@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HTML Graphics</title>
+</head>
+<body>
+
+    <!-- Draw a circle -->
+    <h2>Circle</h2>
+    <canvas id="mycanvas1" width="500" height="300" style="border:1px solid black;"></canvas>
+   
+    <!-- text -->
+    <canvas id="mycanvas2" width="500" height="300" style="border:1px solid black;"></canvas>
+
+    <script>
+        const canvas1 = document.getElementById("mycanvas1");
+        const ctx1 = canvas1.getContext("2d");
+        
+        ctx1.beginPath(); 
+        ctx1.arc(250, 150, 80, 0, 2 * Math.PI); // Removed the stray "arc()" from before
+        ctx1.stroke(); // Added this to actually outline and show the circle!
+       
+        const canvas2 = document.getElementById("mycanvas2");
+        const ctx2 = canvas2.getContext("2d");
+
+        ctx2.font="40px Arial";
+        ctx2.fillStyle="blue";
+        ctx2.fillText("Hello Canvas",100,150)
+    </script>
+    
+</body>
+</html>

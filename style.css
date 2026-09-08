@@ -1,0 +1,102 @@
+/* Body applies styling to the entire page */
+body {
+    font-family: Arial, sans-serif;
+    background-color: #e7ebd1;
+    margin: 20px;
+}
+
+
+/* Main headings applies to all <h2> elements */
+h2 {
+    color: darkgreen;
+}
+
+
+/* Sub headings applies to all <h3> elements */
+h3 {
+    color: #628d62;
+}
+
+
+/* Introduction applied using class="introduction" */
+.introduction {
+    font-size: 16px;
+    color: #444444;
+    line-height: 1.5;
+}
+
+
+/* Education text applied using class="education-text" */
+.education-text {
+    font-size: 16px;
+    color: #555555;
+    line-height: 1.5;
+}
+
+
+/* Learning notes applied using class="learning-text" */
+.learning-text {
+    background-color: lightgray;
+    padding: 15px;
+    font-family: monospace;
+}
+
+hr {
+    margin: 25px 0;
+}
+
+#pre-formatted{
+    color: #6c9c8e;
+}
+
+a:link {
+    color: green;
+    background-color: transparent;
+    text-decoration: none;
+}
+
+a:visited {
+    color: rgb(65, 69, 64);
+    background-color: transparent;
+    text-decoration: none;
+}
+
+a:hover {
+    color: red;
+    background-color: transparent;
+    text-decoration: underline;
+}
+
+a:active {
+    color: yellow;
+    background-color: transparent;
+    text-decoration: underline;
+}
+
+ th, td {
+    /* border: 1px solid black; */
+    /* border-collapse: collapse; */
+    /* border-radius: 10px;  */
+      border-bottom: 1px solid #442626;
+
+    /* border-style: dotted; */
+    /* background-color: #c5dbdb; */
+    padding: 10px;
+
+} 
+
+ /* tr:nth-child(even) {
+  background-color: #a2d6d6;
+} 
+
+ th:nth-child(even), td:nth-child(even) {
+  background-color: #a2d6d6;
+} */
+
+table{
+    border: none;
+}
+
+ tr:hover {background-color: #a2bf87;} 
+
+
