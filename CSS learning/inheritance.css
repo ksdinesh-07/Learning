@@ -1,0 +1,24 @@
+div
+{
+    color: blue;
+}
+    
+div {
+    color: blue;
+}
+
+p {
+    color: red;
+}
+
+div {
+    border: 2px solid black;
+}
+
+div {
+    color: blue;
+}
+
+p {
+    color: inherit;
+}

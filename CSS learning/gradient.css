@@ -1,0 +1,15 @@
+.box{
+    height: 400px;
+    width: 400px;
+    margin: auto;
+    background: linear-gradient(to top right, blue 40%,green,black);
+
+}
+
+.box1{
+    height: 400px;
+    width: 400px;
+    margin: auto;
+    background: radial-gradient( blue,green,black);
+
+}

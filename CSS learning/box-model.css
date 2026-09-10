@@ -1,0 +1,17 @@
+.box{
+    width: 300px;
+    padding: 30px;
+    height: 150px;
+    box-sizing: content-box;
+    background-color: lightblue;
+    border: 2px solid black;
+}
+
+.box1{
+    width: 300px;
+    padding: 30px;
+    height: 150px;
+    box-sizing: border-box;
+    background-color: lightblue;
+    border: 2px solid black;
+}
