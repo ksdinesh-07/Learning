@@ -5041,13 +5041,27 @@
                         max-width: 1200px;
                     } 
 
-                    This create an important combination:
+                    This create an combination:
 
                         width: 100%
                             +
                         max-width: 1200px
 
                     Use all available space, but never become wider than 1200px
+
+                    Where is it used?
+                         News websites
+                         Blogs
+                         Portfolio websites
+                         Login forms
+                         E-commerce content
+                         Documentation websites
+
+                    .article {
+                        width: 90%;
+                        max-width: 800px;
+                        margin: auto;
+                    }
 
             ### Centering a Fluid Container
 
@@ -5080,6 +5094,24 @@
 
                     but ---> min-width can sometimes cause horizontal overflow on very small screens if the minimum value is larger than the available viewport.
 
+                    Where is it used?
+                         E-commerce product cards
+                         Dashboard cards
+                         Chat messages
+                         News cards
+                         Image galleries
+
+                    example:
+
+                        .products {
+                            display: flex;
+                            gap: 20px;
+                        }
+
+                        .product-card {
+                            min-width: 200px;
+                        }
+
             ### min height
 
                 min-height defines the minimum height of an element.
@@ -5093,6 +5125,13 @@
                     This means that the hero section should be atleast 500px tall.
 
                     If the content requires more space, the element can grow beyond 500px.
+
+                Where is it used?
+                    E-commerce landing pages
+                    Homepages
+                    Portfolio hero sections
+                    Mobile app-style web pages
+                    Dashboard sections
 
             ### max height
 
@@ -5110,6 +5149,14 @@
                         overflow: auto;
 
                         can provide scrolling when necessary.
+
+                    Where is it used?
+                        Dropdown menus
+                        Chat windows
+                        Notification panels
+                        Sidebars
+                        Mobile menus
+                        Tables with scrolling
 
             ### min() function
 
@@ -5173,6 +5220,14 @@
                         Maximum → 4rem
 
                 The browser adjusts the value according to the viewport while respecting the minimum and maximum limits.
+
+                use cases:
+
+                    Website heading
+
+                        .hero-title {
+                            font-size: clamp(32px, 6vw, 72px);
+                        }
 
 # CSS Transitions & Animations
 
@@ -5401,7 +5456,6 @@
                             -opacity
                             -width
                             -height
-                            -transform
                             -border-color
                             -box-shadow
 
@@ -5415,6 +5469,15 @@
                             .card:hover {
                                 box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
                             }
+
+
+                        ## Application
+
+                            1.E-commerce — Add to Cart button
+
+                            2.News website navigation
+
+                            3.Product card
 
                     ### Animation
 
@@ -5612,6 +5675,16 @@
                                     After the animation finishes, the element keeps the styles from the final keyframe.
 
                                     Without forwards, it normally returns to its original CSS state.
+
+                                Application:
+
+                                    Very common in:
+
+                                        -loading icons
+                                        -When opening a mobile navigation
+                                        -Suppose an order is successfully placed
+                                        -Like / Favorite button
+
 
 # CSS Transform
 
@@ -5863,6 +5936,7 @@
                     transform-origin: right;
                     transform-origin: top left;
 
+
 # 3D Transforms
 
     CSS also supports transformations in three dimensions.
@@ -5923,6 +5997,13 @@
             For normal 2D rotation, this produces a result similar to:
 
                 transform: rotate(45deg);
+
+        Application:
+
+            -E-commerce — Product card hover
+            -Product image zoom
+            -Buttons
+            -Mobile menu
 
 # CSS Custom Properties (CSS Variables)
 
@@ -6300,6 +6381,12 @@
         6. Component customization
 
             Different components can override variables locally.
+
+    ## Application 
+
+        1.Ecom store to maintain a theme
+        2.News website
+        3.Dark/Light Themes
     
 # Pseudo-Classes & Pseudo-elements
 
@@ -6578,6 +6665,31 @@
 
                 This visually tells the user that the button cannot currently be used.
 
+    Applications:
+        E-commerce websites
+            Product card hover
+            Add-to-cart button hover
+            Selected product options
+            Disabled buttons
+            Focused search boxes
+        Navigation menus
+            Highlight the current/active menu item
+            Hover effects on links
+            Dropdown menu interactions
+        Login & registration forms
+            Show styling when an input is focused
+            Style valid/invalid fields
+            Style disabled fields
+            Checkbox/radio selected states
+        News websites
+            Highlight links when hovered
+            Active navigation category
+            First/last items in article lists
+        Shopping carts
+            Selected items
+            Disabled checkout button
+            Hover actions such as remove/edit
+
 # Pseudo-elements
 
     A pseudo-element allows you to style a specific part of an element or create a cosmetic piece of content.
@@ -6662,6 +6774,32 @@
                     background-color: black;
                     color: white;
                 }
+
+        Applications:
+
+            E-commerce websites
+                Sale/discount badges
+                Decorative lines
+                Required-field *
+                Add icons or visual decorations
+            News websites
+                Decorative line before headings
+                Drop-cap effect for the first letter of an article
+                Add quotation marks around quotes
+                Separate article sections visually
+            Buttons
+                Add an arrow/icon before or after button text
+                Create animated underline effects
+            Forms
+                Add * after required labels
+                Display visual indicators
+            Navigation
+                Create underline indicators
+                Add arrows beside dropdown menu items
+            Cards
+                Add decorative shapes
+                Create overlays
+                Add visual separators
 
 # CSS Architecture
 
