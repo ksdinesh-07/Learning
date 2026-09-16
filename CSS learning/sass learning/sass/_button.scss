@@ -1,0 +1,47 @@
+$bg-primary-color:#3498db;
+$bg-success-color:#90EE90;
+$bg-danger-color:#FF0000;
+
+.btn{
+    border: none;
+    padding:8px 20px;
+    border-radius: 5px;
+}
+
+.btn-primary{
+    background-color: $bg-primary-color;
+    color: #fff;
+}
+
+.btn-success{
+    background-color: $bg-success-color;
+    color: #fff;
+}
+
+.btn-danger{
+    background-color: $bg-danger-color;
+    color: #fff;
+}
+
+@mixin button($bg-color,$text-color){
+    background-color:$bg-color;
+    color:$text-color; 
+    border-radius: 50px;
+    font-size: 16px;
+    padding: 10px 20px;
+    text-transform:uppercase;
+    cursor: pointer;
+    &:hover{
+        background-color:darken($bg-color,20px) ;
+    }
+}
+
+.btn-danger{
+    @include button(#f01d1d,#fff);
+}
+
+.btn-primary{
+        @include button(#995c88,#fff);
+        border:solid 1px black;
+}
+

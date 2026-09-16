@@ -1,0 +1,29 @@
+.box{
+    width: 50px;
+    height: 50px;
+    background-color: black;
+    animation: moveBox 2s;
+    animation-duration: 2s;
+}
+
+@keyframes moveBox{
+    from{
+        transform: translateX(0);
+    }
+    to{
+        transform: translateY(200px);
+    }
+}
+
+h2::after {
+    content: "";
+
+    display: block;
+
+    width: 50px;
+    height: 3px;
+
+    background-color: black;
+
+    margin: 10px auto;
+}

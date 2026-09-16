@@ -1,0 +1,33 @@
+// @use "sass:math";
+
+// @debug math.max(10px,4px,12px);
+// @debug math.ceil(4.2);
+// @debug math.ceil(4.9);
+// @debug math.floor(4.3);
+// @debug math.abs(-10px);
+// @debug math.sqrt(100);
+// @debug math.pow(10,2);
+// @debug math.is-unitless(199);
+// @debug math.is-unitless(100px);
+// @debug math.unit(19px);
+// @debug math.unit(19px * 20px);
+// @debug math.compatible(2px,1px);
+// @debug math.compatible(10px,1em);
+// @debug math.compatible(10cm,3mm);
+// @debug math.div(25px,2px);
+// @debug math.random(5000);
+// @debug math.percentage(0.2);
+
+// @debug "Testing Debug SASS";
+// @debug 10px + 2;
+// @debug 20% * 5;
+// @debug 34-32;
+
+//mapping
+@debug map-get($colors,"primary");
+//to check already present
+@debug map-has-key($colors,"danger");
+//remove color key
+@debug map-remove($colors,"info");
+//add color key
+@debug map-merge($colors,("secondary":#6610f2,));

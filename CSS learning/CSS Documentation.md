@@ -3053,6 +3053,612 @@
                 -Conditional content
                 -Elements controlled by JavaScript
 
+
+    ## CSS Flexbox
+
+        CSS Flexbox, also called the Flexible Box Layout, is a CSS layout system used to arrange elements in a single direction.
+
+        Flexbox is mainly used to arrange elements:
+
+            Horizontally in a row
+            Vertically in a column
+            With flexible spacing
+            With alignment and positioning
+
+        For example:
+
+            ┌─────────┐  ┌─────────┐  ┌─────────┐
+            │ Item 1  │  │ Item 2  │  │ Item 3  │
+            └─────────┘  └─────────┘  └─────────┘
+
+            or:
+
+            ┌─────────┐
+            │ Item 1  │
+            ├─────────┤
+            │ Item 2  │
+            ├─────────┤
+            │ Item 3  │
+            └─────────┘
+
+            Flexbox is especially useful for:
+
+                -Navigation bars
+                -Buttons
+                -Headers
+                -Cards
+                -Form layouts
+                -Centering elements
+
+        1D layout
+
+            -Flexbox is a one-dimensional layout system.
+
+            -This means Flexbox primarily works in one direction at a time.
+
+        Flex Container
+
+            Flexbox has two important concepts:
+
+                -Flex Container
+                -Flex Items
+
+
+            <div class="container"> 
+                <div>Item 1</div> 
+                <div>Item 2</div> 
+                <div>Item 3</div>
+            </div>
+
+            The parent:
+
+                <div class="container">  ---> will become the Flex Container.
+
+                <div>Item 1</div> ---> The direct childrens
+                <div>Item 2</div>
+                <div>Item 3</div>
+
+                are the Flex Items.
+
+                Flex Container 
+                │ 
+                ├── Flex Item 1 
+                ├── Flex Item 2 
+                └── Flex Item 3
+
+        
+        Example
+
+            To create a Flex Container, we use:
+
+            display: flex;
+
+            Example
+
+                <div class="container">
+
+                    <div class="item">Item 1</div>
+                    <div class="item">Item 2</div>
+                    <div class="item">Item 3</div>
+
+                </div>
+
+                .container {
+                    display: flex;
+                }
+
+                Now .container becomes a Flex Container.
+
+            Its direct children automatically become Flex Items.
+
+        Default Flex Direction
+
+            By default, Flexbox uses:
+
+                flex-direction: row;
+
+            This means the items are arranged horizontally.
+
+            Example:
+
+                <div class="container">
+
+                    <div>Item 1</div>
+                    <div>Item 2</div>
+                    <div>Item 3</div>
+
+                </div>
+                .container {
+                    display: flex;
+                }
+
+        Gives:
+
+            ┌─────────┐  ┌─────────┐  ┌─────────┐
+            │ Item 1  │  │ Item 2  │  │ Item 3  │
+            └─────────┘  └─────────┘  └─────────┘
+
+            This is because:
+
+            display: flex;
+
+        flex-direction
+
+            The flex-direction property determines the direction in which Flex Items are arranged.
+
+            Syntax
+                flex-direction: value;
+
+                The main values are:
+
+                    -row
+                    -row-reverse
+                    -column
+                    -column-reverse
+
+        flex direction:row
+
+            This is the default direction.
+
+                .container {
+                    display: flex;
+                    flex-direction: row;
+                }
+
+                Result:
+
+                Item 1 → Item 2 → Item 3
+
+        flex direction:row-reversed
+
+            This reverses the horizontal direction.
+
+                .container {
+                    display: flex;
+                    flex-direction: row-reverse;
+                }
+
+            Result:
+
+                Item 3 → Item 2 → Item 1
+
+                The items are arranged from right to left.
+
+        flex direction: Column
+
+            This arranges items vertically.
+
+                .container {
+                    display: flex;
+                    flex-direction: column;
+                }
+
+                Result:
+
+                    Item 1
+                    ↓
+                    Item 2
+                    ↓
+                    Item 3
+
+                This is useful when creating vertical layouts.
+
+        flex-direction: column-reverse
+
+            This reverses the vertical direction.
+
+            .container {
+                display: flex;
+                flex-direction: column-reverse;
+            }
+
+            Result:
+
+            Item 3
+            ↓
+            Item 2
+            ↓
+            Item 1
+
+        Main Axis and Cross Axis
+
+            This is one of the most important concepts in Flexbox.
+
+            Flexbox has two axes:
+
+                1.Main Axis
+                2.Cross Axis
+
+            The direction of the main axis depends on flex-direction.
+                                                    
+            When flex-direction:row
+
+                the main axis is horizontal.
+
+                    Main Axis
+                    ────────────────────────→
+
+                    Item 1    Item 2    Item 3
+
+                    Cross Axis
+                        ↓
+
+                    So:
+
+                    Main Axis  → Horizontal
+                    Cross Axis → Vertical
+
+            when the flex-direction:column
+
+                The main axis is vertical
+
+                    main Axis
+
+                        Item 1
+                        Item 2 
+                        Item 3
+                
+                Cross Axis → Horizontal
+
+                So:
+
+                    Main Axis  → Vertical
+                    Cross Axis → Horizontal
+
+                Important Rule
+
+                    justify-content works along the main axis.
+
+                    align-items works along the cross axis.
+
+        justify-content
+
+            The justify-content property controls how Flex Items are positioned along the main axis.
+
+            Syntax
+
+                justify-content: value;
+
+                Common values are:
+
+                    flex-start
+                    center
+                    flex-end
+                    space-between
+                    space-around
+                    space-evenly
+
+        justify-content: flex-start
+
+            Items are placed at the beginning of the main axis.
+
+                .container {
+                    display: flex;
+                    justify-content: flex-start;
+                }
+
+                Result:
+
+                ┌──────┐ ┌──────┐ ┌──────┐
+                │ Item │ │ Item │ │ Item │
+                └──────┘ └──────┘ └──────┘
+                ↑
+                Start
+
+                This is the default value.
+
+
+            justify-content: center
+
+                Items are placed in the center of the main axis.
+
+                .container {
+                    display: flex;
+                    justify-content: center;
+                }
+
+                Result:
+
+                        ┌──────┐ ┌──────┐ ┌──────┐
+                        │ Item │ │ Item │ │ Item │
+                        └──────┘ └──────┘ └──────┘
+                                    ↑
+                                Center
+
+                This is commonly used to center navigation items or content horizontally.
+
+            justify-content: flex-end
+
+                Items are placed at the end of the main axis.
+
+                .container {
+                    display: flex;
+                    justify-content: flex-end;
+                }
+
+                Result:
+
+                                            ┌──────┐ ┌──────┐ ┌──────┐
+                                            │ Item │ │ Item │ │ Item │
+                                            └──────┘ └──────┘ └──────┘
+
+
+            justify-content: space-between
+
+                The available space is distributed between the items.
+
+                .container {
+                    display: flex;
+                    justify-content: space-between;
+                }
+
+                Result:
+
+                ┌──────┐              ┌──────┐              ┌──────┐
+                │ Item │              │ Item │              │ Item │
+                └──────┘              └──────┘              └──────┘
+
+                There is no extra space before the first item or after the last item.
+
+            justify-content: space-around
+
+                Space is distributed around each item.
+
+                .container {
+                    display: flex;
+                    justify-content: space-around;
+                }
+
+                Conceptually:
+
+                ┌──────┐      ┌──────┐      ┌──────┐
+                │ Item │      │ Item │      │ Item │
+                └──────┘      └──────┘      └──────┘
+
+                Each item receives space around it.
+
+
+            justify-content: space-evenly
+
+                The available space is distributed evenly between the items and the container edges.
+
+                .container {
+                    display: flex;
+                    justify-content: space-evenly;
+                }
+
+                Conceptually:
+
+                ┌──────┐    ┌──────┐    ┌──────┐
+                │ Item │    │ Item │    │ Item │
+                └──────┘    └──────┘    └──────┘
+
+                The gaps are equal.
+
+            align-items
+
+                The align-items property controls the alignment of Flex Items along the cross axis.
+
+                Syntax
+
+                    align-items: value;
+
+                    Common values include:
+
+                        -stretch
+                        -flex-start
+                        -center
+                        -flex-end
+
+            align-items:center
+
+                .container {
+                    display: flex;
+                    height: 300px;
+
+                    align-items: center;
+                }
+
+                The items are centered vertically when the main axis is a row.
+
+                ┌──────────────────────────────────┐
+                │                                  │
+                │                                  │
+                │   Item 1   Item 2   Item 3       │
+                │                                  │
+                │                                  │
+                └──────────────────────────────────┘
+
+                one of the most common Flexbox techniques.
+
+            Centering an Element
+
+                To center an element both horizontally and vertically:
+
+                .container {
+                    display: flex;
+
+                    justify-content: center;
+                    align-items: center;
+
+                    height: 300px;
+                }
+
+                Here:
+
+                justify-content
+                    ↓
+                Horizontal center
+
+                align-items
+                    ↓
+                Vertical center
+
+                Result:
+
+                ┌──────────────────────────────┐
+                │                              │
+                │                              │
+                │          ┌────────┐          │
+                │          │  Item  │          │
+                │          └────────┘          │
+                │                              │
+                │                              │
+                └──────────────────────────────┘
+
+
+            gap
+
+                The gap property creates space between Flex Items.
+
+                .container {
+                    display: flex;
+                    gap: 20px;
+                }
+
+                Result:
+
+                ┌────────┐   20px   ┌────────┐   20px   ┌────────┐
+                │ Item 1 │          │ Item 2 │          │ Item 3 │
+                └────────┘          └────────┘          └────────┘
+
+                Unlike manually adding margins to each item, gap directly controls the spacing between Flex Items.
+
+
+            flex-wrap
+
+                Normally, Flex Items try to stay on one line.
+
+                The flex-wrap property controls whether items are allowed to move to another line.
+
+                Syntax
+
+                    flex-wrap: value;
+
+                Values:
+
+                    -nowrap
+                    -wrap
+                    -wrap-reverse
+
+            flex-wrap: nowrap
+
+                This is the default.
+
+                    .container {
+                        display: flex;
+                        flex-wrap: nowrap;
+                    }
+
+                The items remain on one line even when space becomes limited.
+
+            flex-wrap:wrap
+
+                Items can move to the next line when there is not enough space.
+
+                .container {
+                    display: flex;
+                    flex-wrap: wrap;
+                }
+
+                Example:
+
+                ┌────────┐ ┌────────┐ ┌────────┐
+                │ Item 1 │ │ Item 2 │ │ Item 3 │
+                └────────┘ └────────┘ └────────┘
+
+                ┌────────┐ ┌────────┐
+                │ Item 4 │ │ Item 5 │
+                └────────┘ └────────┘
+
+                This is useful for responsive layouts.
+
+            flex-flow
+
+                flex-flow is a shorthand property for:
+
+                    flex-direction
+                    flex-wrap
+
+                    Example:
+
+                        .container {
+                            flex-flow: row wrap;
+                        }
+
+                        This is equivalent to:
+
+                        .container {
+                            flex-direction: row;
+                            flex-wrap: wrap;
+                        }
+
+        align-content
+
+            align-content controls the alignment of multiple flex lines along the cross axis.
+
+            It becomes useful when:
+
+                flex-wrap: wrap;
+
+                is being used and there are multiple rows or columns of Flex Items.
+
+            Example:
+
+                .container {
+                    display: flex;
+                    flex-wrap: wrap;
+                    align-content: center;
+                }
+
+            Important:
+
+                align-items aligns items within a flex line.
+
+                align-content controls the positioning of multiple flex lines.
+
+        flex-grow
+
+            flex-grow determines how much a Flex Item can grow when extra space is available.
+
+            Example:
+
+                .item1 {
+                    flex-grow: 1;
+                }
+
+                .item2 {
+                    flex-grow: 2;
+                }
+
+            The available extra space is distributed according to the ratio:
+
+            1 : 2
+
+            Therefore, Item 2 receives twice as much extra space as Item 1.
+
+        flex-shrink
+
+            flex-shrink determines how much a Flex Item can shrink when there is not enough space.
+
+            Example:
+
+                .item1 {
+                    flex-shrink: 1;
+                }
+
+                The default value is generally:
+
+                flex-shrink: 1;
+
+                An item with:
+
+                flex-shrink: 0;
+
+                will not shrink because of Flexbox's shrinking algorithm.
+
+
+
     ## Grid layout
 
         CSS Grid is a CSS layout system used to arrange HTML elements into rows and columns.
@@ -3112,11 +3718,6 @@
 
                 Item 1    Item 2    Item 3
                 Item 4    Item 5    Item 6
-                Simple way to remember
-
-                Flexbox → one dimension
-
-                Grid → two dimensions
 
                 Grid Container and Grid Items
 
@@ -3125,7 +3726,6 @@
                     Grid Container
                     Grid Items
 
-                    Consider this HTML:
 
                     <div class="container">
 
@@ -3389,19 +3989,7 @@
                     column-gap: 20px;
                 }
 
-                Therefore:
-
-                gap
-                ↓
-                Rows + Columns
-
-                row-gap
-                ↓
-                Rows only
-
-                column-gap
-                ↓
-                Columns only
+    
 
             The repeat() Function
 
@@ -3435,7 +4023,3547 @@
 
                     200px 200px 200px
 
+            Grid lines
+
+                Grid also contains grid lines.
+
+                Suppose we create three columns:
+
+                    grid-template-columns: 1fr 1fr 1fr;
+
+                        There are three columns but four vertical grid lines.
+
+                        Line 1       Line 2       Line 3       Line 4
+                        │            │            │            │
+                        │  Column 1  │  Column 2  │  Column 3  │
+                        │            │            │            │
+
+                    The lines are numbered from left to right.
+
+                    Similarly, if we have two rows:
+
+                    ──────────── Line 1
+
+                        Row 1
+
+                    ──────────── Line 2
+
+                        Row 2
+
+                    ──────────── Line 3
+
+                    Therefore:
+
+                    The number of grid lines is generally the number of tracks + 1.
+            
+            Grid Cells
+
+                A grid cell is the smallest individual area created by the intersection of a row and a column.
+
+                For example:
+
+                    ┌─────────┬─────────┬─────────┐
+                    │ Cell 1  │ Cell 2  │ Cell 3  │
+                    ├─────────┼─────────┼─────────┤
+                    │ Cell 4  │ Cell 5  │ Cell 6  │
+                    └─────────┴─────────┴─────────┘
+
+                    Each area represents one grid cell.
+
+                    A grid item normally occupies one grid cell.
+            
+            Grid columns
+
+                The grid-column property controls the horizontal position and size of a grid item.
+
+                Example:
+
+                    .item1 {
+                        grid-column: 1 / 3;
+                    }
+
+                    This means:
+
+                    Start at grid line 1
+                            ↓
+                            1       2       3       4
+                            │       │       │       │
+                            ├───────┴───────┤
+                            │    Item 1     │
+                            └───────────────┘
+                                            ↑
+                                    End at line 3
+
+                    The item occupies:
+
+                        Column 1 + Column 2
+
+                    So:
+
+                        grid-column: 1 / 3;
+
+                    means:
+
+                        Start at line 1 and end at line 3.
+
+            grid-row
+
+                The same concept applies vertically.
+
+                    .item1 {
+                        grid-row: 1 / 3;
+                    }
+
+                This means:
+
+                    Start at row line 1
+                            ↓
+
+                    ──────────────
+                        Row 1
+                    ──────────────
+                        Row 2
+                    ──────────────
+                            ↑
+                    End at row line 3
+
+                Therefore:
+
+                    grid-column
+
+                    controls horizontal placement.
+
+                    grid-row
+
+                    controls vertical placement.
+
+            span
+
+                Instead of specifying the ending grid line, we can specify how many tracks an item should occupy.
+
+                Example:
+
+                    .item1 {
+                        grid-column: span 2;
+                    }
+
+                    This means:
+
+                        Make the item occupy two columns.
+
+                    Example:
+
+                        ┌──────────────────────┬────────────┐
+                        │                      │            │
+                        │       Item 1         │   Item 2   │
+                        │       span 2         │            │
+                        │                      │            │
+                        └──────────────────────┴────────────┘
+
+                    Similarly:
+
+                        .item1 {
+                            grid-row: span 2;
+                        }
+
+                    means the item occupies two rows.
+
+
+# Positioning
+
+    CSS Positioning is used to control the placement of HTML elements on a webpage.
+
+    Normally, HTML elements are arranged according to the normal document flow. The position property allows us to change how an element is positioned and where it appears.
+
+        CSS positioning is commonly used for:
+
+            -Placing elements at specific locations
+            -Creating overlapping elements
+            -Placing text over images
+            -Creating notification badges
+            -Creating fixed navigation bars
+            -Creating sticky headers
+            -Positioning buttons and icons
+
+        syntax
+
+            selector {
+                position: value;
+            }
+
+            Example:
+
+                .box {
+                    position: relative;
+                }
+
+            The main values of the position property are:
+
+                -static
+                -relative
+                -absolute
+                -fixed
+                -sticky
+
+        1.Postion:static
+
+            static is the default positioning of an HTML element.
+
+            The element follows the normal document flow.
+
+                .box {
+                    position: static;
+                }
+                
+            Example
+
+                <div class="box">Box 1</div>
+                <div class="box">Box 2</div>
+
+                .box {
+                    position: static;
+                    width: 100px;
+                    height: 100px;
+                    background-color: lightblue;
+                }
+
+                Result
+
+                    The elements appear one after another according to the normal document flow.
+
+                    When an element has:
+
+                    position: static;
+
+                        the following properties do not normally affect its position:
+
+                        -top
+                        -right
+                        -bottom
+                        -left
+
+                        Example:
+
+                        .box {
+                            position: static;
+                            top: 50px;
+                        }
+
+                        top: 50px will not move the element.
+
+                        static is useful when an element should behave normally without any special positioning.
+        
+        2.Position:relative
+
+            relative positions an element relative to its original position.
+
+                .box {
+                    position: relative;
+                }
+
+            The element remains in the normal document flow, but we can move it using:
+
+                -top
+                -right
+                -bottom
+                -left
+                
+                Example
+
+                <div class="box">Box</div>
+                .box {
+                    width: 100px;
+                    height: 100px;
+                    background-color: lightblue;
+
+                    position: relative;
+                    top: 20px;
+                    left: 30px;
+                }
+
+                Explanation
+
+                    top: 20px;
+
+                    moves the element 20px downward.
+
+                    left: 30px;
+
+                    moves the element 30px to the right.
+
+                    Important
+
+                    The original space occupied by the element is still preserved.
+
+                Real-Time Use Case
+
+                    relative is commonly used when:
+
+                        -Slightly moving an element
+                        -Creating a reference point for an absolutely positioned child
+                        -Positioning badges inside cards
+                        -Positioning icons inside containers.
+
+        3.Position:absolute
+
+            absolute positions an element relative to its nearest positioned ancestor.
+
+            The element is removed from the normal document flow.
+
+            .box {
+                position: absolute;
+            }
+
+            It can be positioned using:
+
+                -top
+                -right
+                -bottom
+                -left
+
+            Example
+
+            <div class="container">
+                <div class="box">Box</div>
+            </div>
+
+            .container {
+                width: 300px;
+                height: 200px;
+                background-color: lightgray;
+
+                position: relative;
+            }
+
+            .box {
+                width: 100px;
+                height: 100px;
+                background-color: lightblue;
+
+                position: absolute;
+                top:20px,
+                right:20px;
+            }
+
+            Explanation
+
+                The parent has:
+
+                .container {
+                    position: relative;
+                }
+
+                Therefore, it becomes the reference point for the absolute child.
+
+                The child has:
+
+                .box {
+                    position: absolute;
+                    top: 20px;
+                    right: 20px;
+                }
+
+                So the box is positioned:
+
+                20px from the top
+                20px from the right
+
+                of the container.
+
+            Common Pattern
+
+                A very common CSS pattern is:
+
+                .parent {
+                    position: relative;
+                }
+
+                .child {
+                    position: absolute;
+                }
+
+            The parent creates the reference point, and the child is positioned inside it.
+
+            Real-Time Use Case
+
+                absolute is commonly used for:
+
+                -Notification badges
+                -Icons inside input fields
+                -Text over images
+                -Sale labels on product cards
+                -Dropdown menus
+                -Close buttons
+
+    ## position:fixed
+
+        fixed positions an element relative to the browser viewport.
+
+        The element remains in the same position even when the page is scrolled.
+
+            .button {
+                position: fixed;
+            }
+
+            Example
+
+                <button class="help-button">Help</button>
+                .help-button {
+                    position: fixed;
+                    bottom: 20px;
+                    right: 20px;
+                }
+
+                Explanation
+
+                    bottom: 20px;
+
+                    places the button 20px from the bottom of the viewport.
+
+                    right: 20px;
+
+                    places it 20px from the right side.
+
+                    When the user scrolls, the button remains in that position.
+
+                When the user scrolls, the button remains in that position.
+
+                Real-Time Use Case
+
+                    fixed is commonly used for:
+
+                        -Chat buttons
+                        -Help buttons
+                        -Back-to-top buttons
+                        -Floating action buttons
+                        -Fixed navigation bars
+                        -Cookie notifications
+
+    position:sticky
+    
+        sticky combines normal document flow with fixed-like positioning.
+
+        An element initially behaves like a normally positioned element. When the user scrolls and the element reaches the specified position, it sticks to that position.
+
+            .header {
+                position: sticky;
+                top: 0;
+            }
+
+        Example
+
+            <div class="header">
+                Navigation Bar
+            </div>
+
+            <p>Content...</p>
+            <p>Content...</p>
+            <p>Content...</p>
+
+            .header {
+                position: sticky;
+                top: 0;
+                background-color: lightblue;
+            }
+
+        Explaination
+
+            Initially, the navigation bar appears in its normal position.
+
+            When the user scrolls and the navigation bar reaches the top of the viewport, it stays there while its scrolling container allows it.
+
+                Real-Time Use Case
+
+                    sticky is commonly used for:
+
+                        -Navigation bars
+                        -Table headers
+                        -Section headings
+                        -Sidebars
+                        -Filters
+                        -Category menus
+
+        Positioning properties
+
+            The following properties are commonly used with positioned elements:
+
+                -top
+                -right
+                -bottom
+                -left
+
+                They control the distance between the element and its positioning reference.
+
+        Z - Index & Stacking contexts
+             
+            When multiple HTML elements overlap each other, the browser needs to decide which element should appear in front and which should appear behind.
+
+            CSS provides the z-index property to control this front-to-back order.
+
+            This is called the Z-axis.
+
+            For example
+
+                on an e-commerce website, a SALE badge may need to appear on top of a product image. A dropdown menu may need to appear above the page content, and a modal window may need to appear above everything else.
+
+            These situations are handled using z-index and stacking contexts.
+
+            Axes 
+
+                X-axis
+
+                    Controls the horizontal direction:
+
+                    Left  ←────────────→  Right
+
+                    In CSS, properties such as left and right can affect the horizontal position.
+
+                 Y-axis
+
+                    Controls the vertical direction:
+
+                    Top
+                    ↑
+                    │
+                    ↓
+                    Bottom
+
+                    Properties such as top and bottom can affect the vertical position.
+
+                Z-axis
+
+                    Controls the front-to-back direction:
+
+                            Element 3     ← Front
+                            Element 2
+                            Element 1     ← Back
+
+                    The Z-axis becomes important when elements overlap.
+
+            ### z-index
+
+                z-index is a CSS property used to control the stacking order of overlapping elements.
+
+                Syntax
+
+                    selector {
+                        z-index: value;
+                    }
+
+                Example:
+
+                    .box {
+                        position: relative;
+                        z-index: 2;
+                    }
+                    
+            ### Use of z-index
+
+                <div class="box1">Box 1</div>
+                <div class="box2">Box 2</div>
+
+                .box1 {
+                    position: absolute;
+                    top: 50px;
+                    left: 50px;
+                }
+
+                .box2 {
+                    position: absolute;
+                    top: 80px;
+                    left: 80px;
+                }
+
+                The two elements overlap.
+
+                ┌───────────────┐
+                │     Box 1     │
+                │        ┌───────────────┐
+                │        │     Box 2     │
+                │        │               │
+                └────────┼───────────────┘
+                        └───────────────┘
+
+                Now we need to decide which box should appear on top.
+
+                We can use z-index:
+
+                    .box1 {
+                        position: absolute;
+                        z-index: 1;
+                    }
+
+                    .box2 {
+                        position: absolute;
+                        z-index: 2;
+                    }
+
+                    Since Box 2 has a higher z-index, it appears above Box 1.
+
+                    Box 2 → z-index: 2 → Front
+                    Box 1 → z-index: 1 → Back
+
+            Stacking Order
+
+                The stacking order determines the order in which overlapping elements are displayed.
+
+                For example:
+
+                    .box1 {
+                        z-index: 1;
+                    }
+
+                    .box2 {
+                        z-index: 2;
+                    }
+
+                    .box3 {
+                        z-index: 3;
+                    }
+
+                    The general order is:
+
+                          User
+                            
+                            ↓
+
+                        Box 3  ← Front
+                        Box 2
+                        Box 1  ← Back
+
+                    So, within the same stacking context:
+
+                    Higher z-index
+                        ↓
+                    Appears in front
+
+            ## Real time use case
+
+                E-commerce websites commonly display a SALE badge over a product image.
+
+                HTML
+
+                    <div class="product">
+                        <img src="shirt.jpg" alt="Women's T-shirt">
+                        <span class="sale">SALE</span>
+                    </div>
+                   
+                CSS
+
+                    .product {
+                        position: relative;
+                    }
+
+                    .sale {
+                        position: absolute;
+                        top: 10px;
+                        right: 10px;
+                        z-index: 2;
+                    }
+
+                pattern is commonly used for 
+                    This pattern is commonly used for:
+
+                        -SALE badges
+                        -New product labels
+                        -Discount labels
+                        -Featured labels
+                        -Product status indicators
+    
+    ## Media Queries in CSS 
+
+        Media Queries are a CSS feature used to apply different styles based on the characteristics of the device or browser.
+
+            They are commonly used to make websites responsive, meaning the layout can adapt to:
+
+                -Mobile phones
+                -Tablets
+                -Laptops
+                -Desktop monitors
+                -Different screen orientations
+                -Different display capabilities
+
+            For example, we may want a navigation bar to display normally on a desktop but change its layout on a mobile screen.
+
+                @media (max-width: 768px) {
+
+                    .navbar {
+                        display: none;
+                    }
+
+                }
+
+                The CSS inside the @media block is applied only when the condition is satisfied.
+
+            Why Do We Need Media Queries?
+
+                A website can be viewed on many different screen sizes.
+
+                If we use exactly the same layout for both devices, the desktop design may not fit properly on a mobile screen.
+
+                Media queries allow us to change the CSS according to the available screen size.
+
+                example
+
+                    @media (max-width: 768px) {
+
+                        body {
+                            background-color: lightblue;
+                        }
+
+                    }
+
+            workflow
+
+                @media (max-width: 768px) {
+
+                    body {
+                        background-color: lightblue;
+                    }
+
+                }
+
+                the browser checks 
+
+                    Is the viewport width ≤ 768px?
+                                │
+                        ┌─────┴─────┐
+                        YES           NO
+                        │             │
+                        ↓             ↓
+                    Apply CSS       Ignore this CSS
+
+                so the browser
+
+                    500px ---> CSS applies
+                    700px ---> CSS applies
+                    768px ---> CSS applies
+                    900px ---> CSS does not apply
+
+                max-width
+
+                    Apply the CSS when the viewport width is less than or equal to the specified value.
+
+                    code:
+
+                        @media (max-width: 768px) {
+
+                                h1 {
+                                    font-size: 30px;
+                                }
+
+                            }
+
+                    here,When the viewport width is 768px or smaller, make the heading 30px.
+
+                min-width
+
+                    Apply the CSS when the viewport width is greater than or equal to the specified value.
+
+                    @media (min-width: 768px) {
+
+                            .container {
+                                width: 80%;
+                            }
+
+                        }
+
+                    The CSS applies when
+
+                        768px → applies
+                        900px → applies
+                        1200px → applies
+                        500px → does not apply
+
+                Changing the grid
+
+                    Media queries are especially useful with CSS Grid.
+
+                        .product-grid {
+                            display: grid;
+                            grid-template-columns: repeat(4, 1fr);
+                            gap: 20px;
+                        }
+
+                        on a large screen
+
+                            ┌────┐ ┌────┐ ┌────┐ ┌────┐
+                            │  1 │ │  2 │ │  3 │ │  4 │
+                            └────┘ └────┘ └────┘ └────┘
+                        
+                        We can change it by:
+
+                            @media (max-width: 768px) {
+
+                                    .product-grid {
+                                        grid-template-columns: repeat(2, 1fr);
+                                    }
+
+                                }
+
+                        Desktop
+
+                            ┌────┐ ┌────┐ ┌────┐ ┌────┐
+                            │  1 │ │  2 │ │  3 │ │  4 │
+                            └────┘ └────┘ └────┘ └────┘
+
+
+                        Mobile
+
+                            ┌────┐ ┌────┐
+                            │  1 │ │  2 │
+                            └────┘ └────┘
+
+                            ┌────┐ ┌────┐
+                            │  3 │ │  4 │
+                            └────┘ └────┘
+
+            ### Orientation
+
+                Media queries can also detect the device orientation.
+
+                There are two common orientations:
+
+                    -portrait
+                    -landscape
+
+                example
+
+                    portrait
+
+                        @media (orientation: portrait) {
+
+                            body {
+                                background-color: lightblue;
+                            }
+
+                        }       
+                    
+                    landscape
+
+                        @media (orientation: landscape) {
+
+                            body {
+                                background-color: lightgreen;
+                            }
+
+                        }
+
+            ### and keyword
+
+                The and keyword allows us to combine conditions.
+
+                @media (min-width: 600px) and (max-width: 1000px) {
+
+                    .container {
+                        width: 90%;
+                    }
+
+                }
+
+                This applies when 600px ≤ viewport width ≤ 1000px
+
+            ### not keyword
+
+                @media not print {
+
+                    body {
+                        font-family: Arial, sans-serif;
+                    }
+
+                }
+
+                This means the rule applies when the media type is not print.
+
+            ### Media Type
+
+                A media query can also specify the type of output medium.
+
+                    @media screen {
+                        /* Screen devices */
+                    }
+
+                    @media print {
+                        /* Printed documents */
+                    }
+
+        ### Two Common Approach 
+
+            There are two common approaches to responsive design.     
+
+                1.Desktop-first 
+
+                    .product-grid {
+                        grid-template-columns: repeat(4, 1fr);
+                    }
+
+                    Then modify it for smaller screens.
+
+                        @media (max-width: 768px) {
+                            .product-grid {
+                                grid-template-columns: 1fr;
+                            }
+                        }
+
+                2.Mobile-first 
+
+                    Start with the smaller layout:
+
+                        .product-grid {
+                            grid-template-columns: 1fr;
+                        }
+
+                        Then add styles for larger screens:
+
+                            @media (min-width: 768px) {
+
+                                .product-grid {
+                                    grid-template-columns: repeat(2, 1fr);
+                                }
+
+                            }
+
+                            @media (min-width: 1024px) {
+
+                                .product-grid {
+                                    grid-template-columns: repeat(4, 1fr);
+                                }
+
+                            }
+
+                    Mobile-first is very common in modern responsive development because you start with the most constrained screen and progressively enhance the layout.
+
+    ## Fluid Layout in CSS
+
+        A fluid layout is a web layout that can automatically adjust its size according to the available screen space.
+
+        Instead of depending only on fixed dimensions such as:
+
+            width: 500px;
+
+        we can use flexible value and constraints such as : 
+
+            width: 100%;
+            max-width: 600px;
+            min-width: 300px;
+
+        There are also CSS functions such as 
+
+            min()
+            max()
+            clamp()
+
+        to create layouts that adapt to different screen sizes.
+
+    ## Need for fluid Layouts?
+
+        Users can access the same website from many different screens:
+
+                        Desktop
+            ┌─────────────────────────────────────────────┐
+            │                                             │
+            │                Website                      │
+            │                                             │
+            └─────────────────────────────────────────────┘
+
+
+            Tablet
+            ┌──────────────────────────────┐
+            │                              │
+            │          Website             │
+            │                              │
+            └──────────────────────────────┘
+
+
+            Mobile
+            ┌─────────────────┐
+            │                 │
+            │    Website      │
+            │                 │
+            └─────────────────┘   
+
+            if we use the fixed dimensions,the content may leads to the,
+
+                -overflow the screen
+                -become too wider
+                -create horizontal scrolling
+                -waste available space
+
+            Fluid layouts allow elements to grow and shrink within controlled limits.
+
+            ### Fixed Layout
+
+                A fixed width does not automatically adapt to the available space.                                 
+
+                    .container {
+                        width: 600px;
+                    }
+
+                    The element will try to remain 600px wide.
+
+                    The element can become wider than the viewport.
+
+            ### Fluid layout    
+
+                .container {
+                    width: 100%;
+                    max-width: 600px;
+                }
+
+                Now the elements can shrink when necessary.
+
+                This approach is much more flexible.
+
+            ### Width:100% 
+
+                 The % unit is the common used for fluid layouts.
+
+                 .container {
+                    width: 100%;
+                }
+
+                This means the element's width equal to the available width of its containing block.
+
+                example
+
+                    1200px → container ≈ 1200px
+                    800px  → container ≈ 800px
+                    500px  → container ≈ 500px
+
+                    This allows the element to adapt.
+                    
+            ### max-width
+
+                Defines the maximum width an element is allowed to have
+
+                    .container {
+                        width: 100%;
+                        max-width: 1200px;
+                    } 
+
+                    This create an important combination:
+
+                        width: 100%
+                            +
+                        max-width: 1200px
+
+                    Use all available space, but never become wider than 1200px
+
+            ### Centering a Fluid Container
+
+                We can combine max-width with:
+
+                    margin: 0 auto;
+
+                Example:
+
+                    .container {
+                        width: 100%;
+                        max-width: 1200px;
+                        margin: 0 auto;
+                    }
+
+                What does the margin:0 auto do?
+
+                    The auto horizontal margins distribute the remaining space equally, centering the container.
+
+            ### min-width
+
+                min-width specifies the minimum width an element can have.
+
+                    .box {
+                        width: 50%;
+                        min-width: 300px;
+                    } 
+
+                    The element can normally be 50% wide, but it should not become narrower than 300px.
+
+                    but ---> min-width can sometimes cause horizontal overflow on very small screens if the minimum value is larger than the available viewport.
+
+            ### min height
+
+                min-height defines the minimum height of an element.
+
+                example
+
+                    .hero {
+                        min-height: 500px;
+                    }
+
+                    This means that the hero section should be atleast 500px tall.
+
+                    If the content requires more space, the element can grow beyond 500px.
+
+            ### max height
+
+                max-height defines the maximum height an element is allowed to have.
+
+                    .box {
+                        max-height: 400px;
+                        overflow: auto;
+                    }
+
+                    If the content becomes taller than 400px, the overflow property can determine what happens.
+
+                    For example,
+
+                        overflow: auto;
+
+                        can provide scrolling when necessary.
+
+            ### min() function
+
+                The min() CSS function allows us to choose the smallest value from multiple options.
+
+
+                Syntax
+
+                property: min(value1, value2);
+
+                Example:
+
+                    .container {
+                        width: min(90%, 1200px);
+                    }
+
+                The browser chooses whichever value is smaller.
+
+            ### max() function
+
+                The max() function does the opposite.
+
+                It chooses the largest value from the given options.
+
+                Syntax
+
+                    property: max(value1, value2);
+
+                Example:
+
+                    .box {
+                        width: max(50%, 300px);
+                    }
+
+                    The browser chooses whichever value is larger.
+
+
+            ### clamp() function
+            
+                clamp() is one of the most useful CSS functions for fluid design.
+
+                It allows a value to have:
+
+                    -minimum
+                    -preferred/fluid value
+                    -maximum
+
+                syntax:
+
+                    property: clamp(minimum, preferred, maximum);
+
+                example:    
+
+                    h1 {
+                        font-size: clamp(2rem, 5vw, 4rem);
+                    }
+
+                    here,
+                        Minimum → 2rem
+                        Preferred → 5vw
+                        Maximum → 4rem
+
+                The browser adjusts the value according to the viewport while respecting the minimum and maximum limits.
+
+# CSS Transitions & Animations
+
+    CSS provides two important ways to create movement and visual effects:
+
+        Transition ---> Smoothly changes a property from one state to another.
+
+        Animation ---> Creates multi stage of movements or change unsing the @kayframes.
+
+        ### Transition
+
+            A CSS transition makes a change between two CSS states happen smoothly instead of immediately.
+
+            Without a transition:
+
+                button {
+                    background-color: black;
+                }
+
+                button:hover {
+                    background-color: gray;
+                }
+
+                This results in transition.
+
+                    Black
+                    ↓
+                    Gray
+
+                With a transition:
+
+                    Black
+                    ↓
+                   dark gray
+                    ↓
+                    gray
+
+                The browser creates the intermediate values automatically.
+
+            ### Basic transition Property
+
+                syntax
+
+                    transition: property duration;
+
+                Example
+
+                    button {
+                        background-color: black;
+                        transition: background-color 0.3s;
+                    }
+
+                    button:hover {
+                        background-color: gray;
+                    }
+
+                    When background-color changes, make the change happen over 0.3 seconds.
+
+                #### Transition Duration
+
+                    The duratio specifies how long the transition takes.
+
+                    button {
+                        transition: background-color 1s;
+                    }
+
+                    The transition takes 1 second.
+
+                    example:
+
+                        0.2s fast
+
+                        0.5s moderate
+                        
+                        2s slow
+
+
+                    Common UI values
+
+                        For normal websites, you will commonly use:
+
+                            0.2s
+                            0.3s
+                            0.4s
+                            0.5s
+                    
+                    ### Transition Multiple Properties
+
+                        we can transition more than one CSS property.
+
+                            button {
+                                background-color: black;
+                                color: white;
+                                transform: scale(1);
+
+                                transition:
+                                    background-color 0.3s,
+                                    color 0.3s,
+                                    transform 0.3s;
+                            }
+
+                            button:hover {
+                                background-color: white;
+                                color: black;
+                                transform: scale(1.05);
+                            }
+
+                        when the mouse enters the button    
+
+                            Background → black → white
+                            Text       → white → black
+                            Size       → normal → slightly larger
+
+                            All three changes happen smoothly.
+
+                    ### transition-property
+
+                        Instead of writing the shorthand immediately, you can use the individual properties.
+
+                       button {
+                            transition-property: background-color;
+                        } 
+
+                        example
+
+                            button {
+                                background-color: black;
+                                transition-property: background-color;
+                                transition-duration: 0.3s;
+                            }
+
+                            button:hover {
+                                background-color: gray;
+                            }
+
+                    ### transition-duration
+
+                        specifies how long the transition should take.  
+
+                        example
+
+                            button {
+                                transition-property: background-color;
+                                transition-duration: 0.3s;
+                            }
+
+                    ### transition-delay
+
+                        transition-delay specifies how long the browser should wait before starting the transition.
+
+                        button{
+                            transition:background-color 0.3s;
+                            transition-delay:1s;
+                        }
+
+                    ### transition-timing-function
+
+                        This controls how the speed changes during the transition.
+
+                        common values are 
+
+                            -ease
+                            -linear
+                            -ease-in
+                            -ease-out
+                            -ease-in-out
+
+                        ease
+
+                            transition: transform 0.5s ease;
+
+                            Starts slowly, moves faster, then slows down.
+
+                            This is commonly used for UI elements.
+
+                            Elements:
+
+                                transition: transform 0.5s ease;
+
+                        linear
+
+                            transition: transform 0.5s linear;
+
+                            The movement happens at a constant speed.
+
+                            Example:
+
+                                transition: transform 0.5s linear;
+
+                        ease-in
+
+                            transition: transform 0.5s ease-in;
+
+                            Starts slowly and becomes faster.
+
+                            Example:
+
+                                transition: transform 0.5s ease-in;
+
+                        ease-out
+
+                            transition: transform 0.5s ease-out;
+
+                            Starts quickly and slows down near the end.
+
+                            Example:
+
+                                transition: transform 0.5s ease-out;
+
+                        ease-in-out
+
+                            transition: transform 0.5s ease-in-out;
+
+                            Starts slowly, becomes faster, then slows down.
+
+                            Example:    
+
+                                transition: transform 0.5s ease-in-out;
+
+                    ### Properties Can Be Transitioned
+
+                        Many visual properties can be transitioned.
+
+                            -background-color
+                            -color
+                            -opacity
+                            -width
+                            -height
+                            -transform
+                            -border-color
+                            -box-shadow
+
+                        Example:
+
+                            .card {
+                                box-shadow: none;
+                                transition: box-shadow 0.3s ease;
+                            }
+
+                            .card:hover {
+                                box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+                            }
+
+                    ### Animation
+
+                        A CSS animation allows an element to change its styles through multiple stages.
+
+                        Unlike a simple transition, an animation does not require a state such as :hover.
+
+                        These stages are defined using the @keyframes.
+
+                        ### @keyframes
+
+                            @keyframes defines the different stages of an animation.
+
+                            syntax:
+
+                                @keyframes animation-name {
+
+                                    from {
+                                        /* starting styles */
+                                    }
+
+                                    to {
+                                        /* ending styles */
+                                    }
+
+                                }
+
+                            Example:
+
+                                @keyframes moveBox {
+
+                                    from {
+                                        transform: translateX(0);
+                                    }
+
+                                    to {
+                                        transform: translateX(200px);
+                                    }
+
+                                }
+
+                        ### Applying an Animation
+
+                            Creating @keyframes alone does not animate anything.
+
+                            You need to apply the animation to an element.
+
+                            .box{
+                                width: 50px;
+                                height: 50px;
+                                background-color: black;
+                                animation: moveBox 2s;
+                            }
+
+                            @keyframes moveBox{
+                                from{
+                                    transform: translateX(0);
+                                }
+                                to{
+                                    transform: translateY(200px);
+                                }
+                            }
+
+                            #### % keyframes
+
+                                Instead of from to,we can use the 
+
+                                    0%
+                                    25%
+                                    50%
+                                    75%
+                                    100%
+
+                                Example:
+
+                                    @keyframes moveBox {
+
+                                        0% {
+                                            transform: translateX(0);
+                                        }
+
+                                        50% {
+                                            transform: translateX(200px);
+                                        }
+
+                                        100% {
+                                            transform: translateX(0);
+                                        }
+
+                                    }
+
+                                    This allows much more control.
+
+                            #### Animation Duration
+
+                                .box {
+                                    animation-name: moveBox;
+                                    animation-duration: 2s;
+                                }
+                                
+                            #### Animation-iteration-count
+
+                                Controls how many times the animation runs.
+
+                                Once
+
+                                    animation-iteration-count: 1;
+                                
+                                Three
+
+                                    animation-iteration-count: 3;
+
+                                Forever
+
+                                    animation-iteration-count: infinite;
+
+                            #### animation-direction
+
+                                Controls the direction in which the animation plays.
+
+                                common valus are
+
+                                    normal
+                                    reverse
+                                    alternate
+                                    alternate-reverse
+
+                                normal
+
+                                    animation-direction: normal;
+
+                                    start ---> End
+
+                                reverse
+
+                                    animation-direction: reverse;
+
+                                    End ---> start
+
+                                alternative
+
+                                    animation-direction:alternative;
+
+                                    start ---> end ---> start ---> end
+
+                                    This is useful for continuous movement.
+
+                            #### animation-delay
+
+                                Waits before starting the animation.
+
+                                .box {
+                                    animation: moveBox 2s;
+                                    animation-delay: 1s;
+                                }
+
+                                The browser waits 1 second before starting.
+
+                            #### animation-timing-function
+
+                                Just like transitions, animations can use:
+
+                                    ease
+                                    linear
+                                    ease-in
+                                    ease-out
+                                    ease-in-out
+
+                                Example:    
+
+                                    .box {
+                                        animation: moveBox 2s ease-in-out;
+                                    }
+
+                            #### animation-fill-mode
+
+                                This controls what styles the element keeps before or after the animation.
+
+                                common values are:
+
+                                    -none
+                                    -forwards
+                                    -backwards
+
+                                The most useful value
+
+                                    animation-fill-mode: forwards;
+
+                                Example:    
+
+                                    .box {
+                                        animation: moveBox 2s forwards;
+                                    }
+
+                                    After the animation finishes, the element keeps the styles from the final keyframe.
+
+                                    Without forwards, it normally returns to its original CSS state.
+
+# CSS Transform
+
+    CSS Transform allows you to visually change the position, size, rotation, or shape of an element without changing the normal document flow.
+
+    Transforms can be used to:
+
+        -Move an element
+        -Increase or decrease its size
+        -Rotate an element
+        -Skew an element
+        -Create 3D effects
+
+        The property is transform:
+
+            .box {
+                transform: scale(1.2);
+            }
+
+            The box becomes 20% larger visually.
+
+    Why do we Use Transforms?
+
+        Transforms are commonly used for interactive and visual effects.
+
+        For Example,on an e-commerce Website:
+
+            .card {
+                transition: transform 0.3s ease;
+            }
+
+            .card:hover {
+                transform: translateY(-5px);
+            }
+
+            Here,
+
+                Here:
+
+                    transform performs the movement.
+                    transition makes the movement smooth.
+
+    ### Types of CSS Transforms
+
+        CSS transforms can be divided into:
+
+            2D Transforms
+                translate()
+                translateX()
+                translateY()
+                scale()
+                scaleX()
+                scaleY()
+                rotate()
+                skew()
+
+            3D Transforms
+                translateZ()
+                scaleZ()
+                rotateX()
+                rotateY()
+                rotateZ()
+                perspective()
+
+
+            translate()
+
+                translate() moves an element from its original position.
+
+                transform: translate(x, y);
+
+                for example:    
+
+                    .box {
+                        transform: translate(50px, 30px);
+                    }
+
+            translateX()
+
+                translateX() moves an element horizontally.
+
+                Syntax
+
+                    transform: translateX(value);
+
+                Example:    
+
+                    .box {
+                        transform: translateX(100px);
+                    }
+
+                The element moves 100px to the right.
+
+            
+            translateY()
+
+                translateY() moves a element vertically.
+
+                Syntax:
+
+                    transform:translateY(value);
+
+                Example:    
+
+                    .box {
+                        transform: translateY(50px);
+                    }
+
+                Moves the element 50px downward.
+
+                Negative values move it upward. 
+
+                    transform: translateY(-50px);
+
+            Scale()
+
+                scale() changes the size of a element.
+
+                Syntax:
+
+                    trasform:scale(value);
+
+                Example:    
+
+                    .box{
+                        transform:scale(1.5);
+                    }
+
+                the element become 1.5 times than its original size.
+
+                scale(!) ---> original size
+
+                scale(2) ---> Twice the size
+
+                scale(0.5) ---> Half the size
+
+            scaleX()
+
+                scale(x) changes the width visually.
+
+                .box {
+                    transform: scaleX(2);
+                }
+
+                The element become twice as wide.
+
+                It changes the horizontal scale,not the vertical scale.
+
+            scaleY()
+
+                scaleY() changes the height visually
+
+                .box {
+                    transform: scaleY(2);
+                }
+
+                The element become twice as tall.
+
+            rotate()
+
+                rotate() rotates an element around its center by default.
+
+                Syntax:
+
+                    transform: rotate(angle);
+
+                Example:    
+
+                    .box {
+                        transform: rotate(45deg);
+                    }
+
+                    The element rotates 45 degree clockwise.
+
+                Negative rotation
+
+                    transform: rotate(-45deg);
+
+                    negative value rotates in the opposite direction.
+
+                    45deg   → clockwise
+                    -45deg  → counter-clockwise
+
+            skew()
+
+                skew() slants an element.
+
+                Syntax:
+
+                    transform: skew(x, y);
+
+                Example:    
+
+                    .box {
+                        transform: skew(20deg, 10deg);
+                    }
+
+                    The element becomes visually slanted.
+
+                Skew is commonly used for:
+
+                    -Decorative designs
+                    -Modern banners
+                    -Buttons
+                    -Hero sections
+                    -Graphic effects
+
+            skewX()
+
+                skewX() slants the element horizontally.
+
+                .box {
+                    transform: skewX(20deg);
+                }
+
+                Only the x-axis is affected.
+
+            skewY()
+
+                skewY()  slants the element vertically.
+
+                .box {
+                    transform: skewY(20deg);
+                }
+
+                Only the Y-axis is affected.
+
+            Transform Origin
+
+                By default, transforms happen around the center of an element.
+
+                You can change the point around which the transformation happens using:                        
+
+                    transform-origin
+
+                Example:
+
+                    .box {
+                        transform-origin: left center;
+                        transform: rotate(20deg);
+                    }
+
+                Common Values:
+
+                    transform-origin: center;
+                    transform-origin: top;
+                    transform-origin: bottom;
+                    transform-origin: left;
+                    transform-origin: right;
+                    transform-origin: top left;
+
+# 3D Transforms
+
+    CSS also supports transformations in three dimensions.
+
+    Instead of only:
+
+        X → horizontal
+        Y → vertical
+
+    3D introduces:  
+
+        Z → depth
+
+        ## translateZ()
+
+            Moves an element along the Z-axis.
+
+            .box {
+                transform: translateZ(50px);
+            }
+
+            However, to visibly demonstrate 3D movement, you generally need a perspective context.
+
+
+        ## rotateX()
+
+            Rotates an element around the X-axis.
+
+            .box {
+                transform: rotateX(45deg);
+            }
+
+        ## rotateY()
+
+            Rotates an element around the Y-axis.
+
+            .box {
+                transform: rotateY(45deg);
+            }
+
+            This creates a left/right 3D rotation.
+
+            It is commonly used for:
+
+                Product cards
+                Flip cards
+                Image galleries
+                3D UI effects
+
+        ## rotateZ()
+
+            rotateZ() rotates around the Z-axis.
+
+            .box {
+                transform: rotateZ(45deg);
+            }
+
+            For normal 2D rotation, this produces a result similar to:
+
+                transform: rotate(45deg);
+
+# CSS Custom Properties (CSS Variables)
+
+    CSS Custom Properties, commonly called CSS Variables, allow us to store reusable CSS values in one place and use those values throughout a stylesheet.
+
+    Example:
+
+        button {
+            background-color: #333;
+        }
+
+        header {
+            background-color: #333;
+        }
+
+        footer {
+            background-color: #333;
+        }
+
+        instead of the above we can create a variable:
+
+            :root {
+                --main-color: #333;
+            }
+        
+        reuse it:
+
+            button {
+                background-color: var(--main-color);
+            }
+
+            header {
+                background-color: var(--main-color);
+            }
+
+            footer {
+                background-color: var(--main-color);
+            }
+
+            all elements using that variable can update automatically.
+
+    ## Why Do We Need CSS Variables?
+
+        a website has the same brand color in 20 different places.
+
+            .header {
+                background-color: #222;
+            }
+
+            .button {
+                background-color: #222;
+            }
+
+            .footer {
+                background-color: #222;
+            }
+
+            .navbar a {
+                color: #222;
+            }
+
+            if we use the variable: 
+
+                :root {
+                    --brand-color: #222;
+                }
+
+            Define once ---> Reuse everywhere ---> Change in one place
+
+    ## Creating a CSS Custom Property
+
+        CSS custom properties start with two hyphens(--).
+
+        Syntax:
+
+            --variable-name: value;
+
+        Example:    
+
+            --main-color: #333;
+
+            --font-size:20px;
+
+            --spacing:30px;
+
+        The variable name can be anything but meaningfull is recommeneded.
+
+        :root
+
+            :root {
+                --main-color: #333;
+                --text-color: #222;
+                --spacing: 20px;
+            }
+
+            :root represents the root element of the HTML document.
+
+            for an HTML document,the root element is <html>
+
+    ## CSS variable
+
+        To use a variable,We use:
+
+            var()
+
+            syntax: 
+
+                var(--variable-name)
+
+            Example:    
+
+                :root {
+                    --main-color: #333;
+                }
+
+                button {
+                    background-color: var(--main-color);
+                }
+
+    ## Variable can store Different Types of Values
+
+        CSS custom properties aren't limited to colors.
+
+        They can store many CSS Values.
+
+        Color:
+
+            :root {
+                --primary-color: #333;
+            }
+
+        Font Size
+
+            :root {
+                --heading-size: 32px;
+            }
+
+        Spacing:
+
+            :root {
+                --section-padding: 60px;
+            }
+
+        Border radius:
+
+            :root {
+                --border-radius: 10px;
+            }
+
+        Font Family
+
+            :root {
+                --main-font: Arial, sans-serif;
+            }
+
+    ## Using Multiple Variable
+
+        A real website usually has several variables.
+
+        :root {
+            --primary-color: #222;
+            --secondary-color: #f5f5f5;
+            --text-color: #333;
+            --white: #ffffff;
+
+            --spacing-small: 10px;
+            --spacing-medium: 20px;
+            --spacing-large: 50px;
+
+            --border-radius: 8px;
+        }
+
+        We can use them:
+
+            button {
+            background-color: var(--primary-color);
+            color: var(--white);
+            padding: var(--spacing-small) var(--spacing-medium);
+            border-radius: var(--border-radius);
+        }
+
+        This makes the CSS easier to maintain 
+        
+    ## Local CSS Variables
+
+        Variables don't always have to be global.
+
+        You can define a variable inside a specific element.
+
+        Example:    
+
+            .card {
+                --card-color: blue;
+            }
+
+            now we can use the --card-color inside another element.
+
+            .card {
+                --card-color: blue;
+            }
+
+            .card h2 {
+                color: var(--card-color);
+            }
+
+            .card a {
+                color: var(--card-color);
+            }    
+
+            The variable is available inside that element's scope.
+
+    ## Global vs Local Variables
+
+        Global variable
+
+            :root {
+                --main-color: blue;
+            }            
+
+            Available throughout the document.
+
+        Local Variable
+
+            .card {
+                --card-color: blue;
+            }
+
+        Primarily available within .card and its descendants.
+
+        A variable defined in :root can be used throughout.
+
+        A variable defined inside .card is scoped to that part of the document.
+
+    ## Changing a Variable Locally
+
+        One powerful feature is that a local value can override the inherited value.
+
+        Example:    
+
+            :root {
+                --button-color: black;
+            }
+
+            .card {
+                --button-color: blue;
+            }
+
+            .button {
+                background-color: var(--button-color);
+            }
+
+        A button inside .card will use
+
+            blue
+
+        While a button outside .card will use 
+
+            black
+
+        This is due to CSS variable participate in the cascade.
+
+
+    ## Fallback values
+
+        What happens if a variable doesn't exist?
+
+        You can provide a fallback value.
+
+        Syntax:
+
+            var(--variable, fallback-value)
+
+        Example:    
+
+            button {
+                background-color: var(--button-color, black);
+            }
+
+            This means:
+
+                Use --button-color if it exists. Otherwise use black.
+
+    ## CSS Variable with calc()
+
+        CSS Variable can also be used with calculations.
+
+        Example:    
+
+            :root {
+                --spacing: 20px;
+            }
+
+            .card {
+                padding: calc(var(--spacing) * 2);
+            }
+
+            The browser calculates:
+
+                20px * 2 = 40px
+
+            so padding:40px;
+
+
+    ## CSS Variable with clamp()
+
+        :root{
+            --heading-size:clamp(2rem,5vw,4rem);
+        }
+
+        h1{
+            font-size:var(--heading-size);
+        }
+
+        Now the responsive heading size is stored in one reusable variable.
+
+    ## Creating a Theme
+
+        One of the biggest real-world uses of CSS variables is theming.
+
+        For example, create a light theme:
+
+            :root {
+                --background-color: white;
+                --text-color: #222;
+                --primary-color: #333;
+            }
+
+        Then:
+
+            body {
+                background-color: var(--background-color);
+                color: var(--text-color);
+            }
+
+            button {
+                background-color: var(--primary-color);
+            }
+
+        For Dark Theme,we can override the variables;   
+
+            .dark-theme {
+                --background-color: #222;
+                --text-color: white;
+                --primary-color: #444;
+            }
+
+            HTML 
+
+                <body class="dark-theme">
+
+        Now all elements using the variables can change according to the theme.
+
+    ## Advantages of CSS Custom Properties
+
+        1. Reusability
+
+            Define once and use many times.
+
+        2. Easy maintenance
+
+            Change a value in one place.
+
+        3. Theming
+
+            Easy to create light and dark themes.
+
+        4. Consistency
+
+            The same color, spacing, or font size can be reused throughout the website.
+
+        5. Responsive design
+
+            Variables can work with:
+        
+        6. Component customization
+
+            Different components can override variables locally.
+    
+# Pseudo-Classes & Pseudo-elements
+
+    Introduction
+
+        CSS selectors normally target HTML elements directly:
+
+        p {
+            color: black;
+        }
+
+        But sometimes we need to style an element based on something more specific.
+
+        For Example:    
+
+            -Style a button when the mouse is over it.
+            -Style an input when the user clicks into it.
+            -Select every second product.
+            -Style the first paragraph differently.
+
+        CSS Provides two special selector mechanisms for this   
+
+            Pseudo-classes ---> Select an element based on its state or condition.
+
+            Pseudo-element ---> Select a part of an element or create cosmetic content.
+
+        Pseudo-classes: 
+
+            A pseudo-class is a CSS keyword that allows you to select an element based on a particular state, condition, or position.
+
+            Pseudo-classes start with a single colon (:).
+
+            Syntax:
+
+                selector:pseudo-class {
+                    property: value;
+                }
+
+            Example:
+
+                button:hover {
+                    background-color: black;
+                }
+
+            here hover is a pseudo-class.
+
+            Apply these styles when the user is hovering over the button.
+
+        Why we need Pseudo-classes?
+
+            Without pseudo-classes, CSS would have difficulty responding to user interaction or selecting elements based on their position.
+
+            button:hover {
+                background-color: black;
+            }
+
+            allows the website to respond to the user's mouse.
+
+            This is why pseudo-classes are heavily used in modern websites.
+
+        Common Pseudo-Classes are:
+
+            :hover
+            :focus
+            :active
+            :visited
+            :first-child
+            :last-child
+            :nth-child()
+            :not()
+            :checked
+            :disabled
+
+        :hover
+
+            :hover applies styles when the user's pointer is over an element.
+
+            Example:
+
+                <button>Shop Now</button>
+
+                button:hover {
+                    background-color: black;
+                    color: white;
+                }
+
+            Real time use:  
+
+                Very common for:
+
+                    -Buttons
+                    -Navigation links
+                    -Product cards
+                    -Images
+                    -Icons
+
+        :focus
+
+            :focus applies when an element receives keyboard focus or user interaction focus.
+
+            It is especially important for form elements.
+
+            Example:    
+
+                input:focus {
+                    border-color: black;
+                    outline: none;
+                }
+
+                <input type="text" placeholder="Enter your name">
+
+                The input receives focus.
+
+                Why is :focus important?
+
+                    It helps users understand:
+
+                "Which input am I currently using?"
+
+                    It is also important for keyboard accessibility.
+
+            :active
+
+                :active applies while an element is being activated.
+
+                Example:    
+
+                    button:active {
+                        transform: scale(0.95);
+                    }
+
+                When the user presses the button,This can create a button-press effect.
+
+            :visited
+
+                :visited applies to links that the user has already visited.
+
+                a:visited {
+                    color: purple;
+                }
+
+                <a href="https://example.com">Visit Website</a>
+
+                After the user visits that link, the browser can style it differently.
+
+                This is mainly useful for links.
+
+            :first-child
+
+                :first-child selects an element if it is the first child of its parent.
+
+                <div>
+                    <p>First paragraph</p>
+                    <p>Second paragraph</p>
+                    <p>Third paragraph</p>
+                </div>
+
+                p:first-child {
+                    color: red;
+                }
+
+                First paragraph ---> red
+                Second paragraph ---> normal
+                Third paragraph ---> normal
+
+                :first-child checks whether the element is the first child of its parent.
+
+            :last-child
+
+                :last-child selects an element if it is the last child of its parent.
+
+                p:last-child {
+                    color: blue;
+                }
+
+                <div>
+                    <p>First paragraph</p>
+                    <p>Second paragraph</p>
+                    <p>Last paragraph</p>
+                </div>
+
+                First paragraph
+                Second paragraph
+                Last paragraph ---> blue
+
+            :nth-child()
+
+                :nth-child() allows you to select an element based on its position among its siblings.
+
+                selector:nth-child(number) {
+                    property: value;
+                }
+
+                Example:    
+
+                    p:nth-child(2) {
+                        color: red;
+                    }
+
+                1 ---> First paragraph
+                2 ---> Second paragraph ---> selected
+                3 ---> Third paragraph
+
+            :nth-child(even)
+
+                We can select even-numbered children.
+
+                .product-card:nth-child(even) {
+                    background-color: #f5f5f5;
+                }
+
+                Product 1 ---> normal
+                Product 2 ---> selected
+                Product 3 ---> normal
+                Product 4 ---> selected
+                Product 5 ---> normal
+                Product 6 ---> selected
+
+                This is useful for creating alternating layouts.
+
+
+            :nth-child(odd)
+
+                Selects odd-numbered children.
+
+                .product-card:nth-child(odd) {
+                    background-color: #eeeeee;
+                }
+
+                1 ---> selected
+                2 ---> normal
+                3 ---> selected
+                4 ---> normal
+                5 ---> selected
+
+            
+            :not()
+
+                :not() selects elements that do not match a particular selector.
+
+                button:not(.primary) {
+                    background-color: gray;
+                }
+
+                <button class="primary">Buy Now</button>
+                <button>Cancel</button>
+                <button>Close</button>
+
+                Select buttons that do NOT have the .primary class.
+
+                The second and third buttons are selected.
+
+            :checked
+
+                :checked selects a checkbox or radio button when it is selected.
+
+                <input type="checkbox" id="terms">
+                <label for="terms">
+                    I agree to the terms
+                </label>
+
+                The pseudo-class becomes active when the checkbox is checked.
+
+            :disabled
+
+                :disabled selects disabled form controls.
+
+                <button disabled>
+                    Submit
+                </button>
+
+                button:disabled {
+                    opacity: 0.5;
+                    cursor: not-allowed;
+                }
+
+                This visually tells the user that the button cannot currently be used.
+
+# Pseudo-elements
+
+    A pseudo-element allows you to style a specific part of an element or create a cosmetic piece of content.
+
+    Pseudo-elements use two colons (::).
+
+        p::first-letter {
+            font-size: 30px;
+        }
+
+        This styles only the first letter of the paragraph.
+
+        Common Pseudo-elements
+
+            ::before
+            ::after
+            ::first-letter
+            ::first-line
+            ::selection
+
+        ::before
+
+            ::before creates a pseudo-element before the content of an element.
+
+            h2::before {
+                content: "★ ";
+            }
+
+            <h2>Featured Products</h2>
+
+            The star was not written in the HTML.
+
+            CSS created it.
+
+        ::after
+
+            ::after creates a pseudo-element after the content.
+
+            h2::after {
+                content: " bye";
+            }
+
+            <h2>Thank you</h2>
+
+            Thank you bye
+
+        ::first-letter
+
+            Selects the first letter of text.
+
+            Example:
+
+                p::first-letter {
+                    font-size: 40px;
+                    font-weight: bold;
+                }
+
+                <p>StyleHub is a modern fashion store.</p>
+
+               becomes larger---> S tyleHub is a modern fashion store.
+
+        
+        ::first-line
+        
+            p::first-line {
+                font-weight: bold;
+            }
+
+            Selects the first line of text.
+
+            The first line of the paragraph becomes bold.
+
+            The exact text included in the first line depends on the available width and screen size.
+
+        ::selection 
+
+            ::selection styles the text when the user highlights it.
+
+            Example:    
+
+                ::selection {
+                    background-color: black;
+                    color: white;
+                }
+
+# CSS Architecture
+
+    CSS Architecture is the way we organize and structure CSS Code in a project so that it remains clean,reusable,maintainable and predictable as the project grows.
+
+    In a small project, we can write CSS freely. But when a website has many pages and hundreds of elements, poorly organized CSS can cause style conflicts and style bleeding.
+
+    One popular methodology for organizing CSS is BEM. 
+
+    Problem:
+
+        <div class="card">
+            <h2>Product Name</h2>
+            <p>₹799</p>
+        </div>
+
+        .card h2 {
+            color: red;
+        }
+
+        <div class="card">
+            <h2>About Us</h2>
+        </div>
+
+        The same .card h2 rule may affect both cards.
+
+        As the project becomes larger, CSS can become difficult to control.
+
+        Common problems:
+
+            -Styles accidentally affect unrelated elements
+            -Class names become confusing
+            -Changing one component can break another
+            -CSS becomes difficult to reuse
+            -Developers are afraid to modify existing CSS
+
+            CSS architecture provides a system for organizing CSS.
+
+    BEM:    
+
+        BEM stands for:
+
+        Block ---> Element ---> Modifier
+
+        It is a naming methodology for creating CSS classes in a predictable way.
+
+        The basic structure is: 
+
+            -block
+            -block__element
+            -block--modifier
+
+        Example:
+
+            product
+            product__image
+            product__title
+            product__price
+            product--featured
+
+        Block:
+
+            A Block is an independent component or section of the UI.
+
+            Example:    
+
+                <div class="product"></div>
+
+            here product is the block.
+
+            Other Example:
+
+                navbar
+                button
+                card
+                product
+                footer
+                header
+
+            Example:    
+
+                <div class="product">
+                    Product information
+                </div>
+
+                .product {
+                    padding: 20px;
+                    border: 1px solid #ddd;
+                }
+
+        Element:    
+
+            An Element is a part of a block.
+
+            BEM users:
+
+                block__element
+
+                Two underscores __ are used between the block and element.
+
+            Example:    
+
+                <div class="product">
+
+                    <img class="product__image" src="product.jpg">
+
+                    <h2 class="product__title">
+                        Oversized T-Shirt
+                    </h2>
+
+                    <p class="product__price">
+                        ₹799
+                    </p>
+
+                </div>
+
+            product ---> Block
+            product__image ---> Element
+            product__title ---> Element
+            product__price ---> Element
+
+            CSS:    
+
+                .product {
+                    padding: 20px;
+                }
+
+                .product__image {
+                    width: 100%;
+                }
+
+                .product__title {
+                    font-size: 20px;
+                }
+
+                .product__price {
+                    font-weight: bold;
+                }
+
+        Modifier
+
+            A Modifier represents a variation or different state of a block or element.
+
+            block--modifier
+
+                Two hyphens -- are used for modifiers.
+
+            Example:    
+
+                Normal Feature  
+
+                    <div class="product">
+
+                Featured product
+
+                    <div class="product product--featured">
+
+                CSS
+
+                    .product {
+                        padding: 20px;
+                        border: 1px solid #ddd;
+                    }
+
+                    .product--featured {
+                        border: 2px solid black;
+                    }
+
+                    The second class modifies the appearance of the original block.
+
+        Element Modifier
+
+            We can also modify an element.
+
+            <p class="product__price product__price--sale">
+                ₹599
+            </p>
+
+            product       ---> Block
+            product__price ---> Element
+            product__price--sale ---> Modifier
+
+            .product__price {
+                font-size: 18px;
+            }
+
+            .product__price--sale {
+                color: red;
+            }
+
+# CSS Preprocessors & Frameworks
+
+    As CSS projects become larger, writing and maintaining CSS manually can become time-consuming. CSS preprocessors and CSS frameworks provide tools and features that can make CSS development faster and more organized.
+
+    Two popular approaches are:
+
+        -Sass — a CSS preprocessor
+        -Tailwind CSS — a utility-first CSS framework
+
+    # What are CSS Preprocessor?
+
+        A CSS preprocessor is a tool that allows developers to write CSS using additional features that are not available in traditional CSS.
+
+        The preprocessor then converts the code into normal CSS that browsers can understand.
+
+        The browser does not directly understand Sass.
+
+        It understands the CSS generated by Sass.
+
+    # What is Sass?
+
+        Sass stands for Syntactically Awesome Style Sheets.
+
+        Sass code is written in a specific file with a .scss or .sass extensions.
+
+        Helps developer to write more modular and reusable code,which can helps to reduce the amount of code needed and improve the maitainability of a project.
+
+            Sass is a CSS preprocessor that adds features such as:
+
+            Variables
+            Nesting
+            Mixins
+            Functions
+            Partial files
+            Imports/modules
+            Reusable styles
+            Mathematical operations
+
+            .sass extensions is used
+
+            Sass code is processed by a Sass compiler and converted into regular CSS, which the browser can understand.
+
+            ##What is SCSS?
+
+                SCSS stands for Sassy CSS.
+
+                SCSS is one of the two syntaxes of Sass.
+
+                SCSS uses the same curly braces {} and semicolons ; that are used in normal CSS.
+
+                example:
+
+                    $primary-color: blue;
+
+                    .button {
+                        background-color: $primary-color;
+                        color: white;
+                    }
+
+                    The above SCSS is compiled into CSS:
+
+                    .button {
+                        background-color: blue;
+                        color: white;
+                    }
+
+                    Because SCSS looks very similar to CSS, it is usually easier for CSS developers to learn.
+
+        # Sass Has Two Syntaxes
+
+            1. SCSS uses:
+
+                {} curly braces
+                ; semicolons
+                CSS-like syntax
+
+                example:
+
+                    .button {
+                        color: white;
+                        background-color: blue;
+                    }
+
+                SCSS is very close to normal CSS.
+
+                example
+
+                    .button {
+                        color: white;
+                    }
+
+                And the same structure of css
+
+                    .button {
+                        color: white;
+                    }
+
+                SCSS simply adds additional Sass features.
+
+            2. Indented Sass Syntax
+
+                The original Sass syntax uses indentation instead of {} and ;.
+
+                example:
+
+                    .button
+                        color: white
+                        background-color: blue
+
+                Here:
+
+                    {} are not used
+                    ; is not used
+                    Indentation defines the structure
+
+                    Therefore, indentation is very important in .sass files.
+
+        
+
+        # Sass Variable
+
+            :root {
+                --primary-color: #222;
+            }
+
+            Sass:
+
+                $primary-color: #222;
+                $text-color: white;
+
+                button {
+                    background-color: $primary-color;
+                    color: $text-color;
+                }
+
+            after compiling it becomes normal CSS
+
+                button {
+                    background-color: #222;
+                    color: white;
+                }
+
+        # Sass nesting
+
+            Normal css
+
+                button {
+                    background-color: #222;
+                    color: white;
+                }
+
+            Sass allows us to nest related s    electors:
+
+                .navbar {
+                display: flex;
+
+                    a {
+                        text-decoration: none;
+
+                        &:hover {
+                            color: red;
+                        }
+                    }
+                }
+
+            The & represents the parent selector.
+
+            .button {
+                &:hover {
+                    background-color: black;
+                }
+            }
+
+    # Sass Mixins
+
+        A mixin is a reusable group of CSS declarations.
+
+        button {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .card {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        using the mixin:    
+
+            @mixin center-content {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            }
+
+        reuse it 
+
+            button {
+                @include center-content;
+            }
+
+            .card {
+                @include center-content;
+            }
+
+    # Sass Function 
+
+        Sass provides functions that can perform calculations or manipulate values.
+
+        Example:    
+
+            $base-size: 16px;
+
+            .title {
+                font-size: $base-size * 2;
+            }
+
+            gives:  
+
+                .title {
+                    font-size: 32px;
+                }
+
+    # What is CSS Framework?    
+
+        A CSS framework is a collection of predefined CSS styles, utilities, components, or design patterns that help developers build interfaces faster.
+
+        Instead of creating every style from scratch, developers can use classes or components provided by the framework.
+
+        Examples include:
+
+            -Tailwind CSS
+            -Bootstrap
+            -Foundation
+            -Bulma
+
+        #Tailwind CSS
+
+            Tailwind CSS is a utility-first CSS framework.
+
+            Instead of creating a custom class such as:
+
+                .button {
+                    padding: 10px 20px;
+                    background-color: black;
+                    color: white;
+                }
+
+            Tailwind allows us to compose utility classes directly in HTML:
+
+                <button class="px-5 py-2 bg-black text-white">
+                    Buy Now
+                </button>
+
+            ## Utility-First CSS
+
+                Utility-first means using small classes that perform one specific styling task.
+
+                <div class="flex items-center justify-center">
+
+            ## Tailwind Responsive Design
+
+                Tailwind also provides responsive utility classes.
+
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4">
+
+                equal to
+
+                    .product-grid {
+                        display: grid;
+                        grid-template-columns: 1fr;
+                    }
+
+                    @media (min-width: 768px) {
+                        .product-grid {
+                            grid-template-columns: repeat(2, 1fr);
+                        }
+                    }
+
+                    @media (min-width: 1024px) {
+                        .product-grid {
+                            grid-template-columns: repeat(4, 1fr);
+                        }
+                    }
+
+                    Tailwind provides predefined utility classes so developers don't have to write all of this CSS manually.
+
+            ## Tailwind Hover States
+
+                Tailwind also provides utilities for states.
+
+                <button class="bg-black text-white hover:bg-gray-700">
+                    Shop Now
+                </button>
+
+                utility applies the background color when the user hovers over the button.
+
+                equal to
+
+                    button {
+                        background-color: black;
+                        color: white;
+                    }
+
+                    button:hover {
+                        background-color: #374151;
+                    }
+
+            ## Traditional CSS:
+
+                    .button {
+                        background-color: blue;
+                        color: white;
+                        padding: 10px 20px;
+                        border-radius: 5px;
+                    }
+
+                    <button class="button">Click Me</button>
+
+                Using the Tailwind
+
+                    <button class="bg-blue-500 px-5 py-2 text-white rounded">
+                        Click Me
+                    </button>
+
+                    bg-blue-500 ---> background color
+                    px-5 ---> horizontal padding
+                    py-2 ---> vertical padding
+                    text-white ---> text color
+                    rounded ---> border radius
+
+
+        # Colors
+
+            Tailwind provides utility classes for applying colors.
+
+            Text colors
+
+                <p class="text-red-500">Red Text</p>
+
+                <p class="text-blue-500">Blue Text</p>
+
+                <p class="text-green-500">Green Text</p>
+
+            
+            Background Color
+
+                <div class="bg-blue-500">
+                    Blue Background
+                </div>
 
 
 
-                                    
+        # Typography
+
+            Tailwind provides utility classes for controlling text size, weight, and alignment.
+
+            ## Font size
+
+                <h1 class="text-4xl">
+                    Large Heading
+                </h1>
+
+                <p class="text-lg">
+                    Large paragraph
+                </p>
+
+                <p class="text-sm">
+                    Small paragraph
+                </p>
+
+
+                Common values are:
+
+                    text-xs
+                    text-sm
+                    text-base
+                    text-lg
+                    text-xl
+                    text-2xl
+                    text-3xl
+                    text-4xl
+
+            ## Font Weight
+
+                <p class="font-normal">Normal</p>
+
+                <p class="font-semibold">Semi Bold</p>
+
+                <p class="font-bold">Bold</p>
+
+            ## Text Alignment
+
+                <p class="text-left">Left</p>
+
+                <p class="text-center">Center</p>
+
+                <p class="text-right">Right</p>
+
+            ## Padding
+
+                <div class="p-4">
+                    Content
+                </div>
+
+                Common Utilities are:
+
+                    p-4   ---> all sides
+                    px-4  ---> left + right
+                    py-4  ---> top + bottom
+                    pt-4  ---> top
+                    pb-4  ---> bottom
+                    pl-4  ---> left
+                    pr-4  ---> right
+
+            ## Margin
+
+                Margin creates space outside an element.
+
+                <div class="m-4">
+                    Content
+                </div>
+
+                Common utilities are:
+
+                    m-4   ---> all sides
+                    mx-4  ---> left + right
+                    my-4  ---> top + bottom
+                    mt-4  ---> top
+                    mb-4  ---> bottom
+                    ml-4  ---> left
+                    mr-4  ---> right
+
+            ## Width and Height
+
+                Tailwind provides utilities for controlling element dimensions.
+
+                <div class="w-full h-64">
+                    Box
+                </div>
+
+                w-full
+                w-1/2
+                w-screen
+                w-64
+
+            ## Flexbox
+
+                Tailwind provides utility classes for CSS Flexbox.
+
+                <div class="flex">
+                    <div>One</div>
+                    <div>Two</div>
+                    <div>Three</div>
+                </div>
+
+                class="flex"  === display: flex;
+
+                ## Direction    
+
+                    <div class="flex flex-row">
+
+                    <div class="flex flex-col">
+
+                    flex-col arranges items vertically.
+
+                    flex-row arranges items Horizontally.
+
+                ## Alignment
+
+                    <div class="flex items-center"> === align-items: center;
+
+                    <div class="flex justify-center"> ===  justify-content: center;
+
+                # Gap
+
+                    <div class="flex gap-4">
+
+                    gap-4 adds space between the flex items.
+
+
+                ## Common Flexbox utilities
+
+                    items-start
+                    items-center
+                    items-end
+
+                    justify-start
+                    justify-center
+                    justify-end
+                    justify-between
+                    justify-around
+                    justify-evenly
+
+            ## Grid
+
+                Tailwind also provides utilities for CSS Grid.
+
+                <div class="grid grid-cols-3 gap-4">
+
+                    <div>Product 1</div>
+                    <div>Product 2</div>
+                    <div>Product 3</div>
+
+                    <div>Product 4</div>
+                    <div>Product 5</div>
+                    <div>Product 6</div>
+
+                </div>
+
+                grid          ---> display: grid
+                grid-cols-3   ---> 3 columns
+                gap-4         ---> gap between items
+
+
+            ## Responsive Design
+
+                Tailwind uses responsive prefixes to apply styles at different screen sizes.
+
+                Common prefixes:    
+
+                    sm:
+                    md:
+                    lg:
+                    xl:
+                    2xl:
+
+                    <p class="text-sm md:text-lg lg:text-2xl">
+                        Responsive Text
+                    </p>
+
+                    here,
+
+                        Small screen  ---> text-sm
+                        Medium screen ---> text-lg
+                        Large screen  ---> text-2xl
+
+            ## Responsive Grid
+
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
+
+                here,
+
+                    Mobile  ---> 1 column
+                    Tablet  ---> 2 columns
+                    Desktop ---> 3 columns
+
+            ## Hover and Focus
+
+                Tailwind uses variants to style different element states.
+
+                Common varients:
+
+                    hover:
+                    focus:
+                    active:
+                    disabled:
+
+                Hover:
+
+                    <button class="bg-blue-500 hover:bg-blue-700">
+                        Buy Now
+                    </button>
+
+                    normally button in the color of blue-500,when we hover it becomes blue-700
+
+                Focus:  
+
+                    <input class="border focus:border-blue-500">
+
+                    When the input receives focus, its border becomes blue.
+
+            ## Border Radius
+
+                Tailwind provides utilities for rounded corners.
+
+                <div class="rounded">
+                    Box
+                </div>
+
+                Common values are:
+                    rounded-sm
+                    rounded
+                    rounded-lg
+                    rounded-xl
+                    rounded-full
+
+                <button class="rounded-lg">
+                    Login
+                </button>
+
+            # Box shadow
+
+                Tailwind provides shadow utilities.
+
+                <div class="shadow">
+                    Card
+                </div>
+
+                Common values are:  
+
+                    shadow-sm
+                    shadow
+                    shadow-md
+                    shadow-lg
+                    shadow-xl
+
+        # Borders
+
+            Tailwind provides utility classes to add and customize borders around elements.
+
+            Adding a Border
+
+                Use the border class.
+
+                <div class="border">
+                    Product Card
+                </div>
+
+                This adds a default border around the element.
+
+            ## Border Width
+
+                You can control the thickness of the border.
+
+                <div class="border">1px Border</div>
+
+                <div class="border-2">2px Border</div>
+
+                <div class="border-4">4px Border</div>
+
+                <div class="border-8">8px Border</div>
+
+            ## Border Color
+
+                Use border-{color}-{shade}.
+
+                    <div class="border border-red-500">
+                        Red Border
+                    </div>
+
+                    <div class="border border-blue-500">
+                        Blue Border
+                    </div>
+
+                    <div class="border border-gray-300">
+                        Gray Border
+                    </div>
+
+                Example:
+
+                    <div class="border-2 border-blue-500 p-4">
+                        Product Card
+                    </div>
+
+                    here,
+
+                        border-2 ---> border thickness
+                        border-blue-500 ---> border color
+                        p-4 ---> padding
+
+
+
+            ## Border Specific size
+
+                we can apply a border only to a particular side.
+
+                    <div class="border-t">Top Border</div>
+
+                    <div class="border-b">Bottom Border</div>
+
+                    <div class="border-l">Left Border</div>
+
+                    <div class="border-r">Right Border</div>
+
+                <div class="border-b border-gray-300 p-4">
+                    Product Information
+                </div>
+
+
+            ## Removing a Border
+
+                Use border-0
+
+                <div class="border-0">
+                    No Border
+                </div>
+
+                removes the border top:
+
+                    <div class="border border-t-0">
+                        Border except top
+                    </div>
+        
+        # Divide utilities
+
+            Tailwind also provides divide-* utilities for adding borders between child elements.
+
+            <div class="divide-y divide-gray-300">
+                <div class="p-4">Product 1</div>
+                <div class="p-4">Product 2</div>
+                <div class="p-4">Product 3</div>
+            </div>
+
+            use case:   
+
+                Real-time use
+
+                    -navigation menus
+                    -product lists
+                    -settings pages
+                    -order lists
+                    -tables

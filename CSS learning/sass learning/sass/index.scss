@@ -1,0 +1,139 @@
+@use "sass:map";
+@import "variable";
+@import "button";
+@import "colors";
+@import "utilities";
+
+
+body{
+    font-family: $font-family;
+    font-size: $base-font-size;
+
+}
+
+h2{
+    color: map.get($colors,"primary");
+    font-size: 20px+5px;
+}
+
+//nested 
+
+nav{
+    background-color: #222;
+    padding: 10px;
+    a{
+        text-decoration: none;
+        display: inline-block;
+        padding: 5px 10px;
+        color: #fff;
+        &:last-child{
+            color: #ffd000;
+        }
+        &:nth-child(2){
+            color: #4853b3;
+        }
+        &:hover{
+            color: #a7e007;
+        }
+
+
+    }
+}
+
+p{
+    line-height: 30px;
+    text-indent: 30px;
+    font-size: $font-size-md;
+    a{
+        text-decoration: none;
+        color: tomato;
+    }
+}
+
+//if - else
+$bg-color:#333;
+$text-color:#222;
+$width:300px;
+$height:300px;
+$is-div:true;
+
+.box-if{
+    width: $width;
+    height: $height;
+    padding: 10px;
+
+    // background-color: $bg-color;
+    
+    @if ($width >= 600px) {
+        color: #ffd000;
+    }
+    @else if ($width <= 300px) {
+        color: #11aeec;
+    }
+    @else if ($bg-color == $text-color) {
+        color: #fff;
+    }
+    @else {
+        color: #acbd8b;
+    }
+
+    @if($width>=300px and $height>=300px){
+    background-color: #11aeec;
+    }
+    @else{
+        background-color: palegreen;
+    }
+
+    @if($width>=300px or $height>=300px){
+        border-radius:35px;
+    }
+    @else{
+        border-radius:15px;
+    }
+
+    @if not $is-div{
+        display: none;
+    }
+
+
+}
+
+.hello{
+    background-color: #ffd000;
+}
+
+@function px_to_rem($px){
+    @return calc($px/26)+rem
+}
+
+@mixin text-style{
+    font-family: Arial;
+    font-size: px_to_rem(18);
+    line-height: 1.5;
+    color: #333;
+}
+
+
+.title{
+    @include text-style();
+    font-weight: bold;
+    text-transform: uppercase;
+}
+
+.para{
+    @include text-style();
+    font-style: italic;
+    text-align: justify;
+}
+
+//inheritance
+%extend-border{
+    border:1px solid #ccc;
+    padding:10px;
+    color: #333;
+    font-size: 1em;
+}
+
+.border{
+    @extend %extend-border;
+}

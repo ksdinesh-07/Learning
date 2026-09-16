@@ -1,0 +1,56 @@
+.sidebar {
+    position: relative;
+    left: -20px;
+    top: -$spacing-lg;
+    border-left: 2px solid black;
+
+    .advertisement {
+        width: 100%;
+        padding: $spacing-lg;
+
+        &--sidebar {
+            border-bottom: 1px solid $color-black;
+        }
+
+        img {
+            width: 100%;
+            height: auto;
+            display: block;
+        }
+    }
+
+
+    .trending {
+        padding: $spacing-lg;
+
+        &__title {
+            margin: 0 0 $spacing-lg;
+            font-family: Arial, sans-serif;
+            font-size: 28px;
+            font-weight: 700;
+            color: $color-black;
+        }
+
+        &__list {
+            display: flex;
+            flex-direction: column;
+            gap: $spacing-lg;
+        }
+
+        &__item {
+            margin: 0;
+            font-family: $fonts-serif;
+            font-size: 20px;
+            line-height: 1.25;
+        }
+
+        &__tag {
+            color: #35a853;
+            font-weight: 400;
+        }
+
+        &__text {
+            color: $color-black;
+        }
+    }
+}

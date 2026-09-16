@@ -1,0 +1,43 @@
+$colors:(
+    "primary":#0d6efd,
+    "success":#198754,
+    "danger":#ea162b,
+    "info":#0dcaf0,
+    "warning":#ffc107,
+);
+
+// each control directive
+
+@each $key,$val in $colors{
+    .text-#{$key}{color:$val;}
+    .bg-#{$key}{background-color: $val;}
+
+
+    //Light
+    @for $i from 1 through 3{
+        .text-#{$key}-light-#{$i}{
+            color:lighten($val,$i * 10);
+        }
+        .bg-#{$key}-light-#{$i}{
+            background-color: lighten($val, $i * 10);
+        }
+    }
+    
+    //Dark
+    @for $i from 1 through 3{
+        .text-#{$key}-Dark-#{$i}{
+            color:Darken($val,$i * 5);
+        }
+        .bg-#{$key}-Dark-#{$i}{
+            background-color: Darken($val, $i * 5);
+        }
+    }
+
+}
+
+
+
+
+.text-white{
+    color: #fff; 
+}
