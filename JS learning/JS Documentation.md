@@ -5867,6 +5867,1752 @@
         -throw
         -Custom errors
 
-    What is an Error?
+    
+    Error
+
+        An error occurs when JavaScript cannot execute an operation as expected.
+
+        example:
+
+            let result = 10 / 0;
+
+            This does not produce a JavaScript error because JavaScript allows division by zero and produces: Infinity
+
+                But this does produce an error:
+
+                    let user = null;
+                    console.log(user.name);
+
+            Output:
+
+                TypeError
+
+            The program cannot access name from null
+            
+    Need for Error Handling
+
+        The main purpose of error handling is:
+
+            To prevent unexpected errors from breaking the normal flow of an application and to handle those errors appropriately.
+
+        Without error handling
+
+                Application 
+                    ↓ 
+                Error occurs 
+                    ↓ 
+                Program stops 
+                    ↓ 
+            User gets unexpected behavior
+
+        With error Handling
+
+            Application 
+                ↓ 
+            Error occurs 
+                ↓ 
+            Error is caught 
+                ↓ 
+            Application handles it 
+                ↓ 
+            User receives proper response
+
+        Use case
+
+            Error handling is commonly used in:
+
+                -Login systems
+                -Payment processing
+                -API requests
+                -Database operations
+                -File processing
+                -Form validation
+                -User input
+                -Network requests
+
+            example 
+                
+                if a payment request fails, instead of the application crashing, we can show:
+
+                    Payment failed. Please try again.
+
+        ## try
+
+            try contains the code that might produce an error.
+
+            Syntax
+
+                try {
+                    // code that may cause an error
+                }
+
+            Example:
+
+                try {
+                    console.log(user.name);
+                }
+
+                If user does not exist, an error occurs.
+                We normally use it together with catch.
+
+        ## catch    
+
+            catch is used to handle an error that occurs inside the try block.
+
+            Syntax
+
+                try {
+                    // risky code
+                } catch (error) {
+                    // handle error
+                }
+
+            Example
+                
+                try {
+                    let user = null;
+
+                    console.log(user.name);
+                } catch (error) {
+                    console.log("Something went wrong");
+                }
+
+            Output
+
+                Something went wrong
+
+                The error occurred inside try, so JavaScript moved to catch.
+
+        ## the error object
+
+            The catch block receives an error object.
+
+                try {
+                    let user = null;
+                    console.log(user.name);
+                }
+                catch (error) {
+                    console.log(error);
+                }
+
+            The output contains information about the error.
+
+            We can access specific properties
+
+            ### error.name
+
+                try {
+                    let user = null;
+                    console.log(user.name);
+                } 
+                catch (error) {
+                    console.log(error.name);
+                }
+
+                Output:
+
+                    TypeError
+
+            ### error.message
+
+                try {
+                    let user = null;
+                    console.log(user.name);
+                } 
+                catch (error) {
+                    console.log(error.message);
+                }
+
+                output:
+
+                    Cannot read properties of null
+
+            ### error.stack
+
+                error.stack provides detailed information about where the error occurred.
+
+                    try {
+                        let user = null;
+                        console.log(user.name);
+                    } 
+                    catch (error) {
+                        console.log(error.stack);
+                    }
+
+                It is mainly useful for debugging
+
+        ## finally
+
+            finally contains code that always executes, whether an error occurs or not.
+
+            Syntax
+
+                try {
+                    // code
+                } 
+                catch (error) {
+                    // handle error
+                } 
+                finally {
+                    // always executes
+                }
+
+
+            Example
+
+                try {
+                    console.log("Processing");
+                } 
+                catch (error) {
+                    console.log("Error occurred");
+                } 
+                finally {
+                    console.log("Process finished");
+                }
+
+                Output:
+
+                    Processing
+                    Process finished
+
+            When an Error Occurs
+
+                try {
+                    let user = null;
+                    console.log(user.name);
+                } 
+                catch (error) {
+                    console.log("Error occurred");
+                } 
+                finally {
+                    console.log("Process finished");
+                }
+
+            Output:
+
+                Error occurred
+                Process finished
+
+                finally still runs.
+
+        ## Need of finally
+
+            finally is useful when some operation must be completed regardless of success or failure.
+
+            It can be used for:
+
+                -Closing a resource
+                -Hiding a loading indicator
+                -Ending a transaction process
+                -Cleaning temporary data
+                -Resetting application state
+
+            example:
+
+                Start payment
+                    ↓
+                Payment processing
+                    ↓
+                Success OR Error
+                    ↓
+                Stop loading indicator
+
+            The loading indicator should stop in both cases, so finally is useful.
+
+        ## throw
+
+            JavaScript allows us to manually create an error using throw.
+
+            Syntax
+
+                throw new Error("Error message");
+                
+            Example
+            
+                let age = 15;
+                if (age < 18) {
+                    throw new Error("User must be 18 or older");
+                }
+
+            Output:
+
+                Error: User must be 18 or older
+
+                Here, we intentionally created an error because the application rule was violated.
+
+        ## throw with try and catch
+
+            Usually, we use throw together with try and catch.
+
+                try {
+                    let age = 15;
+                    if (age < 18) {
+                        throw new Error("User must be 18 or older");
+                    }
+                    console.log("Registration allowed");
+                } 
+                catch (error) {
+                    console.log(error.message);
+                }
+
+            Output:
+
+                User must be 18 or older
+
+                    age = 15
+                    ↓
+                    age < 18
+                    ↓
+                    throw Error
+                    ↓
+                    catch
+                    ↓
+                    Display error message
 
         
+        ## why we need throw
+
+            throw is useful when the program needs to say:
+
+            "This situation is not acceptable, so I want to stop this operation and report an error."
+
+            example:
+
+                let quantity = 0;
+                if (quantity <= 0) {
+                    throw new Error("Quantity must be greater than 0");
+                }
+
+                This allows us to enforce application rules.
+
+            Use case
+
+                      Login
+                        ↓
+                    Invalid credentials
+                        ↓
+                    throw error
+                --------------------------
+                      Order
+                        ↓
+                    Quantity is 0
+                        ↓
+                    throw error
+                 --------------------------
+                    Payment
+                        ↓
+                    Amount is invalid
+                        ↓
+                    throw error
+
+        ## Custom Errors
+
+            A custom error is an error that we create ourselves to represent a specific problem in our application.
+
+            JavaScript provides the Error constructor:
+
+                new Error("message")
+
+            Example:
+
+                throw new Error("Invalid product price");
+
+            This is a custom error message created by the developer.
+
+        ## Creating a Custom Error Class
+
+            For larger applications, we can create our own error class.
+
+            Example
+
+                class OrderError extends Error {
+                    constructor(message) {
+                        super(message);
+                        this.name = "OrderError";
+                    }
+                }
+
+                try {
+                    throw new OrderError("Order quantity is invalid");
+                } 
+                catch (error) {
+                    console.log(error.name);
+                    console.log(error.message);
+                }
+
+            Output:
+
+                OrderError
+                Order quantity is invalid
+
+        ## Purpose of Custom Errors?    
+
+            Custom errors help us identify different types of problems clearly.
+                
+                an e-commerce application might have:
+
+                    -OrderError
+                    -PaymentError
+                    -AuthenticationError
+                    -ValidationError
+
+                Instead of receiving a generic: Error
+
+                we can identify what type of problem occurred.
+
+                Example:
+
+                    class PaymentError extends Error {
+                        constructor(message) {
+                            super(message);
+                            this.name = "PaymentError";
+                        }
+                    }
+
+                    Then:
+
+                        throw new PaymentError("Payment failed");
+
+                        The application can identify:
+
+                            PaymentError ---> Payment failed
+
+        ## Handling Different Errors
+
+            We can check the type of error inside catch.
+
+                try {
+                    let user = null;
+                    console.log(user.name);
+                } 
+                catch (error) {
+                    if (error instanceof TypeError) {
+                        console.log("Invalid object access");
+                    }
+                }
+
+            Output:
+
+                Invalid object access
+
+                This allows the application to respond differently to different errors.
+
+        ## Example -
+        
+            1.Product purchase
+
+            try {
+                let quantity = 0;
+                if (quantity <= 0) {
+                    throw new Error("Quantity must be greater than 0");
+                }
+                console.log("Order placed");
+            } 
+            catch (error) {
+                console.log(error.message);
+            } finally {
+                console.log("Order process completed");
+            }
+
+        Output:
+
+            Quantity must be greater than 0
+            Order process completed
+
+            2.requests product information from a server
+
+                try {
+                    let response = await fetch("/api/products");
+
+                    if (!response.ok) {
+                        throw new Error("Failed to load products");
+                    }
+
+                    let products = await response.json();
+
+                } 
+                catch (error) {
+                    console.log("Unable to load products");
+                }
+
+
+                Example:    
+
+                    the user might see:
+
+                    Unable to load products.
+                    Please try again.
+
+# JavaScript Events
+
+    An event is an action that happens in a web page.
+
+    Examples:
+
+        -User clicks a button
+        -User types in an input
+        -User submits a form
+        -Mouse moves over an element
+        -Keyboard key is pressed
+        -A page finishes loading
+
+        JavaScript can listen for these events and execute code when they happen.
+
+    ## Event
+
+        An event represents something that happened in the browser.
+
+            User clicks button
+                ↓
+              Event
+                ↓
+            JavaScript responds
+                ↓
+            Display message
+
+        Example:
+
+            <button>Buy Now</button>
+
+            When the user clicks the button:
+
+                JavaScript can detect this click and perform an action.
+
+    ## Why we need Event
+
+        To make web pages interactive by allowing JavaScript to respond to user actions and browser activities.
+
+        Events are used in:
+
+            -Add to cart buttons
+            -Login forms
+            -Search boxes
+            -Dropdown menus
+            -Navigation menus
+            -Like buttons
+            -Image sliders
+            -Form validation
+            -Popup windows
+
+        Common Js Events
+
+            Some commonly used events are:
+
+            Event	    --->    When it happens
+            click	    --->    User clicks an element
+            dblclick    --->    User double-clicks
+            mouseover    --->    Mouse moves over an element
+            mouseout    --->    Mouse leaves an element
+            keydown	    --->    Keyboard key is pressed
+            keyup	    --->    Keyboard key is released
+            input	    --->    Input value changes
+            change	    --->    Input/select value is changed
+            submit	    --->    Form is submitted
+            focus	    --->    Element receives focus
+            blur	    --->    Element loses focus
+            load	    --->    Resource/page finishes loading
+
+    ## Event Listener
+
+        An event listener tells JavaScript:
+
+            "Watch this element for a particular event, and run this function when that event happens."
+
+        We use:
+
+            addEventListener()
+
+        Example
+
+            HTML:
+
+                <button id="buyButton">Buy Now</button>
+
+            JavaScript:
+
+                let button = document.getElementById("buyButton");
+                button.addEventListener("click", function() {
+                    console.log("Product added");
+                });
+
+            When the user clicks:
+
+                Buy Now
+                    ↓
+                click event
+                    ↓
+                function runs
+                    ↓
+                "Product added"
+
+            Output:
+
+                Product added
+
+    ## Use of addEventListener()
+
+        addEventListener() allows us to attach JavaScript behavior to an element.
+
+        For example:
+
+            button.addEventListener("click", function() {
+                console.log("Clicked");
+            });
+
+        The browser waits for:
+
+            click
+
+        When the click occurs:
+
+            function() is executed.
+
+    ## USing the separate function  
+
+        Instead of writing the function directly, we can create a separate function.
+
+            function buyProduct() {
+                console.log("Product added to cart");
+            }
+
+            let button = document.getElementById("buyButton");
+            button.addEventListener("click", buyProduct);
+
+        We pass the function so that the browser can call it when the event happens.
+                                                            
+    ## Multiple Event Listeners
+
+        We can add different events to the same element.
+
+        let button = document.getElementById("buyButton");
+        button.addEventListener("click", function() {
+            console.log("Button clicked");
+        });
+        button.addEventListener("mouseover", function() {
+            console.log("Mouse over button");
+        });
+
+        Now the button responds to two different events.
+
+            Mouse over   --->      mouseover handler
+
+            Click    --->        click handler  
+
+    ## Event Object
+
+        When an event occurs, the browser creates an event object containing information about that event.
+
+            We can receive it as a parameter.
+
+        Example
+
+            button.addEventListener("click", function(event) {
+                console.log(event);
+            });
+
+        The event object contains information about:
+
+            -What event occurred
+            -Which element triggered it
+            -Mouse position
+            -Keyboard key
+            -Target element
+            -Other event details   
+
+        ### event.target
+
+            event.target tells us which element actually triggered the event.
+
+            Example:
+
+                <button id="buyButton">Buy Now</button>
+                let button = document.getElementById("buyButton");
+
+                button.addEventListener("click", function(event) {
+                    console.log(event.target);
+                });
+
+            The target is:
+
+                <button id="buyButton">Buy Now</button>
+
+                event.target  ---> Element that triggered the event               
+
+        ### event.type
+        
+            event.type tells us what type of event occurred.
+
+                button.addEventListener("click", function(event) {
+                    console.log(event.type);
+                });
+
+            Output:
+
+                click
+
+            For a keyboard event:
+
+                input.addEventListener("keydown", function(event) {
+                    console.log(event.type);
+                });
+
+            Output:
+
+                keydown
+
+        ### Keyboard Event Example
+
+            HTML:
+
+                <input id="username">
+
+            JavaScript:
+
+                let input = document.getElementById("username");
+                input.addEventListener("keydown", function(event) {
+                    console.log(event.key);
+                });
+
+            If the user presses: A
+
+                Output: ---> a
+
+            If the user presses: Enter
+
+                Output: ---> Enter
+
+            event.key ---> Which keyboard key was pressed
+
+        ### Preventing Default Behaviour
+
+            The event object provides:
+
+                event.preventDefault()
+
+                It prevents the browser's default action for an event.
+
+            Example
+
+                Suppose we have a form:
+
+                    <form id="loginForm">
+                        <button type="submit">Login</button>
+                    </form>
+
+                Normally, submitting the form may cause the browser to navigate/reload.
+
+                We can prevent that:
+
+                    let form = document.getElementById("loginForm");
+
+                    form.addEventListener("submit", function(event) {
+                        event.preventDefault();
+
+                        console.log("Form submitted without page reload");
+                    });
+
+                Use case
+
+                    This is commonly used when submitting forms through JavaScript
+
+        ### Event Bubbling
+
+            Event bubbling means an event starts at the element where it happened and then moves upward through its parent elements.
+
+                <div id="parent">
+                    <button id="child">Click</button>
+                </div>
+
+            When the button is clicked:
+
+                button
+                ↑
+                div
+                ↑
+                body
+                ↑
+                html
+                ↑
+                document
+
+            The event bubbles upward.
+
+            Example
+
+                let parent = document.getElementById("parent");
+                let child = document.getElementById("child");
+
+                child.addEventListener("click", function() {
+                    console.log("Button clicked");
+                });
+
+                parent.addEventListener("click", function() {
+                    console.log("Parent clicked");
+                });
+
+                Output
+
+                    When the button is clicked
+
+                    Button clicked
+                    Parent clicked
+
+
+                        Click button
+                            ↓
+                        Button handler runs
+                            ↓
+                        Event bubbles upward
+                            ↓
+                        Parent handler runs
+
+        ### Importance of Event Bubbling Matter
+
+            Event bubbling is important because events can be handled by parent elements.
+
+            This becomes especially useful when we have many child elements.
+
+            example:
+
+                <div id="products">
+                    <button>Product 1</button>
+                    <button>Product 2</button>
+                    <button>Product 3</button>
+                </div>
+
+            Instead of adding a listener to every button, we can use the parent.
+
+            This idea is called: Event Delegation
+
+        ### Event Delegation
+
+            Event delegation is a technique where we:
+
+            Attach one event listener to a parent element and use event bubbling to handle events from its child elements.
+
+            Instead of:
+
+                Button 1 ---> listener
+                Button 2 ---> listener
+                Button 3 ---> listener
+                Button 4 ---> listener
+
+            we use:
+
+                     Parent
+                        ↓
+                One event listener
+                    ↙    ↓    ↘
+             Button1 Button2 Button3
+
+            Example
+
+                HTML:
+
+                    <div id="products">
+                        <button>Product 1</button>
+                        <button>Product 2</button>
+                        <button>Product 3</button>
+                    </div>
+
+                JavaScript:
+
+                    let products = document.getElementById("products");
+
+                    products.addEventListener("click", function(event) {
+                        console.log(event.target.textContent);
+                    });
+
+                    If the user clicks: Product 2
+
+                Output
+
+                    Product 2
+
+                We attached only one listener to the parent
+
+        ### Working of Event Delegation Works
+
+            When the user clicks Product 2:
+
+                User clicks Product 2
+                        ↓
+                Click event occurs
+                        ↓
+                Event bubbles to #products
+                        ↓
+                Parent listener runs
+                        ↓
+                event.target identifies Product 2
+                        ↓
+                Product 2 is processed
+
+
+                event.target ---> Find which child was clicked 
+
+            Why Use Event Delevation
+
+                Event delegation is useful when there are many similar elements.
+
+                For example, an e-commerce page may have:
+
+                    Product 1 → Add to Cart
+                    Product 2 → Add to Cart
+                    Product 3 → Add to Cart
+                    Product 4 → Add to Cart
+                    Product 5 → Add to Cart
+
+                Instead of creating five separate listeners:
+
+                    Button 1 → listener
+                    Button 2 → listener
+                    Button 3 → listener
+                    Button 4 → listener
+                    Button 5 → listener
+
+                we can use:
+
+                    Product container
+                        ↓
+                    One listener
+                        ↓
+                    event.target
+                        ↓
+                    Identify clicked button
+
+                    This can reduce the number of event listeners we need to manage.
+
+        ### stopPropagation()
+
+            Sometimes we don't want an event to continue bubbling.
+
+            We can use:
+
+                event.stopPropagation();
+
+            Example:
+
+                child.addEventListener("click", function(event) {
+                    event.stopPropagation();
+
+                    console.log("Button clicked");
+                });
+
+                Now the event will not continue to the parent through normal bubbling.
+
+            Flow
+
+                Without stopPropagation():
+
+                  Button
+                    ↓
+                  Parent
+                    ↓
+                   Body
+                    ↓
+                Document
+
+            With stopPropagation():
+
+                Button ---> STOP
+
+        ### Example
+
+            online shopping cart.
+
+                <div id="cart">
+                    <button class="remove">Remove</button>
+                    <button class="remove">Remove</button>
+                    <button class="remove">Remove</button>
+                </div>
+
+                Instead of adding a listener to every remove button:
+
+                let cart = document.getElementById("cart");
+                cart.addEventListener("click", function(event) {
+                    if (event.target.classList.contains("remove")) {
+                        console.log("Remove product");
+                    }
+
+                });
+
+            Flow
+
+                User clicks Remove
+                        ↓
+                Click event
+                        ↓
+                Event bubbles to cart
+                        ↓
+                Cart listener executes
+                        ↓
+                event.target
+                        ↓
+                Find clicked Remove button
+                        ↓
+                Remove product
+
+                This pattern is very common in dynamic interfaces
+
+# DOM Manipulation  
+
+    DOM manipulation is used to change HTML elements, content, styles, attributes, and structure dynamically using JavaScript.
+
+    DOM (Document Object Model) is a representation of an HTML page that JavaScript can access and modify.
+    
+    When a browser loads HTML, it creates a DOM tree from the HTML elements.
+
+    Example:
+
+        <h1>Hello</h1>
+        <button>Buy Now</button>
+
+        The browser represents them as objects that JavaScript can access.
+
+        Document
+        │
+        ├── h1
+        │    └── "Hello"
+        │
+        └── button
+                └── "Buy Now"
+
+    ## Selecting Elements
+
+        Before JavaScript can change an HTML element, it usually needs to select or find the element.
+
+        The commonly used methods are:
+
+            getElementById()
+            querySelector()
+
+        ### getElementById()
+
+            getElementById() selects an HTML element using its id.
+
+            HTML
+
+                <h1 id="title">Old Product Name</h1>
+
+            JavaScript
+
+                const title = document.getElementById("title");
+                console.log(title);
+
+
+            We can change it:
+
+                title.textContent = "New Product Name";
+                Result
+
+            output
+
+                New Product Name
+
+            use case
+
+                Used when a page has a specific element that needs to be updated.
+
+                        Changing a user's name
+                        Updating cart count
+                        Showing an error message
+                        Updating product price
+                        Easy Memory
+
+                    getElementById() → Find an element by its ID
+
+        ### querySelector()
+
+            querySelector() selects the first element that matches a CSS selector.
+
+            HTML
+
+                <p class="price">₹499</p>
+
+            JavaScript
+
+                const price = document.querySelector(".price");
+                console.log(price);
+
+            Here:
+
+                ".price" ---> is a CSS class selector.
+
+            We can change it:
+
+                price.textContent = "₹399";
+                It can select different selectors
+
+                ID
+                document.querySelector("#title");
+
+                Class
+                document.querySelector(".price");
+
+                Tag
+                document.querySelector("button");
+
+                Attribute
+                document.querySelector("[type='email']");
+
+        ### createElement
+
+            createElement() creates a new HTML element using JavaScript.
+
+                Example:
+
+                    const product = document.createElement("div");
+
+                This creates:
+
+                    <div></div>
+
+                But it is not yet displayed on the page.
+                We can add content:
+
+                    product.textContent = "T-Shirt";
+
+                Now the element contains:
+
+                    <div>T-Shirt</div>
+
+                To display it, we add it to an existing element.
+
+                document.body.appendChild(product);
+
+                Complete code
+
+                HTML
+                    <div id="products"></div>
+
+                JS
+                    const product = document.createElement("div");
+                    product.textContent = "T-Shirt";
+                    document.getElementById("products").appendChild(product);
+                
+                Output      
+
+                    T-shirt
+
+                Use case
+
+                    createElement() is commonly used when applications need to create UI elements dynamically.
+
+                        -Adding a new product card
+                        -Creating a new cart item
+                        -Adding a notification
+                        -Creating a new table row
+                        -Displaying search results
+                        -Easy Memory
+
+        ### innerHTNL
+
+            innerHTML is used to get or change the HTML content inside an element.
+
+            HTML
+
+                <div id="message"></div>
+
+            JavaScript
+
+                const message = document.getElementById("message");
+                message.innerHTML = "<b>Order Placed</b>";
+
+            Creates
+
+                <div id="message">
+                    <b>Order Placed</b>
+                </div>
+
+        ### classList
+
+            classList is used to add, remove, toggle, or check CSS classes on an element.
+
+            Example:
+
+                <button id="menu">Menu</button>
+
+            Suppose CSS contains:
+
+                .active {
+                    background: black;
+                    color: white;
+                }
+
+            JavaScript can add the class:
+
+                const menu = document.getElementById("menu");
+                menu.classList.add("active");
+
+            Now the button has:
+
+                <button id="menu" class="active">
+                    Menu
+                </button>
+
+            Common Classlist methods
+
+                add()
+
+                    Adds a class.
+
+                    menu.classList.add("active");
+                    
+                remove()
+
+                    Removes a class.
+
+                    menu.classList.remove("active");
+                    
+                toggle()
+
+                    Adds the class if it does not exist and removes it if it already exists.
+
+                    menu.classList.toggle("active");
+
+                    This is very useful for things like:
+
+                        -Opening/closing menus
+                        -Dark mode
+                        -Showing/hiding elements
+                        -Active navigation links
+                        -Wishlist buttons
+
+                contains()
+
+                    Checks whether an element has a class.
+
+                    menu.classList.contains("active");
+
+                    Returns:     true or false
+
+        ## Attributes
+
+            HTML elements can have attributes that provide additional information.
+
+            Example:
+
+                <img id="productImage" src="shirt.jpg" alt="T-Shirt">
+
+            Here:
+
+                src  → attribute
+                alt  → attribute
+                id   → attribute
+
+                JavaScript can read and modify these attributes.
+
+            getAttribute()
+
+                Used to get an attribute value.
+
+                    const image = document.getElementById("productImage");
+                    console.log(image.getAttribute("src"));
+
+                Output:
+
+                    shirt.jpg
+        
+            setAttribute()
+
+                Used to create or change an attribute.
+
+                image.setAttribute("src", "new-shirt.jpg");
+
+                Now:
+
+                <img src="new-shirt.jpg">
+
+            removeAttribute()
+
+                Used to remove an attribute.
+
+                image.removeAttribute("alt");
+                
+            hasAttribute()
+
+                Checks whether an attribute exists.
+
+                image.hasAttribute("alt");
+
+                Returns ---> true or false
+
+        use case
+
+            e-commerce website displays a product image.
+
+            HTML
+
+                <img id="productImage" src="shirt.jpg" alt="T-Shirt">
+
+                <button id="changeImage">View Back</button>
+            
+            JavaScript
+                const image = document.getElementById("productImage");
+                const button = document.getElementById("changeImage");
+
+                button.addEventListener("click", function () {
+                    image.setAttribute("src", "shirt-back.jpg");
+                });
+
+            When the user clicks:
+
+                View Back
+                    ↓
+                JavaScript
+                    ↓
+                Change src attribute
+                    ↓
+                New product image displayed
+
+                This is DOM manipulation because JavaScript changes the existing HTML element dynamically.
+                                                    
+
+# BOM (Browser Object Model)
+
+    BOM (Browser Object Model) allows JavaScript to interact with the browser itself, rather than directly with the HTML elements of the page.
+
+    The main object in BOM is the window object.
+
+    BOM is used to interact with the browser window, URL, browser information, screen, and browser dialogs.
+
+        Browser
+        │
+        └── window
+                ├── alert()
+                ├── confirm()
+                ├── prompt()
+                ├── location
+                ├── navigator
+                └── screen
+
+        ### window
+
+            window represents the browser window or browser tab where the webpage is running.
+
+            Many browser features are available through window.
+
+            code:
+
+                window.alert("Welcome!");
+
+                alert("Welcome!");
+
+            Because alert() is a method of the window object, the browser allows you to omit window..
+
+            Examples
+
+                window.alert("Hello");
+                window.confirm("Are you sure?");
+                window.prompt("Enter your name");
+
+        ### alert()
+
+            alert() displays a simple message box to the user.
+
+            alert("Order placed successfully!");
+
+            The browser displays:
+
+            
+             Order placed successfully!   
+                                          
+                       [ OK ]            
+
+            The user must click OK to close it.
+
+            Real-Time Use
+
+            Used for simple notifications such as:
+
+            Showing an important message
+            Warning the user
+            Informing the user about an action
+
+            Example:
+
+            alert("Payment successful!");
+
+        ### confirm()
+
+            confirm() asks the user to confirm an action.
+
+            const result = confirm("Do you want to delete this item?");
+
+             Do you want to delete this     
+             item?                          
+                                            
+                   [ OK ]    [ Cancel ]     
+
+            The result is a Boolean value.
+
+            If the user clicks OK:
+
+                true
+
+            If the user clicks Cancel:
+
+                false
+
+            Example:
+
+                const result = confirm("Delete this product?");
+
+                if (result) {
+                    console.log("Product deleted");
+                }
+
+            Real-Time Use
+
+                Used when an action needs user confirmation.
+
+                    -Delete an item
+                    -Logout
+                    -Cancel an order
+                    -Clear a cart
+
+        ### prompt()
+
+            prompt() asks the user to enter some information.
+
+            const name = prompt("Enter your name");
+
+            The browser displays an input box.
+
+                Enter your name              
+                                          
+                    [ Dinesh]  
+                                          
+                   [ OK ]    [ Cancel ]   
+
+            If the user enters:
+
+                Dinesh
+
+            Then:
+
+                name   --->     "Dinesh"
+
+            Real-Time Use
+
+                prompt() can be used for simple input demonstrations, but modern websites usually use HTML forms or custom input fields for better user experience
+
+
+        ### location
+
+            location contains information about the current webpage URL.
+
+            It can also be used to navigate to another URL.
+
+            Example:
+
+                console.log(location.href);
+
+            This gives the current page URL.
+
+            example:
+
+                https://example.com/products
+
+            Changing the URL
+
+                location.href = "https://example.com/login";
+
+                The browser navigates to the new page.
+
+            You can also use:
+
+                location.reload();
+
+            This reloads the current page.
+
+            Use Case
+
+                location is commonly used for:
+
+                -Redirecting users
+                -Reading the current URL
+                -Reloading a page
+                -Working with URL parameters
+
+            Example
+
+                if (!userLoggedIn) {
+                    location.href = "/login";
+                }
+
+                User is not logged in ---> Redirect to login page
+
+        ### navigator
+
+            navigator provides information about the browser and the user's environment.
+
+            Example:
+
+                console.log(navigator.userAgent);
+
+            This can provide information about the browser environment.
+
+            Another commonly used property:
+
+                .log(navigator.onLine);
+
+            returns true ---> if the browser currently reports that it is online.
+
+            Or:
+
+            false ---> if it reports that it is offline.
+
+            Use cases:
+
+                navigator can be used for browser/device-related features such as:
+
+                    -Checking online/offline status
+                    -Accessing supported browser APIs
+                    -Detecting some browser environment information
+                    -Working with device-related browser capabilities
+
+            Example:
+
+                if (navigator.onLine) {
+                    console.log("Internet connection available");
+                } else {
+                    console.log("You are offline");
+                }
+
+        ### screen
+
+            screen provides information about the user's physical display screen.
+
+            Example:
+
+                console.log(screen.width);
+                console.log(screen.height);
+
+            This gives the screen dimensions in pixels.
+
+            For example:
+
+                Screen width  → 1920
+                Screen height → 1080
+
+            Use case
+
+                screen can be useful when applications need information about the display.
+
+            Examples:
+
+                -Full-screen applications
+                -Display-related calculations
+                -Presentations
+                -Kiosk applications
+
+# Timers
+
+    JavaScript timers allow us to run code after a certain amount of time or repeatedly at a fixed time interval.
+
+        JavaScript provides four commonly used timer methods:
+
+            setTimeout()
+            setInterval()
+            clearTimeout()
+            clearInterval()
+        
+        Main Purpose
+
+            Timers are used to delay code execution or run code repeatedly after a specific time interval.
+
+        ### setTimeout()
+
+            setTimeout() runs a function once after a specified amount of time.
+
+            Syntax
+
+                setTimeout(function, delay);
+
+                The delay is measured in milliseconds.
+                1000 milliseconds = 1 second
+        
+            Example
+
+                setTimeout(function () {
+                    console.log("Payment successful");
+                }, 3000);
+
+                The code waits for:
+
+                3 seconds
+                ↓
+                "Payment successful"
+
+                The function runs only once.
+
+            Use case
+
+                setTimeout() is commonly used for:
+
+                Showing a message temporarily
+                Delaying a notification
+                Redirecting after a message
+                Hiding a success message
+                Creating a delay before an action
+
+            Example
+
+                console.log("Order placed");
+
+                setTimeout(function () {
+                    console.log("Redirecting to orders...");
+                }, 2000);
+
+            Output:
+
+                Order placed
+                    ↓
+                Wait 2 seconds
+                    ↓
+                Redirecting to orders...
+                Easy Memory
+
+                setTimeout() → Run once after a delay
+
+        ### setInterval()
+
+            setInterval() runs a function repeatedly after a fixed amount of time.
+
+            Syntax
+            
+                setInterval(function, interval);
+
+            Example:
+
+                setInterval(function () {
+                    console.log("Checking order status...");
+                }, 5000);
+
+            The function runs:
+
+                5 seconds → Run
+                5 seconds → Run
+                5 seconds → Run
+                5 seconds → Run
+            ...
+
+                It continues until we stop it.
+
+            Use cases:
+
+                Digital clocks
+                Countdown timers
+                Checking status periodically
+                Updating dashboards
+                Refreshing information
+                Slideshow/carousel timing
+
+            Example:
+
+                setInterval(function () {
+                    console.log("Checking payment status...");
+                }, 3000);
+
+                This checks every 3 seconds.
+
+        ### clearTimeout()
+
+            clearTimeout() is used to cancel a setTimeout() before it runs.
+
+            To cancel a timeout, we first store its timer ID.
+
+                const timer = setTimeout(function () {
+                    console.log("Order cancelled");
+                }, 5000);
+
+            Now we can cancel it:
+
+                clearTimeout(timer);
+
+            The function will not execute if the timeout has not already fired.
+
+            Use case
+
+                Suppose a website shows:"Session expired in 5 minutes"
+
+                But the user becomes active again.
+
+                The application can cancel a previously scheduled action.
+
+                const timer = setTimeout(function () {
+                    console.log("Session expired");
+                }, 300000);
+
+                // User becomes active
+                clearTimeout(timer);
+
+        ### clearInterval()
+
+            clearInterval() is used to stop a repeating setInterval().
+
+            First, store the interval ID:
+
+                const timer = setInterval(function () {
+                    console.log("Checking status...");
+                }, 2000);
+
+            Then stop it:
+
+                clearInterval(timer);
+
+            After clearInterval() runs, the function stops repeating.
+
+            Use case
+
+                Suppose we have an order status checker:
+
+                const checker = setInterval(function () {
+                    console.log("Checking order status...");
+                }, 3000);
+
+                Once the order is delivered: clearInterval(checker);
+
+                Now the application stops checking.
+
+# ES6+ Features
+
+    ES6 stands for ECMAScript 2015. It introduced many important features that made JavaScript easier to write and maintain.
+
+        ES6+ means ES6 and the newer JavaScript features introduced after it.
+
+        Some commonly used features are:
+
+            let and const
+            Arrow functions
+            Template literals
+            Spread operator
+            Rest parameter
+            Destructuring
+            Modules
+
+        ES6+ features provide modern and cleaner ways to write, organize, and reuse JavaScript code.
+
+    let and const
+
+        let and const are used to create variables.
+        They replaced many common uses of the older var keyword.
+
+        let
+
+            Use let when the value of a variable needs to change.
+
+            let quantity = 1;
+            quantity = 2;
+
+            Here, the value changes from: 1 → 2
+        
+        Real-Time Example
+
+            A shopping cart quantity can change:
+
+            let quantity = 1;
+            quantity = quantity + 1;
+
+            Now: quantity = 2
