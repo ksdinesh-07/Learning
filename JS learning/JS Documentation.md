@@ -1666,7 +1666,7 @@
 
                             The object contains key-value pairs.
 
-                    Call Stack
+                    ## Call Stack
 
                         The Call Stack is a data structure used by the JavaScript engine to keep track of currently executing code and function calls.
 
@@ -1707,19 +1707,19 @@
 
     example:    
 
-        let a=10;
-        let b=5;
-        let result=a+b;
-        console.log(result);
+        let price = 1000;
+        let discount = 200;
+        let finalPrice = price - discount;
+        console.log(finalPrice);
 
     output
 
-        15
+        800
     
         here 10+5 
-        10 ---> operand
-        + ---> operator
-        5 ---> operand 
+        800 ---> operand
+        - ---> operator
+        200 ---> operand 
 
         JavaScript provides different types of operator for different purposes.
 
@@ -2241,7 +2241,7 @@
 
                 use case
 
-                    Permission systems can use individual bits to represent permissions such as read, write, and delete.
+                    Bitwise AND is commonly used to check whether a particular permission/flag is enabled.
 
             #### Bitwise OR |
 
@@ -2361,66 +2361,6 @@
                 -Cryptography-related implementations
                 -Image/pixel manipulation
                 -Performance-sensitive integer operations
-
-            Giving permission:
-            
-                Read ---> ON    1
-                Add  ---> ON    1
-                Delete ---> OFF 0
-
-                This is 110
-
-                110 decimal value is 6
-
-                user_permission = 6;
-
-            Assigning  a value
-
-                Read   ---> 001 → 1
-                Add    ---> 010 → 2
-                Delete ---> 100 → 4
-
-            Adding permission (OR)
-
-                Read ---> 001
-                Add  ---> 010 |
-                          011
-
-                011 in binary is 3
-
-            Checking the Add Permission
-
-                User permissions → 011 → 3
-                Add permission   → 010 → 2  &
-                                   010
-
-                add_permission=2
-
-                let user_permission=3;
-                let add_permission=2;
-                if (userPermissions & addPermission) {
-                    console.log("User can add products");
-                }
-
-                output
-
-                    User can add products
-
-            XOR ^
-
-                let userPermissions = 3;
-                let addPermission = 2;
-                userPermissions = userPermissions ^ addPermission;
-                console.log(userPermissions);
-
-                  011   ---> Read + Add
-                ^ 010   ---> Add
-                
-                  001
-
-            Output 
-
-                1
 
 
         ### Ternary Operator
@@ -2546,7 +2486,7 @@
             Syntax
 
                 if (condition) {
-                    // code to execute
+                    // code 
                 }
 
                 The basic flow is:
@@ -2562,24 +2502,24 @@
 
             Example
 
-                let age = 20;
-                if (age >= 18) {
-                    console.log("You are an adult");
+                let orderAmount = 1500;
+                if (orderAmount >= 500) {
+                    console.log("Free delivery");
                 }
 
             Output:
      
-                You are an adult
+                Free delivery
 
             is true, the code inside the if block executes.
 
             When the condition is false
 
-                let age = 15;
-                if (age >= 18) {
-                    console.log("You are an adult");
+                let orderAmount = 400;
+                if (orderAmount >= 500) {
+                    console.log("Free delivery");
                 }
-            
+
             Output
 
                 There is no output.
@@ -2590,14 +2530,13 @@
 
                 Example:
 
-                    if (age >= 18) {
-                        console.log("Adult");
-                        console.log("Access granted");
-                    }
+                let orderAmount = 400;
+                if (orderAmount >= 500) {
+                    console.log("Free delivery");
+                }
 
-                console.log("Adult");
-                console.log("Access granted");
-                Both statements belong to the if block.
+                console.log("Free delivery");
+                the statement belong to the if block.
 
                 If the condition is true, the entire block executes.
 
@@ -2615,16 +2554,16 @@
 
             Example
 
-                let age = 16;
-                if (age >= 18) {
-                    console.log("Adult");
+                let stock = 5;
+                if (stock > 0) {
+                    console.log("Product is available");
                 } else {
-                    console.log("Minor");
+                    console.log("Product is out of stock");
                 }
 
             Output:
 
-                Minor
+                Product is available
 
             use case
 
@@ -2718,28 +2657,28 @@
 
             Example
 
-                let day = 2;
+                let orderStatus = "shipped";
 
-                switch (day) {
-                    case 1:
-                        console.log("Monday");
+                switch (orderStatus) {
+                    case "pending":
+                        console.log("Your order is being processed");
                         break;
 
-                    case 2:
-                        console.log("Tuesday");
+                    case "shipped":
+                        console.log("Your order is on the way");
                         break;
 
-                    case 3:
-                        console.log("Wednesday");
+                    case "delivered":
+                        console.log("Your order has been delivered");
                         break;
 
                     default:
-                        console.log("Invalid day");
+                        console.log("Invalid order status");
                 }
 
             Output:
 
-                Tuesday
+                Your order is on the way
 
             Use case
 
@@ -2750,25 +2689,6 @@
                     delivered
                     cancelled
 
-                let status = "shipped"; 
-                switch (status) { 
-                    case "pending": 
-                        console.log("Order is waiting"); 
-                        break; 
-                    case "processing": 
-                        console.log("Order is being prepared"); break; 
-                    case "shipped": 
-                        console.log("Order is on the way"); 
-                        break; 
-                    case "delivered": 
-                        console.log("Order delivered"); 
-                        break; 
-                    case "cancelled": 
-                        console.log("Order cancelled"); 
-                        break; 
-                    default: 
-                        console.log("Unknown status"); 
-                    }
 
         ### Ternary Operator    
 
@@ -2800,27 +2720,26 @@
 
         to print numbers from 1 to 5:
 
-            console.log(1);
-            console.log(2);
-            console.log(3);
-            console.log(4);
-            console.log(5);
+            console.log("T-Shirt");
+            console.log("Jeans");
+            console.log("Shoes");
+            console.log("watch");
 
         Writing 1000 statements would be inefficient.
 
     A loop helps us to do:
 
-        for (let i = 1; i <= 5; i++) {
-            console.log(i);
+        let products = ["T-Shirt", "Jeans", "Shoes", "Watch"];
+        for (let i = 0; i < products.length; i++) {
+            console.log(products[i]);
         }
 
     Output:
 
-        1
-        2
-        3
-        4
-        5
+        T-Shirt
+        Jeans
+        Shoes
+        Watch
 
     Use case:   
 
@@ -2878,17 +2797,17 @@
 
         Example
 
-            for (let i = 1; i <= 5; i++) {
-                console.log(i);
+            let prices = [500, 300, 200];
+            let total = 0;
+
+            for (let i = 0; i < prices.length; i++) {
+                total = total + prices[i];
             }
+            console.log(total);
 
         Output:
 
-            1
-            2
-            3
-            4
-            5
+            1000
 
         Here,
 
@@ -2896,7 +2815,7 @@
             let i = 1;
 
             Condition
-            i <= 5;
+            i <= prices.length;
 
             Update
             i++;
@@ -2938,20 +2857,17 @@
 
         Example
 
-            let i = 1;
-            while (i <= 5) {
-                console.log(i);
-                i++;
+            let password = prompt("Enter your password:");
+            while (password !== "1234") {
+                console.log("Incorrect password");
+                password = prompt("Enter your password again:");
             }
-
+            console.log("Login successful");
+        
         Output:
 
-            1
-            2
-            3
-            4
-            5
-        
+            Login successful
+
         Use case:   
 
             To get valid input from user 
@@ -2971,19 +2887,15 @@
 
         Example
 
-            let i = 1;
+            let password;
             do {
-                console.log(i);
-                i++;
-            } while (i <= 5);
+                password = prompt("Enter your password:");
+            } while (password !== "1234");
+            console.log("Login successful");
 
         Output:
 
-            1
-            2
-            3
-            4
-            5
+            Enter your password:
 
         Use case
 
@@ -2998,23 +2910,25 @@
 
         Example
 
-            for (let i = 1; i <= 10; i++) {
-                if (i === 5) {
+            let products = ["T-Shirt", "Jeans", "Shoes", "Watch"];
+
+            for (let i = 0; i < products.length; i++) {
+                if (products[i] === "Shoes") {
+                    console.log("Product found");
                     break;
                 }
-                console.log(i);
+                console.log("Searching...");
             }
 
         Output:
 
-            1
-            2
-            3
-            4
+            Searching...
+            Searching...
+            Product found
 
         When:
 
-            i === 5
+            i === 2
             becomes true, JavaScript executes break and exits the loop.
 
     ## Continue Statement
@@ -3025,21 +2939,26 @@
 
         Example
 
-            for (let i = 1; i <= 5; i++) {
-                if (i === 3) {
-                    continue;
-                }
-                console.log(i);
+            let products = [
+            { name: "T-Shirt", stock: 5 },
+            { name: "Jeans", stock: 0 },
+            { name: "Shoes", stock: 3 }
+        ];
+
+        for (let i = 0; i < products.length; i++) {
+
+            if (products[i].stock === 0) {
+                continue;
             }
+
+            console.log(products[i].name);
+        }
 
         Output:
 
-            1
-            2
-            4
-            5
+            T-shirt
+            Shoes
 
-            When i becomes 3 skip the iteration
 
     ## for in loop
 
@@ -3229,11 +3148,11 @@
         Example
             
             //function is defined here.
-            function greet() {
-                console.log("Hello!");
+            function showWelcomeMessage() {
+                console.log("Welcome to Litorox");
             }
-
-            greet(); //function call
+            showWelcomeMessage();
+             //function call
 
     ## function Parameters
 
@@ -3245,21 +3164,22 @@
             function greet(name) {
                 console.log(`Hello ${name}`);
             }
-            greet("Dinesh") //is the argument
+            greet("Dinesh");
 
         Multiple Parameters
 
-            function add(a, b) { 
-                console.log(a + b); 
-            } 
-            
-            add(10, 20);
+            function calculateTotal(price, quantity) {
+                console.log(price * quantity);
+            }
+            calculateTotal(500, 2);            
              
-            here, 
-                a ---> parameter
-                b ---> parameter
-                10 ---> argument
-                20 ---> argument
+            here,
+
+                price    → parameter
+                quantity → parameter
+
+                500      → argument
+                2        → argument
 
     ## Return 
 
@@ -3267,39 +3187,28 @@
 
         Example
 
-            function add(a, b) {
-                return a + b;
+            function calculateTotal(price, quantity) {
+                return price * quantity;
             }
-
-            const result = add(10, 20);
-            console.log(result);
+            let total = calculateTotal(500, 2);
+            console.log(total);
 
         Output:
 
-            30
-        
+            1000
+
         console.log() ---> displays a value.
         return ---> sends a value back.
-
-        Example
-
-            function add(a, b) {
-                return a + b;
-            }
-
-            allows us to store and use the result
-
-            const result = add(10, 20);
 
     ## Function Expression
 
         A function expression creates a function and assigns it to a variable.
 
-            const greet = function() {
-                console.log("Hello");
+            const calculateDiscount = function (price, discount) {
+                return price - discount;
             };
-
-            greet();
+            let finalPrice = calculateDiscount(500, 50);
+            console.log(finalPrice);
 
         Here:
 
@@ -3307,15 +3216,7 @@
                 |
               function
 
-        Unlike a function declaration, the function is created as part of an expression and assigned to greet.
-
-        With Parameters
-
-            const add = function(a, b) {
-                return a + b;
-            };
-
-            console.log(add(10, 20));
+        Unlike a function declaration, the function is created as part of an expression and assigned .
 
     ## Arrow function
 
@@ -3323,15 +3224,17 @@
 
         Normal Function
 
-            function add(a, b) {
-                return a + b;
-            }
+        function welcome(name) {
+        console.log(`Welcome, ${name}`);
+        }
 
         Arrow Function
 
-            const add = (a, b) => {
-                return a + b;
+            const calculateTotal = (price, quantity) => {
+                return price * quantity;
             };
+            let total = calculateTotal(500, 2);
+            console.log(total);
 
 # Hoisting 
 
@@ -3478,17 +3381,17 @@
 
     4.Lexical Scope
 
-        JavaScript looks at where a function or block is written to determine which variables it can access.
+        A function can access variables based on where the function is written in the code, not where the function is called.
 
-            let name = "Dinesh";
-            function greet() {
-                console.log(name);
+            let storeName = "Litorox";
+            function showStore() {
+                console.log(storeName);
             }
-            greet();
+            showStore();
 
-            The greet() function is written inside the global scope.
+        Why can showStore() access storeName?
 
-            Therefore, it can access variables from its outer scope.
+            Because storeName is written in the outer scope where the function was created.
 
             let company = "Litorox"; 
             function outer() { 
@@ -3527,7 +3430,6 @@
 
         There are two variables named name:
 
-
         The inner name shadows the outer name.
 
         Therefore, inside greet(), JavaScript uses the local variable.
@@ -3559,44 +3461,8 @@
 
     ## Closures
 
-        A closure occurs when a function remembers and can access variables from its surrounding lexical scope even after the outer function has finished executing.
-
-        Example
-
-            function outer() {
-                let message = "Hello";
-                function inner() {
-                    console.log(message);
-                }
-                return inner;
-            }
-            const greet = outer();
-            greet();
-
-        Output:
-
-            Hello
-
-        Because inner() forms a closure over its surrounding scope.
-
-            outer()
-            │
-            ├── message = "Hello"
-            │
-            └── inner()
-                    │
-                    └── remembers message
-                            ↓
-                        return inner
-                            ↓
-                        const greet
-                            ↓
-                        greet()
-                            ↓
-                        "Hello"
-
-        The function inner() retains access to the variables from the scope where it was created.
-
+        A closure is created when a function remembers and can access variables from its outer scope, even after the outer function has finished executing.
+        
         Example
 
             Closures are commonly used to create private or persistent state.
@@ -4223,6 +4089,13 @@
 
             T-Shirt
             499             
+
+        
+        Also these are also works
+
+            console.log(Object.keys(product));
+            console.log(Object.values(product));
+            console.log(Object.entries(product));
 
     ## Adding new Property
 
@@ -5690,4 +5563,310 @@
 
                 45
 
-            
+        ### Formatting a Date
+
+            A Date object contains date information, but we often need to display it in a format that users can easily understand.
+
+            example:
+
+                2026-09-18
+
+                might need to be displayed as:
+
+                18/09/2026 or 18 September 2026
+
+                JavaScript provides several methods for formatting dates.
+
+        ### toDateString()
+
+            toDateString() returns only the date portion in a readable format.
+
+                let date = new Date();
+                console.log(date.toDateString());
+
+            output:
+
+                Fri Sep 18 2026 ---> It does not display the time.
+
+        ### toTimeString()
+
+            toTimeString() returns the time portion.
+
+                let date = new Date();
+                console.log(date.toTimeString());
+
+            output:
+
+                10:30:45 GMT+0530 (India Standard Time)
+
+        ### toISOString()
+
+            toISOString() converts a Date object into an ISO 8601 formatted string.
+
+                            YYYY-MM-DDTHH:mm:ss.sssZ
+
+                let date = new Date("2026-09-18T10:30:45Z");
+                console.log(date.toISOString());
+
+            Output:
+
+                2026-09-18T10:30:45.000Z
+
+            Use Case
+
+                ISO format is commonly used when sending dates between:
+
+                    Frontend
+                    ↓
+                    API
+                    ↓
+                    Backend
+                    ↓
+                    Database
+
+                example:
+
+                    2026-09-18T10:30:45.000Z ---> is easier for systems to process consistently.
+
+        ### toLocaleDateString()
+
+            toLocaleDateString() formats a date according to a locale.
+
+                let date = new Date();
+                console.log(date.toLocaleDateString());
+
+            output:
+
+                18/09/2026
+
+            The exact format depends on the user's locale and environment.
+
+                let date = new Date();
+                console.log(date.toLocaleDateString("en-IN"));
+
+            output:
+
+                18/09/2026
+
+            For an Indian application, en-IN can be useful for displaying dates in an Indian-friendly format.
+
+        ### toLocaleTimeString()
+
+            toLocaleTimeString() formats the time according to a locale.
+
+                let date = new Date();
+                console.log(date.toLocaleTimeString("en-IN"));
+
+            output:
+
+                10:30:45 am
+
+            The exact output can vary depending on the environment and options.
+
+        ### Custom Date Formatting
+
+            We can combine Date methods to create our own format.
+
+                let date = new Date("2026-09-18");
+                let day = date.getDate();
+                let month = date.getMonth() + 1;
+                let year = date.getFullYear();
+                console.log(`${day}/${month}/${year}`);
+
+            Output:
+
+                18/9/2026
+
+            We can add a leading zero if needed:
+
+                let day = String(date.getDate()).padStart(2, "0");
+                let month = String(date.getMonth() + 1).padStart(2, "0");
+                let year = date.getFullYear();
+                console.log(`${day}/${month}/${year}`);
+
+            Output:
+
+                18/09/2026
+
+        ### Timestamp
+
+            A timestamp represents a point in time as the number of milliseconds since January 1, 1970 UTC.
+
+                This starting point is called the:
+
+                Unix Epoch
+
+                example:
+
+                    January 1, 1970
+                        ↓
+                    Unix Epoch
+                        ↓
+                    Milliseconds counted from this point
+
+        ### Getting the Current Timestamp
+
+            We can use:
+
+                Date.now();
+
+            Example:
+
+                let timestamp = Date.now();
+                console.log(timestamp);
+
+            output:
+
+                1789704000000
+
+            The exact value changes continuously because it represents the current time.
+
+        ### getTime()
+
+            getTime() returns the timestamp of a Date object.
+
+                let date = new Date();
+                console.log(date.getTime());
+
+            output:
+
+                1789704000000
+
+            So:
+
+                Date.now() 
+                new Date().getTime()
+
+                both provide the current timestamp in milliseconds.
+                                
+        ### Timestamps Useful
+
+            Timestamps make it easy to compare and calculate time.
+
+            example:
+
+                Order placed
+                    ↓
+                10:00 AM
+
+                Order delivered
+                    ↓
+                12:00 PM
+
+            Instead of comparing formatted strings, we can compare timestamps.
+
+                Delivery timestamp  - Order timestamp = Time difference
+
+            Use Cases
+
+                Timestamps are commonly used for:
+
+                    -Order creation time
+                    -Login time
+                    -Last updated time
+                    -API responses
+                    -Database records
+                    -Expiration times
+                    -Session timeout
+                    -Comparing two dates
+
+        ### Comparing Dates
+
+            Date objects can be compared using their timestamps.
+
+                let date1 = new Date("2026-09-18");
+                let date2 = new Date("2026-09-20");
+                if (date1 < date2) {
+                    console.log("date1 is earlier");
+                }
+
+            Output:
+
+                date1 is earlier
+
+        ### Calculating Difference Between Dates
+
+                let start = new Date("2026-09-18");
+                let end = new Date("2026-09-20");
+                let difference = end - start;
+                console.log(difference);
+
+            The result is in milliseconds.
+
+            To convert milliseconds into days:
+
+                let days = difference / (1000 * 60 * 60 * 24);
+                console.log(days);
+
+            Output:
+
+                2
+
+        ### Setting Date Values
+
+            JavaScript also provides methods to change parts of a Date object.
+
+                setFullYear()
+                let date = new Date();
+                date.setFullYear(2030);
+                console.log(date.getFullYear());
+
+            Output:
+
+                2030
+                
+            #### setMonth()
+
+                let date = new Date();
+                date.setMonth(0);
+                console.log(date.getMonth());
+
+                Output:
+                    
+                    0   ---> represents January.
+
+            #### setDate()
+
+                let date = new Date();
+                date.setDate(25);
+                console.log(date.getDate());
+
+            Output:
+
+                25
+
+    ## Use cases
+
+        an e-commerce application storing when an order was placed.
+
+            let orderDate = new Date();
+            console.log(orderDate.toLocaleDateString("en-IN"));
+            console.log(orderDate.toLocaleTimeString("en-IN"));
+
+        output:
+
+            18/09/2026
+            10:30:45 am
+
+        We can also store a timestamp:
+
+            let orderTimestamp = orderDate.getTime();
+            console.log(orderTimestamp);
+
+        The formatted date/time is useful for displaying to the user, while the timestamp is useful for calculations and comparisons.
+
+## Error Handling
+
+    Error handling is used to detect, handle, and respond to errors without suddenly stopping the entire program.
+
+    The main concepts are:
+
+        -try
+        -catch
+        -finally
+        -throw
+        -Custom errors
+
+    What is an Error?
+
+        

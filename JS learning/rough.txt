@@ -1,0 +1,79 @@
+            Giving permission:
+            
+                Read ---> ON    1
+                Add  ---> ON    1
+                Delete ---> OFF 0
+
+                This is 110
+
+                110 decimal value is 6
+
+                user_permission = 6;
+
+            Assigning  a value
+
+                Read   ---> 001 → 1
+                Add    ---> 010 → 2
+                Delete ---> 100 → 4
+
+            Adding permission (OR)
+
+                Read ---> 001
+                Add  ---> 010 |
+                          011
+
+                011 in binary is 3
+
+            Checking the Add Permission
+
+                User permissions → 011 → 3
+                Add permission   → 010 → 2  &
+                                   010
+
+                add_permission=2
+
+                let user_permission=3;
+                let add_permission=2;
+                if (userPermissions & addPermission) {
+                    console.log("User can add products");
+                }
+
+                output
+
+                    User can add products
+
+                XOR ^
+
+                let userPermissions = 3;
+                let addPermission = 2;
+                userPermissions = userPermissions ^ addPermission;
+                console.log(userPermissions);
+
+                  011   ---> Read + Add
+                ^ 010   ---> Add
+                
+                  001
+
+            Output 
+
+                Read   ---> 001 → 1
+                Add    ---> 010 → 2
+                Delete ---> 100 → 4
+                
+                
+                Read
+
+                read & Write
+
+                read , write and Delete
+
+                read --- Delete 
+
+                001
+                010 &
+                ---
+                
+
+
+
+
