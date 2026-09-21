@@ -63,3 +63,35 @@ try{
     console.log('Error:',err);
     console.log(err.message)
 }
+
+const productPrice = 499;
+const stock = 5;
+const quantity = 2;
+const paymentSuccessful = true;
+
+try {
+    console.log("Processing order...");
+
+    if (quantity <= 0) {
+        throw new Error("Quantity must be greater than 0");
+    }
+
+    if (quantity > stock) {
+        throw new Error("Not enough stock available");
+    }
+
+    const total = productPrice * quantity;
+
+    if (!paymentSuccessful) {
+        throw new Error("Payment failed");
+    }
+
+    console.log(`Order placed successfully`);
+    console.log(`Total: ₹${total}`);
+}
+catch (error) {
+    console.log(`Order failed: ${error.message}`);
+}
+finally {
+    console.log("Order process completed");
+}

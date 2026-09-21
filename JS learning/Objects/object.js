@@ -41,7 +41,7 @@ person.color="blue";
 // console.log(person.contact_details.ph_no);
 
 
-document.getElementById('result').innerHTML=person.full_name();
+// document.getElementById('result').innerHTML=person.full_name();
 
 
 //object merging
@@ -123,4 +123,78 @@ let primary_color,secondary_color;
 })
 
 console.log(primary_color,secondary_color,other_values);
+
+const movieCatalog = [
+  {
+    title: "Inception",
+    director: "Christopher Nolan",
+    year: 2010,
+    genres: ["Sci-Fi", "Action", "Thriller"],
+    rating: 8.8,
+    cast: ["Leonardo DiCaprio", "Joseph Gordon-Levitt", "Elliot Page"]
+  },
+  {
+    title: "The Matrix",
+    director: "Lana Wachowski, Lilly Wachowski",
+    year: 1999,
+    genres: ["Sci-Fi", "Action"],
+    rating: 8.7,
+    cast: ["Keanu Reeves", "Laurence Fishburne", "Carrie-Anne Moss"]
+  },
+  {
+    title: "Interstellar",
+    director: "Christopher Nolan",
+    year: 2014,
+    genres: ["Sci-Fi", "Drama", "Adventure"],
+    rating: 8.6,
+    cast: ["Matthew McConaughey", "Anne Hathaway", "Jessica Chastain"],
+    show_title(){
+        return this.title;
+    }
+  }
+];
+
+
+//accessing
+
+//1 dot notation
+console.log(movieCatalog[0].title);
+
+//2 bracket notation
+console.log(movieCatalog[1]['title']);
+
+//methods
+console.log(movieCatalog[2].show_title());
+
+//destructuring
+
+const {title,year}=movieCatalog[0];
+console.log("destrucuring values:",title,year);
+
+//keys
+
+const keys=Object.keys(movieCatalog[0]);
+console.log(keys);
+
+//values
+
+const values=Object.values(movieCatalog[0]);
+console.log(values);
+
+//entries
+
+const entries=Object.entries(movieCatalog);
+console.log(entries);
+
+//length
+
+console.log(Object.keys(movieCatalog[0]).length);
+
+//for each
+
+Object.entries(movieCatalog[0]).forEach(([key,value])=>{
+    console.log(`${key}:,value`);
+})
+
+
 

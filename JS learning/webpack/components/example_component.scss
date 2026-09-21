@@ -1,0 +1,10 @@
+$bg-color:red;
+$text-color:rgb(158, 158, 147);
+
+.green-button{
+   color:$text-color;
+   background-color: $bg-color;
+   outline: none;
+   padding: 7px 15 px;
+   font-size: 20px; 
+}

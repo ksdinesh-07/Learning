@@ -3110,19 +3110,23 @@
 
     Need for function:
 
-        console.log("Welcome, Dinesh");
-        console.log("Welcome, Arun");
-        console.log("Welcome, Priya");
-
+        const total1 = 499 * 2;
+        const total2 = 799 * 3;
+        const total3 = 299 * 4;
+        
     A function allows us to reuse the logic:
 
-    function welcome(name) {
-        console.log(`Welcome, ${name}`);
-    }
+        function calculateTotal(price, quantity) {
+            return price * quantity;
+        }
+        const total = calculateTotal(499, 2);
+        console.log("Total:", total);
 
-    welcome("Dinesh");
-    welcome("Arun");
-    welcome("Priya");
+    we can resue them 
+
+        calculateTotal(499, 2);
+        calculateTotal(799, 3);
+        calculateTotal(299, 4);
 
     Real-Time Use Cases        
 
@@ -3175,11 +3179,11 @@
              
             here,
 
-                price    → parameter
-                quantity → parameter
+                price    ---> parameter
+                quantity ---> parameter
 
-                500      → argument
-                2        → argument
+                500      ---> argument
+                2        ---> argument
 
     ## Return 
 
@@ -3216,23 +3220,22 @@
                 |
               function
 
-        Unlike a function declaration, the function is created as part of an expression and assigned .
-
     ## Arrow function
 
         An arrow function is a shorter syntax for writing functions.
 
         Normal Function
 
-        function welcome(name) {
-        console.log(`Welcome, ${name}`);
-        }
+            function welcome(name) {
+            console.log(`Welcome, ${name}`);
+            }
 
         Arrow Function
 
             const calculateTotal = (price, quantity) => {
                 return price * quantity;
             };
+
             let total = calculateTotal(500, 2);
             console.log(total);
 
@@ -3501,12 +3504,9 @@
         Use case
 
             Counters
-            Data encapsulation
             Maintaining state
             Event handlers
             Callbacks
-            Function factories
-            Private variables
             Timers
             Maintaining configuration inside functions
 
@@ -4386,9 +4386,9 @@
 
         Now:
 
-        console.log(name);
-        console.log(email);
-        console.log(department);
+            console.log(name);
+            console.log(email);
+            console.log(department);
 
         This makes code easier to read, especially when working with API responses.
 
@@ -4489,7 +4489,7 @@
 
             This is useful when an application needs to process an object's information dynamically
 
-    ## Strings  
+# Strings  
 
         A string is a data type used to store text.
 
@@ -4583,16 +4583,17 @@
 
             D i n e s h _ K S
             1 2 3 4 5 6 7 8 9
-            Real-time use
+                
+        Real-time use
 
-        Use cases:  
+            Use cases:  
 
-            length can be used to check whether a username has an acceptable number of characters.
+                length can be used to check whether a username has an acceptable number of characters.
 
-            let username = "Dinesh";
-            if (username.length >= 5) {
-                console.log("Valid username");
-            }
+                let username = "Dinesh";
+                if (username.length >= 5) {
+                    console.log("Valid username");
+                }
 
         Output:
 
@@ -5013,9 +5014,9 @@
 
                     T-S
 
-    ## Numbers and Math
+# Numbers and Math
 
-        JavaScript Number Methods
+    JavaScript Number Methods
 
         JavaScript provides several built-in methods to convert, check, format, and perform calculations with numbers.
 
@@ -5368,9 +5369,9 @@
 
                 8
 
-    ## Date Object
+# Date Object
 
-        The JavaScript Date object is used to work with dates and times.
+    The JavaScript Date object is used to work with dates and times.
 
         It can be used to:
 
@@ -5389,10 +5390,10 @@
             let today = new Date();
             console.log(today);
 
-            Possible output:
+            output:
 
-            Fri Sep 1 2023 01:22:00 GMT+0530
-
+                2026-09-20T16:44:00.800Z
+        
         ### Creating a Date
 
             We use the new Date() constructor to create a Date object.
@@ -5401,7 +5402,6 @@
 
                 let date = new Date();
                 console.log(date);
-
 
             Specific Date
 
@@ -5907,15 +5907,15 @@
 
         With error Handling
 
-            Application 
-                ↓ 
-            Error occurs 
-                ↓ 
-            Error is caught 
-                ↓ 
-            Application handles it 
-                ↓ 
-            User receives proper response
+                Application 
+                    ↓ 
+                Error occurs 
+                    ↓ 
+                Error is caught 
+                    ↓ 
+                Application handles it 
+                    ↓ 
+                User receives proper response
 
         Use case
 
@@ -7616,3 +7616,2565 @@
             quantity = quantity + 1;
 
             Now: quantity = 2
+
+        const
+
+            Use const when the variable should not be reassigned.
+
+                const price = 499;
+                price = 599;
+
+            This is not allowed,because price was declared using const.
+
+            Example
+
+                A product ID usually does not change:
+
+                const productId = 101;
+
+# Arrow Functions
+
+    An arrow function is a shorter way to write a function.
+
+    Normal Function
+
+        function calculateTotal(price, quantity) {
+            return price * quantity;
+        }
+
+    Arrow Function
+
+        const calculateTotal = (price, quantity) => {
+            return price * quantity;
+        };
+
+    Both perform the same calculation.
+
+    use case
+
+        Calculate an order total:
+
+            const total = (499, 2) => 499 * 2;
+
+        A more useful form:
+
+            const calculateTotal = (price, quantity) => price * quantity;
+            console.log(calculateTotal(499, 2));
+
+        Output:
+
+            998
+
+        They are commonly used with:
+
+            map()
+            filter()
+            reduce()
+            Event handlers
+            Callbacks
+
+        Example:
+
+            const prices = [499, 799, 999];
+            const discounted = prices.map(price => price - 50);
+
+    ## Template Literals
+
+        Template literals provide an easier way to create strings containing variables and expressions.
+
+        They use backticks: `
+
+        instead of normal quotes.
+
+        Normal String
+
+            const name = "Dinesh";
+            console.log("Welcome " + name);
+
+        Template Literal
+
+            const name = "Dinesh";
+            console.log(`Welcome ${name}`);
+
+        Output:
+
+            Welcome Dinesh
+
+        use case
+
+            Displaying an order message:
+
+                const product = "T-Shirt";
+                const price = 499;
+                const message = `You purchased ${product} for ₹${price}`;
+                console.log(message);
+
+            Output:
+
+                You purchased T-Shirt for ₹499
+
+            calculation inside ${}
+
+                const price = 499;
+                const quantity = 2;
+                console.log(`Total: ₹${price * quantity}`);
+
+            Output:
+
+                Total: ₹998
+
+    ## spread Operator
+
+        The spread operator uses three dots: ...
+        It is used to expand the values of an array or object.
+
+        Spread with Arrays
+
+            Suppose we have:
+
+                const first = ["T-Shirt", "Jeans"];
+
+                We can create another array containing those values:
+
+                const products = [...first, "Shoes"];
+
+            Result:
+
+                ["T-Shirt", "Jeans", "Shoes"]
+
+        Spread with Objects
+
+            const user = {
+                name: "Dinesh",
+                city: "Coimbatore"
+            };
+
+            const updatedUser = {
+                ...user,
+                age: 21
+            };
+
+            Result:
+
+                {
+                    name: "Dinesh",
+                    city: "Coimbatore",
+                    age: 21
+                }
+
+    ## Rest Parameter (...)
+
+        The rest parameter also uses three dots: ...
+        But its purpose is different from spread.
+
+        Rest is used to collect multiple values into an array.
+
+        Example
+
+            function calculateTotal(...prices) {
+                console.log(prices);
+            }
+
+        Call:
+
+            calculateTotal(499, 799, 999);
+
+        The prices variable becomes:
+
+            [499, 799, 999]
+
+        Now we can calculate:
+
+            function calculateTotal(...prices) {
+                return prices.reduce((total, price) => total + price, 0);
+            }
+
+            console.log(calculateTotal(499, 799, 999));
+
+        Output:
+
+            2297
+
+        use case
+
+            Rest is useful when the number of values is unknown.
+
+                function addProducts(...products) {
+                    console.log(products);
+                }
+
+                addProducts("T-Shirt", "Jeans", "Shoes");
+
+                The function receives all products as one array.
+
+    ## Destructuring
+
+        Destructuring allows us to extract values from arrays or objects and store them in variables easily.
+
+        Object Destructuring
+
+            const user = { name: "Dinesh", age: 21 };
+
+        Without destructuring:
+
+            const name = user.name;
+            const age = user.age;
+
+            With destructuring:
+
+                const { name, age } = user;
+
+            Now:
+
+                name → "Dinesh"
+                age  → 21
+
+            Real-Time Use
+
+                When receiving user information:
+
+                const user = {
+                    name: "Dinesh",
+                    email: "dinesh@example.com"
+                };
+
+                const { name, email } = user;
+                console.log(name);
+                console.log(email);
+
+        Array Destructuring
+
+            Destructuring can also be used with arrays.
+
+            const products = ["T-Shirt", "Jeans", "Shoes"];
+            const [first, second, third] = products;
+
+            Now:
+
+                first  ---> "T-Shirt"
+                second ---> "Jeans"
+                third  ---> "Shoes"
+
+            Array destructuring works based on position.
+
+    ## Modules
+
+        Modules allow us to split JavaScript code into separate files and reuse code between those files.
+
+        Instead of putting the entire application into one large JavaScript file:
+
+        app.js
+
+        we can organize it:
+
+            src/
+            │
+            ├── products.js
+            ├── cart.js
+            ├── payment.js
+            └── app.js
+
+        Each file can contain related functionality.
+
+        export
+
+            Suppose products.js contains:
+
+                export const productName = "T-Shirt";
+
+            We are making productName available to another file.
+
+        import
+
+            In app.js:
+
+                import { productName } from "./products.js";
+                console.log(productName);
+
+            Output:
+
+                T-Shirt
+
+            The flow is:
+
+                products.js
+                    │
+                    │ export
+                    ↓
+                productName
+                    │
+                    │ import
+                    ↓
+                app.js
+
+        Main Benefits
+        
+            Organizes code
+            Makes code easier to maintain
+            Allows code reuse
+            Prevents unnecessary global variables
+            Makes large applications easier to manage
+
+# Modules
+
+    A module is a separate JavaScript file that contains related code.
+
+        Instead of putting all JavaScript code into one large file, we can divide it into multiple files.
+
+    Example
+
+        project/
+        │
+        ├── products.js
+        ├── cart.js
+        └── main.js
+
+    Each file can contain a specific part of the application.
+
+        products.js → product-related code
+        cart.js     → cart-related code
+        main.js     → application entry point
+       
+    Main purpose
+
+        Modules help divide JavaScript code into smaller, reusable files.
+
+        One file can become very large and difficult to maintain.
+
+            With modules:
+
+            products.js → products
+            cart.js     → cart
+            users.js    → users
+            payment.js  → payment
+            orders.js   → orders
+
+        Now each file has a specific responsibility.
+
+    ## Export
+
+        export is used to make code available outside a module.
+
+        products.js
+
+            export const productName = "T-Shirt";
+
+        The variable can now be used by another JavaScript file.
+
+    ## Named Export
+
+        A named export exports something using its name.
+
+            products.js
+
+            export const productName = "T-Shirt";
+            export const price = 499;
+
+        Here we exported two values:
+
+            productName
+            price
+
+    ## import
+
+        import is used to bring exported code into another module.
+
+        main.js
+
+            import { productName, price } from "./products.js";
+
+            console.log(productName);
+            console.log(price);
+
+        Output:
+
+            T-Shirt
+            499
+
+    ## import with Alias
+
+        Sometimes we want to use a different name inside the current file.
+
+            import { productName as name } from "./products.js";
+
+            console.log(name);
+
+        Here:
+
+            productName ---> exported name
+            name        ---> local name
+
+    ## Default Export   
+
+        A module can also have a default export.
+
+        A default export is normally used when a file has one main thing that it provides.
+
+        product.js
+
+            const product = {
+            name: "T-Shirt",
+            price: 499
+            };
+
+            export default product;
+
+        Now we can import it:
+
+        main.js
+
+            import product from "./product.js";
+
+            console.log(product.name);
+            console.log(product.price);
+
+        Output:
+
+            T-Shirt
+            499
+
+    ## Named export
+        export const price = 499;
+
+        Import:
+
+        import { price } from "./products.js";
+        
+    ## Default export
+        export default product;
+
+        Import:
+
+        import product from "./product.js";
+
+    ## Module bundler
+
+        A module bundler takes many modules and processes them into files that can be efficiently used by the application.
+
+        Need for bundlers
+
+            In a small application: 5 JavaScript files may be easy to manage.
+
+            In a large application:
+
+                100+ modules
+                CSS
+                images
+                fonts
+                JavaScript
+                third-party packages
+
+            Managing everything manually becomes difficult.
+
+            A bundler can help with things such as:
+
+                Modules
+                ↓
+                Dependency analysis
+                ↓
+                Build
+                ↓
+                Optimized application files
+
+            It can also support features such as:
+
+                dependency handling
+                code transformation
+                minification
+                asset processing
+                code splitting
+                development builds
+
+    ## Webpack
+
+        Webpack is a JavaScript module bundler.
+
+            It analyzes the application's dependency graph and builds output files.
+
+            For example:
+
+                main.js
+                ↓
+                products.js
+                cart.js
+                user.js
+                payment.js
+                ↓
+                Webpack
+                ↓
+                Build output
+
+            Webpack has been widely used for large JavaScript applications and has a highly configurable build system.
+
+    ## vite
+
+        Vite is a modern frontend development tool that provides a fast development server and a production build system.
+
+        For development, Vite can serve source modules efficiently so that changes appear quickly during development.
+
+        For production, Vite creates a build of the application.
+
+        Typical flow: 
+        
+        Development
+
+            Your code
+            ↓
+            Vite Dev Server
+            ↓
+            Browser
+
+        Production:
+
+            Your code
+            ↓
+            Vite Build
+            ↓
+            Production files
+
+# JSON
+
+    JSON stands for JavaScript Object Notation.
+
+    JSON is a text format used to store and exchange data between applications.
+
+    It looks similar to a JavaScript object, but JSON is actually text (a string).
+
+    Example
+
+        {
+        "name": "T-Shirt",
+        "price": 499,
+        "quantity": 2
+        }
+
+    This could represent product information sent between a frontend and backend.
+
+    Main purpose
+
+        JSON provides a common text format for exchanging structured data between systems.
+
+    JSON VS JavaScript Object
+
+        A JavaScript object:
+
+            const product = {
+            name: "T-Shirt",
+            price: 499
+            };
+
+            A JSON string:
+
+                const productJSON = `{
+                "name": "T-Shirt",
+                "price": 499
+                }`;
+
+            The important difference is:
+
+            JavaScript Object → actual JavaScript data
+            JSON             → text/string
+
+            console.log(typeof product);
+            console.log(typeof productJSON);
+
+            Output:
+
+                object
+                string
+
+        ## Need for JSON
+
+            Suppose the frontend wants product information from a backend.
+
+            The backend may send:
+
+                {
+                "name": "T-Shirt",
+                "price": 499
+                }
+
+            The frontend receives this data and converts it into JavaScript data that it can work with.
+
+                Backend
+                ↓
+                JSON data
+                ↓
+                Frontend
+                ↓
+                JavaScript object
+
+            JSON is commonly used for communication between web applications and APIs. 
+
+
+        ## JSON.parse()
+
+            JSON.parse() converts a JSON string into a JavaScript value.
+
+            Example
+
+                const productJSON = '{"name":"T-Shirt","price":499}';
+                const product = JSON.parse(productJSON);
+                console.log(product);
+                console.log(product.name);
+
+            Output:
+
+                { name: "T-Shirt", price: 499 }
+                T-Shirt
+
+            Direction
+
+                JSON string
+                    ↓
+                JSON.parse()
+                    ↓
+                JavaScript object
+
+        ## JSON.parse() Need
+
+            API sends:
+
+                const response = '{"name":"T-Shirt","price":499}';
+
+            This is a string.
+
+                You cannot treat it as a normal object:
+
+                    console.log(response.name);
+
+            The result is:
+
+                undefined
+
+            So we parse it:
+
+                const product = JSON.parse(response);
+                console.log(product.name);
+
+            Output:
+
+                T-Shirt
+
+        ## JSON.stringify()
+
+            JSON.stringify() converts a JavaScript value into a JSON string.
+
+            Example
+
+                const product = {
+                name: "T-Shirt",
+                price: 499
+                };
+
+                const productJSON = JSON.stringify(product);
+                console.log(productJSON);
+
+            Output:
+
+                {"name":"T-Shirt","price":499}
+
+            Direction
+
+                JavaScript object
+                    ↓
+                JSON.stringify()
+                    ↓
+                JSON string
+
+        ## API
+
+            API stands for Application Programming Interface.
+
+            An API provides a way for one software system to communicate with another.
+
+            example:
+
+                Frontend
+                │
+                │ Request
+                ↓
+                Backend API
+                │
+                │ Response
+                ↓
+                Frontend
+
+            use case
+
+                An e-commerce frontend might request:
+
+                GET /products
+
+                The backend could return:
+
+                [
+                {
+                    "name": "T-Shirt",
+                    "price": 499
+                },
+                {
+                    "name": "Jeans",
+                    "price": 999
+                }
+                ]
+
+                The frontend can then display these products.
+
+        ## using fetch() with an API
+
+            JavaScript provides fetch() for making HTTP requests.
+
+                fetch("/api/products")
+                .then(response => response.json())
+                .then(products => {
+                    console.log(products);
+                });
+
+            Here:
+
+                response.json()
+
+            reads the response body as JSON and converts it into a JavaScript value.
+
+            You can then use: products as JavaScript data.
+
+        ## API with async/await
+
+            The same idea can be written using async/await.
+
+                async function loadProducts() {
+                const response = await fetch("/api/products");
+
+                const products = await response.json();
+
+                console.log(products);
+                }
+
+                loadProducts();
+
+            Flow:
+
+                fetch()
+                ↓
+                HTTP response
+                ↓
+                response.json()
+                ↓
+                JavaScript data
+                ↓
+                Use the data
+
+        ## Copying
+
+            Copying means creating another value from an existing value.
+
+            For primitive values:
+
+                const price = 499;
+                const newPrice = price;
+
+                The values are independent.
+
+                But objects and arrays are different because they are reference values.
+
+            Example
+
+                const product = {
+                name: "T-Shirt"
+                };
+                const copy = product;
+                copy.name = "Jeans";
+                console.log(product.name);
+
+            Output:
+
+                Jeans
+
+            const copy = product;
+            does not create a new object.
+
+            Both variables refer to the same object.
+
+        ## Shallow Copy
+
+            A shallow copy creates a new outer object or array, but nested objects/arrays are still shared references.
+
+            Example
+
+                const product = {
+                name: "T-Shirt",
+                details: {
+                    size: "M"
+                }
+                };
+                const copy = { ...product };
+                copy.name = "Jeans";
+                copy.details.size = "L";
+                console.log(product.name);
+                console.log(product.details.size);
+
+            Output:
+
+                T-Shirt
+                L
+
+                product ──→ original object 
+                copy ──→ new object
+
+        ## Shallow Copy
+
+            Array
+
+                const products = ["T-Shirt", "Jeans"];
+                const copy = [...products];
+
+            Object
+
+                const product = {
+                name: "T-Shirt",
+                price: 499
+                };
+                const copy = { ...product };
+
+            Another option:
+
+                const copy = Object.assign({}, product);
+
+                These create a new top-level object/array.
+
+        ## Deep Copy
+
+            A deep copy creates a completely independent copy, including nested objects and arrays.
+
+            Example:
+
+                const product = {
+                name: "T-Shirt",
+                details: {
+                    size: "M"
+                }
+                };
+
+                const copy = structuredClone(product);
+                copy.details.size = "L";
+                console.log(product.details.size);
+                console.log(copy.details.size);
+
+            Output:
+
+                M
+                L
+
+            Now the nested object is independent.
+
+        ## StructuredClone()
+
+            Modern JavaScript provides:
+
+            structuredClone()
+
+                for making a deep copy of many JavaScript values.
+
+            Example:
+
+                const order = {
+                product: {
+                    name: "T-Shirt",
+                    price: 499
+                }
+                };
+
+                const copy = structuredClone(order);
+                copy.product.price = 599;
+                console.log(order.product.price);
+
+            Output:
+
+                499
+
+                The original is not changed.
+
+        ## JSON Method for Deep Copy
+
+            const copy = JSON.parse(JSON.stringify(product));
+
+            The process is:
+
+                Object
+                ↓
+                JSON.stringify()
+                ↓
+                JSON string
+                ↓
+                JSON.parse()
+                ↓
+                New object
+
+            For simple JSON-compatible data, this can create an independent copy.
+
+            However, it has limitations. It does not preserve every JavaScript value or object type correctly, such as functions, undefined, Date, Map, and Set.
+
+            For general deep cloning of supported values, structuredClone() is usually the clearer modern choice.
+
+# JavaScript Browser Storage
+
+    JavaScript provides different ways to store data in the user's browser.
+
+    The common methods are: 
+
+        -localStorage 
+        -sessionStorage 
+        -cookies
+
+    They are useful for storing information such as:
+
+        -User preferences 
+        -Shopping cart data 
+        -Login/session information 
+        -Language selection 
+        -Theme selection 
+        -Small pieces of application data
+
+
+    ## 1.LocalStorage
+
+        localStorage is used to store data in the browser that remains available even after the browser is closed and reopened.
+
+        Main purpose
+
+            localStorage stores data that should remain available for a long time.
+
+        Example
+
+            localStorage.setItem("theme", "dark");
+
+        The browser stores:
+
+            theme = dark
+
+            Even if the user closes the browser, the data normally remains until it is removed.
+
+        ### Storing data
+
+            localStorage.setItem(key, value);
+
+            Example:
+
+                localStorage.setItem("username", "Dinesh");
+
+                key   ---> username
+                value ---> Dinesh
+
+        ### Reading data
+
+            const username = localStorage.getItem("username");
+            console.log(username);
+
+            Output:
+
+                Dinesh
+
+        ### Removing data
+
+            localStorage.removeItem("username");
+
+            Now:
+
+                localStorage.getItem("username");
+
+            returns:
+
+                null
+
+        ### clearing loalstorage
+
+            To remove all data stored by your web origin:
+
+                localStorage.clear();
+
+            This removes all localStorage entries for that origin.
+
+        ### Example
+
+            localStorage.setItem("language", "English"); 
+            const language = localStorage.getItem("language"); 
+            console.log(language); 
+            localStorage.removeItem("language");
+
+        ### localstorage stores string
+
+            localStorage stores values as strings.
+
+            example:
+
+                localStorage.setItem("quantity", 5);
+
+            When we read
+
+                const quantity = localStorage.getItem("quantity");
+                console.log(typeof quantity);
+
+            Output:
+
+                string
+
+        ### Storing Objects
+
+            we cannot directly store the object 
+
+            Example
+
+                const user = { name: "Dinesh", age: 22 };
+
+                using the JSON.stringify()
+
+                localStorage.setItem("user", JSON.stringify(user)); ---> to convert the object to the json text
+
+                const storedUser = JSON.parse( localStorage.getItem("user") ); 
+                console.log(storedUser.name);
+
+            output
+
+                Dinesh
+
+        ### use case
+
+            an e-commerce website allows the user to select a theme.
+
+                function changeTheme(theme) {
+                localStorage.setItem("theme", theme);
+                }
+                changeTheme("dark");
+
+            When the user visits the website again:
+
+            const theme = localStorage.getItem("theme");
+            console.log(theme);
+
+            Output:
+
+                dark
+
+            The website can then apply the saved theme.
+
+    ## 2. SessionStorage
+
+        sessionStorage stores data for the current browser tab/session.
+
+        The data normally remains available while that tab is open.
+
+        When the tab or window is closed, the stored session data is cleared.
+
+        Main purpose:
+
+            sessionStorage stores temporary data that is needed only during the current tab session.
+
+        
+        ### Storing data
+
+            store data:
+
+                sessionStorage.setItem("step", "2");
+
+            Read it:
+
+                const step = sessionStorage.getItem("step");
+                console.log(step);
+
+            Output:
+
+                2
+
+            Remove it:
+
+                sessionStorage.removeItem("step");
+
+                Clear all session storage for the current origin:
+                sessionStorage.clear();
+
+        ### Example
+
+            Imagine a multi-step checkout:
+
+                Step 1 → Address
+                Step 2 → Delivery
+                Step 3 → Payment
+
+            We can temporarily store the current step:
+
+                sessionStorage.setItem("checkoutStep", "2");
+
+            When the page is refreshed:
+
+                const step = sessionStorage.getItem("checkoutStep");
+                console.log(step);
+
+            Output:
+
+                2
+
+            The user can continue from the same step while the session remains.
+
+            When the tab is closed, the session data is normally removed.
+
+    ## Cookies
+
+        JavaScript can create a cookie using:
+
+            document.cookie
+
+        Example:
+
+            document.cookie = "username=Dinesh";
+
+        The browser stores:
+
+            username = Dinesh
+
+        read cookies using:
+
+            console.log(document.cookie);
+
+    ### Coookie Expiration   
+
+        Cookies can have an expiration time.
+
+        Example:
+
+            document.cookie =
+            "username=Dinesh; max-age=3600";
+
+        Here:
+
+            3600 seconds = 1 hour
+
+        The cookie will expire after the specified lifetime.
+
+    ### Session Cookies
+
+        A cookie can also be created without a persistent expiration time.
+
+        example:
+
+            document.cookie = "theme=dark";
+
+        Depending on browser behavior and cookie attributes, this is generally treated as a session cookie and does not have a persistent lifetime.
+
+    
+    ### Cookie Security Attributes
+
+        Cookies have important attributes that control how they are sent and accessed.
+
+        Secure
+
+            Tells the browser to send the cookie over HTTPS connections.
+
+            HttpOnly
+
+                Prevents JavaScript from reading the cookie through document.cookie.
+
+                This is especially useful for cookies used for authentication.
+
+            SameSite
+
+                Controls when cookies are sent in cross-site situations.
+
+                Common values include:
+
+                    Strict
+                    Lax
+                    None
+
+            example:
+
+                SameSite=Strict
+
+                provides stronger restrictions on cross-site cookie sending.
+
+            use cases
+                Used for:
+                    ---> Server-managed login sessions
+                    ---> Authentication/session identifiers
+                    ---> Preferences that need to accompany requests
+
+# Fetch API
+
+    In a real web application, JavaScript often needs to communicate with a server.
+
+    an e-commerce website may need to:
+
+        -Get products from the server
+        -Send login details
+        -Create an order
+        -Get user information
+        -Update a product
+        -Delete an item
+
+    This communication between the browser and server is commonly done using HTTP requests.
+
+    ## HTTP Request
+
+        An HTTP request is a message sent from the client to the server asking it to perform an operation or provide data.
+        
+    example:
+
+        Browser ---> "request"
+
+        The server processes the request and sends a response:
+
+        Server ---> "response"
+
+        GET /api/products means: Get the products from the server.
+
+    ## Async Request
+
+        Async means JavaScript can start a request without stopping the rest of the program while waiting for the server.
+
+        example:
+
+            console.log("Start");
+            fetch("/api/products");
+            console.log("Continue");
+
+        The browser does not need to wait for the server response before executing:
+
+            console.log("Continue");
+    
+        In a e-com application page opens and the javascript request the products and the user can still interact with the page.
+
+    ## Promise
+
+        A Promise represents the future result of an asynchronous operation.
+
+        It can have three states:
+
+            Pending
+            ↓
+            ┌───────────┐
+            ↓           ↓
+            Fulfilled   Rejected
+            Pending
+
+        Pending
+
+            The operation is still running.
+
+            "Waiting for server response..."
+            
+        Fulfilled
+
+            The operation completed successfully.
+
+            "Products received."
+            
+        Rejected
+
+            The operation failed.
+
+            "Could not connect to server."  
+
+        Example
+
+            const order = new Promise((resolve, reject) => {
+                const payment_success = true;
+                if (payment_success) {
+                    resolve("Payment successful");
+                } else {
+                    reject("Payment failed");
+                }
+            });
+
+        Here:
+
+        resolve() ---> Success
+        reject()  ---> Failure
+
+        We can handle the result using:
+
+        order
+            .then(result => {
+                console.log(result);
+            })
+            .catch(error => {
+                console.log(error);
+            });
+
+    ## Need for Promise
+
+        Without a convenient asynchronous mechanism, handling many asynchronous operations can become difficult.
+
+        Promises make it easier to handle:
+
+            Success ---> .then()
+            Failure ---> .catch()
+            Cleanup ---> .finally()
+
+        Example:
+
+            fetch("/api/products")
+                .then(response => response.json())
+                .then(products => {
+                    console.log(products);
+                })
+                .catch(error => {
+                    console.log(error);
+                });
+
+    ## fetch()
+
+        fetch() is a modern JavaScript API used to make HTTP requests.
+
+        It can be used to:
+
+            GET
+            POST
+            PUT
+            PATCH
+            DELETE
+
+        Example:
+
+            fetch("/api/products");
+
+        This sends a request to:
+
+            /api/products
+
+        By default, fetch() makes a GET request.
+
+    ## Fetch Flow
+
+            fetch("/api/products")
+        .then(response => response.json())
+        .then(products => {
+            console.log(products);
+        });
+
+        Step 1 — Send request
+
+            fetch("/api/products")
+
+            The browser sends a request to the server.
+
+        Step 2 — Receive response
+
+            .then(response => ...)
+
+            The server sends a response.
+
+            The response object contains information about the HTTP response.
+
+            example:
+
+                status
+                headers
+                body
+            
+        Step 3 — Convert response to JSON
+
+            response.json()
+
+            The response body may contain JSON data.
+
+            response.json() reads that data and converts it into a JavaScript value.
+
+        Step 4 — Use the data
+
+            .then(products => {
+                console.log(products);
+            });
+
+            Now JavaScript can work with the products.
+
+    ## JSON
+
+        JSON stands for JavaScript Object Notation.
+
+        JSON is a text format commonly used for exchanging structured data between applications.
+
+        Example JSON:
+
+            {
+                "id": 101,
+                "name": "T-Shirt",
+                "price": 499
+            }
+
+            A server may send:
+
+            {
+                "id": 101,
+                "name": "T-Shirt",
+                "price": 499
+            }
+
+            JavaScript can then use the data.
+
+    ## JSON and JavaScript Object
+
+        A JavaScript object:
+
+        const product = {
+            id: 101,
+            name: "T-Shirt",
+            price: 499
+        };
+
+
+        JSON:
+
+            {
+                "id": 101,
+                "name": "T-Shirt",
+                "price": 499
+            }
+
+        They will look similar but not the same thing
+
+    ## JSON.parse()
+
+        JSON.parse() converts JSON text into a JavaScript value.
+
+            const json_data = '{"name":"T-Shirt","price":499}';
+            const product = JSON.parse(json_data);
+            console.log(product.name);
+
+    ## JSON.stringify()
+
+        JSON.stringify() converts a JavaScript value into a JSON string.
+
+        const product = {
+            name: "T-Shirt",
+            price: 499
+        };
+
+        const json_data = JSON.stringify(product);
+
+
+    ## Sending Data Using fetch()
+
+        const order = {
+            product_id: 101,
+            quantity: 2
+        };
+
+        fetch("/api/orders", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify(order)
+        });
+
+        method
+            
+            method: "POST"
+
+            Tells the server that we are sending data.
+    
+        headers
+
+            headers: {
+                "Content-Type": "application/json"
+            }
+
+            Tells the server sending a  JSON data
+            
+        body
+
+            body: JSON.stringify(order)
+
+            Converts the JavaScript object into JSON text before sending it.
+
+    ## HTTP Headers
+
+        Headers contain additional information about an HTTP request or response.
+
+        Think of headers as information attached to the request.
+
+        Example:
+
+            headers: {
+                "Content-Type": "application/json"
+            }
+
+        The header tells the server what type of data is being sent.
+
+        Common headers
+
+            Content-Type
+
+                Tells the server the format of the request body.
+
+                "Content-Type": "application/json"
+
+                The request body contains JSON.
+
+            Authorization
+
+                Used when the server needs to identify or authorize the user.
+
+                Example:
+
+                headers: {
+                    "Authorization": "Bearer token_here"
+                }
+
+                Commonly used with authenticated APIs.
+
+            Accept
+
+                Tells the server what response format the client prefers.
+
+                Example:
+
+                    headers: {
+                        "Accept": "application/json"
+                    }
+
+                I prefer JSON as the response.
+
+        Example
+
+            fetch("/api/products")
+                .then(response => response.json())
+                .then(products => {
+                    console.log(products);
+                })
+                .catch(error => {
+                    console.log("Request failed:", error);
+                });
+
+    ## Fetch with async and await
+
+        Promises can also be handled using async and await.
+
+        Example:
+
+            async function get_products() {
+                const response = await fetch("/api/products");
+                const products = await response.json();
+                console.log(products);
+            }
+
+        Call the function:
+
+            get_products();
+
+    ## async
+
+        the function always returns a Promise.
+
+        Example:
+
+            async function get_products() {
+                return "Products";
+            }
+
+        The function result is handled as a Promise.
+
+    ## await
+
+        await waits for a Promise to settle inside an async function before continuing that function.
+
+        Example:
+
+            const response = await fetch("/api/products");
+
+    ## async / await with error handling
+
+        A real application should handle errors.
+
+            async function get_products() {
+                try {
+                    const response = await fetch("/api/products");
+                    const products = await response.json();
+                    console.log(products);
+                } catch (error) {
+                    console.log("Could not load products");
+                }
+            }
+
+    ## XMLHtttpRequest
+
+        XMLHttpRequest, commonly called XHR, is an older browser API used to make asynchronous HTTP requests.
+
+        Before fetch() became the common modern approach, developers frequently used:
+
+            XMLHttpRequest
+
+        Example:
+
+            const request = new XMLHttpRequest();
+            request.open("GET", "/api/products");
+            request.send();
+
+    ## XMLHttpRequest Response
+
+        XHR uses event handlers to process the response.
+
+        Example:
+
+            const request = new XMLHttpRequest();
+            request.open("GET", "/api/products");
+            request.onload = function () {
+                if (request.status === 200) {
+                    console.log(request.responseText);
+                }
+            };
+
+            request.send();
+
+# Promise
+
+    A Promise represents the future result of an asychronous operation.
+
+    A promise can be 
+        -Pending
+        -Fulfilled
+        -Rejected
+
+    JavaScript provides several methods to handle these results:
+
+        .then()      ---> Handle success
+        .catch()     ---> Handle failure
+        .finally()   ---> Run cleanup code
+        Chaining     ---> Run multiple async operations in sequence
+        Promise.all()  ---> Wait for multiple Promises
+        Promise.race() ---> Get the first settled Promise
+
+    .then()
+
+        .then() is used to execute code when a Promise is successfully fulfilled.
+
+        .then() handles the successful result of a Promise.
+
+        Example:
+
+            const payment = Promise.resolve("Payment successful");
+
+            payment.then(result => {
+                console.log(result);
+            });
+
+        Output:
+
+            Payment successful
+
+    Example
+
+        const order = new Promise((resolve) => {
+            resolve("Order placed");
+        });
+        order.then(message => {
+            console.log(message);
+        });
+
+    Output:
+
+        Order placed
+
+    ## .catch
+
+        .catch() is used to handle a rejected Promise.
+
+        .catch() handles the failure of a Promise.
+
+        Example:
+
+            const payment = Promise.reject("Payment failed");
+
+            payment.catch(error => {
+                console.log(error);
+            });
+
+        Output:
+
+            Payment failed
+
+    ## Example
+
+        const payment = new Promise((resolve, reject) => {
+            const payment_success = false;
+            if (payment_success) {
+                resolve("Payment successful");
+            } else {
+                reject("Payment failed");
+            }
+        });
+
+        payment
+            .then(message => {
+                console.log(message);
+            })
+            .catch(error => {
+                console.log(error);
+            });
+
+        Output:
+
+            Payment failed
+
+    ## .finally
+
+        .finally() runs after the Promise is completed, whether it succeeds or fails.
+
+        .finally() runs common cleanup code after a Promise finishes.
+
+        Example:
+
+            const payment = Promise.resolve("Payment successful");
+            payment
+                .then(result => {
+                    console.log(result);
+                })
+                .finally(() => {
+                    console.log("Payment process completed");
+                });
+
+        Output:
+
+            Payment successful
+            Payment process completed
+
+        use case
+
+            While payment is processing, we may disable the button:
+
+            After the request finishes, we need to enable the button again.
+
+            It does not matter whether payment succeeds or fails.
+
+            That is where .finally() is useful.
+
+            pay_button.disabled = true;
+
+            payment()
+                .then(() => {
+                    console.log("Payment successful");
+                })
+                .catch(() => {
+                    console.log("Payment failed");
+                })
+                .finally(() => {
+                    pay_button.disabled = false;
+                });
+
+    ## Promise Chaining
+
+        Promise chaining means connecting multiple .then() methods so that the result of one asynchronous operation is passed to the next operation.
+
+        Promise chaining runs multiple asynchronous operations one after another.
+
+        Example:
+
+            Promise.resolve(10)
+                .then(value => {
+                    return value * 2;
+                })
+                .then(value => {
+                    return value + 5;
+                })
+                .then(value => {
+                    console.log(value);
+                });
+
+        Output:
+
+            25
+
+        use case
+
+            checkStock(itemId)
+                .then(inStock => {
+                    if (!inStock) throw new Error("Out of stock!");
+                    // Step 2: Create a pending invoice
+                    return createInvoice(itemId);
+                })
+                .then(invoice => {
+                    // Step 3: Process the payment
+                    return processPayment(invoice.amount);
+                })
+                .then(paymentStatus => {
+                    // Step 4: Update inventory count
+                    return reduceInventoryCount(itemId);
+                })
+                .catch(txError => {
+                    console.log("Transaction failed. Rolling back changes.");
+                });
+
+    ## promise.all()
+
+        Promise.all() is used when we have multiple independent asynchronous operations and need all of them to finish successfully.
+
+        Promise.all() waits for multiple Promises and returns all successful results together.
+
+        Example:
+
+            const products = Promise.resolve("Products loaded");
+            const categories = Promise.resolve("Categories loaded");
+            Promise.all([products, categories])
+                .then(results => {
+                    console.log(results);
+                });
+
+        Output:
+
+            [
+                "Products loaded",
+                "Categories loaded"
+            ]
+
+        Example
+
+            Suppose an e-commerce homepage needs:
+
+                Products
+                Categories
+                Offers
+
+            These requests are independent.
+
+            Instead of waiting for one before starting another:
+
+                const products = fetch("/api/products");
+                const categories = fetch("/api/categories");
+                const offers = fetch("/api/offers");
+
+                Promise.all([
+                    products,
+                    categories,
+                    offers
+                ])
+                .then(results => {
+                    console.log("All requests completed");
+                });
+
+    ## promise.race()
+
+        Promise.race() starts multiple Promises and settles as soon as the first Promise settles.
+
+        Promise.race() gives the result of the first Promise that settles.
+
+        Settles means either:
+
+            Fulfilled
+            OR
+            Rejected
+
+        It does not mean "first successful Promise."
+
+        Example
+
+            const first = new Promise(resolve => {
+                setTimeout(() => {
+                    resolve("First request");
+                }, 1000);
+            });
+
+            const second = new Promise(resolve => {
+                setTimeout(() => {
+                    resolve("Second request");
+                }, 2000);
+            });
+
+            Promise.race([first, second])
+                .then(result => {
+                    console.log(result);
+                });
+
+            Output:
+
+                First request
+
+        Use case
+
+            Promise.race([
+                fetch("/api/server-a"),
+                fetch("/api/server-b")
+            ])
+            .then(response => {
+                console.log("First response received");
+            });
+
+# Async Functions
+
+    ## Asynchronous JavaScript?
+
+        In JavaScript, some operations take time to complete.
+
+        For example:
+
+            -Loading products from a server
+            -Sending a payment request
+            -Loading a user profile
+            -Reading data from an API
+
+        JavaScript should not stop the entire program while waiting for these operations.
+
+        Instead, JavaScript can start the operation and continue executing other code.
+
+        Example
+
+            console.log("Start");
+            setTimeout(() => {
+                console.log("Product loaded");
+            }, 2000);
+            console.log("End");
+
+        Output
+            
+            Start
+            End
+            Product loaded
+
+        The product takes 2 seconds, but JavaScript does not wait there.
+
+    ## Asyync Function  
+
+        An async function is a function that always returns a Promise.
+
+        We create an async function using the async keyword.
+
+        Syntax
+
+            async function functionName() {
+                // asynchronous code
+            }
+
+        Simple Example
+
+            async function getProduct() {
+                return "Product loaded";
+            }
+
+            getProduct().then(result => {
+                console.log(result);
+            });
+
+        Output
+
+            Product loaded
+
+        Even though we return a normal string, an async function automatically returns a Promise.
+
+    ## Why do we use Async function
+
+        Async functions make asynchronous code easier to read.
+
+        Without async/await:
+
+            fetch("/api/product")
+                .then(response => response.json())
+                .then(product => {
+                    console.log(product);
+                });
+
+        With async/await:
+
+            async function getProduct() {
+                const response = await fetch("/api/product");
+                const product = await response.json();
+                console.log(product);
+            }
+
+        The second version looks more like normal step-by-step code.
+
+    ## await
+
+        await is used inside an async function to wait for a Promise to settle.
+
+        Example
+        
+            async function loadProduct() {
+                const response = await fetch(
+                    "https://jsonplaceholder.typicode.com/posts/1"
+                );
+                const product = await response.json();
+                console.log(product.title);
+            }
+
+        await can be used only inside async
+
+    use case
+
+        Load product
+
+            <button id="loadBtn">Load Product</button>
+            <p id="display"></p>
+
+            const loadBtn = document.getElementById("loadBtn");
+            const display = document.getElementById("display");
+
+            async function loadProduct() {
+                display.innerText = "Loading...";
+                const response = await fetch(
+                    "https://jsonplaceholder.typicode.com/posts/1"
+                );
+                const product = await response.json();
+                display.innerText = product.title;
+            }
+
+            loadBtn.addEventListener("click", loadProduct);
+
+    ## Error handling with try ... catch
+
+        Network requests can fail.
+
+        For example:
+
+            Server is unavailable
+            Internet connection fails
+            API URL is incorrect
+            Request fails
+
+        We can handle these errors using try...catch.
+
+    ## Try catch with async/await
+
+        A common real-time pattern is:
+
+            async function loadProduct() {
+
+                try {
+                    const response = await fetch(
+                        "https://jsonplaceholder.typicode.com/posts/1"
+                    );
+                    const product = await response.json();
+                    console.log(product.title);
+                }
+                catch (error) {
+                    console.log("Failed to load product");
+                }
+            }
+        
+        ### response.ok
+
+            A fetch() Promise does not automatically reject for HTTP errors such as:
+
+            404 Not Found
+            500 Server Error
+
+            response.ok
+
+        Example
+            async function loadProduct() {
+                try {
+                    const response = await fetch(
+                        "https://jsonplaceholder.typicode.com/posts/1"
+                    );
+                    if (!response.ok) {
+                        throw new Error("Product request failed");
+                    }
+                    const product = await response.json();
+                    console.log(product.title);
+                }
+                catch (error) {
+                    console.log(error.message);
+                }
+            }
+
+    ## Concurrency
+
+        Concurrency means starting multiple asynchronous operations without waiting for each one to finish before starting the next.
+
+        an e-commerce homepage needs:
+
+            Products
+            Categories
+            Offers
+
+        These requests are independent.
+
+        We can start them together.
+
+    ## sequential execution
+
+        async function loadData() {
+            const products = await getProducts();
+            const categories = await getCategories();
+            const offers = await getOffers();
+        }
+
+        If each request takes about 2 seconds:
+
+        2 sec + 2 sec + 2 sec
+        = 6 seconds
+
+        This is sequential execution.
+
+    ## concurrent Execution
+
+        If these operations do not depend on each other, we can start them together.
+
+        async function loadData() {
+            const productsPromise = getProducts();
+            const categoriesPromise = getCategories();
+            const offersPromise = getOffers();
+            const products = await productsPromise;
+            const categories = await categoriesPromise;
+            const offers = await offersPromise;
+        }
+
+        They are started without waiting for the previous request.
+
+    ## Concurrency with Promise.all()
+
+        A cleaner way is:
+
+            async function loadData() {
+                const [products, categories, offers] = await Promise.all([
+                    getProducts(),
+                    getCategories(),
+                    getOffers()
+                ]);
+                console.log(products);
+                console.log(categories);
+                console.log(offers);
+            }
+
+        This is a very common real-world pattern.
+
+    ## use case
+
+        Imagine a shopping page needs:
+
+            1. Product information
+            2. User profile
+            3. Discount information
+
+        They are independent requests.
+
+            async function loadShopPage() {
+                try {
+                    const [
+                        productsResponse,
+                        profileResponse,
+                        offersResponse
+                    ] = await Promise.all([
+                        fetch("/api/products"),
+                        fetch("/api/profile"),
+                        fetch("/api/offers")
+                    ]);
+                    const products = await productsResponse.json();
+                    const profile = await profileResponse.json();
+                    const offers = await offersResponse.json();
+                    console.log(products);
+                    console.log(profile);
+                    console.log(offers);
+                }
+                catch (error) {
+                    console.log("Failed to load shop page");
+                }
+            }
+
+# Classes
+
+    JavaScript classes provide a way to create objects using a common structure.
+
+    an e-commerce application may have many products.
+
+        Instead of creating every product object manually, we can create a Product class and use it to create multiple product objects.
+
+        ## Why Do We Need Classes?
+
+        Without a class:
+
+            const product_1 = {
+                product_name: "T-Shirt",
+                product_price: 499
+            };
+
+            const product_2 = {
+                product_name: "Jeans",
+                product_price: 999
+            };
+
+        Both objects contain similar properties.
+
+        If we have many products, repeating the same structure becomes difficult.
+
+        A class allows us to define the structure once.
+
+            class Product {
+
+            }
+
+        Then we can create multiple products from it.
+
+    ## Class Syntax
+
+        Basic syntax
+        class Product {
+
+        }
+
+        A class is a blueprint for creating objects.
+
+        Product class
+            ↓
+        Blueprint
+            ↓
+        ┌────┴────┐
+        ↓         ↓
+        Product 1  Product 2
+
+    ## Creating an Object from a Class
+
+        We use the new keyword to create an object from a class.
+
+            class Product {
+
+            }
+
+            const product_1 = new Product();
+            const product_2 = new Product();
+
+            console.log(product_1);
+            console.log(product_2);
+
+        Here:
+
+        new Product() ---> creates a new object using the Product class.
+
+    ## Constructor
+
+        A constructor is a special method that runs automatically when an object is created.
+
+        Syntax
+
+            class Product {
+
+                constructor() {
+
+                }
+
+            }
+
+        The constructor is called automatically when we use: new Product();
+    
+    ## Constructor with Properties
+
+        We can use the constructor to initialize object properties.
+
+            class Product {
+                constructor(product_name, product_price) {
+                    this.product_name = product_name;
+                    this.product_price = product_price;
+                }
+            }
+
+            const product_1 = new Product("T-Shirt", 499);
+            console.log(product_1.product_name);
+            console.log(product_1.product_price);
+
+        Output
+
+            T-Shirt
+            499
+
+    ## What is this?
+
+        this refers to the current object.
+
+        example:
+
+            this.product_name = product_name;
+
+            means:
+
+                Store the received product name inside the current object's product_name property.
+
+    ## Methods
+
+        A method is a function defined inside a class.
+
+        For example, a product can have a method to display its details.
+
+            class Product {
+                constructor(product_name, product_price) {
+                    this.product_name = product_name;
+                    this.product_price = product_price;
+                }
+                show_product() {
+                    console.log(this.product_name);
+                    console.log(this.product_price);
+                }
+            }
+            const product_1 = new Product("T-Shirt", 499);
+            product_1.show_product();
+
+        Output
+
+            T-Shirt
+            499
+
+    ## Why Do We Use Methods?
+
+        Properties store data.
+
+        Methods perform actions.
+
+        For a product:
+
+            Properties
+            ↓
+            product_name
+            product_price
+
+            Methods
+            ↓
+            show_product()
+            update_price()
+            calculate_discount()
+
+        So:
+
+            Properties describe the object, while methods define what the object can do.
+
+    ## Multiple Objects from One Class
+
+        One class can create many objects.
+
+            class Product {
+                constructor(product_name, product_price) {
+                    this.product_name = product_name;
+                    this.product_price = product_price;
+                }
+                show_product() {
+                    console.log(this.product_name);
+                    console.log(this.product_price);
+                }
+            }
+
+            const product_1 = new Product("T-Shirt", 499);
+            const product_2 = new Product("Jeans", 999);
+            product_1.show_product();
+            product_2.show_product();
+
+        Here:
+
+            Product class
+                ↓
+            ┌────┴────┐
+            ↓         ↓
+            product_1 product_2
+
+        Both objects have the same structure but different values.
+
+    ## Inheritance
+
+        Inheritance allows one class to use properties and methods from another class.
+
+        For example, an e-commerce application may have:
+
+            Product
+            ↓
+            Clothing
+
+        Clothing is a type of Product.
+
+        We can use extends to create inheritance.
+
+        Syntax
+        class Clothing extends Product {
+
+        }
+        11. Inheritance Example
+        class Product {
+
+            constructor(product_name, product_price) {
+
+                this.product_name = product_name;
+                this.product_price = product_price;
+
+            }
+
+            show_product() {
+
+                console.log(this.product_name);
+                console.log(this.product_price);
+
+            }
+
+        }
+
+        class Clothing extends Product {
+
+        }
+
+        Now Clothing inherits from Product.
+
+        const clothing_1 = new Clothing("T-Shirt", 499);
+
+        clothing_1.show_product();
+
+        Output:
+
+        T-Shirt
+        499
+
+        The Clothing class did not define show_product().
+
+        It received the method from Product.
+
+        12. super
+
+        When a child class has its own constructor, we use super() to call the parent class constructor.
+
+        Example:
+
+        class Product {
+
+            constructor(product_name, product_price) {
+
+                this.product_name = product_name;
+                this.product_price = product_price;
+
+            }
+
+        }
+
+        class Clothing extends Product {
+
+            constructor(product_name, product_price, size) {
+
+                super(product_name, product_price);
+
+                this.size = size;
+
+            }
+
+        }
+
+        Create the object:
+
+        const clothing_1 = new Clothing(
+            "T-Shirt",
+            499,
+            "L"
+        );
+
+        console.log(clothing_1.product_name);
+        console.log(clothing_1.product_price);
+        console.log(clothing_1.size);
+
+        Output:
+
+        T-Shirt
+        499
+        L
+        13. What Does super() Do?
+
+        The parent class requires:
+
+        product_name
+        product_price
+
+        The child class receives them:
+
+        constructor(product_name, product_price, size)
+
+        Then:
+
+        super(product_name, product_price);
+
+        passes those values to the parent constructor.
+
+        Flow:
+
+        Clothing
+        ↓
+        super()
+        ↓
+        Product constructor
+        ↓
+        product_name
+        product_price
+
+        Then the child class handles its own property:
+
+        this.size = size;
+        14. Child Class Methods
+
+        A child class can also have its own methods.
+
+        class Product {
+
+            constructor(product_name, product_price) {
+
+                this.product_name = product_name;
+                this.product_price = product_price;
+
+            }
+
+            show_product() {
+
+                console.log(this.product_name);
+                console.log(this.product_price);
+
+            }
+
+        }
+
+        class Clothing extends Product {
+
+            constructor(product_name, product_price, size) {
+
+                super(product_name, product_price);
+
+                this.size = size;
+
+            }
+
+            show_size() {
+
+                console.log(this.size);
+
+            }
+
+        }
+
+        const clothing_1 = new Clothing(
+            "T-Shirt",
+            499,
+            "L"
+        );
+
+        clothing_1.show_product();
+        clothing_1.show_size();
+
+        Output:
+
+        T-Shirt
+        499
+        L
+
+        The child object can use:
+
+        Parent methods
+            +
+        Child methods
+        15. static
+
+        A static method belongs to the class itself, not to individual objects.
+
+        Example
+        class Product {
+
+            static show_store_name() {
+
+                console.log("Litorox Store");
+
+            }
+
+        }
+
+        We call it using the class name:
+
+        Product.show_store_name();
+
+        Output:
+
+        Litorox Store

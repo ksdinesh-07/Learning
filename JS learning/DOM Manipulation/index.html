@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Product Cart</title>
+    
+    <style>
+        .product {
+            width: 250px;
+            padding: 20px;
+            border: 1px solid gray;
+            margin-bottom: 20px;
+        }
+
+        .added {
+            border: 2px solid green;
+        }
+
+        .cart {
+            padding: 10px;
+            border: 1px dashed gray;
+            width: 250px;
+        }
+
+        .selected {
+            background-color: lightgreen;
+            border: 2px solid green;
+        }
+    </style>
+</head>
+<body>
+
+    <h1 id="pageTitle">Shopping Page</h1>
+
+    <div class="product" id="productCard">
+        <h2>Oversized T-Shirt</h2>
+        <p>Price: ₹499</p>
+        <button id="addButton">Add to Cart</button>
+    </div>
+
+    <div class="cart">
+        <h2>Cart</h2>
+        <div id="cartItems"></div>
+    </div>
+
+    <input id="emailInput">
+    <a id="productLink">View Product</a>
+
+
+    <div id="course">
+        <h3>AI & Data Science</h3>
+        <button id="selectButton">Select Course</button>
+    </div>
+
+    <script src="dom.js"></script>
+</body>
+</html>
