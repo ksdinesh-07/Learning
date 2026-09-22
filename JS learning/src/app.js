@@ -1,1 +1,0 @@
-const result=add(2,2);

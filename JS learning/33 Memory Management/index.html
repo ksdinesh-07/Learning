@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Memory Leaks</title>
+    <script src="memory _leaks.js" defer></script>
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 30px;
+        }
+
+        .course {
+            border: 1px solid #ccc;
+            padding: 15px;
+            margin: 10px 0;
+            width: 300px;
+        }
+
+        button {
+            padding: 8px 15px;
+            cursor: pointer;
+        }
+
+        #course-details {
+            margin-top: 20px;
+            padding: 20px;
+            border: 1px solid #999;
+        }
+    </style>
+
+</head>
+<body>
+
+    <h1>Online Learning Platform</h1>
+
+    <div class="course">
+        <h3>JavaScript</h3>
+        <button class="open-course" data-course="JavaScript">
+            Open Course
+        </button>
+    </div>
+
+    <div class="course">
+        <h3>Python</h3>
+        <button class="open-course" data-course="Python">
+            Open Course
+        </button>
+    </div>
+
+    <div id="course-details">
+        Select a course
+    </div>
+
+    <button id="close-course">
+        Close Course
+    </button>
+
+    
+</body>
+</html>

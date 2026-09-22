@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Order Management</title>
+    <script src="higher_order_functions.js" defer></script>
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 30px;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: auto;
+        }
+
+        .orders {
+            display: grid;
+            gap: 15px;
+        }
+
+        .order {
+            border: 1px solid #ccc;
+            padding: 15px;
+            border-radius: 8px;
+        }
+
+        button {
+            padding: 10px 15px;
+            margin: 5px;
+            cursor: pointer;
+        }
+
+        #orders {
+            margin-top: 20px;
+        }
+
+        #summary {
+            margin-top: 20px;
+            padding: 15px;
+            border: 1px solid #999;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="container">
+
+        <h1>Online Shopping Order Management</h1>
+
+        <button id="show-all">
+            All Orders
+        </button>
+
+        <button id="show-delivered">
+            Delivered
+        </button>
+
+        <button id="show-pending">
+            Pending
+        </button>
+
+        <button id="show-cancelled">
+            Cancelled
+        </button>
+
+        <div id="orders"></div>
+
+        <div id="summary"></div>
+
+    </div>
+
+</body>
+</html>

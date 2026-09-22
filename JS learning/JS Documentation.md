@@ -3216,9 +3216,8 @@
 
         Here:
 
-             function() {}
-                |
-              function
+            const caluculate= function() {}
+                
 
     ## Arrow function
 
@@ -3391,8 +3390,6 @@
                 console.log(storeName);
             }
             showStore();
-
-        Why can showStore() access storeName?
 
             Because storeName is written in the outer scope where the function was created.
 
@@ -3922,6 +3919,24 @@
                 console.log(total);
 
                 // 1000     
+
+        filter()
+
+            filter() is used to select the items from an array that satisfy a condition and return them as a new array.
+
+            example
+
+                let product_prices = [300, 500, 700, 900];
+
+                let expensive_products = product_prices.filter((price) => {
+                    return price > 500;
+                });
+
+                console.log(expensive_products);
+
+            output
+
+                [700,900]
 
 # Object
 
@@ -9978,162 +9993,137 @@
         We can use extends to create inheritance.
 
         Syntax
-        class Clothing extends Product {
 
-        }
-        11. Inheritance Example
+            class Clothing extends Product {
+
+            }
+
+    ## Inheritance Example
+
         class Product {
 
             constructor(product_name, product_price) {
-
                 this.product_name = product_name;
                 this.product_price = product_price;
-
             }
 
             show_product() {
-
                 console.log(this.product_name);
                 console.log(this.product_price);
-
             }
-
         }
 
         class Clothing extends Product {
-
         }
 
         Now Clothing inherits from Product.
 
         const clothing_1 = new Clothing("T-Shirt", 499);
-
         clothing_1.show_product();
 
         Output:
 
-        T-Shirt
-        499
+            T-Shirt
+            499
 
         The Clothing class did not define show_product().
 
         It received the method from Product.
 
-        12. super
+    ## super
 
         When a child class has its own constructor, we use super() to call the parent class constructor.
 
         Example:
 
-        class Product {
-
-            constructor(product_name, product_price) {
-
-                this.product_name = product_name;
-                this.product_price = product_price;
-
+            class Product {
+                constructor(product_name, product_price) {
+                    this.product_name = product_name;
+                    this.product_price = product_price;
+                }
             }
-
-        }
 
         class Clothing extends Product {
-
             constructor(product_name, product_price, size) {
-
                 super(product_name, product_price);
-
                 this.size = size;
-
             }
-
         }
 
         Create the object:
 
-        const clothing_1 = new Clothing(
-            "T-Shirt",
-            499,
-            "L"
-        );
+            const clothing_1 = new Clothing(
+                "T-Shirt",
+                499,
+                "L"
+            );
 
-        console.log(clothing_1.product_name);
-        console.log(clothing_1.product_price);
-        console.log(clothing_1.size);
+            console.log(clothing_1.product_name);
+            console.log(clothing_1.product_price);
+            console.log(clothing_1.size);
 
         Output:
 
-        T-Shirt
-        499
-        L
-        13. What Does super() Do?
+            T-Shirt
+            499
+            L
+
+    ## What Does super() Do?
 
         The parent class requires:
 
-        product_name
-        product_price
+            product_name
+            product_price
 
         The child class receives them:
 
-        constructor(product_name, product_price, size)
+            constructor(product_name, product_price, size)
 
         Then:
 
-        super(product_name, product_price);
+            super(product_name, product_price);
 
         passes those values to the parent constructor.
 
         Flow:
 
-        Clothing
-        ↓
-        super()
-        ↓
-        Product constructor
-        ↓
-        product_name
-        product_price
+            Clothing
+            ↓
+            super()
+            ↓
+            Product constructor
+            ↓
+            product_name
+            product_price
 
         Then the child class handles its own property:
 
-        this.size = size;
-        14. Child Class Methods
+            this.size = size;
+
+    ## Child Class Methods
 
         A child class can also have its own methods.
 
         class Product {
-
             constructor(product_name, product_price) {
-
                 this.product_name = product_name;
                 this.product_price = product_price;
-
             }
-
             show_product() {
-
                 console.log(this.product_name);
                 console.log(this.product_price);
-
             }
-
         }
 
         class Clothing extends Product {
-
-            constructor(product_name, product_price, size) {
-
+          constructor(product_name, product_price, size) {
                 super(product_name, product_price);
-
                 this.size = size;
-
             }
 
             show_size() {
-
                 console.log(this.size);
-
             }
-
         }
 
         const clothing_1 = new Clothing(
@@ -10147,34 +10137,2761 @@
 
         Output:
 
-        T-Shirt
-        499
-        L
+            T-Shirt
+            499
+            L
 
         The child object can use:
 
-        Parent methods
-            +
-        Child methods
-        15. static
+            Parent methods
+                +
+            Child methods
+
+    ## static
 
         A static method belongs to the class itself, not to individual objects.
 
         Example
-        class Product {
 
-            static show_store_name() {
-
-                console.log("Litorox Store");
-
+            class Product {
+                static show_store_name() {
+                    console.log("Litorox Store");
+                }
             }
-
-        }
 
         We call it using the class name:
 
-        Product.show_store_name();
+            Product.show_store_name();
+
+        Output:
+            
+            Litorox Store
+
+# Prototypes & Inheritance
+
+    JavaScript objects can get properties and methods from another object.
+
+        This is done using prototypes.
+
+        The main concepts are:
+
+            Prototype
+            Prototype chain
+            __proto__
+            Object.create()
+            Constructor functions
+
+    ## Prototype
+
+        A prototype is an object that another object can use to get properties and methods.
+
+    example:
+
+        const product = {
+            product_name: "Laptop"
+        };
+
+        The product object can have access to properties and methods from its prototype.
+
+            product object
+                ↓
+            prototype
+                ↓
+            properties / methods
+
+        So a prototype is basically an object from which another object can inherit properties and methods.
+
+    ## Need for Prototypes
+
+        Suppose we have many products.
+        Every product needs a method:
+
+        show_product()
+
+        Instead of creating the same method separately inside every object, JavaScript can keep the method in a prototype and let multiple objects use it.
+
+                    Product prototype
+                           │
+                    show_product()
+                           │
+                 ┌─────────┴─────────┐
+                ↓                   ↓
+            product_1           product_2
+
+        Both objects can use the same method.
+
+        This helps avoid unnecessary duplication.
+
+    ## __proto__
+
+        __proto__ is used to access the prototype of an object.
+
+Example:
+
+        const product = {
+            product_name: "T-Shirt"
+        };
+        console.log(product.__proto__);
+
+        The object has a prototype.
+
+    We can also check:
+
+        console.log(product.__proto__ === Object.prototype);
+
+    Output:
+
+        true
+
+        This means the normal object created using {} gets Object.prototype as its prototype.
+
+    __proto__ is mainly useful for understanding prototypes. In modern JavaScript, Object.getPrototypeOf() and Object.setPrototypeOf() are preferred for programmatic prototype access.
+
+    ## Accessing a property through the prototype
+
+        const product_details = {
+            product_name: "T-Shirt"
+        };
+        const product = Object.create(product_details);
+        console.log(product.product_name);
 
         Output:
 
-        Litorox Store
+            T-Shirt
+
+    ## Prototype Chain
+
+        When JavaScript tries to access a property, it first checks the current object.
+
+        If it cannot find the property, JavaScript checks the object's prototype.
+
+        If it is not there, JavaScript continues to the prototype's prototype.
+
+        This continues until it reaches null.
+
+        Example:
+
+            object
+            ↓
+            prototype
+            ↓
+            prototype's prototype
+            ↓
+            Object.prototype
+            ↓
+            null
+
+        This is called the prototype chain.
+
+    Example
+
+        const product_details = {
+            product_name: "T-Shirt"
+        };
+        const product = Object.create(product_details);
+        console.log(product.product_name);
+
+        JavaScript searches like this:
+
+            prototype
+            ↓
+            product_name ✅
+
+        So the output is:
+
+            T-Shirt
+
+    ## if the Property exists in both
+
+        const product_details = {
+            product_name: "T-Shirt"
+        };
+        const product = Object.create(product_details);
+        product.product_name = "Jeans";
+        console.log(product.product_name);
+
+    Output:
+
+        Jeans
+
+    ## Object.create()  
+
+        Object.create() creates a new object and allows us to specify its prototype.
+
+        Syntax
+
+            Object.create(prototype_object);
+
+            Example:
+
+                const product_details = {
+                    show_product() {
+                        console.log("Product details");
+                    }
+                };
+                const product = Object.create(product_details);
+                product.show_product();
+
+            Output:
+
+                Product details
+
+    ## Real-Time Use    
+
+        Suppose an application has common product information.
+
+            const product_features = {
+
+                show_details() {
+                    console.log("This product is available");
+                }
+
+            };
+
+            const product_1 = Object.create(product_features);
+
+            const product_2 = Object.create(product_features);
+
+            product_1.show_details();
+            product_2.show_details();
+
+        Both objects can use the same method from the prototype.
+
+                    product_features
+                    show_details()
+                        │
+                ┌─────┴─────┐
+                ↓           ↓
+            product_1    product_2
+
+    ## Constructor Functions
+
+        Before JavaScript classes became common, constructor functions were widely used to create multiple similar objects.
+
+        A constructor function is a normal function used with the new keyword to create objects.
+
+        Example:
+
+            function Product(product_name, product_price) {
+
+                this.product_name = product_name;
+                this.product_price = product_price;
+
+            }
+
+        Now we can create objects:
+
+            const product_1 = new Product("T-Shirt", 499);
+
+            const product_2 = new Product("Jeans", 999);
+
+            console.log(product_1.product_name);
+            console.log(product_2.product_name);
+
+        Output:
+
+            T-Shirt
+            Jeans
+
+    ## working of Constructor Function
+
+        const product_1 = new Product("T-Shirt", 499);
+
+        JavaScript creates a new object and connects it to:
+
+            Product.prototype
+
+            new Product()
+                ↓
+            product_1
+                ↓
+            Product.prototype
+
+        This is one of the important reasons prototypes are useful.
+
+    ## Adding a method to the Constructor Prototype
+
+        Instead of putting the method inside every object, we can add it to the constructor's prototype.
+
+            function Product(product_name, product_price) {
+                this.product_name = product_name;
+                this.product_price = product_price;
+            }
+
+            Product.prototype.show_product = function() {
+                console.log(this.product_name);
+                console.log(this.product_price);
+            };
+
+            Now create products:
+
+            const product_1 = new Product("T-Shirt", 499);
+            const product_2 = new Product("Jeans", 999);
+
+            product_1.show_product();
+            product_2.show_product();
+
+        Both objects can use:
+
+            show_product()
+
+        from:
+
+            Product.prototype
+
+    ## Constructor Function and prototype
+
+        Product.prototype
+
+            This is a property of the constructor function.
+
+            Product.prototype.show_product = function() {
+                console.log("Product");
+            };
+            
+        product_1.__proto__
+
+            This refers to the prototype of the created object.
+
+            console.log(product_1.__proto__ === Product.prototype);
+
+            Output:
+
+                true
+
+    ## Constructor Property
+
+        The prototype also has a constructor property.
+
+        Example:
+
+            function Product(product_name) {
+                this.product_name = product_name;
+            }
+
+            const product_1 = new Product("T-Shirt");
+            console.log(product_1.constructor);
+            console.log(product_1.constructor === Product);
+
+        output
+
+            true
+
+# this Keyword
+
+    In JavaScript, the value of this depends on how a function is called.
+
+    To understand this properly, we need to understand different types of context:
+
+        Global context
+        Object context
+        Function context
+        Class context
+        call()
+        apply()
+        bind()
+
+    ## Context
+
+        Context means the environment in which JavaScript code is currently running.
+
+        For example, when a function is called as an object method, JavaScript knows which object is calling the function.
+
+        const student = {
+            student_name: "Dinesh",
+            show_name() {
+                console.log(this.student_name);
+            }
+        };
+
+        student.show_name();
+
+        Output:
+
+            Dinesh
+
+        Here: this refers to ---> student
+
+        So the context is related to who is calling the function.
+
+    ## Global Context
+
+        The global context is the outermost environment of a JavaScript program.
+
+        Example:
+
+            console.log(this);
+
+        In a browser, when this code runs in the global script context, this refers to the global window object.
+
+            Global context
+                ↓
+            window
+
+        The browser's global object provides things such as:
+
+        console.log(window.location);
+        console.log(window.innerWidth);
+
+        Example
+
+            var college_name = "ABC College";
+            console.log(window.college_name);
+
+            Output in a browser:
+
+                ABC College
+
+            This happens because a var declaration at the top level of a classic browser script becomes a property of the global window object.
+
+            However, let and const behave differently:
+
+            let student_count = 100;
+            console.log(window.student_count);
+
+            Output:
+
+                undefined
+
+            So we should not assume every global variable becomes a property of window.
+
+    ## Object Content
+
+        When a function is called as a method of an object, this usually refers to that object.
+
+        Example:
+
+            const bank_account = {
+                account_holder: "Dinesh",
+                balance: 25000,
+                show_balance() {
+                    console.log(this.balance);
+                }
+            };
+
+            bank_account.show_balance();
+
+        Output:
+
+            25000
+
+        this refers to the bank_account
+        this.balance = bank_account.balance
+
+    ## Why Object Context is Useful
+
+        Consider a banking application.
+
+        An account contains:
+
+            account_holder
+            balance
+            account_number
+
+        A method can use this to access the data belonging to the current account.
+
+            const bank_account = {
+                account_holder: "Dinesh",
+                balance: 25000,
+                withdraw_money(amount) {
+                    this.balance = this.balance - amount;
+                    console.log("Remaining balance:", this.balance);
+                }
+            };
+
+        bank_account.withdraw_money(5000);
+
+        Output:
+
+        Remaining balance: 20000
+
+        Here this.balance means the balance belonging to that particular account.
+
+
+    ## Function Context
+
+        A function can also be called independently.
+
+            function show_message() {
+                console.log(this);
+            }
+
+            show_message();
+
+        The value of this depends on how the function is executed.
+
+            In a browser's non-strict classic script, a standalone function call can have this referring to the global object.
+
+        In strict mode:
+
+            "use strict";
+
+            function show_message() {
+                console.log(this);
+            }
+
+            show_message();
+
+        Output:
+
+            undefined
+
+        So the value of this in a normal function depends on the calling pattern and strict mode.
+
+    ## Function Context with this
+
+        Consider a student management application:
+
+            function show_student() {
+                console.log(this.student_name);
+            }
+
+            const student = {
+                student_name: "Dinesh",
+                show_student: show_student
+            };
+
+            student.show_student();
+
+        Output:
+
+            Dinesh
+
+            Because the function was called as: student.show_student();
+
+            Therefore:
+
+            this
+            ↓
+            student
+
+    ## class Context
+
+        Classes also use this.
+
+            Inside a class, this normally refers to the object created from that class when an instance method is called.
+
+        Example:
+
+            class Student {
+                constructor(student_name, department) {
+                    this.student_name = student_name;
+                    this.department = department;
+                }
+
+                show_student() {
+                    console.log(this.student_name);
+                    console.log(this.department);
+                }
+            }
+
+            const student_1 = new Student(
+                "Dinesh",
+                "AI & Data Science"
+            );
+
+            student_1.show_student();
+
+            Output:
+
+                Dinesh
+
+    ## Class context with Multiple Objects
+
+        The same class can create different objects.
+
+        class Student {
+            constructor(student_name) {
+                this.student_name = student_name;
+            }
+
+            show_student() {
+                console.log(this.student_name);
+            }
+        }
+
+        const student_1 = new Student("Dinesh");
+        const student_2 = new Student("Arun");
+        student_1.show_student();
+        student_2.show_student();
+
+        Output:
+
+            Dinesh
+            Arun
+
+        The method is the same, but this changes depending on which object calls it.
+
+
+    ## call
+
+        call() allows us to manually decide what this should refer to when calling a function.
+
+        function_name.call(object);
+
+        Example:
+
+            function show_student() {
+                console.log(this.student_name);
+            }
+
+            const student_1 = {
+                student_name: "Dinesh"
+            };
+
+            show_student.call(student_1);
+
+        Output:
+
+            Dinesh
+
+        Normally the function does not have a specific object.
+
+        Using:
+
+            show_student.call(student_1);
+
+        Call this function with student_1 as this.
+
+
+        ### call() with Arguments
+
+            We can also pass arguments using call().
+
+                function show_result(subject, mark) {
+                    console.log(this.student_name);
+                    console.log(subject);
+                    console.log(mark);
+                }
+
+                const student_1 = {
+                    student_name: "Dinesh"
+                };
+
+                show_result.call(
+                    student_1,
+                    "JavaScript",
+                    85
+                );
+
+            Output:
+
+                Dinesh
+                JavaScript
+                85
+
+                The first argument is the object used as this.
+                The remaining arguments are passed normally.
+
+    ## apply()
+
+        apply() works almost the same way as call().
+
+        The main difference is how arguments are supplied.
+
+        call()
+
+            Arguments are passed separately:
+
+            function_name.call(object, value_1, value_2);
+        
+        apply()
+
+            Arguments are passed inside an array:
+
+            function_name.apply(object, [value_1, value_2]);
+
+        Example
+
+            function show_result(subject, mark) {
+                console.log(this.student_name);
+                console.log(subject);
+                console.log(mark);
+            }
+
+            const student_1 = {
+                student_name: "Dinesh"
+            };
+
+            show_result.apply(
+                student_1,
+                ["JavaScript", 85]
+            );
+
+            Output:
+
+                Dinesh
+                JavaScript
+                85
+
+        use case
+
+            Suppose a school application receives marks as an array.
+
+                function calculate_total(mark_1, mark_2, mark_3) {
+                    return mark_1 + mark_2 + mark_3;
+                }
+                const marks = [80, 75, 90];
+                const total_mark = calculate_total.apply(
+                    null,
+                    marks
+                );
+                console.log(total_mark);
+
+            Output:
+
+                245
+
+            Here apply() is useful because the values are already available in an array.
+
+    ## bind()
+    
+        bind() also allows us to decide what this should refer to.
+
+            But there is an important difference:
+
+            call() and apply() execute the function immediately, while bind() creates a new function that can be called later.
+
+        Example:
+
+            function show_student() {
+                console.log(this.student_name);
+            }
+
+            const student_1 = {
+                student_name: "Dinesh"
+            };
+
+            const show_student_name = show_student.bind(student_1);
+            show_student_name();
+
+        Output:
+
+            Dinesh
+
+        Purpose of bind()
+
+            A common situation is when we pass an object's method somewhere else.
+
+            Example:
+
+                const student = {
+                    student_name: "Dinesh",
+                    show_name() {
+                        console.log(this.student_name);
+                    }
+                };
+
+                const show = student.show_name;
+                show();
+
+            The method was taken out of the object.
+
+                It is no longer being called as:
+                student.show_name();
+
+            So this does not automatically remain connected to student.
+
+                We can use bind():
+
+                const show = student.show_name.bind(student);
+                show();
+
+             Now:
+
+                show()
+                ↓
+                this = student
+
+            use case
+
+                Consider a school application where a button displays a student's information.
+
+                const student = {
+                    student_name: "Dinesh",
+                    show_name() {
+                        console.log(this.student_name);
+                    }
+                };
+
+                const button = document.getElementById("show_button");
+                button.addEventListener(
+                    "click",
+                    student.show_name.bind(student)
+                );
+
+                When the button is clicked, the method still uses the correct student object.
+
+                This is a common reason bind() is useful when passing methods as callbacks.
+
+# Higher-Order Functions
+
+    JavaScript Callbacks, map(), filter(), reduce(), forEach() and Functions Returning Functions
+
+    These concepts are commonly used when working with lists of data and when we need to perform an operation on each item.
+
+    They are especially useful in real applications such as:
+
+        -Student management systems
+        -Banking applications
+        -Hospital systems
+        -Employee management systems
+        -Food delivery systems
+        -Ticket booking systems
+        -Payment systems
+
+    ## Callback Function
+
+        A callback function is a function that is passed to another function as an argument.
+
+        The receiving function can then call the function when it needs it.
+
+        Simple structure
+
+            function process_data(callback_function) {
+                callback_function();
+            }
+
+            function show_message() {
+                console.log("Data processed");
+            }
+            process_data(show_message);
+
+        Output:
+
+            Data processed
+
+        need for callback
+
+            Callbacks are useful when we want to tell a function:
+
+            "Do this main task, and when you process each item or finish the task, use this function."
+
+            For example, a student management system may have a list of students.
+
+            We may want to:
+
+                Get students
+                    ↓
+                Process each student
+                    ↓
+                Display student
+
+            The function that processes the students can receive another function as a callback.
+
+        use case
+
+            Imagine a hospital system that needs to display each patient's name.
+
+            const patients = [
+                "Arun",
+                "Priya",
+                "Rahul"
+            ];
+
+            function show_patient(patient_name) {
+                console.log("Patient:", patient_name);
+            }
+
+            patients.forEach(show_patient);
+
+            Output:
+
+                Patient: Arun
+                Patient: Priya
+                Patient: Rahul
+
+            and
+
+            students.forEach(function(student_name) {
+                console.log(student_name);
+            });
+
+            Output:
+
+                Arun
+                Priya
+                Rahul
+
+            The callback runs once for every array item.
+
+    ## map()
+
+        map() is used when we want to create a new array by changing each item.
+
+        Syntax
+
+            const new_array = old_array.map(callback_function);
+
+            For example, a bank application may store transaction amounts in rupees and need to convert them to another format.
+
+            const amounts = [
+                1000,
+                2000,
+                3000
+            ];
+            const updated_amounts = amounts.map(function(amount) {
+                return amount + 100;
+            });
+            console.log(updated_amounts);
+
+        Output:
+
+            [1100, 2100, 3100]
+
+            The original array is not changed.
+
+
+        use case
+
+            Suppose a college application receives student marks.
+
+                const marks = [
+                    70,
+                    80,
+                    90
+                ];
+                const updated_marks = marks.map(function(mark) {
+                    return mark + 5;
+                });
+                console.log(updated_marks);
+
+            Output:
+
+                [75, 85, 95]
+
+                The application created a new array containing the updated marks.
+
+        map() with Objects
+
+            In real applications, arrays usually contain objects.
+
+            example:
+
+                const students = [
+                    {
+                        student_name: "Arun",
+                        mark: 80
+                    },
+                    {
+                        student_name: "Priya",
+                        mark: 90
+                    }
+                ];
+
+                Suppose we only need the student names.
+
+                const student_names = students.map(function(student) {
+                    return student.student_name;
+                });
+                console.log(student_names);
+
+            Output:
+
+                ["Arun", "Priya"]
+
+                This is very common when data comes from an API.
+
+    ## filter()
+
+        filter() is used when we want to select only the items that satisfy a condition.
+
+        Syntax
+
+            const new_array = array.filter(callback_function);
+
+            The callback must return:
+
+            true  ---> keep the item
+            false ---> remove the item
+
+        use case
+
+            Suppose a college system needs to find students who scored 80 or more.
+
+                const marks = [
+                    65,
+                    82,
+                    90,
+                    70,
+                    85
+                ];
+                const selected_marks = marks.filter(function(mark) {
+                    return mark >= 80;
+                });
+                console.log(selected_marks);
+
+            Output:
+
+                [82, 90, 85]
+
+        filter() with Objects
+
+            Suppose a bank has customer accounts.
+
+                const accounts = [
+                    {
+                        account_holder: "Arun",
+                        balance: 5000
+                    },
+                    {
+                        account_holder: "Priya",
+                        balance: 25000
+                    },
+                    {
+                        account_holder: "Rahul",
+                        balance: 15000
+                    }
+                ];
+
+                Suppose we want accounts with a balance greater than ₹10,000.
+
+                    const selected_accounts = accounts.filter(function(account) {
+                        return account.balance > 10000;
+                    });
+                    console.log(selected_accounts);
+
+                Output:
+
+                [
+                    {
+                        account_holder: "Priya",
+                        balance: 25000
+                    },
+                    {
+                        account_holder: "Rahul",
+                        balance: 15000
+                    }
+                ]
+
+                This is a realistic use of filter() because applications frequently need to display only records that satisfy a condition.
+
+    ## reduce()
+
+        reduce() is used when we want to combine multiple array values into one final value.
+
+            workflow
+
+                100
+                200
+                300
+                ----               
+                600
+                
+            Syntax
+
+                const result = array.reduce(callback_function, initial_value);
+
+                The callback receives an accumulator and the current item.
+
+            example
+
+                Suppose a bank application needs to calculate the total value of several transactions.
+
+                const transactions = [
+                    5000,
+                    3000,
+                    2000
+                ];
+                const total_amount = transactions.reduce(function(total, amount) {
+                    return total + amount;
+                }, 0);
+                console.log(total_amount);
+
+            Output:
+
+                10000
+
+            The calculation happens like this:
+
+                Start = 0
+
+                0 + 5000 = 5000
+                5000 + 3000 = 8000
+                8000 + 2000 = 10000
+
+            Final result:
+
+                10000
+
+            use case
+
+                Suppose a hospital wants to calculate the total number of beds occupied across different departments.
+
+                const occupied_beds = [
+                    20,
+                    15,
+                    25,
+                    10
+                ];
+                const total_beds = occupied_beds.reduce(function(total, beds) {
+                    return total + beds;
+                }, 0);
+                console.log(total_beds);
+
+                Output:
+
+                70
+
+                Here:
+
+                20 + 15 + 25 + 10
+                        ↓
+                    70
+
+                So reduce() is useful when multiple values need to become one final result.
+
+    ## function returning a function    
+
+        a function returns another function.
+
+        Example:
+
+            function create_message() {
+                return function() {
+                    console.log("Welcome");
+                };
+            }
+
+            const show_message = create_message();
+            show_message();
+
+        Output:
+
+            Welcome
+
+        use case
+
+            Consider an employee management application.
+
+            Different employees may receive different salary increases.
+
+            Instead of creating separate functions manually, we can create a function that creates salary calculators.
+
+                function create_salary_calculator(increase_percentage) {
+                    return function(salary) {
+                        return salary +
+                            (salary * increase_percentage / 100);
+                    };
+                }
+                const calculate_5_percent =
+                    create_salary_calculator(5);
+                const calculate_10_percent =
+                    create_salary_calculator(10);
+                console.log(calculate_5_percent(30000));
+                console.log(calculate_10_percent(30000));
+
+            Output:
+
+                31500
+                33000
+
+# Pure Function,Immutability,Composition and Currying
+
+    These concepts are related to writing JavaScript code that is:
+
+        -easier to understand
+        -easier to test
+        -safer to modify
+        -reusable
+        -easier to maintain
+
+        The four concepts are:
+
+            -Pure Functions
+            -Immutability
+            -Composition
+            -Currying
+
+        ## 1.Pure Function  
+
+            A pure function is a function that:
+
+                1.gives the same output when given the same input
+                2.does not change anything outside the function
+
+            Simple example
+            
+                function calculate_total(price, quantity) {
+                    return price * quantity;
+                }
+                console.log(calculate_total(500, 2));
+
+            Output:
+
+                1000
+
+            If we call it again:
+
+                console.log(calculate_total(500, 2));
+
+            The result will always be:
+
+                1000
+
+            The function does not depend on anything outside itself.
+
+            use case    
+
+                1.Suppose a banking application calculates a transaction fee.
+
+                    function calculate_transaction_fee(amount) {
+                        return amount * 0.02;
+                    }
+                    console.log(calculate_transaction_fee(5000));
+
+                Output:
+
+                    100
+
+                For the same amount:
+
+                    5000 ---> ₹100 fee
+                    5000 ---> ₹100 fee
+                    5000 ---> ₹100 fee
+
+                The function always produces the same result.
+
+                    So it is a pure function.
+
+                2. A college application may calculate a student's total marks.
+
+                    function calculate_total_mark(mark_1, mark_2, mark_3) {
+                        return mark_1 + mark_2 + mark_3;
+                    }
+                    console.log(calculate_total_mark(80, 75, 90));
+
+                Output:
+
+                    245
+
+                The function only uses the values given to it.
+
+                    It does not depend on:
+
+                        -global variables
+                        -database
+                        -DOM
+                        -random values
+                        -current time
+
+                    Therefore, it is pure.
+
+            impure function example 
+
+                let balance = 10000;
+                function withdraw_money(amount) {
+                    balance = balance - amount;
+                    return balance;
+                }
+
+            The function changes the external variable:balance
+
+                So the function has a side effect.
+
+                It is not a pure function.
+
+    ## Immutability
+
+        Immutability means not changing the original data after it has been created.
+
+        Instead of modifying the original value, we create a new value.
+
+        example:
+
+            const student = {
+                student_name: "Arun",
+                mark: 80
+            };
+
+        Suppose we want to update the mark.
+
+            Instead of changing: student.mark = 90;
+
+            we can create a new object:
+
+                const updated_student = {
+                    ...student,
+                    mark: 90
+                };
+
+        Now:
+
+            console.log(student);
+            console.log(updated_student);
+
+        The original student remains:
+
+            Arun, 80
+
+        The new object contains:
+
+            Arun, 90
+
+        Uses of Immutability
+
+            1. Consider a student management application.
+
+                Suppose the application is displaying:
+
+                    Student: Arun
+                    Mark: 80
+
+                Now the mark needs to be updated.
+
+                If we directly change the original object, other parts of the application using that object may also see the changed value.
+
+                With immutability:
+
+                    Original data
+                        ↓
+                    Create new data
+                        ↓
+                    Use updated data
+
+                This makes it easier to understand what changed.
+
+                Immutability is especially important in applications that manage a lot of state.
+
+            2.Suppose a hospital application has a list of patients.
+
+                const patients = [
+                    "Arun",
+                    "Priya",
+                    "Rahul"
+                ];
+
+                Suppose we want to add another patient.
+                Instead of: patients.push("Kumar");
+
+                we can create a new array:
+
+                    const updated_patients = [
+                        ...patients,
+                        "Kumar"
+                    ];
+
+                Now:
+
+                    patients = Arun, Priya, Rahul
+                    updated_patients = Arun, Priya, Rahul, Kumar
+
+                The original array is unchanged.
+
+    ## Composition
+
+        Function composition means combining small functions to create a bigger operation.
+
+        Instead of creating one large function:
+
+            we create small functions:
+
+                Function A
+                Function B
+                Function C
+
+            and connect them.
+
+        Example
+
+            Suppose we have two functions.
+
+                function add_tax(amount) {
+                    return amount + (amount * 0.05);
+                }
+
+                function round_amount(amount) {
+                    return Math.round(amount);
+                }
+
+            We can use them one after another:
+
+                const amount_with_tax = add_tax(1000);
+                const final_amount = round_amount(amount_with_tax);
+                console.log(final_amount);
+
+            output
+
+                1050
+
+            The output of one function becomes the input of another function.
+
+        use case
+
+            Suppose a banking application needs to process a transaction amount.
+
+            The application may need to:
+
+                Calculate fee
+                    ↓
+                Add fee
+                    ↓
+                Round amount
+
+            We can create separate functions.
+
+                function calculate_fee(amount) {
+                    return amount * 0.02;
+                }
+
+                function add_fee(amount) {
+                    return amount + calculate_fee(amount);
+                }
+
+                function round_amount(amount) {
+                    return Math.round(amount);
+                }
+
+            Then:
+
+                const transaction_amount = 5000;
+                const amount_with_fee = add_fee(transaction_amount);
+                const final_amount = round_amount(amount_with_fee);
+                console.log(final_amount);
+
+                Each function has one responsibility.
+                That makes the code easier to understand and reuse.
+
+        use of Composition
+
+            Without composition, we may write one large function:
+
+                function process_transaction(amount) {
+                    // calculate fee
+                    // add fee
+                    // round amount
+                    // validate amount
+                    // etc.
+                }
+
+                As the application grows, the function can become difficult to maintain.
+
+                With composition:
+
+                    calculate_fee()
+                        ↓
+                    add_fee()
+                        ↓
+                    round_amount()
+
+                Each function has a small job.
+
+    ## Currying
+
+        Currying means converting a function that takes multiple arguments into a sequence of functions that each take one argument.
+
+        example:
+
+            Normal function:
+
+                function calculate_total(price, quantity) {
+                    return price * quantity;
+                }
+
+            We call:
+
+                calculate_total(500, 3);
+
+            With currying:
+
+                function calculate_total(price) {
+                    return function(quantity) {
+                        return price * quantity;
+                    };
+
+                }
+
+            we call:
+
+                const calculate_product_total = calculate_total(500);
+                console.log(calculate_product_total(3));
+
+            Output:
+
+                1500
+
+        work flow    
+
+            const calculate_product_total = calculate_total(500);
+            The first function receives:
+
+                price = 500
+
+            It returns another function:
+
+                function(quantity)
+
+            That returned function remembers:
+
+                price = 500
+
+            Then:
+
+                calculate_product_total(3);
+
+            provides:
+
+                quantity = 3
+
+            So:
+
+                500 × 3=1500
+
+        Currying is Useful When One Value is Reused
+
+            Suppose an application repeatedly needs a 10% tax calculation.
+
+            Instead of repeatedly doing:
+
+                calculate_tax(30000, 10);
+                calculate_tax(40000, 10);
+                calculate_tax(50000, 10);
+
+            we can create the specialized function once:
+
+                const calculate_10_percent =
+                    create_tax_calculator(10);
+
+            Then:
+
+                calculate_10_percent(30000);
+                calculate_10_percent(40000);
+                calculate_10_percent(50000);
+
+            The 10% rule is already stored in the function.
+
+# Regular Expressions (RegEx)
+
+    A Regular Expression (RegExp) is a pattern used to search, check, or replace text.
+
+        It is useful when we need to find a specific pattern inside a string.
+
+        Real-time uses
+
+            Regular expressions are commonly used for:
+
+            -Checking an email format
+            -Validating a phone number
+            -Finding a word in a message
+            -Replacing unwanted characters
+            -Checking a password format
+            -Extracting numbers from text
+            -Searching logs or documents
+
+        ## RegExp Syntax
+
+            A regular expression is written between two / symbols.
+
+                const pattern = /hello/;
+
+                Here:
+
+                    /hello/
+                    ↑    ↑
+                    start end
+
+                The word hello is the pattern we want to search for.
+
+                Example
+
+                    const pattern = /javascript/;
+
+                This pattern searches for:
+
+                    javascript inside a string.
+
+            with string
+
+                const message = "I am learning javascript";
+                const pattern = /javascript/;
+                console.log(pattern.test(message));
+
+            Output:
+
+                true
+
+        ## Flags
+
+            Flags change how the regular expression searches.
+
+                The most commonly used flags are:
+
+                Flag	Meaning
+                g	 -  Global search
+                i	 -  Case-insensitive search
+                m	 -  Multiline search
+
+
+        ## g — Global Flag
+
+            Without g, many RegExp operations work with the first match.
+
+                const message = "apple apple apple";
+                console.log(message.match(/apple/));
+
+            It finds the first occurrence.
+
+            With g:
+
+                const message = "apple apple apple";
+                console.log(message.match(/apple/g));
+
+            Output:
+
+                ["apple", "apple", "apple"]
+            
+            Real-time use
+
+                Suppose a document contains many occurrences of a particular word.
+
+                Using g allows us to find all occurrences instead of only the first one.
+
+        ## i-Case-Insensitive Flag
+
+            Normally, RegExp is case-sensitive.
+
+                const pattern = /hello/;
+                console.log(pattern.test("Hello"));
+
+            Output:
+
+                false
+                
+            hello & Hello are different in case.
+
+            Using i:
+
+                const pattern = /hello/i;
+                console.log(pattern.test("Hello"));
+
+            Output:
+
+                true
+
+            The i flag means:Ignore uppercase and lowercase differences.
+
+            use case
+
+                A search box may allow a user to search:
+
+                bank
+                Bank
+                BANK
+                BaNk
+
+                and treat them as the same search term.
+
+        ## m-Multiline Flag
+
+            The m flag changes how ^ and $ work when the string contains multiple lines.
+
+                const message = `Hello Welcome Goodbye`;
+                console.log(/^Welcome/m.test(message));
+
+            Output:
+
+                true
+
+            Here ^ means the beginning of a line when the m flag is used.
+
+            use case
+
+                This can be useful when processing:
+
+                    -Logs
+                    -Multi-line documents
+                    -Configuration files
+                    -Text files
+
+        ## test()
+
+            The test() method checks whether a pattern exists in a string.
+
+            Syntax
+
+                pattern.test(string);
+
+            It returns: true or false
+
+            Example
+            
+                const email_pattern = /@/;
+                console.log(email_pattern.test("student@gmail.com"));
+
+            Output:
+
+                true
+
+            The @ symbol exists in the email.
+
+            Example
+
+                const phone_pattern = /^\d{10}$/;
+                console.log(phone_pattern.test("9876543210"));
+
+                Output:
+
+                    true
+
+                Here:
+
+                    ^       ---> start
+                    \d      ---> digit
+                    {10}    ---> exactly 10 times
+                    $       ---> end
+
+                So the pattern checks whether the entire value contains exactly 10 digits.
+
+                test() is commonly useful for validation.
+
+        ## match()
+
+            The match() method is used to find matching text inside a string.
+
+            Syntax
+
+                string.match(pattern);
+
+            Example
+
+                const message = "The order number is 4582";
+                const result = message.match(/\d+/);
+                console.log(result);
+
+             \d+ ---> one or more digits
+
+            The result contains: 
+                
+                4582
+
+        ## match() with g
+
+            const message = "Order 101, Order 202, Order 303";
+            const result = message.match(/\d+/g);
+            console.log(result);
+
+            Output:
+
+                ["101", "202", "303"]
+
+            use case
+
+                Suppose a system log contains:
+
+                    Order 101 completed
+                    Order 202 completed
+                    Order 303 completed
+
+                We can extract all order numbers using:
+
+                    message.match(/\d+/g);
+
+        ## replace()
+
+            The replace() method is used to replace matching text with another value.
+
+            Syntax
+
+                string.replace(pattern, replacement);
+
+            Example
+
+                const message = "Hello user";
+                const result = message.replace(/user/, "student");
+                console.log(result);
+
+            Output:
+
+                Hello student
+
+
+        ## replace() with g
+
+            Without g:
+
+                const message = "JavaScript is easy. JavaScript is powerful.";
+                const result = message.replace(/JavaScript/, "JS");
+                console.log(result);
+
+            Output:
+
+                JS is easy. JavaScript is powerful.
+
+            Only the first occurrence is replaced.
+
+            With g:
+
+                const message = "JavaScript is easy. JavaScript is powerful.";
+                const result = message.replace(/JavaScript/g, "JS");
+                console.log(result);
+
+            Output:
+
+                JS is easy. JS is powerful.
+
+            use case
+
+                A text-processing application may need to remove or replace unwanted words throughout a document.
+
+            Example
+
+                Before:
+                    Error Error Error
+
+                After:
+                    Warning Warning Warning
+
+                    const message = "Error Error Error";
+                    const result = message.replace(/Error/g, "Warning");
+                    console.log(result);
+
+                output
+
+                    Warning Warning Warning
+
+        ## exec()
+
+            The exec() method is used to execute a regular expression against a string and return detailed information about the match.
+
+            Syntax
+
+                pattern.exec(string);
+
+            Example
+
+                const pattern = /\d+/;
+                const message = "Student ID: 105";
+                const result = pattern.exec(message);
+                console.log(result[0]);
+
+            Output:
+
+                105
+
+            result[0] contains the matched text.
+
+            use case
+
+                const pattern = /\d+/;
+                const message = "Student ID: 105";
+                const result = pattern.exec(message);
+                console.log(result);
+
+                The result contains information such as:
+
+                    -matched text
+                    -index
+                    -input
+
+                example:
+
+                    ["105", index: 12, input: "Student ID: 105"]
+
+                The exact representation can vary, but the important information is:
+
+                    result[0]    ---> matched text
+                    result.index ---> position of the match
+                    result.input ---> original string
+
+                exec() can be useful when processing structured text and we need not only the matching value but also information about where the match occurred.
+
+# Error Handling
+
+    JavaScript provides built-in errors such as:
+
+        -TypeError
+        -ReferenceError
+        -SyntaxError
+        -RangeError
+
+    But in real applications, we often need to create errors for our own application rules.
+
+    example:
+
+        -Bank balance is insufficient
+        -Student has not paid the exam fee
+        -Booking is unavailable
+        -User is not authorized
+        -Account is already blocked
+        -File upload is too large
+
+    we can use:
+
+        Custom Errors
+            ↓
+        Error Propagation
+            ↓
+        Stack Trace
+
+    ## Custom Error
+
+        A custom error is an error that we create to represent a specific problem in our application.
+
+        JavaScript provides the Error class for creating errors.
+
+        Basic syntax
+
+            throw new Error("Something went wrong");
+
+        Example:
+
+            function withdraw_money(balance, amount) {
+                if (amount > balance) {
+                    throw new Error("Insufficient balance");
+                }
+                return balance - amount;
+            }
+            console.log(withdraw_money(5000, 7000));
+
+        Output:
+
+            Error: Insufficient balance
+
+        Here, the error is created by us because the application has detected a specific problem.
+
+        ### use of custom error
+
+            Consider a banking application.
+
+            There can be different problems:
+
+                -Insufficient balance
+                -Invalid account
+                -Account blocked
+                -Invalid amount
+
+            Instead of giving a generic error: Something went wrong
+
+            we can create meaningful errors.
+
+                This makes the application easier to understand and debug.
+
+
+        ### Creating a custom error Class
+
+            We can create our own error class using class.
+
+                class Insufficient_balance_error extends Error {
+                    constructor(message) {
+                        super(message);
+                        this.name = "Insufficient_balance_error";
+                    }
+                }
+
+            Now we can use it:
+
+                function withdraw_money(balance, amount) {
+                    if (amount > balance) {
+                        throw new Insufficient_balance_error("Insufficient balance");
+                    }
+                    return balance - amount;
+                }
+
+            Handling the error:
+
+                try {
+                    console.log(withdraw_money(5000, 7000));
+                } catch (error) {
+                    console.log(error.name);
+                    console.log(error.message);
+                }
+
+            Output:
+
+                Insufficient_balance_error
+                Insufficient balance
+
+        ### Extending build in error class
+
+            When we extend the built-in Error class:
+
+                class Insufficient_balance_error extends Error 
+
+            the super() call runs the constructor of the parent Error class.
+
+            super(message);
+
+            This gives our custom error the normal Error features.
+
+            For example:
+
+                error.message
+                error.name
+                error.stack
+
+        ### use case
+
+            an education application where a student tries to download an exam hall ticket.
+
+            The system checks whether the student has paid the required fee.
+
+                class Fee_not_paid_error extends Error {
+                    constructor(message) {
+                        super(message);
+                        this.name = "Fee_not_paid_error";
+                    }
+                }
+
+                function download_hall_ticket(fee_paid) {
+                    if (!fee_paid) {
+                        throw new Fee_not_paid_error("Exam fee has not been paid");
+                    }
+                    return "Hall ticket downloaded";
+                }
+
+                try {
+                    console.log(download_hall_ticket(false));
+                } catch (error) {
+                    console.log(error.name);
+                    console.log(error.message);
+                }
+
+            Output:
+
+                Fee_not_paid_error
+                Exam fee has not been paid
+
+    ## Error Propagation
+
+        Error propagation means an error moves from the place where it occurs toward the calling functions until something handles it.
+
+            function check_balance() {
+                throw new Error("Insufficient balance");
+            }
+
+            function withdraw_money() {
+                check_balance();
+            }
+
+            function process_payment() {
+                withdraw_money();
+            }
+
+            process_payment();
+
+        The error starts ---> check_balance()
+
+            Then moves back through:
+
+            withdraw_money()
+                    ↑
+            process_payment()
+                    ↑
+            main code
+
+            This movement is called error propagation.
+
+        The catch block handles the error even though the error was created inside check_balance().
+
+        several functions calling each other:
+
+            process_payment()
+                ↓
+            withdraw_money()
+                ↓
+            check_balance()
+
+        If check_balance() cannot complete its job, it throws an error.
+
+        JavaScript looks for a catch block in the current function.
+
+        If there isn't one, the error moves to the function that called it.
+
+        This continues until JavaScript finds a matching catch.
+
+    ## Rethrowing an Error  
+
+        Sometimes a function catches an error but cannot fully handle it.
+
+        It can rethrow the error.
+
+        function check_balance() {
+            try {
+                throw new Error("Insufficient balance");
+            } catch (error) {
+                console.log("Logging error");
+                throw error;
+            }
+        }
+
+        try {
+            check_balance();
+        } catch (error) {
+            console.log("Error handled by outer function");
+        }
+
+        Flow:
+
+            check_balance()
+                ↓
+            throw
+                ↓
+            catch
+                ↓
+            log error
+                ↓
+            throw again
+                ↓
+            outer catch
+
+        This is called rethrowing an error.
+
+    ## Stack Trace
+
+        A stack trace shows the path of function calls that led to an error.
+
+        Example:
+
+            function check_balance() {
+                throw new Error("Insufficient balance");
+            }
+
+            function withdraw_money() {
+                check_balance();
+            }
+
+            function process_payment() {
+                withdraw_money();
+            }
+
+            process_payment();
+
+        JavaScript may display something similar to:
+
+            Error: Insufficient balance
+                at check_balance (...)
+                at withdraw_money (...)
+                at process_payment (...)
+
+            This information is called the stack trace.
+
+        ### Stack Trace uses
+
+            Suppose an application has hundreds of functions.
+
+            An error message says: Insufficient balance
+
+            This tells us what happened.
+
+            But the stack trace tells us where it happened and how the program reached that point.
+
+            example:
+
+                Error: Insufficient balance
+
+                check_balance()
+                    ↓
+                withdraw_money()
+                    ↓
+                process_payment()
+
+                This makes debugging much easier.
+
+        ### Accessing the Stack Trace
+
+            Every JavaScript Error object has a stack property.
+
+            try {
+                throw new Error("Something went wrong");
+            } catch (error) {
+                console.log(error.stack);
+            }
+
+            The output contains the error message and the function call information.
+
+        ### Error Object Properties
+
+            A JavaScript error commonly provides:
+
+                error.name
+                error.message
+                error.stack
+
+            Example:
+
+                try {
+                    throw new Error("Invalid account");
+                } catch (error) {
+                    console.log(error.name);
+                    console.log(error.message);
+                    console.log(error.stack);
+                }
+
+            name
+
+                Tells us the type/name of the error.
+            
+            message
+
+                Tells us what happened. ---> Invalid account
+            
+            stack
+
+                Shows where the error occurred and the function call path.
+
+# Event Loop & Concurrency
+
+    JavaScript runs code using a few important parts of the browser environment.
+
+        When JavaScript performs something that takes time, such as:
+
+            setTimeout()
+            fetch()
+            button clicks
+            API requests
+            DOM events
+
+        JavaScript does not simply stop and wait.
+
+        Instead, the browser handles the waiting work, and JavaScript continues running other code.
+
+    ## 1.Call Stack
+
+        The Call Stack is where JavaScript keeps track of the functions that are currently running.
+
+        JavaScript is single-threaded, so it executes one piece of JavaScript code at a time.
+
+        Simple example
+
+            function show_message() {
+                console.log("Hello");
+            }
+            show_message();
+
+        Execution:
+
+            show_message()
+                ↓
+            Call Stack
+                ↓
+            console.log()
+                ↓
+            "Hello"
+
+        The function is added to the stack when it starts running.
+
+        After it finishes, it is removed.
+
+        example
+
+        ### Working of the call stack
+
+            function first() {
+                second();
+            }
+
+            function second() {
+                console.log("Hello");
+            }
+
+            first();
+
+            The Call Stack changes like this:
+
+        Step 1
+
+
+            first()
+
+        Step 2
+
+
+            second()
+            first()
+
+        Step 3
+
+
+            console.log()
+            second()
+            first()
+
+        After console.log() finishes:
+
+            second()
+            first()
+
+        Then:
+
+            first()
+
+        Finally:
+
+            Empty
+
+        Call Stack is the place where JavaScript keeps track of currently executing functions.
+
+    ## Web APIs
+
+        The browser provides features called Web APIs.
+
+        These APIs handle operations that are not simply normal JavaScript function execution.
+
+        Common examples include:
+
+            setTimeout()
+            fetch()
+            DOM events
+            Geolocation
+            Browser storage
+
+        example:
+
+            setTimeout(() => {
+                console.log("Timer finished");
+            }, 2000);
+
+        JavaScript does not stay inside the Call Stack for two seconds.
+
+        The browser handles the timer.
+
+            JavaScript
+                ↓
+            setTimeout()
+                ↓
+            Browser Web API
+                ↓
+            Wait for 2 seconds
+                ↓
+            Callback becomes ready
+
+        The callback is then placed into a queue.
+
+        Web APIs is browser-provided features that handle browser and asynchronous operations.
+
+    ## Task Queue
+
+        The Task Queue stores callbacks that are ready to execute after certain browser tasks finish.
+
+        It is also commonly called the Macrotask Queue.
+
+        Examples include callbacks from:
+
+            setTimeout()
+            setInterval()
+            DOM events such as click
+            Some browser events
+
+        Example:
+
+            setTimeout(() => {
+                console.log("Timer finished");
+            }, 1000);
+
+        After the timer becomes ready:
+
+            Web API
+            ↓
+            Timer finishes
+            ↓
+            Task Queue
+            ↓
+            Event Loop
+            ↓
+            Call Stack
+
+        The callback waits in the queue until JavaScript can execute it.
+
+    ## Microtask Queue
+
+        The Microtask Queue stores callbacks that need to be processed before the browser moves to another normal task.
+
+        Common examples are:
+
+            Promise.then()
+            Promise.catch()
+            Promise.finally()
+            queueMicrotask()
+
+        Example:
+
+            Promise.resolve().then(() => {
+                console.log("Promise completed");
+            });
+
+        The callback goes into the Microtask Queue.
+
+            Promise
+            ↓
+            Microtask Queue
+            ↓
+            Event Loop
+            ↓
+            Call Stack
+
+        Microtask Queue is a queue that stores Promise callbacks and other microtasks waiting to run.
+
+    ## Rendering
+
+        The browser also needs to update what the user sees.
+
+        example:
+
+            document.querySelector("#message").textContent = "Payment successful";
+
+        JavaScript changes the DOM.
+
+        The browser can then update the screen.
+
+        A simplified rendering process is:
+
+            DOM changes
+                ↓
+            Style calculation
+                ↓
+            Layout
+                ↓
+            Painting
+                ↓
+            Updated screen
+
+        The exact browser rendering pipeline is more complex, but this simplified flow is useful for learning.
+
+    ## Rendering uses
+
+        an application showing:
+
+            Loading...
+
+        Then an API request finishes,JavaScript changes it to:
+
+            Data loaded
+
+            The browser needs to render that change so the user can see it.
+
+                JavaScript
+                    ↓
+                DOM change
+                    ↓
+                Browser rendering
+                    ↓
+                Updated screen
+
+    ## Event Loop
+
+        The Event Loop coordinates JavaScript execution with queued work.
+
+                        JavaScript
+                            ↓
+                        Call Stack
+                            ↑
+                            |
+                        Event Loop
+                        ↙       ↘
+                Microtask Queue   Task Queue
+
+        The Event Loop continuously checks whether JavaScript can process queued work.
+
+        Flow
+
+            Call Stack finishes current work
+                        ↓
+                Process Microtasks
+                        ↓
+                Browser may render
+                        ↓
+                Take another Task
+                        ↓
+                Process Microtasks
+                        ↓
+                Browser may render
+
+# Memory Management
+
+    JavaScript automatically manages memory for us.
+
+        When we create:
+
+            const student_name = "Arun";
+            const student = {
+                name: "Arun",
+                mark: 85
+            };
+
+        JavaScript needs memory to store these values.
+
+        When some data is no longer needed, JavaScript can automatically remove it from memory.
+
+        This process is called Garbage Collection.
+
+        To understand garbage collection, we first need to understand references.
+
+            References
+                ↓
+            Reachability
+                ↓
+            Garbage Collection
+                ↓
+            Memory Leaks
+
+    ## Memory Heap  
+
+        JavaScript uses an area called the Memory Heap to store dynamically allocated data such as objects and functions.
+
+        Example:
+
+            const student = {
+                name: "Arun",
+                mark: 85
+            };
+
+
+            Memory Heap
+
+            ┌──────────────────────┐
+            │ Object               │
+            │ name: "Arun"         │
+            │ mark: 85             │
+            └──────────────────────┘
+                    ↑
+                    │
+                student
+
+            The variable student refers to the object stored in memory.
+
+    ## Reference
+
+        A reference is a connection from one variable or object to another object in memory.
+
+            const student = {
+                name: "Arun",
+                mark: 85
+            };
+
+            student
+            │
+            ↓
+            Object in Memory
+
+            The variable doesn't need to contain the complete object itself.
+
+            It provides access to the object.
+
+    ## Multiple reference
+
+        More than one variable can refer to the same object.
+
+            const student = {
+                name: "Arun",
+                mark: 85
+            };
+            const student_copy = student;
+
+        Now:
+
+            student  ───────┐
+                            ↓
+                        ┌──────────────┐
+                        │ Student      │
+                        │ name: Arun   │
+                        │ mark: 85     │
+                        └──────────────┘
+                            ↑
+                            │
+             student_copy ──┘ 
+
+            Both variables refer to the same object.
+
+    ## Why Reference matter?
+
+        const student = {
+            name: "Arun",
+            mark: 85
+        };
+
+        const student_copy = student;
+        student_copy.mark = 95;
+        console.log(student.mark);
+
+        Output:
+
+            95
+
+        Why?
+
+            Because both variables point to the same object.
+
+        Changing the object through one reference changes what the other reference sees.
+
+    ## removing the reference   
+
+        let student = {
+            name: "Arun",
+            mark: 85
+        };
+
+        student = null;
+
+        Initially:
+
+            student
+            ↓
+            Object
+
+        After:
+
+            student = null;
+
+        student → null
+
+        If nothing else refers to that object, it becomes unreachable.
+        That means the object can eventually be removed by the garbage collector.
+
+    ## Garbage Collection
+
+        Garbage Collection (GC) is the automatic process of finding memory that is no longer reachable and reclaiming it.
+
+        JavaScript engines such as V8 use garbage collection techniques based on reachability, commonly including a mark-and-sweep approach.
+
+        You normally do not manually free memory like you would in languages where explicit memory management is required.
+
+    ## Reachability
+
+        Garbage collection is mainly based on whether an object is still reachable.
+
+        An object is reachable if the program can still access it through an active reference path.
+
+        example:
+
+            const student = {
+                name: "Arun"
+            };
+
+        The object is reachable:
+
+            Global reference
+                ↓
+                student
+                ↓
+                Object
+
+        As long as the object can be reached, the garbage collector should not remove it.
+
+    ## Unreachable Objects
+
+        let student = {
+            name: "Arun"
+        };
+
+        student = null;
+
+        Now:
+
+            student
+            ↓
+            null
+
+        No active reference points to the object.
+        The object becomes unreachable.
+        The garbage collector can reclaim its memory.
+
+    ## Garbage Collection Example
+
+        function create_student() {
+            const student = {
+                name: "Arun",
+                mark: 85
+            };
+        }
+        create_student();
+
+        While the function is running:
+
+            create_student()
+                ↓
+            student
+                ↓
+            Student object
+
+        After the function finishes, if there are no other references,
+
+        The object is no longer reachable through that local variable.
+        It can eventually be garbage collected.
+
+    ## Meamory Leak
+
+        A memory leak happens when an application keeps references to data that it no longer needs.
+
+        Because the data is still reachable, the garbage collector cannot reclaim it.
+
+        Flow
+
+            Application no longer needs object
+                        ↓
+            But a reference still exists
+                        ↓
+            Object remains reachable
+                        ↓
+            Garbage collector cannot remove it
+                        ↓
+            Memory remains occupied
+
+        Example 
+            1.Server Logs
+
+            const logs = [];
+            function store_log(message) {
+                logs.push(message);
+            }
+
+            Every time the function runs:
+
+                logs
+                ↓
+                message 1
+                message 2
+                message 3
+                message 4
+                ...
+
+            If the application keeps adding data forever and never removes old entries, memory usage can continuously increase.
+
+            For example, a monitoring application might accidentally keep every log message in memory even though only the latest 100 logs are needed.
+
+            2.Event Listener
+
+                Event listeners can also cause memory-related problems when they are created repeatedly and never removed when no longer needed.
+
+                Example:
+
+                    function add_button_listener(button) {
+                        button.addEventListener("click", () => {
+                            console.log("Clicked");
+                        });
+                    }
+
+                If an application repeatedly creates components and attaches listeners without cleaning them up when those components are removed, unnecessary references and callbacks can remain.
+
+        ## How to Avoid Memory Leaks
+
+            1. Remove unnecessary event listeners
+
+                button.removeEventListener("click", handle_click);
+
+            2. Clear timers
+
+                clearTimeout(timer_id);
+                clearInterval(interval_id);
+
+            3. Remove unnecessary data
+
+                logs.length = 0;
+                or remove only the data that is no longer required.
+
+            4. Avoid unlimited global collections
+
+                Instead of:
+                const all_data = [];
+
+                and continuously adding data forever, keep only what the application actually needs.
+
+            5. Clean up when components are removed
+
+                When a screen or component is no longer used, clean up:
+
+                    Listeners
+                    Timers
+                    Subscriptions
+                    Connections
+                    References
+
