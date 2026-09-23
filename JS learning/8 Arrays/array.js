@@ -144,3 +144,5 @@ console.log(total_cart);
 // filter() → Creates a new array containing only elements that satisfy a condition.
 
 // reduce() → Processes all elements and combines them into a single result.
+
+

@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Employee Management System</title>
+    <script src="./js/app.js" defer></script>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+    <header class="header">
+        <div class="header-content">
+            <div class="brand">
+                <h1>Employee Management</h1>
+                <p>Manage and explore employee information</p>
+            </div>
+            <button id="add_employee" class="add-employee-btn">
+                Add Employee
+            </button>
+        </div>
+    </header>
+
+    <section class="employee-form-section" id="employee_form_section">
+
+        <h2>Add Employee</h2>
+        <form id="employee_form">
+            <div>
+                <label for="employee_name">Name</label>
+                <input
+                    type="text"
+                    id="employee_name"
+                    required
+                >
+            </div>
+            <div>
+                <label for="employee_email">Email</label>
+                <input
+                    type="email"
+                    id="employee_email"
+                    required
+                >
+            </div>
+
+            <div>
+                <label for="employee_phone">Phone</label>
+                <input
+                    type="text"
+                    id="employee_phone"
+                    required
+                >
+            </div>
+
+            <div>
+                <label for="employee_department">Department</label>
+                <input
+                    type="text"
+                    id="employee_department"
+                    required
+                >
+            </div>
+
+            <div>
+                <label for="employee_role">Role</label>
+                <input
+                    type="text"
+                    id="employee_role"
+                    required
+                >
+            </div>
+
+            <div>
+                <label for="employee_city">City</label>
+                <input
+                    type="text"
+                    id="employee_city"
+                    required
+                >
+            </div>
+
+            <div>
+                <label for="employee_salary">Basic Salary</label>
+                <input
+                    type="number"
+                    id="employee_salary"
+                    required
+                >
+            </div>
+
+            <div>
+                <label for="employee_bonus">Bonus</label>
+                <input
+                    type="number"
+                    id="employee_bonus"
+                    required
+                >
+            </div>
+            <button type="submit">
+                Save Employee
+            </button>
+
+        </form>
+
+    </section>
+
+    <!-- main -->
+    <main class="main-container">
+        <!-- search and filter -->
+        <section class="search-section">
+            <div class="search-box">
+                <label for="search_employee">
+                    Search Employee
+                </label>
+
+                <input
+                    type="text"
+                    id="search_employee"
+                    placeholder="Search by name, email, role..."
+                >
+            </div>
+
+            <div class="filter-box">
+                <label for="department_filter">
+                    Department
+                </label>
+                <select id="department_filter">
+                    <option value="">
+                        All Departments
+                    </option>
+                </select>
+            </div>
+
+            <div class="filter-box">
+                <label for="locationFilter">
+                    Location
+                </label>
+                <select id="locationFilter">
+                    <option value="">
+                        All Locations
+                    </option>
+                </select>
+            </div>
+        </section>
+
+        <!-- statistic -->
+        <section class="statistics-section">
+            <div class="stat-card">
+                <h3>Total Employees</h3>
+                <p id="total_employees"></p>
+            </div>
+
+            <div class="stat-card">
+                <h3>Departments</h3>
+                <p id="total_departments"></p>
+            </div>
+
+            <div class="stat-card">
+                <h3>Locations</h3>
+                <p id="total_locations"></p>
+            </div>
+
+            <div class="stat-card">
+                <h3>Projects</h3>
+                <p id="totalProjects"></p>
+            </div>
+        </section>
+
+        <!-- employee list -->
+        <section class="employees-section">
+            <div class="section-heading">
+                <div>
+                    <h2>Employees</h2>
+                    <p>
+                        Employee information from the data source
+                    </p>
+                </div>
+                <span id="employee_count"></span>
+            </div>
+
+        <!-- employee card template -->
+            <div
+                id="employee_list"
+                class="employee-grid">
+            </div>
+        </section>
+
+        <!-- employee details -->
+        <section
+            id="employee_details_section"
+            class="employee-details-section">
+            <div class="section-heading">
+                <div>
+                    <h2>Employee Details</h2>
+                    <p>
+                        Select an employee to view complete information
+                    </p>
+                </div>
+            </div>
+
+        <!-- dislay selectedd emp -->
+            <div id="employee_details"></div>
+        </section>
+
+        <!-- insights -->
+        <section class="insights-section">
+
+            <div class="section-heading">
+                <div>
+                    <h2>Employee Insights</h2>
+                    <p>
+                        View employee information and organizational insights
+                    </p>
+                </div>
+            </div>
+
+            <div class="insights-grid">
+                <!-- Salary Overview -->
+                <div class="insight-card">
+                    <div class="insight-header">
+                        <h3>Salary Overview</h3>
+                        <span>₹</span>
+                    </div>
+
+                    <div class="insight-content">
+                        <div>
+                            <span>Total Salary</span>
+                            <strong id="total_salary"></strong>
+                        </div>
+                        <div>
+                            <span>Average Salary</span>
+                            <strong id="average_salary"></strong>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Project Overview -->
+                <div class="insight-card">
+                    <div class="insight-header">
+                        <h3>Project Overview</h3>
+                        <span>Projects</span>
+                    </div>
+                    <div class="insight-content">
+                        <div>
+                            <span>Total Projects</span>
+                            <strong id="total_projects"></strong>
+                        </div>
+                        <div>
+                            <span>Active Projects</span>
+                            <strong id="active_projects"></strong>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Skills -->
+                <div class="insight-card">
+                    <div class="insight-header">
+                        <h3>Skills</h3>
+                        <span>Skills</span>
+                    </div>
+                    <div class="insight-content">
+                        <div>
+                            <span>Total Skills</span>
+                            <strong id="total_skills"></strong>
+                        </div>
+                        <div>
+                            <span>Most Used Skill</span>
+                            <strong id="most_used_skill"></strong>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Employee Status -->
+                <div class="insight-card">
+                    <div class="insight-header">
+                        <h3>Employee Status</h3>
+                        <span>Status</span>
+                    </div>
+                    <div class="insight-content">
+                        <div>
+                            <span>Active Employees</span>
+                            <strong id="active_employees"></strong>
+                        </div>
+                        <div>
+                            <span>On Leave</span>
+                            <strong id="employees_on_leave"></strong>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+</body>
+</html>

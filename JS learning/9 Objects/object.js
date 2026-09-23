@@ -198,3 +198,153 @@ Object.entries(movieCatalog[0]).forEach(([key,value])=>{
 
 
 
+//obj
+
+const customer = {
+    name: "vivek",
+    account_number: "XXXX1234",
+    balance: 50000,
+
+    // 1. method
+
+    show_balance: function () {return `Current Balance: ₹${this.balance}`;},
+
+    // 2. nested object
+
+    account_details: {
+        account_type: "Savings",
+        branch: "Coimbatore",
+        ifsc_code: "ABCD0001234"
+    }
+};
+
+// 3. properties
+
+console.log(customer.name);
+console.log(customer.balance);
+console.log(customer.account_number);
+
+// 4. methods
+
+console.log(customer.show_balance());
+
+// 5. nested objects
+
+console.log(customer.account_details.account_type);
+console.log(customer.account_details.branch);
+console.log(customer.account_details.ifsc_code);
+
+// 6. destructuring
+
+const {
+    name,
+    account_number,
+    balance
+} = customer;
+
+console.log(name);
+console.log(account_number);
+console.log(balance);
+
+// 7. nested object destructuring
+
+const {
+    account_details: {
+        account_type,
+        branch,
+        ifsc_code
+    }
+} = customer;
+
+console.log(account_type);
+console.log(branch);
+console.log(ifsc_code);
+
+// 8. Object.keys()
+
+const customer_keys =Object.keys(customer);
+console.log(customer_keys);
+
+// 9. Object.values()
+
+const customer_values =Object.values(customer);
+console.log(customer_values);
+
+// 10. Object.entries()
+
+const customer_entries =Object.entries(customer);
+console.log(customer_entries);
+
+// 11. Display
+
+const account_button =document.getElementById("account");
+account_button.addEventListener("click",function () {
+        document.getElementById("customer_name").innerText =`Customer: ${name}`;
+        document.getElementById("account_number").innerText =`Account Number: ${account_number}`;
+        document.getElementById("balance").innerText =`Balance: ₹${balance}`;
+        document.getElementById("account_type").innerText =`Account Type: ${account_type}`;
+        document.getElementById("branch").innerText =`Branch: ${branch}`;
+        document.getElementById("keys").innerText =`Properties: ${customer_keys.join(", ")}`;
+        document.getElementById("entries").innerText =`Entries: ${customer_entries
+                .map(function (entry) {
+                    return entry[0] + ": " + entry[1];
+                })
+                .join(" | ")}`;
+    }
+);
+
+// Orders received from an online shopping system
+
+const orders = [
+    {
+        order_id: 101,
+        customer_name: "Arun",
+        amount: 1200,
+        status: "delivered"
+    },
+    {
+        order_id: 102,
+        customer_name: "Priya",
+        amount: 800,
+        status: "pending"
+    },
+    {
+        order_id: 103,
+        customer_name: "Rahul",
+        amount: 2500,
+        status: "delivered"
+    },
+    {
+        order_id: 104,
+        customer_name: "Meena",
+        amount: 600,
+        status: "cancelled"
+    }
+];
+
+
+// 1. map()
+// Get the amount of every order
+
+const order_amounts = orders.map(function (order) {
+    return order.amount;
+});
+console.log(order_amounts);
+
+
+// 2. filter()
+// Get only delivered orders
+const delivered_orders = orders.filter(function (order) {
+    return order.status === "delivered";
+});
+console.log(delivered_orders);
+
+// 3. reduce()
+// Calculate total revenue
+const total_revenue = orders.reduce(
+    function (total, order) {
+        return total + order.amount;
+    },
+    0
+);
+console.log(total_revenue);

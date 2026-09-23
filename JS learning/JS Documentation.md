@@ -3327,7 +3327,32 @@
         Use case
 
             -common values or names 
- 
+
+        In a web application, an API base URL is often shared by multiple functions.
+
+        For example:
+
+            API_BASE_URL = "https://api.example.com"
+
+            Different parts of the application may use this same API URL:
+
+            Login API
+            Product API
+            Order API
+            User profile API
+            Payment API
+
+            So the API base URL can be kept at the global/module level because multiple functions need it.
+
+            Other real-time examples of global/module-level data
+
+                API base URL
+                Application configuration
+                Authentication configuration
+                Common constants
+                Currency setting
+                Environment configuration
+    
     2 local Scope
 
         A variable declared inside a function is available only within that function.
@@ -3349,6 +3374,23 @@
             console.log(message);
 
             This produces an error because message is not accessible outside the function.
+
+        example
+
+            Where it is used in real projects
+
+            Banking → transaction amount can be local to a money-transfer function.
+
+            Shopping → discount calculation variables can be local to a checkout function.
+
+            Education → a student's temporary exam score can be local to an exam function.
+
+            Login systems → a temporary validation result can be local to the login function.
+
+            Payment systems → payment calculation variables can be 
+            local to the payment-processing function.
+
+            Purpose: Keep data limited to the part of the application that actually needs it.
 
     3. Block Scope
 
@@ -3412,6 +3454,27 @@
             company     ---> global scope
 
             This is called the scope chain
+
+     ## Real-Time Uses
+
+        Lexical scope is used when a function needs to access variables from the place where the function was created.
+
+        Common real-time places:
+
+        Banking applications → a transaction function accesses account number and balance from its surrounding function.
+        
+        Online shopping → a cart function accesses cart data from its 
+        surrounding scope.
+        
+        Online exams → answer/score functions access the student's name and current score.
+       
+        Login systems → functions access user/session information from their surrounding scope.
+        
+        Timers → timer callbacks access variables such as remaining time.
+        
+        Event handlers → click handlers access variables defined outside the handler.
+        
+        API requests → callback/async functions access request-related variables from their surrounding scope.
 
     ## Variable Shadowing
 
@@ -4504,6 +4567,163 @@
 
             This is useful when an application needs to process an object's information dynamically
 
+
+        Real-Time Uses of map()
+
+            map() is used when an application needs to take every item from a list and create a new value from each item.
+
+            1. Shopping Application
+
+            An online shopping application has a list of products. The application may need to get only the product names from the product data.
+
+            Purpose: Transform product data into another format.
+
+            2. Search Results
+
+            After searching for a product, the application may need to display only the product names, prices, or product IDs from the search results.
+
+            Purpose: Extract required information from every search result.
+
+            3. Online Education Platform
+
+            An education platform may have a list of courses. map() can be used to create a list containing the course names or course prices.
+
+            Purpose: Transform course information for displaying it on the page.
+
+            4. Banking Application
+
+            A banking application may receive a list of transactions. map() can be used to extract:
+
+            Transaction amounts
+            Transaction IDs
+            Transaction dates
+            Transaction descriptions
+
+            Purpose: Convert transaction objects into the specific information required by the interface.
+
+            5. Student Management System
+
+            A college application may have student records containing name, department, roll number, and marks.
+
+            map() can be used to create a separate list containing only the student names or marks.
+
+            Purpose: Transform a complete student record into the required data.
+
+                map() is used when we want to transform every item in an array and create a new array.
+
+            Real-Time Uses of reduce()
+
+                reduce() is used when an application needs to combine multiple values into one final result.
+
+                1. Shopping Cart
+
+                An online shopping cart may contain multiple products.
+
+                reduce() can calculate the total cart amount.
+
+                For example:
+
+                ₹1,000 + ₹2,000 + ₹500 = ₹3,500
+
+                Purpose: Calculate the final cart total.
+
+                2. Banking Application
+
+                A banking application may have many transactions.
+
+                reduce() can be used to calculate:
+
+                Total money deposited
+                Total money withdrawn
+                Total transaction amount
+                Current balance from transaction records
+
+                Purpose: Combine multiple transactions into a single financial result.
+
+                3. Online Education Platform
+
+                An education platform may store marks for multiple subjects.
+
+                reduce() can calculate:
+
+                Total marks
+                Total completed lessons
+                Total course duration
+                Overall score
+
+                Purpose: Combine multiple values into one result.
+
+                4. E-Commerce Sales Dashboard
+
+                An admin dashboard may contain hundreds of orders.
+
+                reduce() can calculate:
+
+                Total sales
+                Total revenue
+                Total discount
+                Total shipping charges
+
+                Purpose: Convert many order values into one business metric.
+
+                5. Employee Management System
+
+                A company may have salary information for many employees.
+
+                reduce() can calculate the total salary expense for all employees.
+
+                Purpose: Combine employee salary values into one total.
+
+                reduce() is used when we want to combine multiple array values and produce one final result.
+
+            Real-Time Uses of filter()
+
+                filter() is used when an application needs to select only the items that match a particular condition.
+
+                1. Search Box — Amazon / Flipkart
+
+                When a user types a product name in the search box, the application checks the available products and keeps only the products that match the search text.
+
+                Example scenario:
+
+                User searches for "laptop".
+
+                The application filters the product list and displays products such as:
+
+                Laptop
+                Gaming Laptop
+                Laptop Bag
+
+                Products that don't match the search are not displayed.
+
+                Purpose: To show only the search results relevant to the user's input.
+
+                2. Product Category Filter
+
+                An online shopping application may allow users to select:
+
+                Electronics
+                Clothing
+                Shoes
+                Mobiles
+
+                When the user selects Electronics, filter() can be used to select only electronic products from the complete product list.
+
+                Purpose: To display products belonging to the selected category.
+
+            Price Filter
+
+                Shopping applications often provide options such as:
+
+                Under ₹500
+                ₹500 – ₹1,000
+                ₹1,000 – ₹5,000
+                Above ₹5,000
+
+                filter() can select products whose prices satisfy the selected range.
+
+                Purpose: To display products according to the customer's price requirement.
+
 # Strings  
 
         A string is a data type used to store text.
@@ -4572,7 +4792,7 @@
 
         Output:
 
-            7
+            5
 
         It count:
 
@@ -4592,7 +4812,7 @@
 
         Output:
 
-            5
+            9
 
             The space is also counted.
 
@@ -4747,7 +4967,6 @@
             let message = "He said \"Hello\"";
             console.log(message);
 
-        Output:
 
     ## Escaping Single Quotes
 
@@ -5199,6 +5418,89 @@
                 Age input
                 Price input
                 Marks input
+
+        use cases   
+
+            1. parseInt()
+
+            Used when you need a whole number (integer) from a value.
+
+            E-commerce → convert product quantity such as "3" into 3.
+
+            Pagination → convert a page number from a URL such as "5" into 5.
+
+            Online exams → convert entered marks such as "85" into 85.
+
+            Shopping cart → convert item quantity before calculating the total.
+
+            Use when: You need an integer and do not need the decimal part.
+
+            2. parseFloat()
+
+            Used when you need a decimal number.
+
+            E-commerce → product price such as "499.99".
+
+            Banking → interest rates such as "7.5".
+
+            Food delivery → delivery distance such as "4.8" km.
+
+            Measurement applications → weight, height, distance, temperature, etc.
+
+            Use when: The value can contain a decimal part.
+
+            3. toFixed()
+
+            Used when you need to display a number with a fixed number of decimal places.
+
+            Banking
+
+            Display an account amount as ₹12500.00
+
+            E-commerce
+
+            Display product price as ₹499.99
+
+            Payment
+
+            Display a calculated payment amount with exactly two decimal places.
+
+            Reports
+
+            Display an average such as 87.50.
+
+            Use when: You are formatting a number for display.
+
+            Important: toFixed() returns a string, not a number.
+
+            4. isNaN()
+
+            Used to check whether a value cannot be treated as a valid number.
+
+
+            Banking
+
+            A user enters an amount:
+
+            "abc"
+
+            The application can check whether the entered value is valid before processing the transaction.
+
+            E-commerce
+
+            A user enters:
+
+            "two"
+
+            instead of a quantity.
+
+            The application can detect the invalid numeric input.
+
+            Online exam
+
+            A marks field should contain a number, not text such as "hello".
+
+            Use when: You need to validate numeric input.
 
     ## Math Object
 
@@ -6697,7 +6999,25 @@
 
             Instead of adding a listener to every button, we can use the parent.
 
-            This idea is called: Event Delegation
+            example
+
+                Product List
+                ├── Product Card
+                │    ├── Product Image
+                │    ├── Product Name
+                │    └── Add to Cart button
+                │
+                ├── Product Card
+                │    ├── Product Image
+                │    ├── Product Name
+                │    └── Add to Cart button
+
+            The user clicks Add to Cart.
+
+            The event starts at the button and can bubble upward through the product card and product list.
+
+            Purpose: Allow a parent element to respond to events that happen on its child elements.
+
 
         ### Event Delegation
 
@@ -12895,3 +13215,339 @@ Example:
                     Connections
                     References
 
+# Web API
+
+    JavaScript does not only work with variables, functions, arrays, and objects. When JavaScript runs inside a web browser, it can also communicate with browser features through Browser APIs.
+
+    Browser APIs allow JavaScript to interact with:
+
+        HTML elements
+        Graphics
+        User location
+        Browser storage
+        Notifications
+        Other browser features
+
+        Some commonly used Browser APIs are:
+
+            DOM API
+            Canvas API
+            Geolocation API
+            Web Storage API
+            Notifications API
+
+    ## DOM API
+
+        DOM stands for Document Object Model.
+
+        When a browser loads an HTML page, it converts the HTML document into a structure of objects called the DOM.
+
+        JavaScript can use the DOM to access and modify the webpage.
+
+        The DOM API allows JavaScript to access, modify, add, and remove HTML elements dynamically.
+
+
+        ## Uses of DOM
+
+            The DOM is used when a webpage needs to change based on user actions or application data.
+
+            For example:
+
+                Change text
+                Change styles
+                Show or hide elements
+                Add new elements
+                Remove elements
+                Handle button clicks
+                Update forms
+                Display API data
+
+        ## use cases
+
+            In a Shopping Website
+
+                The page initially shows:
+
+                    Cart (2)
+
+                The user clicks:
+
+                    Add to Cart
+
+                JavaScript updates the DOM:
+
+                    Cart (3)
+
+                The page does not need to be completely reloaded.
+                This type of dynamic webpage behavior is commonly handled using the DOM.
+
+            Common DOM methods
+
+                getElementById() ---> Finds an element using its ID
+                querySelector()	---> Finds the first matching element
+                querySelectorAll() --->	Finds multiple matching elements
+                createElement()	---> Creates a new HTML element
+                appendChild() --->	Adds an element to another element
+                remove() ---> Removes an element
+                addEventListener() --->	Responds to user actions
+
+
+            Real-Time Applications of DOM
+
+                Amazon/Flipkart: Update cart count after adding a product.
+
+                Gmail: Show or hide emails and update the inbox.
+
+                Online banking: Display updated account information.
+
+                Education: Display quiz results without reloading the page.
+
+                Food delivery: Update order status dynamically.
+
+    ## Canvas API
+
+        The Canvas API provides a drawing area inside an HTML page.
+        JavaScript can use Canvas to draw graphics dynamically.
+
+        It can be used to create:
+
+            Lines
+            Shapes
+            Charts
+            Images
+            Animations
+            Games
+            Graphs
+
+        The Canvas API allows JavaScript to draw and manipulate graphics inside a webpage.
+
+
+        ### uses of canvas  
+
+            Canvas is useful when graphics need to be generated or changed dynamically.
+
+            For example, a website can use Canvas to create a chart based on data received from a server.
+
+            Banking dashboard
+
+                The application wants to show the customer's monthly expenses.
+
+                    The data might be:
+
+                    January    $10,000
+                    February   $8,000
+                    March      $12,000
+                    April      $9,000
+
+                    The application can use Canvas to draw a graph.
+
+            Online Games
+
+                Canvas can be used to draw:
+
+                    Player characters
+                    Enemies
+                    Game objects
+                    Backgrounds
+                    Education
+
+                Canvas can be used to display:
+
+                    Mathematical graphs
+                    Diagrams
+                    Interactive drawing activities
+                    Image Editing
+
+                Canvas can be used for:
+
+                    Cropping images
+                    Drawing on images
+                    Adding text
+                    Applying visual modifications.
+
+    ## Geolocation API
+
+        The Geolocation API allows a website to request the user's geographical location.
+
+        The browser can provide information such as:
+
+            Latitude
+            Longitude
+
+        The browser normally asks the user for permission before providing the location.
+
+        The Geolocation API allows a website to obtain the user's location with permission.
+
+        ### uses of geolocaion
+
+            Geolocation is useful when an application needs to provide location-based services.
+
+                Find nearby restaurants
+                Find nearby stores
+                Show the user's position on a map
+                Calculate distance
+                Find nearby drivers
+                Display local weather
+
+            Food Delivery
+
+                The customer opens the application.
+                The application needs to find restaurants near the customer.
+
+                    User opens food delivery website
+                            ↓
+                    Website requests location permission
+                            ↓
+                    User allows location access
+                            ↓
+                    Latitude and longitude are received
+                            ↓
+                    Nearby restaurants are identified
+                            ↓
+                    Restaurants are displayed
+
+
+                Your Location
+                    |
+                Nearby Restaurants
+                    |
+                Restaurant A
+                Restaurant B
+                Restaurant C
+
+
+            Google Maps: Show the user's current position.
+            Ride booking: Identify the pickup location.
+            Food delivery: Find restaurants near the customer.
+            Weather applications: Show weather for the user's area.
+            Travel applications: Find nearby attractions.
+
+
+    ## Web Storage API
+
+        The Web Storage API allows websites to store small amounts of data in the browser.
+
+        There are two main storage mechanisms:
+
+            localStorage
+            sessionStorage
+            Simple Definition
+
+        Web Storage allows a website to store data on the user's browser.
+
+        ### Local Storage
+
+            localStorage stores data in the browser and generally keeps it available even after the browser is closed.
+
+            The data remains until the website removes it or the user clears the stored data.
+
+            uses
+
+                The user selects Dark Mode = the website stores the preference.
+
+                    User selects Dark Mode
+                            ↓
+                    Preference stored in localStorage
+                            ↓
+                    User closes browser
+                            ↓
+                    User opens website again
+                            ↓
+                    Dark Mode preference is restored
+
+                This provides a better user experience.
+
+            -Website theme preference
+            -Language preference
+            -UI preferences
+            -Recently selected settings
+            -Non-sensitive user preferences
+
+        ### SessionStorage
+
+            sessionStorage stores data for the current browser tab/session.
+
+            The stored data is generally removed when the tab or window is closed.
+
+            Online Examination
+
+                A student is answering questions:
+
+                Question 1 ---> A
+                Question 2 ---> C
+                Question 3 ---> B
+
+                The application can temporarily store session-specific information while the exam is open.
+
+                Student starts exam
+                        ↓
+                Answers questions
+                        ↓
+                Temporary session data is stored
+                        ↓
+                Student continues the exam
+                        ↓
+                Exam session ends
+
+                This is useful for temporary browser-session data.
+
+        ### Notification API
+
+            The Notifications API allows a website to display notifications through the browser and operating system.
+
+            The website normally needs permission from the user.
+
+            uses
+
+                Notifications allow websites to inform users about important events even when the user is not actively looking at a particular page.
+
+                Food Deleviry
+
+                    The customer places an order.
+
+                    The order status changes:
+
+                        Order Placed
+                            ↓
+                        Restaurant Accepted
+                            ↓
+                        Food Preparing
+                            ↓
+                        Picked Up
+                            ↓
+                        Out for Delivery
+                            ↓
+                        Delivered
+
+                    The application can notify the customer ---> Order Update
+
+                    Your order has been picked up.
+
+            Banking
+
+                Payment Successful
+                ₹2,000 payment completed.
+
+            Education
+                
+                New Assignment
+                A new JavaScript assignment has been posted.
+                
+            E-commerce
+            
+                Order Update
+                Your package has been shipped.
+            
+            Email
+
+                New Email
+                You received a new message.
+
+            Permission
+
+                Notifications generally require the user's permission.
+
+                The browser may ask:
+
+                    Allow this website to send notifications?
+                    The user can allow or deny the request.

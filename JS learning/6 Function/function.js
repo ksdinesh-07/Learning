@@ -42,3 +42,32 @@ const login_verify=(username,password)=>{
 login_verify("admin@gmail.com","12345678");
 
 //output ==> true
+
+
+// difference between the arrow function and the normal function
+const student = {
+    name: "dinesh",
+
+    normal_function: function () {
+        console.log(this.name);
+    },
+
+    arrow_function: () => {
+        console.log(this.name);
+    }
+};
+
+student.normal_function();
+student.arrow_function();
+
+
+//arrow fuction
+const products = [
+    { name: "Laptop", price: 50000 },
+    { name: "Mouse", price: 800 },
+    { name: "Keyboard", price: 1500 }
+];
+
+const expensive_products = products.filter(
+    product => product.price > 1000
+);

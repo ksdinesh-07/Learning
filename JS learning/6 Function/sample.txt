@@ -1,0 +1,91 @@
+1. Function Declaration — Main application operation
+
+Use a function declaration when you have a reusable operation that is part of the main application logic.
+
+Real-time examples
+
+Banking application
+
+    check_balance()
+    withdraw_money()
+    transfer_money()
+
+Education platform
+
+    calculate_marks()
+    submit_exam()
+    calculate_result()
+
+E-commerce
+
+    calculate_total()
+    place_order()
+    cancel_order()
+
+Why?
+
+    These are named operations that the application may call from different places.
+
+Simple idea:
+
+    Use a function declaration for important, reusable operations of your application.
+
+2. Function Expression — When the function is treated as data
+
+    A function expression is useful when you want to store a function in a variable, pass it somewhere, or choose a function dynamically.
+
+Real-time example: Payment processing
+
+    An application may have different payment methods:
+
+    UPI
+    Card
+    Net Banking
+
+The application can store the appropriate payment operation in a variable and execute it when required.
+
+Other real-time uses
+
+    Callback functions
+    Event handlers
+    API success/error handling
+    Different payment methods
+    Different validation rules
+    Functions passed to map(), filter(), and reduce()
+
+
+Use a function expression when a function needs to be treated like a value.
+
+3. Normal Function — When you need this
+
+    A normal function is particularly useful when the function needs its own this.
+
+Real-time example: Shopping cart object
+
+    A cart object may contain:
+
+    Cart items
+    Total amount
+
+A method to calculate the total
+
+The method can use this to access the current cart object's data.
+
+Other real-time uses
+
+Banking
+
+Account object methods accessing account data through this
+
+User profile
+
+Profile methods accessing the current user's properties
+
+Shopping
+
+Cart/order methods accessing their object's properties
+
+Classes
+
+Methods that operate on the current object instance
+
