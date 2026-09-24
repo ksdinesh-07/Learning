@@ -71,11 +71,11 @@ console.log(mat[0][1]);
 // Example
 
 //creation
-const products = [
-    { id: 1, name: "T-Shirt", price: 499 },
-    { id: 2, name: "Jeans", price: 999 },
-    { id: 3, name: "Shoes", price: 1499 }
-];
+// const products = [
+//     { id: 1, name: "T-Shirt", price: 499 },
+//     { id: 2, name: "Jeans", price: 999 },
+//     { id: 3, name: "Shoes", price: 1499 }
+// ];
 
 
 //indexing
@@ -146,3 +146,266 @@ console.log(total_cart);
 // reduce() → Processes all elements and combines them into a single result.
 
 
+
+const products = [
+  {
+    id: 101,
+    title: "Wireless Noise-Canceling Headphones",
+    price: 129.99,
+    category: "Electronics",
+    inStock: true,
+    tags: ["audio", "wireless", "gadget"],
+    details: {
+      brand: "SoundWave",
+      color: "Matte Black",
+      warrantyMonths: 12
+    },
+    ratings: [5, 4, 5, 4, 5]
+  },
+  {
+    id: 102,
+    title: "Ergonomic Mesh Office Chair",
+    price: 245.00,
+    category: "Furniture",
+    inStock: true,
+    tags: ["office", "home", "comfort"],
+    details: {
+      brand: "SitWell",
+      color: "Charcoal Grey",
+      warrantyMonths: 24
+    },
+    ratings: [4, 4, 3, 5]
+  },
+  {
+    id: 103,
+    title: "Stainless Steel Vacuum Water Bottle",
+    price: 24.95,
+    category: "Kitchen & Dining",
+    inStock: false,
+    tags: ["eco-friendly", "hydration", "outdoor"],
+    details: {
+      brand: "HydroPeak",
+      color: "Ocean Blue",
+      warrantyMonths: 6
+    },
+    ratings: [5, 5, 4, 5, 5, 4]
+  },
+  {
+    id: 104,
+    title: "Mechanical Gaming Keyboard",
+    price: 89.99,
+    category: "Electronics",
+    inStock: true,
+    tags: ["gaming", "peripherals", "rgb"],
+    details: {
+      brand: "ClickMaster",
+      color: "RGB Custom",
+      warrantyMonths: 12
+    },
+    ratings: [4, 5, 4, 3, 5]
+  },
+  {
+    id: 105,
+    title: "Water-Resistant Trail Running Shoes",
+    price: 110.00,
+    category: "Apparel",
+    inStock: true,
+    tags: ["sports", "footwear", "outdoor"],
+    details: {
+      brand: "TerraStride",
+      color: "Forest Green",
+      warrantyMonths: 3
+    },
+    ratings: [5, 4, 4]
+  }
+];
+
+const product_find = products.find((product) => {
+    return product.id === 102;
+});
+
+console.log(product_find);
+
+// push() — Add a new item
+// Where is it used?
+
+// Shopping cart
+
+// Scenario
+
+// A customer clicks:
+
+// Add to Cart
+
+// const cart = [];
+
+// const product = {
+//     product_id: 101,
+//     product_name: "Wireless Headphones",
+//     price: 2499,
+//     quantity: 1
+// };
+
+// cart.push(product);
+
+// console.log(cart);
+
+
+// some()  — Is any product out of stock?
+// Real scenario
+
+// Admin dashboard wants to show:
+
+//  Some products are unavailable
+
+const has_out_of_stock_product = products.some((product) => {
+    return product.inStock === false;
+});
+
+console.log(has_out_of_stock_product);
+
+// Output:
+
+true
+
+// every()  — Are all products in stock?
+
+const all_products_available = products.every((product) => {
+    return product.inStock === true;
+});
+
+console.log(all_products_available);
+
+Output:
+
+false
+
+// Because product 103 is unavailable.
+
+// . sort() — Price low to high
+// Real scenario
+
+// User selects:
+
+// price low to high
+
+const sorted_products = [...products];
+
+sorted_products.sort((a, b) => {
+    return a.price - b.price;
+});
+
+//sort modifies the original array
+
+// 23. sort() — Highest rated products
+
+// First calculate/assume average ratings
+
+products_with_average_rating.sort((a, b) => {
+    return b.average_rating - a.average_rating;
+});
+// Real scenario
+
+// Top Rated
+
+// The application sorts products by rating.
+
+
+// slice() -pagination
+
+// Suppose there are 100 products in the real application.
+
+// const page_size = 2;
+// const page_1 = products.slice(0, 2);
+// const page_2 = products.slice(2, 4);
+
+// splice() — Delete product
+// Real scenario
+
+// Delete Product #103
+
+
+const product_index = products.findIndex((product) => {
+    return product.id === 103;
+});
+
+
+// products.splice(product_index, 1);
+
+// some() inside nested data
+// Scenario
+
+// Find products where at least one rating is 5.
+
+const products_with_five_star = products.filter((product) => {
+    return product.ratings.some((rating) => {
+        return rating === 5;
+    });
+});
+
+// Again:
+
+// filter()
+//    ↓
+// some()
+
+// This is very important for complex data processing.
+
+// You already have a list sorted from oldest to newest and want to show newest first.
+
+// products.reverse();
+
+// But remember:
+
+// reverse() modifies the original array.
+
+// Safer:
+
+// const reversed_products = [...products].reverse();
+
+// concat() — Combine product lists
+
+// Suppose your application receives:
+
+// const electronics_products = [...];
+// const apparel_products = [...];
+
+// Combine:
+
+// const all_products = electronics_products.concat(apparel_products);
+
+// at() — Access from the end
+
+// Instead of:
+
+// products[products.length - 1]
+
+// you can:
+
+// products.at(-1)
+// Real scenario
+
+// Get the most recently added product:
+
+// const latest_product = products.at(-1);
+
+
+
+// ratings: [5, 4, 5]
+
+// check:
+
+console.log(Array.isArray(products[0].ratings));
+
+// Output:
+
+// true
+// When processing API data, you might need to verify:
+// Did the server actually give me an array
+
+//number ascending order
+const sorted_products1 = [...products].sort((a, b) => {
+    return a.price - b.price;
+});
+
+console.log(sorted_products1);

@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>XSS PoC</title>
+    <script src="xss.js" defer></script>
+</head>
+
+<body>
+    <h1>Banking Dashboard</h1>
+    <input
+        type="text"
+        id="user_name"
+        placeholder="Enter your name"
+    >
+    <button id="display_button">
+        Display Name
+    </button>
+    <h2 id="welcome_message"></h2>
+
+</body>
+
+</html>

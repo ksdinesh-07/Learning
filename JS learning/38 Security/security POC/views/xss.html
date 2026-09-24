@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>XSS PoC</title>
+</head>
+<body>
+    <h1>XSS PoC</h1>
+    <p>
+        Enter a username.
+    </p>
+    <input
+        id="user_name"
+        placeholder="Enter username"
+    >
+    <button id="display_button">
+        Display
+    </button>
+    <h2 id="welcome_message"></h2>
+    <script>
+        const user_name =document.getElementById("user_name");
+        const display_button =document.getElementById("display_button");
+        const welcome_message =document.getElementById("welcome_message");
+
+        display_button.addEventListener("click", () => {
+            const name = user_name.value;
+            // vulnarbility
+            welcome_message.innerHTML =`Welcome ${name}`;
+        });
+
+    </script>
+</body>
+</html>

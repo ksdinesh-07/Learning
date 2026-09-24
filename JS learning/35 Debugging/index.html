@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bank Debugging PoC</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="app.js" defer></script>
+</head>
+
+<body>
+    <div class="container">
+        <h1>Bank Transaction Dashboard</h1>
+        <div class="account">
+            <h2>Account Balance</h2>
+            <p id="balance">₹10000</p>
+        </div>
+
+        <div class="transfer">
+            <h2>Transfer Money</h2>
+            <input
+                type="number"
+                id="transfer_amount"
+                placeholder="Enter amount"
+            >
+            <button id="transfer_button">
+                Transfer
+            </button>
+        </div>
+
+
+        <div class="result">
+            <h2>Transaction Result</h2>
+            <p id="transaction_status">
+                No transaction yet
+            </p>
+        </div>
+    
+    </div>
+
+</body>
+</html>

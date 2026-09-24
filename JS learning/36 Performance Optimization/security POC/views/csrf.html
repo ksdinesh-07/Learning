@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>CSRF PoC</title>
+</head>
+<body>
+    <h1>Bank Transfer Security PoC</h1>
+    <h2>Vulnerable Transfer</h2>
+    <input
+        id="vulnerable_account"
+        placeholder="Account number"
+        value="12345"
+    >
+    <input
+        id="vulnerable_amount"
+        placeholder="Amount"
+        value="1000"
+    >
+    <button id="vulnerable_button">
+        Make Vulnerable Transfer
+    </button>
+    <h2>Protected Transfer</h2>
+    <input
+        id="secure_account"
+        placeholder="Account number"
+        value="12345"
+    >
+    <input
+        id="secure_amount"
+        placeholder="Amount"
+        value="1000"
+    >
+    <button id="secure_button">
+        Make Protected Transfer
+    </button>
+    <p id="result"></p>
+
+    <script>
+        const result =document.getElementById("result");
+        
+        // Vulnerable request
+        document
+            .getElementById("vulnerable_button")
+            .addEventListener("click", async () => {
+                const account_number =document.getElementById("vulnerable_account").value;
+                const amount =document.getElementById("vulnerable_amount").value;
+
+                const response = await fetch("/api/vulnerable-transfer",{
+                        method: "POST",
+                        headers: {
+                            "Content-Type": "application/json"
+                        },
+                        body: JSON.stringify({
+                            account_number,
+                            amount
+                        })
+                    }
+                );
+
+                const data =await response.json();
+                result.textContent =data.message;
+            });
+
+        // Protected request
+        document
+            .getElementById("secure_button")
+            .addEventListener("click", async () => {
+
+                const account_number =document.getElementById("secure_account").value;
+                const amount=document.getElementById("secure_amount").value;
+                const token_response=await fetch("/api/csrf-token");
+                const token_data =await token_response.json();
+                const response = await fetch("/api/secure-transfer",
+                    {
+                        method: "POST",
+                        headers: {
+                            "Content-Type": "application/json"
+                        },
+                        body: JSON.stringify({
+                            account_number,
+                            amount,
+                            csrf_token:
+                                token_data.csrf_token
+                        })
+                    }
+                );
+
+
+                const data =await response.json();
+                result.textContent =data.message;
+            });
+    </script>
+
+</body>
+
+</html>

@@ -265,3 +265,77 @@ body {
 .employee-form-section {
     display: none;
 }
+
+.employee-form-section {
+display: none;
+margin: 20px 0;
+padding: 24px;
+background: #ffffff;
+border: 1px solid #e5e7eb;
+border-radius: 10px;
+}
+
+.employee-form-section h2 {
+margin: 0 0 20px;
+font-size: 22px;
+}
+
+#employee_form {
+display: grid;
+grid-template-columns: repeat(2, 1fr);
+gap: 18px;
+}
+
+#employee_form > div {
+display: flex;
+flex-direction: column;
+}
+
+#employee_form label {
+margin-bottom: 6px;
+font-size: 14px;
+font-weight: 600;
+}
+
+#employee_form input {
+width: 100%;
+padding: 11px 13px;
+border: 1px solid #d1d5db;
+border-radius: 7px;
+font-size: 14px;
+outline: none;
+box-sizing: border-box;
+}
+
+#employee_form input:focus {
+border-color: #2563eb;
+box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+}
+
+#employee_form button[type="submit"] {
+grid-column: 1 / -1;
+padding: 12px;
+border: none;
+border-radius: 7px;
+background: #2563eb;
+color: #ffffff;
+font-size: 15px;
+font-weight: 600;
+cursor: pointer;
+}
+
+#employee_form button[type="submit"]:hover {
+background: #1d4ed8;
+}
+
+@media (max-width: 700px) {
+#employee_form {
+grid-template-columns: 1fr;
+}
+
+
+#employee_form button[type="submit"] {
+    grid-column: auto;
+}
+
+}

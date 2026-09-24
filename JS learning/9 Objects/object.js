@@ -348,3 +348,103 @@ const total_revenue = orders.reduce(
     0
 );
 console.log(total_revenue);
+
+
+const product_entries = [
+    ["id", 101],
+    ["title", "Headphones"],
+    ["price", 129.99]
+];
+
+const product = Object.fromEntries(product_entries);
+
+console.log(product);
+
+// o/p
+// {
+//     id: 101,
+//     title: "Headphones",
+//     price: 129.99
+// }
+
+// Object.entries()
+// Object → Array
+
+// Object.fromEntries()
+// Array → Object
+
+
+// hasown()
+
+// Checks whether an object directly contains a particular property.
+
+const product1 = {
+    id: 101,
+    title: "Headphones",
+    price: 129.99
+};
+
+console.log(Object.hasOwn(product1, "price"));
+
+// Output:
+
+// true
+
+// Object.create()
+
+// Creates a new object using another object as its prototype.
+
+const product_functions = {
+    show_product() {
+        console.log(this.title);
+    }
+};
+
+// const product = Object.create(product_functions);
+
+// product.title = "Gaming Keyboard";
+
+// product.show_product();
+
+objectName.freeze()
+// Prevents an object from being modified.
+
+// const product = {
+//     id: 101,
+//     price: 129.99
+// };
+
+// Object.freeze(product);
+
+// product.price = 200;
+
+// console.log(product.price);
+
+// The price remains:
+
+// 129.99
+
+
+Object.seal()
+
+// Prevents adding or deleting properties.
+
+// But existing properties can still be changed.
+
+// const product = {
+//     id: 101,
+//     price: 129.99
+// };
+
+// Object.seal(product);
+
+// product.price = 149.99;
+
+// product.category = "Electronics";
+
+// delete product.id;
+
+// console.log(product);
+
+// The price can change:
+// 149.99

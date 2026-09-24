@@ -1,11 +1,13 @@
+import { employee_data} from "../Data/data.js";
 const employee_list=document.getElementById('employee_list');
+const employees = employee_data.employees
 
 async function load_employees() {
     //loading data from json
-    const response=await fetch("./Data/employee.json");
-    const data=await response.json();
-    console.log('Data :',data);
-    const employees=data.employees;
+    // const response=await fetch("./Data/employee.json");
+    // const data=await response.json();
+    // console.log('Data :',data);
+    // const employees=data.employees;
     console.log('employees ',employees);
 
     // total employee
@@ -135,13 +137,28 @@ async function load_employees() {
 
             // adding emp id to card
             card.dataset.employee_id=emp.id;
+            const delete_button = document.createElement("button");
+            delete_button.innerText = "Delete";
+            delete_button.dataset.employee_id = emp.id;
+
+            card.appendChild(delete_button);
             employee_list.appendChild(card);
+
+            delete_button.addEventListener("click", (event) => {
+                event.stopPropagation();
+                const employee_id = Number(delete_button.dataset.employee_id);
+                const employee_index = employees.findIndex(
+                    emp => emp.id === employee_id
+                );
+                if (employee_index !== -1) {
+                    employees.splice(employee_index, 1);
+                }
+                display_employees(employees);
+            });
 
             //detect the card which was clicked
             card.addEventListener("click", () => {
-
                 const employee_id =Number(card.dataset.employee_id);
-            
                 const selected_employee=employees.find((emp)=>{
                     return emp.id === employee_id;
                 })
@@ -217,6 +234,12 @@ async function load_employees() {
         display_employees(filter_employees);
     })
 
+    //delete button
+    const employee_card = document.createElement("div");
+    employee_card.classList.add("employee-card");
+
+
+
 }
 
 const employee_details=document.getElementById('employee_details');
@@ -230,9 +253,60 @@ add_employee_button.addEventListener('click',()=>{
 
 //getting the form
 const employee_form=document.getElementById('employee_form');
-employee_form.addEventListener('submit',(event)=>{
+
+employee_form.addEventListener("submit", (event) => {
     event.preventDefault();
-    console.log('Employee form submitted')
-})
+    const employee_name =document.getElementById("employee_name").value;
+    const employee_email =document.getElementById("employee_email").value;
+    const employee_phone =document.getElementById("employee_phone").value;
+    const employee_department =document.getElementById("employee_department").value;
+    const employee_role =document.getElementById("employee_role").value;
+    const employee_city =document.getElementById("employee_city").value;
+    const employee_salary =Number(document.getElementById("employee_salary").value);
+    const employee_bonus =Number(document.getElementById("employee_bonus").value);
+
+    const new_employee={
+        id: Math.max(...employees.map(emp=>emp.id))+1,
+        name: employee_name,
+        email: employee_email,
+        phone: employee_phone,
+        department: {
+            name: employee_department,
+            manager: "Not Assigned"
+        },
+        contact: {
+            address: {
+                street: "Not Provided",
+                city: employee_city,
+                state: "Tamil Nadu",
+                country: "India",
+                pincode: "Not Provided"
+            }
+        },
+        skills: [],
+        languages: [],
+        employment: {
+            role: employee_role,
+            type: "Full Time",
+            experience: 0,
+            joiningDate: new Date()
+                .toISOString()
+                .split("T")[0],
+            status: "Active"
+        },
+        salary: {
+            basic: employee_salary,
+            bonus: employee_bonus,
+            currency: "INR"
+        },
+        projects: [],
+        attendance: [],
+        performance: []
+    };
+    employees.push(new_employee)
+    console.log("New employee:", new_employee);
+    
+});
+
 load_employees();
 

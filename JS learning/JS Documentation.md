@@ -5386,17 +5386,11 @@
 
                 console.log(isNaN(100));
             
-            Output
-                
-                false
 
             100 is a valid number
 
                 console.log(isNaN("hello"));
 
-            Output
-
-                true
 
             use cases
 
@@ -5916,7 +5910,7 @@
 
                 10:30:45 GMT+0530 (India Standard Time)
 
-        ### toISOString()
+        ### toISOString() //
 
             toISOString() converts a Date object into an ISO 8601 formatted string.
 
@@ -5945,7 +5939,7 @@
 
                     2026-09-18T10:30:45.000Z ---> is easier for systems to process consistently.
 
-        ### toLocaleDateString()
+        ### toLocaleDateString() // indian languages time stamp
 
             toLocaleDateString() formats a date according to a locale.
 
@@ -13551,3 +13545,5 @@ Example:
 
                     Allow this website to send notifications?
                     The user can allow or deny the request.
+
+                    
