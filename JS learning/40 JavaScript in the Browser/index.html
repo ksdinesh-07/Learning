@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+    <title>JavaScript Browser APIs POC</title>
+    <link rel="stylesheet" href="./style.css">
+    <script src="./js/app.js" defer></script>
+</head>
+<body>
+    <header>
+        <h1>JavaScript Browser APIs</h1>
+        <p>
+            DOM, Events, Rendering, Storage, History API and Media API
+        </p>
+    </header>
+    <!-- DOM + Events + Rendering -->
+    <section>
+        <h2>1. DOM + Events + Rendering</h2>
+        <input
+            type="text"
+            id="product_name"
+            placeholder="Enter product name"
+        >
+        <input
+            type="number"
+            id="product_price"
+            placeholder="Enter product price"
+        >
+        <button id="add_button">
+            Add Product
+        </button>
+        <div id="product_list"></div>
+    </section>
+    <!-- Storage -->
+    <section>
+        <h2>2. Browser Storage</h2>
+        <input
+            type="text"
+            id="user_name"
+            placeholder="Enter your name"
+        >
+        <button id="save_name_button">
+            Save Name
+        </button>
+        <button id="load_name_button">
+            Load Name
+        </button>
+        <button id="remove_name_button">
+            Remove Name
+        </button>
+        <p id="storage_result"></p>
+    </section>
+    <!-- History API -->
+    <section>
+        <h2>3. History API</h2>
+        <button id="home_button">
+            Home
+        </button>
+        <button id="products_button">
+            Products
+        </button>
+        <button id="profile_button">
+            Profile
+        </button>
+        <p id="current_route"></p>
+    </section>
+    <!-- Media API -->
+    <section>
+        <h2>4. Media API</h2>
+        <button id="camera_button">
+            Start Camera
+        </button>
+        <button id="stop_camera_button">
+            Stop Camera
+        </button>
+        <br><br>
+        <video
+            id="camera_preview"
+            width="400"
+            autoplay
+            playsinline
+        ></video>
+    </section>
+</body>
+</html>

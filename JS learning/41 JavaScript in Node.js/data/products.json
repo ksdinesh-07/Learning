@@ -1,0 +1,14 @@
+[
+    {
+        "id": "101",
+        "product_name": "Wireless Mouse",
+        "price": 1200,
+        "category": "Electronics"
+    },
+    {
+        "id": "102",
+        "product_name": "Keyboard",
+        "price": 1800,
+        "category": "Electronics"
+    }
+]

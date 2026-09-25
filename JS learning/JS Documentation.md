@@ -5974,6 +5974,44 @@
 
             The exact output can vary depending on the environment and options.
 
+
+            let date = new Date();
+
+            console.log(
+                date.toLocaleDateString("en-IN", {
+                    weekday: "long",
+                    year: "numeric",
+                    month: "long",
+                    day: "numeric"
+                })
+            );
+
+            console.log(
+                date.toLocaleDateString("ta-IN", {
+                    weekday: "long",
+                    year: "numeric",
+                    month: "long",
+                    day: "numeric"
+                })
+            );
+
+            console.log(
+                date.toLocaleDateString("hi-IN", {
+                    weekday: "long",
+                    year: "numeric",
+                    month: "long",
+                    day: "numeric"
+                })
+            );
+
+            console.log(
+                date.toLocaleDateString("en-IN", {
+                    day: "2-digit",
+                    month: "2-digit",
+                    year: "numeric"
+                })
+            );
+
         ### Custom Date Formatting
 
             We can combine Date methods to create our own format.
@@ -6413,7 +6451,6 @@
             It can be used for:
 
                 -Closing a resource
-                -Hiding a loading indicator
                 -Ending a transaction process
                 -Cleaning temporary data
                 -Resetting application state
@@ -6470,16 +6507,7 @@
 
                 User must be 18 or older
 
-                    age = 15
-                    ↓
-                    age < 18
-                    ↓
-                    throw Error
-                    ↓
-                    catch
-                    ↓
                     Display error message
-
         
         ## why we need throw
 
@@ -6516,143 +6544,7 @@
                         ↓
                     throw error
 
-        ## Custom Errors
-
-            A custom error is an error that we create ourselves to represent a specific problem in our application.
-
-            JavaScript provides the Error constructor:
-
-                new Error("message")
-
-            Example:
-
-                throw new Error("Invalid product price");
-
-            This is a custom error message created by the developer.
-
-        ## Creating a Custom Error Class
-
-            For larger applications, we can create our own error class.
-
-            Example
-
-                class OrderError extends Error {
-                    constructor(message) {
-                        super(message);
-                        this.name = "OrderError";
-                    }
-                }
-
-                try {
-                    throw new OrderError("Order quantity is invalid");
-                } 
-                catch (error) {
-                    console.log(error.name);
-                    console.log(error.message);
-                }
-
-            Output:
-
-                OrderError
-                Order quantity is invalid
-
-        ## Purpose of Custom Errors?    
-
-            Custom errors help us identify different types of problems clearly.
-                
-                an e-commerce application might have:
-
-                    -OrderError
-                    -PaymentError
-                    -AuthenticationError
-                    -ValidationError
-
-                Instead of receiving a generic: Error
-
-                we can identify what type of problem occurred.
-
-                Example:
-
-                    class PaymentError extends Error {
-                        constructor(message) {
-                            super(message);
-                            this.name = "PaymentError";
-                        }
-                    }
-
-                    Then:
-
-                        throw new PaymentError("Payment failed");
-
-                        The application can identify:
-
-                            PaymentError ---> Payment failed
-
-        ## Handling Different Errors
-
-            We can check the type of error inside catch.
-
-                try {
-                    let user = null;
-                    console.log(user.name);
-                } 
-                catch (error) {
-                    if (error instanceof TypeError) {
-                        console.log("Invalid object access");
-                    }
-                }
-
-            Output:
-
-                Invalid object access
-
-                This allows the application to respond differently to different errors.
-
-        ## Example -
         
-            1.Product purchase
-
-            try {
-                let quantity = 0;
-                if (quantity <= 0) {
-                    throw new Error("Quantity must be greater than 0");
-                }
-                console.log("Order placed");
-            } 
-            catch (error) {
-                console.log(error.message);
-            } finally {
-                console.log("Order process completed");
-            }
-
-        Output:
-
-            Quantity must be greater than 0
-            Order process completed
-
-            2.requests product information from a server
-
-                try {
-                    let response = await fetch("/api/products");
-
-                    if (!response.ok) {
-                        throw new Error("Failed to load products");
-                    }
-
-                    let products = await response.json();
-
-                } 
-                catch (error) {
-                    console.log("Unable to load products");
-                }
-
-
-                Example:    
-
-                    the user might see:
-
-                    Unable to load products.
-                    Please try again.
 
 # JavaScript Events
 
@@ -13546,4 +13438,3 @@ Example:
                     Allow this website to send notifications?
                     The user can allow or deny the request.
 
-                    

@@ -1,0 +1,161 @@
+big O notation
+
+o(n) --- linear
+
+if input size increases ---> time also increases 
+
+time and space complexity is calculate by the useage of the extra spaces.
+
+extra spaces ---> loops,array,hasmap,nested loops,recurssion
+
+no of code doesnot reduce the complexity
+
+inbuild function like splice sort ---> used the for loops inbuild methods
+
+Big O notation ---> metric
+
+calculate this with regards of the input
+
+n ---> represent the input
+
+array.length =100 ===> n
+
+3 types of notation
+
+omega teta and big O notation
+
+omega ---> best complexity 
+for example in finding the element the array while traversing the data the elemnt is find in the first traverse or in the first iteration this is know as the omega notation.
+
+theta ---> average case
+for example if i runs the iteration the targetted element ca be obtainer either in the first iteration or in the last iteration so can calculating the average of the obtained value we can find the avg value.
+simply = worst case complexity / 2;
+
+big O notation
+for example 
+
+
+    |
+    |
+  T |
+  I |
+  M |
+  E |
+    |
+    |
+    |
+    |__________________________
+
+        input size
+
+    constant time complexity O(1)
+
+        instant result or find hash map and hash set O(1)
+
+    Linear time complexity  O(n)
+
+        two pointer, linked list, traversal ,sliding window
+
+        amount of input size increases results in the time increases
+        linear search
+            Traversing the entiere array or object fully
+
+        nested loops 
+            2(n) or n/2 or n/4
+            all are equal
+    
+    O(n^2) quadratic complexity
+
+        sq pattern spiral pattern matrix operation
+
+        bubble sort insertion sort
+        loop inside loop ---> mostly
+
+        let start=0;
+
+        for (let i = start; i <= 5; i++) {
+            for (let j = 0; j <= i; j++) {
+                console.log(i, j);
+            }
+        }
+
+        complexity 0(n)2
+
+    Jagged arrays
+
+        arr row=n and height=m
+        n*m
+        mostly in the matrix
+
+        it is equalent to the O(n)
+
+        not equal to O(n)2
+
+    Cubic complexity    
+
+        worst 
+         O(n)^3
+         permutaton and combination
+         print all subset 
+
+        must use the hash map or the hash set to optimize
+
+
+    O(n)^4 similar to the O(n)^3
+
+    O(log n) ---> most optimal
+        binary search
+
+        located between the O(n) and the O(1)
+
+        the input size increases the time reduces
+
+        if we traverse the 1 million record 
+            n = 1M
+            in O(n) ---> O(1M)
+            log(n) ---> log(1M) 
+            log(1M) ---> 19
+
+            n=1B
+            log(1B)=30
+
+        used in binary search
+
+            similar to the divide and conquere method 
+
+                in each iteration we ignore a particular part and select a small part 
+                
+                opposite to the 2^^n  
+
+
+        O(n log n)       
+            merge sort and quick sort
+
+            n(log n) nearby n
+
+    O(2^n) nonpolynomial
+        binary tree or recurssion
+        head ---> 2 nodes 2 nodes
+
+        worst
+
+    O(n^n)
+        b tree 
+        1 node ---> n nodes ---> n nodes
+
+        very worst
+
+    O(n!)
+        very very very wrst 
+        optimized by the recurssion or dp or by constant space or two pointer 
+
+Greedy
+
+    brute force no optimal uproach
+
+O(root(n))
+
+    between O(n) and O(log n)
+
+    factors finding using the root
+

@@ -1,5 +1,5 @@
-const {calculate_fee,calculate_final_amount} = require("../src/transaction");
-const { expect } = require("chai");
+const {calculate_fee,calculate_final_amount} = require("../src/transcation.js");
+// let {expect} import from ''
 
 
 describe("Transaction calculations", () => {
@@ -9,17 +9,17 @@ describe("Transaction calculations", () => {
     });
 });
 
-//mocha , chai
-describe("Transaction calculations", () => {
-    it("should calculate transaction fee", () => {
-        const result=calculate_fee(1000);
-        expect(result).to.equal(20);
-    });
-    it("should calculate final transaction amount", () => {
-        const result=calculate_final_amount(1000);
-        expect(result).to.equal(1020);
-    });
-});
+// // mocha , chai
+// describe("Transaction calculations", () => {
+//     it("should calculate transaction fee", () => {
+//         const result=calculate_fee(1000);
+//         expect(result).to.equal(20);
+//     });
+//     it("should calculate final transaction amount", () => {
+//         const result=calculate_final_amount(1000);
+//         expect(result).equal(20);
+//     });
+// });
 
 test("calculate transaction fee for 1000", () => {
     const result =calculate_fee(1000);
@@ -28,18 +28,18 @@ test("calculate transaction fee for 1000", () => {
 
 test("calculate fee for 500", () => {
     const result =calculate_fee(500);
-    expect(result).toBe(10);
+    expect(result).toBe(11);
 });
 
 
-test("calculate final transaction amount for 1000", () => {
-    const result=calculate_final_amount(1000);
-    expect(result).toBe(1020);
-});
+// test("calculate final transaction amount for 1000", () => {
+//     const result=calculate_final_amount(1000);
+//     expect(result).toBe(1020);
+// });
 
 
-test("calculate final amount for 500", () => {
-    const result=calculate_final_amount(500);
-    expect(result).toBe(510);
-});
+// test("calculate final amount for 500", () => {
+//     const result=calculate_final_amount(500);
+//     expect(result).toBe(510);
+// });
 

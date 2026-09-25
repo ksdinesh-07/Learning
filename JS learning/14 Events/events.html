@@ -5,6 +5,23 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Events</title>
     <script src="event_lisitener.js" defer></script>
+        <style>
+        .product_list {
+            padding: 30px;
+            background-color: lightblue;
+        }
+
+        .product {
+            padding: 30px;
+            margin: 20px;
+            background-color: lightgreen;
+        }
+
+        .buy_button {
+            padding: 10px 20px;
+            cursor: pointer;
+        }
+    </style>
 </head>
 <body>
 
@@ -27,6 +44,33 @@
         <button data-product="Shoes">Add Shoes</button>
     </div>
 
+    
+        <h1>Event Bubbling POC</h1>
+        <div class="product_list" id="product_list">
+            <div class="product" id="product">
+                <h2>iPhone 16</h2>
+                <button id="buy_button">
+                    Buy Now
+                </button>
+            </div>
+        </div>
+
+
+    <h1>Product List</h1>
+    <div id="product_list">
+        <div class="product" data-product_id="101">
+            <h3>iPhone 16</h3>
+            <button class="buy_button">Buy Now</button>
+        </div>
+        <div class="product" data-product_id="102">
+            <h3>Samsung Galaxy</h3>
+            <button class="buy_button">Buy Now</button>
+        </div>
+        <div class="product" data-product_id="103">
+            <h3>OnePlus 13</h3>
+            <button class="buy_button">Buy Now</button>
+        </div>
+    </div>
     
 </body>
 </html>
