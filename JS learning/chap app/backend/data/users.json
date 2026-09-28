@@ -1,0 +1,26 @@
+[
+    {
+        "user_id": 1,
+        "user_name": "dinesh ks",
+        "email": "ks.dinesh005@gmail.com",
+        "password": "11111111",
+        "online_status": false,
+        "created_at": "2026-09-27T14:58:16.539Z"
+    },
+    {
+        "user_id": 2,
+        "user_name": "gowtham",
+        "email": "gowtham25@gmail.com",
+        "password": "11111111",
+        "online_status": false,
+        "created_at": "2026-09-27T14:58:52.954Z"
+    },
+    {
+        "user_id": 3,
+        "user_name": "arul",
+        "email": "arul25@gmail.com",
+        "password": "11111111",
+        "online_status": false,
+        "created_at": "2026-09-27T14:59:04.521Z"
+    }
+]

@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Browser Storage POC</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background: #f4f6f8;
+            padding: 30px;
+        }
+
+        h1 {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: auto;
+        }
+
+        .storage_grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 20px;
+        }
+
+        .storage_card {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .storage_card h2 {
+            margin-bottom: 15px;
+        }
+
+        .input_group {
+            margin-bottom: 12px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+
+        input {
+            width: 100%;
+            padding: 9px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+
+        button {
+            padding: 9px 12px;
+            margin: 4px 2px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .set_button {
+            background: #2563eb;
+            color: white;
+        }
+
+        .get_button {
+            background: #16a34a;
+            color: white;
+        }
+
+        .delete_button {
+            background: #dc2626;
+            color: white;
+        }
+
+        .clear_button {
+            background: #7c3aed;
+            color: white;
+        }
+
+        .output_section {
+            margin-top: 30px;
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+        }
+
+        .storage_output {
+            margin-top: 15px;
+            padding: 15px;
+            background: #111827;
+            color: #f9fafb;
+            border-radius: 5px;
+            min-height: 100px;
+            white-space: pre-wrap;
+            overflow-x: auto;
+        }
+
+        .cookie_info {
+            margin-top: 10px;
+            padding: 10px;
+            background: #fef3c7;
+            border-radius: 5px;
+            font-size: 14px;
+        }
+
+        @media (max-width: 900px) {
+            .storage_grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="container">
+
+        <h1>Browser Storage Demonstration</h1>
+        <div class="storage_grid">
+
+            <!-- LOCAL STORAGE -->
+            <div class="storage_card">
+
+                <h2>Local Storage</h2>
+                <div class="input_group">
+                    <label for="local_key">Key</label>
+                    <input type="text" id="local_key" placeholder="Example: user_name">
+                </div>
+
+                <div class="input_group">
+                    <label for="local_value">Value</label>
+                    <input type="text" id="local_value" placeholder="Example: Dinesh">
+                </div>
+
+                <button class="set_button" id="set_local_button">
+                    Set
+                </button>
+
+                <button class="get_button" id="get_local_button">
+                    Get
+                </button>
+
+                <button class="delete_button" id="delete_local_button" >
+                    Delete
+                </button>
+
+                <button class="clear_button" id="clear_local_button">
+                    Clear All
+                </button>
+
+            </div>
+
+
+            <!-- SESSION STORAGE -->
+
+            <div class="storage_card">
+
+                <h2>Session Storage</h2>
+                <div class="input_group">
+                    <label for="session_key">Key</label>
+                    <input type="text" id="session_key" placeholder="Example: current_page">
+                </div>
+
+                <div class="input_group">
+                    <label for="session_value">Value</label>
+                    <input type="text" id="session_value" placeholder="Example: dashboard">
+                </div>
+
+                <button class="set_button" id="set_session_button">
+                    Set
+                </button>
+
+                <button class="get_button" id="get_session_button">
+                    Get
+                </button>
+
+                <button class="delete_button" id="delete_session_button">
+                    Delete
+                </button>
+
+                <button class="clear_button" id="clear_session_button">
+                    Clear All
+                </button>
+
+            </div>
+
+
+            <!-- COOKIES -->
+
+            <div class="storage_card">
+                <h2>Cookies</h2>
+                <div class="input_group">
+                    <label for="cookie_key">Key</label>
+                    <input type="text" id="cookie_key" placeholder="Example: theme">
+                </div>
+
+                <div class="input_group">
+                    <label for="cookie_value">Value</label>
+                    <input type="text" id="cookie_value" placeholder="Example: dark">
+                </div>
+
+                <button class="set_button" id="set_cookie_button">
+                    Set Cookie
+                </button>
+
+                <button class="get_button" id="get_cookie_button">
+                    Get Cookie
+                </button>
+
+                <button class="delete_button" id="delete_cookie_button">
+                    Delete Cookie
+                </button>
+
+                <button class="clear_button" id="clear_cookie_button">
+                    Clear Cookies
+                </button>
+
+                <div class="cookie_info">
+                    Cookies can have expiration and other attributes.
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- DISPLAY ALL STORAGE -->
+
+        <div class="output_section">
+
+            <h2>Current Browser Storage</h2>
+            <div class="storage_output" id="storage_output">
+                No storage data loaded.
+            </div>
+
+            <button class="get_button" id="refresh_storage_button">
+                Refresh Storage Display
+            </button>
+
+        </div>
+
+    </div>
+
+    <script src="./demo.js"></script>
+
+</body>
+</html>
+

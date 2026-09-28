@@ -1,0 +1,64 @@
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: Arial, sans-serif;
+    padding: 40px;
+}
+
+.todo_app {
+    width: 500px;
+    max-width: 100%;
+    margin: 0 auto;
+}
+
+h1 {
+    margin-bottom: 20px;
+}
+
+#todo_form {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 20px;
+}
+
+#todo_input {
+    flex: 1;
+    padding: 10px;
+    font-size: 16px;
+}
+
+button {
+    padding: 10px 15px;
+    font-size: 16px;
+    cursor: pointer;
+}
+
+#todo_list {
+    list-style: none;
+}
+
+.todo_item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px 0;
+    border-bottom: 1px solid #ccc;
+}
+
+.todo_content {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.todo_text.completed {
+    text-decoration: line-through;
+}
+
+.delete_button {
+    cursor: pointer;
+}

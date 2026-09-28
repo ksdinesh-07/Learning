@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - Chat App</title>
+    <link rel="stylesheet" href="./css/style.css">
+</head>
+<body>
+
+    <main class="auth_page">
+
+        <section class="auth_card">
+
+            <h1>Login</h1>
+            <form id="login_form">
+                
+                <label for="email">Email</label>
+                <input id="email" type="email" placeholder="Enter email" required >
+
+                <label for="password">Password</label>
+                <input id="password" type="password" placeholder="Enter password" required>
+
+                <button type="submit" class="button">Login</button>
+
+            </form>
+
+            <p id="form_message"></p>
+            <p> Don't have an account? <a href="./register.html">Register</a></p>
+
+        </section>
+
+    </main>
+
+    <script type="module" src="./js/login.js"></script>
+
+</body>
+</html>

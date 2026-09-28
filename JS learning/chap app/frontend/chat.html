@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chat - Chat App</title>
+    <link rel="stylesheet" href="./css/style.css">
+</head>
+
+<body>
+    <main class="chat_page">
+
+        <header class="chat_header">
+            <h1>Chat App</h1>
+            <div>
+                <span id="logged_in_user"></span>
+                <button id="logout_button" class="button">Logout</button>
+            </div>
+
+        </header>
+
+
+        <section class="chat_layout">
+
+            <aside class="user_sidebar">
+                <h2>Users</h2>
+                <input id="user_search" type="text" placeholder="Search users">
+                <div id="user_list"></div>
+            </aside>
+
+            <section class="chat_section">
+
+                <div class="chat_header_info">
+                    <h2 id="selected_user">Select a user</h2>
+                </div>
+
+                <div id="message_list" class="message_list"></div>
+                
+                <form id="message_form" class="message_form">
+                    <input id="message_input" type="text" placeholder="Type a message..."autocomplete="off">
+                    <button type="submit" class="button">Send</button>
+                </form>
+
+            </section>
+
+        </section>
+
+    </main>
+    <script type="module" src="./js/chat.js"></script>
+</body>
+</html>

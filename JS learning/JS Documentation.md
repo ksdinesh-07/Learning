@@ -8297,14 +8297,6 @@
                 ↓
                 Optimized application files
 
-            It can also support features such as:
-
-                dependency handling
-                code transformation
-                minification
-                asset processing
-                code splitting
-                development builds
 
     ## Webpack
 
@@ -8339,7 +8331,7 @@
         
         Development
 
-            Your code
+            code
             ↓
             Vite Dev Server
             ↓
@@ -8347,7 +8339,7 @@
 
         Production:
 
-            Your code
+            code
             ↓
             Vite Build
             ↓
@@ -8384,12 +8376,12 @@
             price: 499
             };
 
-            A JSON string:
+        A JSON string:
 
-                const productJSON = `{
+            const productJSON = `{
                 "name": "T-Shirt",
                 "price": 499
-                }`;
+            }`;
 
             The important difference is:
 
@@ -8663,6 +8655,28 @@
                 const copy = Object.assign({}, product);
 
                 These create a new top-level object/array.
+            
+            use case
+
+                const order = {
+                    order_id: 1001,
+                    customer: {
+                        name: "Dinesh",
+                        address: {
+                            city: "Coimbatore"
+                        }
+                    },
+                    items: [
+                        {
+                            product_name: "Laptop",
+                            quantity: 1
+                        }
+                    ]
+                };
+
+                Suppose you want to create a temporary version of the order for editing.
+
+                const edited_order = { ...order };
 
         ## Deep Copy
 
@@ -8688,6 +8702,24 @@
                 L
 
             Now the nested object is independent.
+
+            application receives customer data from an API:
+            
+            const customer = {
+                customer_id: 101,
+                name: "Dinesh",
+                contact: {
+                    email: "dinesh@gmail.com",
+                    phone: "9876543210"
+                },
+                address: {
+                    city: "Coimbatore",
+                    pincode: "641001"
+                }
+            };
+
+            const edited_customer = structuredClone(customer);
+            edited_customer.address.city = "Chennai";
 
         ## StructuredClone()
 
@@ -9721,7 +9753,7 @@
 
 # Async Functions
 
-    ## Asynchronous JavaScript?
+    ## Asynchronous JavaScript
 
         In JavaScript, some operations take time to complete.
 
@@ -9990,6 +10022,15 @@
                 }
             }
 
+    chaining liitation
+        1. Can make independent operations sequential
+        2. A failure can stop later operations
+        3. Long chains become difficult to read
+        4. Easy to forget return
+        5. Nested chains can become complicated
+        6. Error handling can become harder to trace
+        7. Not ideal for many independent API requests
+
 # Classes
 
     JavaScript classes provide a way to create objects using a common structure.
@@ -10003,13 +10044,13 @@
         Without a class:
 
             const product_1 = {
-                product_name: "T-Shirt",
-                product_price: 499
+                product_name: "TV",
+                product_price: 44499
             };
 
             const product_2 = {
-                product_name: "Jeans",
-                product_price: 999
+                product_name: "AC",
+                product_price: 59999
             };
 
         Both objects contain similar properties.
@@ -13437,4 +13478,14556 @@ Example:
 
                     Allow this website to send notifications?
                     The user can allow or deny the request.
+
+# Debugging
+
+    Debugging is the process of finding, understanding, and fixing errors or unexpected behavior in a JavaScript program.
+
+    When a JavaScript application does not work as expected, debugging helps us understand:
+
+        Where the problem occurred
+        Which code caused the problem
+        What values variables contain
+        Which functions were executed
+        Why the program produced an unexpected result
+
+    JavaScript provides several tools for debugging, especially through browser Developer Tools.
+
+    The important debugging tools are:
+
+        Console methods
+        Breakpoints
+        Developer Tools
+        Watch expressions
+        Call Stack
+        Variable inspection
+        Step-by-step execution
+
+    ## Types of Errors
+
+        ### Syntax Error
+
+            A syntax error occurs when JavaScript code does not follow the correct syntax.
+
+            Example
+
+                const product_name = "Laptop";
+                console.log(product_name;
+
+            The closing ) is missing.
+
+            The JavaScript engine cannot correctly parse the code.
+
+        ### untime Error
+
+            A runtime error occurs while the program is executing.
+
+            const product = null;
+            console.log(product.product_name);
+
+            The code is syntactically valid, but product is null.
+
+            Trying to access product_name from null causes a runtime error.
+
+        ### Logical Error
+
+            A logical error occurs when the program runs successfully but produces an incorrect result.
+
+        Example
+            function calculate_discount(product_price, discount_percentage) {
+                return product_price +
+                    (product_price * discount_percentage / 100);
+            }
+            const final_price = calculate_discount(1000, 10);
+            console.log(final_price);
+
+            The intended result should be:900
+
+            But the function returns:1100
+
+            The program does not produce a syntax or runtime error. The problem is in the logic.
+
+            Debugging helps us identify this type of problem.
+
+        ### Developer Tools
+
+            Modern browsers provide Developer Tools, commonly called DevTools.
+
+            Developer Tools allow developers to inspect and debug web applications.
+
+            Developer Tools can usually be opened using:
+
+            F12 or Ctrl + Shift + I
+
+            Common Developer Tools sections include:
+                For JavaScript debugging, the most important sections are:
+
+                    Console
+                    Debugger
+                    Breakpoints
+                    Watch
+                    Call Stack
+                    Scope
+
+        ### Console
+
+            The Console is one of the simplest and most commonly used JavaScript debugging tools.
+
+            The console object provides several methods for displaying information.
+
+            Common methods include:
+
+                console.log()
+                console.error()
+                console.warn()
+                console.info()
+                console.table()
+                console.time()
+                console.timeEnd()
+
+        ### console.log()
+
+            console.log() is used to display values or messages in the browser console.
+
+            Example
+
+                const product_name = "Laptop";
+                const product_price = 55000;
+                console.log(product_name);
+                console.log(product_price);
+
+            Output:
+
+                Laptop
+                55000
+
+                It is commonly used to check whether a variable contains the expected value.
+
+        ### console.error()
+
+            console.error() is used to display an error message in the console.
+
+            Example
+
+                const payment_status = "failed";
+                console.error("Payment failed:", payment_status);
+
+                It is useful when an unexpected or failed operation needs to be highlighted during debugging.
+
+        ### console.warn() is used to display a warning message.
+
+            Example
+
+                const stock_quantity = 3;
+                if (stock_quantity < 5) {
+                    console.warn("Stock quantity is low");
+                }
+                Warnings are useful when something requires attention but is not necessarily a program-breaking error.
+
+        ### console.info()
+
+            console.info() is used to display informational messages.
+
+            Example
+
+                console.info("Loading product information...");
+                It can be used to identify important stages of application execution.
+
+        ### console.table()
+
+            console.table() is useful for displaying arrays and objects in a table format.
+
+            Example
+
+                const product_data = [
+                    {
+                        product_id: 101,
+                        product_name: "Laptop",
+                        product_price: 55000
+                    },
+                    {
+                        product_id: 102,
+                        product_name: "Keyboard",
+                        product_price: 2500
+                    },
+                    {
+                        product_id: 103,
+                        product_name: "Mouse",
+                        product_price: 1200
+                    }
+                ];
+                console.table(product_data);
+
+                Instead of displaying the entire array as a large object, the browser displays the information in rows and columns.
+
+                This makes structured data easier to inspect.
+
+        ### console.time() and console.timeEnd()
+
+            These methods are used to measure how long a particular section of code takes to execute.
+
+            Example
+
+                console.time("product_processing");
+                const product_data = [];
+                for (let index = 0; index < 100000; index++) {
+                    product_data.push(index);
+                }
+                console.timeEnd("product_processing");
+
+            Example output:
+
+                product_processing: 5.23 ms
+
+            This is useful when investigating performance-related problems.
+
+        ### Breakpoints
+
+            A breakpoint is a point in the code where JavaScript execution is temporarily paused.
+
+            Normally, JavaScript executes continuously:
+
+                Line 1
+                ↓
+                Line 2
+                ↓
+                Line 3
+                ↓
+                Line 4
+                ↓
+                Line 5
+
+            With a breakpoint:
+
+                Line 1
+                ↓
+                Line 2
+                ↓
+                Line 3
+                ↓
+                BREAKPOINT
+                ↓
+                Program pauses
+
+            When execution is paused, we can inspect variables and program state.
+
+        ### Seting a breaking point
+            
+            Step 1
+
+                Open the web page in the browser.
+
+            Step 2
+
+                Open Developer Tools.F12
+                
+            Step 3
+
+                Open the:Debugger or Sources section.
+
+            Step 4
+
+                Open the JavaScript file.
+                example:
+
+                    app.js
+                    Step 5
+
+                Click the line number where you want execution to pause.
+
+                const tax_amount = subtotal * 0.18;
+                The browser creates a breakpoint on that line.
+            
+            Step 5
+
+                Click the line number where you want execution to pause.
+                example:
+
+                const tax_amount = subtotal * 0.18;
+
+                The browser creates a breakpoint on that line.
+
+        ## Step Over
+
+            Step Over executes the current line and moves to the next line.
+
+            const subtotal = product_price * quantity;
+            const tax_amount = subtotal * 0.18;
+            const total_amount = subtotal + tax_amount;
+
+            If execution is currently paused at:
+                const subtotal = product_price * quantity;
+
+            Step Over executes that line and moves to:
+                const tax_amount = subtotal * 0.18;
+
+            Step Over is useful when we want to execute the program one line at a time without entering function calls.
+
+        ## Step Into
+
+            Step Into enters a function when the current line calls that function.
+
+            Example
+
+                const total_amount = calculate_total(1000, 2);
+
+            If we use Step Into, the debugger enters:
+            function calculate_total(product_price, quantity) {
+                const subtotal = product_price * quantity;
+                return subtotal;
+            }
+
+            This is useful when we suspect that the problem exists inside a function.
+
+        ## Step Out
+
+            Step Out finishes the current function and returns to the code that called it.
+
+            For example:
+
+                function calculate_total(product_price, quantity) {
+                    const subtotal = product_price * quantity;
+                    return subtotal;
+                }
+                const total_amount = calculate_total(1000, 2);
+
+            If we are already inside calculate_total() and do not need to inspect the remaining lines, Step Out returns execution to:
+
+            const total_amount = calculate_total(1000, 2);
+
+        ## Resume / continue
+
+            Resume or Continue allows the program to continue executing after it has been paused.
+
+            Example:
+
+                Breakpoint
+                    ↓
+                Program pauses
+                    ↓
+                Inspect variables
+                    ↓
+                Resume
+                    ↓
+                Program continues
+                    ↓
+                Next breakpoint
+
+            This is useful when we have inspected the current section and want the application to continue.
+
+        ## Watch Expression
+
+            A watch expression allows us to continuously monitor a variable or expression while debugging.
+
+            function calculate_order(product_price, quantity) {
+                const subtotal = product_price * quantity;
+                const tax_amount = subtotal * 0.18;
+                const total_amount = subtotal + tax_amount;
+                return total_amount;
+            }
+            calculate_order(1000, 3);
+
+            While execution is paused, we can add:
+            subtotal
+
+            to the Watch section.
+                The debugger displays its current value.
+
+            We can also watch expressions such as:
+            subtotal + tax_amount
+
+            const subtotal = 5000;
+            const discount_amount = 500;
+            const tax_amount = 810;
+            const shipping_fee = 100;
+
+            const final_amount =
+                subtotal -
+                discount_amount +
+                tax_amount +
+                shipping_fee;
+
+            We can watch:
+
+                subtotal
+                discount_amount
+                tax_amount
+                shipping_fee
+                final_amount
+
+            If the final amount is incorrect, we can identify which value caused the problem.
+
+        ## Inspecting variables
+
+            When JavaScript execution is paused, Developer Tools allow us to inspect variables.
+
+            Example:
+
+                function calculate_total(product_price, quantity) {
+                    const subtotal = product_price * quantity;
+                    const tax_amount = subtotal * 0.18;
+                    return subtotal + tax_amount;
+                }
+
+                When execution is paused inside the function, we may see:
+
+                    product_price    1000
+                    quantity         2
+                    subtotal         2000
+                    tax_amount       360
+
+                This allows us to understand the actual runtime values.
+
+        ## Scope
+
+            The debugger also allows us to inspect the scope of variables.
+
+            Common scopes include:
+
+                Local
+                Global
+                Closure
+
+            For example:
+
+            function calculate_total(product_price, quantity) {
+                const subtotal = product_price * quantity;
+                return subtotal;
+            }
+
+            The variables:
+
+                product_price
+                quantity
+                subtotal
+
+                are available within the function's local scope.
+
+            Inspecting scope is useful when a variable does not contain the value we expected.
+
+        ## call stack
+
+            The Call Stack shows the sequence of functions that are currently being executed.
+
+                function submit_order() {
+                    calculate_total();
+                }
+
+                function calculate_total() {
+                    calculate_tax();
+                }
+
+                function calculate_tax() {
+                    console.log("Calculating tax");
+                }
+
+                submit_order();
+
+                The function execution path is:
+
+                    submit_order()
+                        ↓
+                    calculate_total()
+                        ↓
+                    calculate_tax()
+
+                The debugger can display this sequence in the Call Stack.
+
+                This is particularly useful when a problem occurs inside multiple nested function calls.
+
+# Performance Optimization
+
+    Performance optimization is the process of improving an application's speed, responsiveness, and resource usage.
+
+    A well-optimized application should:
+
+        Load quickly
+        Respond quickly to user actions
+        Avoid unnecessary calculations
+        Avoid unnecessary network requests
+        Use memory efficiently
+        Keep the user interface responsive
+        Handle large amounts of data efficiently
+
+    In JavaScript applications, common performance optimization techniques include:
+
+        Debouncing
+        Throttling
+        Lazy Loading
+        Asynchronous Loading
+        Web Workers
+
+    ## importance of perfoemance optimization   
+
+        If a search request is sent every time the user types a character:
+
+            L
+            ↓
+            API request
+
+            La
+            ↓
+            API request
+
+            Lap
+            ↓
+            API request
+
+            Lapt
+            ↓
+            API request
+
+            Lapto
+            ↓
+            API request
+
+            Laptop
+            ↓
+            API request
+
+        Six API requests may be generated for a single search.
+        This can cause:
+
+            Unnecessary API requests
+            Increased server load
+            Increased network usage
+            Slower application behavior
+            Poor user experience
+
+        Performance optimization techniques help control this behavior.
+
+    ## Debouncing
+
+        Debouncing delays the execution of a function until the user stops performing an action for a specific amount of time.
+
+        The function is executed only after the event has stopped for the specified delay.
+
+            Simple idea
+            User types
+            ↓
+            Wait
+            ↓
+            User types again
+            ↓
+            Reset timer
+            ↓
+            User types again
+            ↓
+            Reset timer
+            ↓
+            User stops typing
+            ↓
+            Wait for delay
+            ↓
+            Function executes
+
+        ### Real-Time Use Case of Debouncing
+
+            A common example is a search box.
+
+            Laptop
+
+            Without debouncing:
+
+            L       → API request
+            La      → API request
+            Lap     → API request
+            Lapt    → API request
+            Lapto   → API request
+            Laptop  → API request
+
+            With debouncing:
+
+            L
+            La
+            Lap
+            Lapt
+            Lapto
+            Laptop
+                ↓
+            User stops typing
+                ↓
+            API request
+
+            Only one request is made after the user stops typing.
+
+            function debounce(callback_function, delay) {
+                let timer_id;
+                return function () {
+                    clearTimeout(timer_id);
+                    timer_id = setTimeout(() => {
+                        callback_function();
+                    }, delay);
+                };
+            }
+
+        Usage:
+
+            function search_products() {
+                console.log("Searching products...");
+            }
+            const debounced_search =
+                debounce(search_products, 500);
+            debounced_search();
+
+            The search_products() function executes only after the specified delay.
+
+        Debouncing is useful for events that occur repeatedly in a short period.
+
+            Common examples:
+
+            Search boxes
+            Autocomplete
+            API search
+            Form validation
+            Window resizing
+            Text editing
+            Filtering large datasets
+
+    ## Throttling
+
+        Throttling limits how frequently a function can execute.
+
+        Instead of waiting until the user stops performing an action, throttling allows the function to execute at a controlled interval.
+
+        For example:
+
+        Function can execute once every 500 ms
+
+        Even if the event happens hundreds of times, the function will not execute more frequently than the specified interval.
+
+        ### Real-Time Use Case of Throttling
+
+            A common example is monitoring page scrolling.
+            The scroll event can fire many times while the user scrolls.
+
+            window.addEventListener("scroll", () => {
+                console.log("User is scrolling");
+            });
+
+            This can execute very frequently.
+            Instead, throttling can limit execution.
+
+            For example:
+
+                User scrolls continuously
+                        ↓
+                Function
+                        ↓
+                Wait 200 ms
+                        ↓
+                Function
+                        ↓
+                Wait 200 ms
+                        ↓
+                Function
+
+        ### implementation
+
+            function throttle(callback_function, delay) {
+                let last_execution_time = 0;
+                return function (...arguments_list) {
+                    const current_time = Date.now();
+                    if (
+                        current_time - last_execution_time >= delay
+                    ) {
+                        last_execution_time = current_time;
+                        callback_function(...arguments_list);
+                    }
+                };
+            }
+
+            Usage:
+
+            function track_scroll() {
+                console.log("Tracking scroll");
+            }
+            const throttled_scroll =
+                throttle(track_scroll, 500);
+            window.addEventListener(
+                "scroll",
+                throttled_scroll
+            );
+
+            The function executes at most once every 500 milliseconds.
+
+    ## Lazy Loading
+
+        Lazy loading means loading a resource only when it is actually needed.
+
+        Instead of loading everything when the page starts, we load certain resources later.
+
+        For example, an e-commerce page may contain:
+
+            Product 1
+            Product 2
+            Product 3
+            ...
+            Product 100
+
+        Loading all 100 product images immediately can consume unnecessary bandwidth.
+
+        With lazy loading:
+
+            Page opens
+            ↓
+            Load visible images
+            ↓
+            User scrolls
+            ↓
+            Load images that become visible
+
+        This can improve the initial page loading experience.
+
+        JavaScript can also be used with the Intersection Observer API.
+
+        HTML
+
+            <img
+                class="product_image"
+                data_src="laptop.jpg"
+                alt="Laptop"
+            >
+            
+        JavaScript
+
+            const product_image =document.querySelector(".product_image");
+            const image_observer =new IntersectionObserver((entries) => {
+                    entries.forEach((entry) => {
+                        if (entry.isIntersecting) {
+                            const image = entry.target;
+                            image.src = image.dataset.src;
+                            image_observer.unobserve(image);
+                        }
+                    });
+                });
+
+            image_observer.observe(product_image);
+
+            The image is loaded when it enters the visible area.
+
+        Use cases
+
+            Lazy loading is commonly used for:
+
+                Images
+                Videos
+                Product lists
+                Large datasets
+                Components
+                JavaScript modules
+                Heavy resources
+
+            For example, a shopping application may initially load only the products visible on the screen.
+
+            More products can be loaded as the user scrolls.
+
+
+        Benifits
+
+            Benefits of Lazy Loading
+            Lazy loading can:
+
+                Reduce initial page load time
+                Reduce network usage
+                Reduce memory usage
+                Avoid loading unnecessary resources
+                Improve initial page responsiveness
+
+            However, lazy loading should be used carefully.
+
+            Resources that are immediately visible or required for the initial page should generally not be unnecessarily delayed.
+
+    ## Asynchronous Loading
+
+        Asynchronous loading allows a task to happen without blocking the rest of the application.
+
+            JavaScript can start an operation and continue executing other code while waiting for the operation to finish.
+
+            Common asynchronous operations include:
+
+                API requests
+                File loading
+                Database requests
+                Timers
+                Dynamic module loading
+
+        Synchronous vs Asynchronous
+
+        Synchronous
+
+            Task A
+            ↓
+            Wait
+            ↓
+            Task B
+            ↓
+            Wait
+            ↓
+            Task C
+
+            Each task must finish before the next task begins.
+
+         Asynchronous
+
+            Task A ──────────────→ Complete
+
+            Task B ─────→ Complete
+
+            Task C ─────────→ Complete
+
+            The application can continue performing other work while waiting for asynchronous operations.
+
+        Asynchronous API Example
+
+            async function load_products() {
+                const response =await fetch("/api/products");
+                const product_data =await response.json();
+                console.log(product_data);
+            }
+            load_products();
+
+            The fetch() operation is asynchronous.
+
+            JavaScript does not need to block the entire page while waiting for the server response.
+
+        Asynchronous Loading with Dynamic Import
+
+            JavaScript modules can also be loaded only when they are needed.
+
+            payment.js
+
+            Instead of loading the module immediately, we can dynamically import it.
+
+            async function open_payment() {
+                const payment_module =
+                    await import("./payment.js");
+                payment_module.start_payment();
+            }
+
+            The payment.js module is loaded when open_payment() is called.
+            This technique is called dynamic importing.
+
+        Code Splitting
+
+            Dynamic imports can help with code splitting.
+            Instead of sending one large JavaScript file:
+
+                application.js
+                    ↓
+                10 MB
+
+            the application can split code into smaller parts:
+
+                main.js
+                    ↓
+                dashboard.js
+                    ↓
+                payment.js
+                    ↓
+                reports.js
+
+            Only the required code needs to be loaded.
+
+        Example of Code Splitting
+        
+            async function open_reports() {
+                const reports_module =await import("./reports.js");
+                reports_module.load_reports();
+            }
+
+            The reports module is loaded only when the reports feature is opened.
+
+            This is useful for large applications containing many features.
+
+# Web Workers   
+
+    A Web Worker allows JavaScript code to run in a separate background thread.
+
+    Normally, JavaScript running in a browser uses the main thread.
+
+    The main thread is responsible for tasks such as:
+
+        JavaScript execution
+        DOM updates
+        User interactions
+        Rendering
+
+    If a heavy calculation runs for a long time on the main thread, the user interface may become unresponsive.
+
+    Web Workers can move heavy calculations away from the main thread.
+
+    ## Main thread Problem
+
+        function process_large_data() {
+            let total_amount = 0;
+            for (let index = 0; index < 1000000000; index++) {
+                total_amount += index;
+            }
+            return total_amount;
+        }
+        process_large_data();
+
+        A very large calculation like this can occupy the main thread.
+        During the calculation, the page may become slow or unresponsive.
+
+    ## Web Worker Architecture
+
+        A Web Worker creates a separate execution environment.
+
+        Main Thread
+            |
+            | postMessage()
+            ↓
+        Web Worker
+            |
+            | Heavy calculation
+            ↓
+        Web Worker
+            |
+            | postMessage()
+            ↓
+        Main Thread
+
+        The main thread and worker communicate using messages.
+
+    ## Creating a Web Worker
+
+        Create a file:
+
+            worker.js
+            worker.js
+
+        self.onmessage = function (event) {
+            const number = event.data;
+            let total = 0;
+            for (let index = 0; index <= number; index++) {
+                total += index;
+            }
+            self.postMessage(total);
+        };
+
+        The worker receives data using:event.data
+        and sends the result back using:self.postMessage()
+    
+    Using the Web Worker
+        main.js
+    
+        const calculation_worker =new Worker("./worker.js");
+        calculation_worker.postMessage(100000000);
+
+        calculation_worker.onmessage =function (event) {
+            console.log("Calculation result:",event.data);
+            };
+
+        The main JavaScript file sends data to the worker:
+        calculation_worker.postMessage(100000000);
+
+        The worker performs the calculation.
+        The worker sends the result back:
+        self.postMessage(total);
+
+        The main thread receives the result:
+
+        calculation_worker.onmessage =
+            function (event) {
+                console.log(event.data);
+            };
+        
+    Web Worker Communication
+
+        The two sides communicate using messages.
+
+            Main Thread → Worker
+            calculation_worker.postMessage(data);
+            Worker → Main Thread
+            self.postMessage(result);
+
+        This is the basic communication pattern:
+
+                Main Thread
+                    |
+                    | postMessage()
+                    ↓
+                Worker
+                    |
+                    | postMessage()
+                    ↓
+                Main Thread
+
+    Terminating a Web Worker
+
+        When the worker is no longer required, it can be terminated.
+        calculation_worker.terminate();
+
+        This stops the worker.
+
+        It is useful when a worker is no longer needed and should not continue consuming resources.
+
+    When to Use Web Workers
+
+        Web Workers are useful for CPU-intensive operations such as:
+
+            Large calculations
+            Processing large datasets
+            Image processing
+            Data transformation
+            Complex mathematical operations
+            Parsing large files
+            Encryption-related computation
+
+        They are generally not necessary for small calculations.
+
+    Important Web Worker Limitation
+
+        A normal Web Worker does not directly manipulate the page DOM.
+        For example, the worker should not directly do:
+
+        document.querySelector(".result");
+
+        Instead, the worker performs the calculation and sends the result to the main thread.
+
+        The main thread then updates the DOM.
+
+            Worker
+            ↓
+            Calculate
+            ↓
+            Send result
+            ↓
+            Main Thread
+            ↓
+            Update DOM
+
+# Unit testing
+
+**Unit testing** is the process of testing small, individual parts of a program to verify that they work correctly.
+
+A small part of a program is called a **unit**.
+
+A unit can be:
+
+* A function
+* A calculation
+* A validation function
+* A utility function
+* A data-processing function
+
+For example:
+
+```javascript
+function calculate_total(product_price, quantity) {
+    return product_price * quantity;
+}
+```
+
+This function can be tested independently.
+
+We can verify:
+
+```text
+calculate_total(1000, 2)
+```
+
+should return:
+
+```text
+2000
+```
+
+---
+
+#  Why Unit Testing Is Important
+
+Without testing, we may manually check the application every time we change the code.
+
+For example:
+
+```text
+Change code
+   ↓
+Run application
+   ↓
+Enter data manually
+   ↓
+Check result
+```
+
+With automated unit tests:
+
+```text
+Change code
+   ↓
+Run tests
+   ↓
+Tests execute automatically
+   ↓
+Pass / Fail
+```
+
+Unit testing helps us:
+
+* Find bugs early
+* Verify individual functions
+* Prevent existing functionality from breaking
+* Make code changes more safely
+* Automate repetitive testing
+* Understand expected behavior
+
+---
+
+# Unit Testing Concept
+
+Suppose we have:
+
+```javascript
+function calculate_total(product_price, quantity) {
+    return product_price * quantity;
+}
+```
+
+We can create a test:
+
+```text
+Input:
+product_price = 1000
+quantity = 2
+
+Expected output:
+2000
+```
+
+The test checks:
+
+```text
+Actual result === Expected result
+```
+
+If they are equal:
+
+```text
+PASS
+```
+
+Otherwise:
+
+```text
+FAIL
+```
+
+---
+
+#  Testing Frameworks and Libraries
+
+Several JavaScript tools are commonly used for testing.
+
+Important ones include:
+
+* Jest
+* Mocha
+* Chai
+
+They have different roles.
+
+| Tool          | Purpose                                |
+| ------------- | -------------------------------------- |
+| Jest          | Testing framework                      |
+| Mocha         | Testing framework                      |
+| Chai          | Assertion library                      |
+| Mocking tools | Replace real dependencies during tests |
+
+---
+
+# 5. Jest
+
+**Jest** is a JavaScript testing framework.
+
+It provides features for:
+
+* Writing tests
+* Running tests
+* Assertions
+* Mocking
+* Test organization
+* Code coverage
+
+A basic Jest test looks like:
+
+```javascript
+test("should calculate total price", () => {
+
+    const result = calculate_total(1000, 2);
+
+    expect(result).toBe(2000);
+});
+```
+
+---
+
+# Installing Jest
+
+Create a Node.js project:
+
+```powershell
+npm init -y
+```
+
+Install Jest:
+
+```powershell
+npm install --save-dev jest
+```
+
+Then configure the test script in `package.json`.
+
+```json
+{
+    "scripts": {
+        "test": "jest"
+    }
+}
+```
+
+Tests can then be executed using:
+
+```powershell
+npm test
+```
+
+---
+
+#  Basic Jest Test
+
+Suppose we have:
+
+### `calculator.js`
+
+```javascript
+function calculate_total(product_price, quantity) {
+    return product_price * quantity;
+}
+
+module.exports = {
+    calculate_total
+};
+```
+
+Test file:
+
+### `calculator.test.js`
+
+```javascript
+const {
+    calculate_total
+} = require("./calculator");
+
+test("should calculate total price", () => {
+
+    const result =
+        calculate_total(1000, 2);
+
+    expect(result).toBe(2000);
+});
+```
+
+Running:
+
+```powershell
+npm test
+```
+
+produces a test result.
+
+---
+
+# Test Structure
+
+A basic test follows this structure:
+
+```text
+Arrange
+   ↓
+Act
+   ↓
+Assert
+```
+
+This is called the **AAA pattern**.
+
+---
+
+# Arrange
+
+Arrange means preparing the data required for the test.
+
+```javascript
+const product_price = 1000;
+const quantity = 2;
+```
+
+---
+
+# Act
+
+Act means executing the function being tested.
+
+```javascript
+const result =
+    calculate_total(product_price, quantity);
+```
+
+---
+
+# Assert
+
+Assert means checking whether the actual result matches the expected result.
+
+```javascript
+expect(result).toBe(2000);
+```
+
+Complete example:
+
+```javascript
+test("should calculate total price", () => {
+
+    const product_price = 1000;
+    const quantity = 2;
+
+    const result =
+        calculate_total(
+            product_price,
+            quantity
+        );
+
+    expect(result).toBe(2000);
+});
+```
+
+---
+
+# Assertions
+
+An **assertion** checks whether the actual result matches what we expect.
+
+For example:
+
+```javascript
+expect(result).toBe(2000);
+```
+
+If:
+
+```text
+result = 2000
+```
+
+the test passes.
+
+If:
+
+```text
+result = 2500
+```
+
+the test fails.
+
+---
+
+#  Common Jest Matchers
+
+Jest provides several matchers.
+
+### `toBe()`
+
+Used for exact equality.
+
+```javascript
+expect(total_amount).toBe(2000);
+```
+
+---
+
+### `toEqual()`
+
+Used to compare objects and arrays.
+
+```javascript
+expect(product).toEqual({
+    product_name: "Laptop",
+    product_price: 50000
+});
+```
+
+---
+
+### `toBeTruthy()`
+
+Checks whether a value is truthy.
+
+```javascript
+expect(is_logged_in).toBeTruthy();
+```
+
+---
+
+### `toBeFalsy()`
+
+Checks whether a value is falsy.
+
+```javascript
+expect(is_logged_in).toBeFalsy();
+```
+
+---
+
+### `toBeNull()`
+
+Checks whether the value is `null`.
+
+```javascript
+expect(product).toBeNull();
+```
+
+---
+
+### `toBeUndefined()`
+
+Checks whether the value is `undefined`.
+
+```javascript
+expect(product).toBeUndefined();
+```
+
+---
+
+### `toContain()`
+
+Checks whether an array or string contains a value.
+
+```javascript
+expect(product_names).toContain("Laptop");
+```
+
+---
+
+# Testing Multiple Cases
+
+A good unit test should test different possible inputs.
+
+Consider:
+
+```javascript
+function calculate_total(product_price, quantity) {
+
+    return product_price * quantity;
+}
+```
+
+We can test multiple cases:
+
+```javascript
+test("should calculate total for two products", () => {
+
+    expect(
+        calculate_total(1000, 2)
+    ).toBe(2000);
+});
+
+test("should calculate total for one product", () => {
+
+    expect(
+        calculate_total(1000, 1)
+    ).toBe(1000);
+});
+
+test("should return zero when quantity is zero", () => {
+
+    expect(
+        calculate_total(1000, 0)
+    ).toBe(0);
+});
+```
+
+---
+
+# Testing Edge Cases
+
+An **edge case** is an unusual or boundary input.
+
+For example:
+
+```text
+Quantity = 0
+Quantity = 1
+Negative quantity
+Very large quantity
+Product price = 0
+```
+
+Tests should consider these situations when they are valid for the application.
+
+Example:
+
+```javascript
+test("should return zero when quantity is zero", () => {
+
+    expect(
+        calculate_total(1000, 0)
+    ).toBe(0);
+});
+```
+
+---
+
+##  What Is Mocha?
+
+**Mocha** is a JavaScript testing framework.
+
+Mocha provides functionality for:
+
+* Defining tests
+* Organizing test suites
+* Running tests
+* Handling asynchronous tests
+* Managing test lifecycle hooks
+
+Mocha commonly works with an assertion library such as **Chai**.
+
+---
+
+# Installing Mocha
+
+Install Mocha:
+
+```powershell
+npm install --save-dev mocha
+```
+
+A package script can be configured:
+
+```json
+{
+    "scripts": {
+        "test": "mocha"
+    }
+}
+```
+
+Run the tests:
+
+```powershell
+npm test
+```
+
+---
+
+# Basic Mocha Test
+
+```javascript
+const assert = require("assert");
+
+describe("calculate_total", () => {
+
+    it("should calculate total price", () => {
+
+        const result =
+            calculate_total(1000, 2);
+
+        assert.strictEqual(
+            result,
+            2000
+        );
+    });
+
+});
+```
+
+---
+
+#  describe()
+
+`describe()` is used to group related tests.
+
+Example:
+
+```javascript
+describe("Shopping Cart", () => {
+
+    // related tests
+});
+```
+
+It helps organize test cases.
+
+---
+
+# it()
+
+`it()` defines an individual test case.
+
+Example:
+
+```javascript
+it("should calculate total price", () => {
+
+    const result =
+        calculate_total(1000, 2);
+
+    assert.strictEqual(result, 2000);
+});
+```
+
+The test description should explain what the test expects.
+
+---
+
+
+## chai
+
+**Chai** is an assertion library commonly used with Mocha.
+
+It provides readable assertion styles.
+
+For example:
+
+```javascript
+expect(result).to.equal(2000);
+```
+
+Chai can make test assertions easier to read.
+
+#  Mocha + Chai Example
+
+```javascript
+const {
+    expect
+} = require("chai");
+
+describe("calculate_total", () => {
+
+    it("should calculate total price", () => {
+
+        const result =
+            calculate_total(1000, 2);
+
+        expect(result).to.equal(2000);
+    });
+
+});
+```
+
+The structure is:
+
+```text
+Mocha
+  ↓
+describe()
+  ↓
+it()
+  ↓
+Chai assertion
+  ↓
+expect()
+```
+
+## Test Case
+
+A **test case** is a specific test that verifies one expected behavior.
+
+Example:
+
+```javascript
+test("should calculate total price", () => {
+
+    expect(
+        calculate_total(500, 3)
+    ).toBe(1500);
+});
+```
+
+This test checks one behavior:
+
+```text
+500 × 3 = 1500
+```
+
+---
+
+#  Good Test Case Structure
+
+A good test should clearly communicate:
+
+```text
+What is being tested?
+What input is provided?
+What output is expected?
+```
+
+Example:
+
+```javascript
+test("should calculate total price for three products", () => {
+
+    const product_price = 500;
+    const quantity = 3;
+
+    const result =
+        calculate_total(
+            product_price,
+            quantity
+        );
+
+    expect(result).toBe(1500);
+});
+```
+
+---
+
+## Testing Error Handling
+
+Unit tests should also verify that functions correctly handle invalid input or errors.
+
+Example:
+
+```javascript
+function withdraw_money(account_balance, withdraw_amount) {
+
+    if (withdraw_amount > account_balance) {
+        throw new Error("Insufficient balance");
+    }
+
+    return account_balance - withdraw_amount;
+}
+```
+
+Test:
+
+```javascript
+test("should throw error when balance is insufficient", () => {
+
+    expect(() => {
+
+        withdraw_money(1000, 1500);
+
+    }).toThrow("Insufficient balance");
+});
+```
+
+This verifies the error behavior instead of only testing successful cases.
+
+---
+
+
+## Mocking?
+
+**Mocking** means replacing a real dependency with a controlled fake version during a test.
+
+Suppose a function calls an external API:
+
+```javascript
+async function get_product_price(product_id) {
+    const response =await fetch(`/api/products/${product_id}`);
+    const product_data =await response.json();
+    return product_data.product_price;
+}
+```
+
+A unit test should not necessarily depend on the real API.
+
+Instead, we can provide a mock response.
+
+---
+
+# Why Mocking Is Useful
+
+Without mocking:
+
+```text
+Test
+ ↓
+Real API
+ ↓
+Network
+ ↓
+Server
+ ↓
+Database
+ ↓
+Response
+```
+
+The test may become:
+
+* Slow
+* Dependent on network availability
+* Dependent on server state
+* Difficult to reproduce
+
+With mocking:
+
+```text
+Test
+ ↓
+Mock API response
+ ↓
+Function
+ ↓
+Result
+```
+
+The test becomes more isolated.
+
+---
+
+# Simple Mock Example
+
+Suppose we have:
+
+```javascript
+function get_product_name(product) {
+
+    return product.product_name;
+}
+```
+
+Instead of using a real product object from a database, we can provide controlled test data:
+
+```javascript
+test("should return product name", () => {
+
+    const mock_product = {
+        product_id: 101,
+        product_name: "Laptop",
+        product_price: 50000
+    };
+
+    const result =
+        get_product_name(mock_product);
+
+    expect(result).toBe("Laptop");
+});
+```
+
+Here, `mock_product` is controlled test data.
+
+---
+
+# Mocking External APIs
+
+Suppose the application normally receives:
+
+```json
+{
+    "product_id": 101,
+    "product_name": "Laptop",
+    "product_price": 50000
+}
+```
+
+During testing, we can provide the same structure without contacting the actual server.
+
+This allows the test to focus on the function's behavior.
+
+---
+
+#  Unit Test Isolation
+
+A unit test should ideally focus on one unit.
+
+For example:
+
+```text
+calculate_total()
+```
+
+should be tested independently from:
+
+```text
+Database
+API
+Payment Gateway
+File System
+External Services
+```
+
+Mocking helps isolate the function from those dependencies.
+
+---
+
+# Setup and Cleanup
+
+Testing frameworks provide mechanisms for preparing and cleaning test data.
+
+Common concepts include:
+
+```text
+before
+beforeEach
+after
+afterEach
+```
+
+For example:
+
+```javascript
+beforeEach(() => {
+    console.log("Before each test");
+});
+```
+This code runs before every test.
+
+---
+
+# Test Lifecycle
+
+A typical test lifecycle is:
+
+```text
+Setup
+  ↓
+Run test
+  ↓
+Check result
+  ↓
+Cleanup
+```
+
+For multiple tests:
+
+```text
+beforeEach
+   ↓
+Test 1
+   ↓
+afterEach
+   ↓
+beforeEach
+   ↓
+Test 2
+   ↓
+afterEach
+```
+
+This helps ensure that tests do not unintentionally affect each other.
+
+---
+
+# Unit Testing Workflow
+
+A typical unit testing process is:
+
+```text
+Write function
+     ↓
+Identify expected behavior
+     ↓
+Create test case
+     ↓
+Arrange test data
+     ↓
+Execute function
+     ↓
+Assert result
+     ↓
+Run test
+     ↓
+PASS / FAIL
+```
+
+---
+
+### Source code
+
+```javascript
+function calculate_order_total(
+    product_price,
+    quantity,
+    discount_percentage
+) {
+
+    const subtotal =product_price * quantity;
+    const discount_amount =subtotal *discount_percentage / 100;
+    return subtotal - discount_amount;
+}
+
+module.exports = {calculate_order_total};
+```
+
+### Test code
+
+```javascript
+const {
+    calculate_order_total
+} = require("./order_service");
+
+test("should calculate order total after discount", () => {
+
+    const result =
+        calculate_order_total(
+            1000,
+            2,
+            10
+        );
+
+    expect(result).toBe(1800);
+});
+```
+
+The calculation is:
+
+```text
+1000 × 2 = 2000
+
+10% discount = 200
+
+Final amount = 1800
+```
+
+# Testing Pyramid
+
+A software application can contain different levels of testing.
+
+```text
+             End-to-End Tests
+                  /\
+                 /  \
+                /    \
+          Integration Tests
+              /        \
+             /          \
+              Unit Tests
+```
+
+Unit tests generally form a large part of the test suite because they are fast and focused.
+
+# JavaScript Security
+
+## Introduction
+
+Security is the process of protecting a web application from:
+
+* Unauthorized access
+* Malicious input
+* Data theft
+* Session attacks
+* Malicious scripts
+* Unauthorized requests
+* Browser-based attacks
+
+The important JavaScript/web security concepts are:
+
+* XSS — Cross-Site Scripting
+* CSRF — Cross-Site Request Forgery
+* Input Sanitization
+* Content Security Policy — CSP
+
+---
+
+# XSS — Cross-Site Scripting
+
+## What is XSS?
+
+**XSS (Cross-Site Scripting)** happens when an attacker manages to make malicious JavaScript execute inside another user's browser.
+
+Example:
+
+```html
+<h2 id="user_name"></h2>
+```
+
+```javascript
+const user_name = "<script>alert('Hacked')</script>";
+
+document.getElementById("user_name").innerHTML = user_name;
+```
+
+The browser interprets the value as HTML.
+
+This can allow an attacker to inject HTML or JavaScript into the page.
+
+---
+
+## Why XSS Happens
+
+One common cause is inserting untrusted data directly into HTML.
+
+```javascript
+element.innerHTML = user_input;
+```
+
+If `user_input` contains HTML, the browser may interpret it as markup.
+
+```text
+Untrusted data
+      ↓
+HTML parser
+      ↓
+Browser interprets it as markup/code
+```
+
+---
+
+## Preventing XSS with textContent
+
+If you only want to display text, use:
+
+```javascript
+textContent
+```
+
+instead of:
+
+```javascript
+innerHTML
+```
+
+Example:
+
+```javascript
+const comment_text = "<script>alert('XSS')</script>";
+
+document.getElementById("comments").textContent = comment_text;
+```
+
+The browser displays the content as normal text instead of interpreting it as HTML.
+
+| Method                 | Use                                                    |
+| ---------------------- | ------------------------------------------------------ |
+| `textContent`          | Display user-provided text                             |
+| `innerHTML`            | Insert HTML when the HTML is trusted/controlled        |
+| `insertAdjacentHTML()` | Insert HTML; requires the same security considerations |
+
+---
+
+## Real-Time XSS Example
+
+Imagine an education platform where students can post questions.
+
+A student enters:
+
+```text
+How do I submit my assignment?
+```
+
+The application receives:
+
+```javascript
+const question_text = user_input;
+```
+
+Display it safely:
+
+```javascript
+question_element.textContent = question_text;
+```
+
+Avoid:
+
+```javascript
+question_element.innerHTML = question_text;
+```
+
+when the content is untrusted.
+
+---
+
+## Types of XSS
+
+### Stored XSS
+
+Malicious content is stored on the server or database.
+
+```text
+User submits malicious content
+        ↓
+Backend stores content
+        ↓
+Another user opens page
+        ↓
+Stored content is rendered
+        ↓
+Malicious content executes
+```
+
+Common locations include:
+
+* Comments
+* Forum posts
+* Product reviews
+* Profile descriptions
+* Messages
+
+---
+
+### Reflected XSS
+
+The malicious input comes from a request and is immediately reflected into the response.
+
+For example:
+
+```text
+/search?query=user_input
+```
+
+If the application inserts the query into HTML without proper handling, it can create an XSS vulnerability.
+
+Common locations include:
+
+* Search pages
+* Error messages
+* URL parameters
+* Query strings
+
+---
+
+### DOM-Based XSS
+
+The vulnerability occurs primarily through client-side JavaScript.
+
+Example:
+
+```javascript
+const search_params = new URLSearchParams(window.location.search);
+
+const search_query = search_params.get("query");
+
+document.getElementById("result").innerHTML = search_query;
+```
+
+The attacker-controlled value comes from the URL and is inserted into HTML.
+
+Safer:
+
+```javascript
+document.getElementById("result").textContent = search_query;
+```
+
+---
+
+## XSS Prevention
+
+### Use `textContent`
+
+```javascript
+element.textContent = user_input;
+```
+
+### Avoid unnecessary `innerHTML`
+
+```javascript
+element.innerHTML = user_input;
+```
+
+should not be used with untrusted input.
+
+### Validate input
+
+```javascript
+if (user_name.length > 50) {
+    throw new Error("Invalid user name");
+}
+```
+
+### Sanitize HTML when HTML is actually required
+
+If an application intentionally allows formatted HTML, use a well-maintained HTML sanitizer rather than attempting to create your own sanitizer using regular expressions.
+
+### Use CSP
+
+Content Security Policy provides another layer of protection.
+
+---
+
+# CSRF — Cross-Site Request Forgery
+
+## What is CSRF?
+
+**CSRF (Cross-Site Request Forgery)** is an attack where a malicious website causes a user's browser to send an unwanted request to another website where the user is authenticated.
+
+For example:
+
+```text
+User is logged into banking application
+        ↓
+Browser has authentication cookie
+        ↓
+User visits malicious website
+        ↓
+Malicious website causes a request
+        ↓
+Browser sends authentication credentials
+        ↓
+Server may process the unwanted request
+```
+
+The important point is that the victim is already authenticated.
+
+---
+
+## CSRF Example
+
+Imagine a backend endpoint:
+
+```text
+POST /api/change-email
+```
+
+The user is already logged in.
+
+A malicious website attempts to cause the browser to submit a request to this endpoint.
+
+If the application relies only on automatically sent cookies and does not properly protect state-changing requests, the request may be accepted.
+
+---
+
+## CSRF Token
+
+One common defense is a **CSRF token**.
+
+The server generates a random token:
+
+```text
+csrf_token = random_secure_value
+```
+
+The legitimate application includes the token with a state-changing request.
+
+Example:
+
+```javascript
+const response = await fetch("/api/change-email", {
+    method: "POST",
+    headers: {
+        "Content-Type": "application/json",
+        "X-CSRF-Token": csrf_token
+    },
+    body: JSON.stringify({
+        email: new_email
+    })
+});
+```
+
+The server verifies the token.
+
+```text
+Request
+   ↓
+CSRF token present?
+   ↓
+Token valid?
+   ↓
+Process request
+```
+
+If the token is missing or invalid, the server rejects the request.
+
+---
+
+## SameSite Cookies
+
+Another important CSRF defense is the cookie's `SameSite` attribute.
+
+Example:
+
+```http
+Set-Cookie: session_id=abc123; Secure; HttpOnly; SameSite=Lax
+```
+
+Common values are:
+
+| SameSite | Meaning                                                                      |
+| -------- | ---------------------------------------------------------------------------- |
+| `Strict` | Strongly restricts cross-site cookie sending                                 |
+| `Lax`    | Allows some cross-site navigation while restricting many cross-site requests |
+| `None`   | Allows cross-site cookie usage and requires `Secure`                         |
+
+The appropriate setting depends on the application's authentication and cross-site requirements.
+
+---
+
+# XSS vs CSRF
+
+These attacks are different.
+
+| XSS                                               | CSRF                                          |
+| ------------------------------------------------- | --------------------------------------------- |
+| Injects malicious content/script                  | Tricks browser into sending a request         |
+| Primarily targets page execution                  | Primarily targets unwanted actions            |
+| Often involves unsafe output handling             | Often involves authentication cookies         |
+| `textContent` can help prevent many DOM XSS cases | CSRF tokens and SameSite cookies can help     |
+| CSP provides an additional layer                  | CSRF-specific protections are still important |
+
+A simple way to remember:
+
+```text
+XSS
+→ Can malicious code execute in my page?
+
+CSRF
+→ Can another site make my browser perform an action?
+```
+
+---
+
+# Input Sanitization
+
+## What is Input Sanitization?
+
+Input sanitization means processing untrusted data so that dangerous content is removed or safely represented before it is used.
+
+General flow:
+
+```text
+User input
+    ↓
+Validation
+    ↓
+Sanitization
+    ↓
+Application processing
+```
+
+---
+
+## Validation vs Sanitization
+
+These concepts are related but different.
+
+### Validation
+
+Validation asks:
+
+> Is this input acceptable?
+
+Example:
+
+```javascript
+const age = Number(user_input);
+
+if (!Number.isInteger(age) || age < 18) {
+    throw new Error("Invalid age");
+}
+```
+
+The application checks whether the value satisfies its requirements.
+
+### Sanitization
+
+Sanitization asks:
+
+> How can this input be safely represented or transformed?
+
+For example, if an application intentionally supports formatted HTML, an HTML sanitizer can remove unsafe HTML while preserving approved formatting.
+
+---
+
+## Example: Email Validation
+
+```javascript
+function validate_email(email_address) {
+    if (!email_address.includes("@")) {
+        throw new Error("Invalid email address");
+    }
+
+    return email_address;
+}
+```
+
+This is validation.
+
+However, validation alone does not automatically make arbitrary HTML safe.
+
+For example:
+
+```javascript
+element.innerHTML = email_address;
+```
+
+is still an inappropriate way to display untrusted content.
+
+---
+
+## Never Trust Client-Side Validation Alone
+
+Consider a registration form:
+
+```javascript
+if (password.length >= 8) {
+    submit_form();
+}
+```
+
+This is useful for user experience.
+
+But an attacker can bypass JavaScript completely and send a request directly to the backend.
+
+Therefore:
+
+```text
+Frontend validation
+        ↓
+Good user experience
+
+Backend validation
+        ↓
+Security enforcement
+```
+
+The backend must enforce security requirements.
+
+---
+
+# Content Security Policy — CSP
+
+## What is CSP?
+
+**Content Security Policy (CSP)** is a browser security mechanism that allows a website to specify which sources of content the browser is allowed to load or execute.
+
+CSP is usually delivered using an HTTP response header.
+
+Example:
+
+```http
+Content-Security-Policy: default-src 'self'
+```
+
+This tells the browser that, by default, resources should come from the application's own origin.
+
+---
+
+## Why CSP is Useful
+
+Suppose an application has an XSS vulnerability.
+
+A strong CSP can provide an additional security layer by restricting where scripts can come from.
+
+```text
+Application
+     ↓
+Unexpected script appears
+     ↓
+Browser checks CSP
+     ↓
+Is this script source allowed?
+     ↓
+No → Browser blocks it
+```
+
+CSP is **defense in depth**.
+
+It should not replace proper input handling and secure coding.
+
+---
+
+## CSP Example
+
+A simple policy:
+
+```http
+Content-Security-Policy: default-src 'self'
+```
+
+A more explicit policy:
+
+```http
+Content-Security-Policy:
+    default-src 'self';
+    script-src 'self';
+    style-src 'self';
+    img-src 'self' https:;
+    connect-src 'self';
+```
+
+This can restrict:
+
+* JavaScript sources
+* CSS sources
+* Image sources
+* API/network connections
+
+The exact policy should be designed around the application's actual resources.
+
+---
+
+## CSP and Inline JavaScript
+
+Consider:
+
+```html
+<script>
+    console.log("Hello");
+</script>
+```
+
+A strict CSP may block inline scripts unless the policy explicitly permits them.
+
+External JavaScript is easier to control:
+
+```html
+<script src="/js/app.js"></script>
+```
+
+with:
+
+```http
+Content-Security-Policy: script-src 'self'
+```
+
+This allows scripts from the application's own origin.
+
+---
+
+## CSP Nonce
+
+For applications that genuinely require specific inline scripts, CSP nonces can be used.
+
+The server generates a random nonce:
+
+```text
+random_nonce_value
+```
+
+Response header:
+
+```http
+Content-Security-Policy: script-src 'nonce-random_nonce_value'
+```
+
+HTML:
+
+```html
+<script nonce="random_nonce_value">
+    console.log("Allowed script");
+</script>
+```
+
+Only scripts with the matching nonce are permitted.
+
+The nonce should be unpredictable and newly generated for each response.
+
+---
+
+# Security Headers
+
+CSP is one of several HTTP security mechanisms.
+
+Examples include:
+
+```http
+Content-Security-Policy
+```
+
+```http
+Strict-Transport-Security
+```
+
+```http
+X-Content-Type-Options: nosniff
+```
+
+```http
+Referrer-Policy
+```
+
+These headers provide browser-side security controls.
+
+---
+
+# Practical Example — Product Review
+
+Imagine an online shopping application.
+
+A user submits:
+
+```javascript
+const review_text = review_input.value;
+```
+
+Validate:
+
+```javascript
+if (review_text.trim().length < 5) {
+    throw new Error("Review is too short");
+}
+```
+
+Send to backend:
+
+```javascript
+await fetch("/api/reviews", {
+    method: "POST",
+    headers: {
+        "Content-Type": "application/json"
+    },
+    body: JSON.stringify({
+        review: review_text
+    })
+});
+```
+
+The backend validates the request again before storing it.
+
+Display safely:
+
+```javascript
+review_element.textContent = review.review;
+```
+
+Avoid:
+
+```javascript
+review_element.innerHTML = review.review;
+```
+
+when the review is untrusted text.
+
+The server can also send an appropriate CSP header.
+
+---
+
+# Security Layers
+
+A modern application should not depend on a single security technique.
+
+| Layer             | Example                          |
+| ----------------- | -------------------------------- |
+| Input validation  | Check email, length, type        |
+| Output handling   | `textContent`                    |
+| Sanitization      | Sanitize allowed HTML            |
+| Authentication    | Login/session/token              |
+| Authorization     | Check user permissions           |
+| CSRF protection   | Token + SameSite cookies         |
+| CSP               | Restrict script/resource sources |
+| HTTPS             | Encrypt network communication    |
+| Server validation | Never trust browser validation   |
+
+---
+
+# Common Security Mistakes
+
+## Using `innerHTML` with untrusted data
+
+```javascript
+element.innerHTML = user_input;
+```
+
+## Relying only on frontend validation
+
+```javascript
+if (amount <= 10000) {
+    submit_payment();
+}
+```
+
+An attacker can bypass this JavaScript.
+
+The server must enforce the limit.
+
+## Storing sensitive information unnecessarily in localStorage
+
+```javascript
+localStorage.setItem("sensitive_data", data);
+```
+
+Client-side storage should be used carefully, especially for sensitive information.
+
+## Creating your own HTML sanitizer
+
+For example:
+
+```javascript
+input.replace("<script>", "");
+```
+
+This is not a reliable security mechanism.
+
+## Using `eval()` with untrusted input
+
+```javascript
+eval(user_input);
+```
+
+Avoid this pattern.
+
+---
+
+# Encoding vs Sanitization
+
+These concepts are often confused.
+
+### Encoding
+
+Converts data so it is represented safely in a particular output context.
+
+For example, displaying:
+
+```text
+<hello>
+```
+
+as text rather than HTML.
+
+### Sanitization
+
+Removes or modifies unsafe content while potentially preserving allowed content.
+
+```text
+Allowed formatting → preserved
+Unsafe HTML        → removed
+```
+
+If you only need to display text, using:
+
+```javascript
+element.textContent = user_input;
+```
+
+is often preferable to treating the input as HTML.
+
+---
+
+# JavaScript Tooling
+
+## Introduction
+
+JavaScript tooling refers to the tools used to develop, manage, test, format, analyze, and build JavaScript applications.
+
+Modern JavaScript projects commonly use tools such as:
+
+* npm
+* Yarn
+* ESLint
+* Prettier
+* Bundlers
+
+These tools help developers manage dependencies, maintain code quality, format code consistently, and prepare applications for production.
+
+---
+
+# npm
+
+## What is npm?
+
+**npm (Node Package Manager)** is the default package manager that comes with Node.js.
+
+It is used to:
+
+* Install packages
+* Remove packages
+* Update packages
+* Manage project dependencies
+* Run project scripts
+* Publish packages
+
+For example:
+
+```bash
+npm install express
+```
+
+This installs the Express package into the project.
+
+---
+
+## package.json
+
+A JavaScript project usually contains a:
+
+```text
+package.json
+```
+
+file.
+
+Example:
+
+```json
+{
+    "name": "student-management-app",
+    "version": "1.0.0",
+    "description": "Student management application",
+    "type": "module",
+    "scripts": {
+        "start": "node server.js",
+        "dev": "nodemon server.js"
+    },
+    "dependencies": {
+        "express": "^5.1.0"
+    }
+}
+```
+
+The `package.json` file contains information about the project and its dependencies.
+
+---
+
+## Creating a package.json
+
+Create a new project:
+
+```bash
+npm init
+```
+
+npm asks questions about the project.
+
+You can also use:
+
+```bash
+npm init -y
+```
+
+This creates `package.json` using default values.
+
+---
+
+## Installing a Package
+
+Example:
+
+```bash
+npm install express
+```
+
+Short form:
+
+```bash
+npm i express
+```
+
+After installation, the dependency is added to:
+
+```json
+"dependencies": {
+    "express": "^5.1.0"
+}
+```
+
+A `node_modules` directory is also created.
+
+---
+
+## Installing Development Dependencies
+
+Some packages are required only during development.
+
+For example:
+
+```bash
+npm install eslint --save-dev
+```
+
+or:
+
+```bash
+npm install eslint -D
+```
+
+The package is added to:
+
+```json
+"devDependencies": {
+    "eslint": "^9.0.0"
+}
+```
+
+Examples of development dependencies:
+
+* ESLint
+* Prettier
+* Jest
+* Nodemon
+* Testing tools
+* Build tools
+
+---
+
+## dependencies vs devDependencies
+
+| dependencies                   | devDependencies                    |
+| ------------------------------ | ---------------------------------- |
+| Required by the application    | Mainly required during development |
+| Used by production application | Used for development/build/testing |
+| Express                        | ESLint                             |
+| Database drivers               | Prettier                           |
+| Authentication libraries       | Jest                               |
+| API libraries                  | Nodemon                            |
+
+---
+
+## package-lock.json
+
+When npm installs packages, it creates:
+
+```text
+package-lock.json
+```
+
+This file records the exact dependency versions and dependency tree used by the project.
+
+For example:
+
+```text
+package.json
+      ↓
+Requested dependency versions
+
+package-lock.json
+      ↓
+Exact resolved dependency versions
+```
+
+The lock file helps developers install consistent dependency versions across different environments.
+
+---
+
+## Installing Existing Project Dependencies
+
+If you clone a project from GitHub, you usually do not need to install every package manually.
+
+Run:
+
+```bash
+npm install
+```
+
+npm reads:
+
+```text
+package.json
+package-lock.json
+```
+
+and installs the required dependencies into:
+
+```text
+node_modules
+```
+
+---
+
+## npm Scripts
+
+Scripts allow developers to create reusable commands.
+
+Example:
+
+```json
+{
+    "scripts": {
+        "start": "node server.js",
+        "dev": "nodemon server.js",
+        "test": "jest"
+    }
+}
+```
+
+Run:
+
+```bash
+npm start
+```
+
+Run:
+
+```bash
+npm run dev
+```
+
+Run:
+
+```bash
+npm test
+```
+
+For scripts other than some built-in shortcuts, use:
+
+```bash
+npm run script_name
+```
+
+---
+
+# Yarn
+
+## What is Yarn?
+
+**Yarn** is another JavaScript package manager.
+
+It performs many of the same tasks as npm:
+
+* Installing packages
+* Managing dependencies
+* Running scripts
+* Updating packages
+* Removing packages
+
+Example:
+
+```bash
+yarn add express
+```
+
+npm equivalent:
+
+```bash
+npm install express
+```
+
+---
+
+## Yarn Project
+
+A project using Yarn may contain:
+
+```text
+package.json
+yarn.lock
+```
+
+The `yarn.lock` file records resolved package versions.
+
+With npm, the equivalent lock file is commonly:
+
+```text
+package-lock.json
+```
+
+---
+
+## npm vs Yarn
+
+| Feature            | npm                   | Yarn               |
+| ------------------ | --------------------- | ------------------ |
+| Package manager    | Yes                   | Yes                |
+| Uses package.json  | Yes                   | Yes                |
+| Lock file          | package-lock.json     | yarn.lock          |
+| Install package    | `npm install package` | `yarn add package` |
+| Run scripts        | `npm run script`      | `yarn script`      |
+| Comes with Node.js | Yes                   | No                 |
+
+Both can manage JavaScript dependencies.
+
+A project generally chooses one package manager and consistently uses its lock file and commands.
+
+---
+
+# Linters
+
+## What is a Linter?
+
+A **linter** analyzes source code and identifies potential problems, incorrect patterns, and style issues.
+
+A linter does not execute the application like a normal program.
+
+Instead, it analyzes the code.
+
+Example:
+
+```javascript
+const student_name = "Dinesh"
+
+console.log(student_name)
+```
+
+A linter may identify missing semicolons depending on the configured rules.
+
+Another example:
+
+```javascript
+const unused_variable = 100;
+```
+
+A linter may report that the variable is never used.
+
+---
+
+# ESLint
+
+## What is ESLint?
+
+**ESLint** is a popular JavaScript and TypeScript linter.
+
+It can detect:
+
+* Undefined variables
+* Unused variables
+* Potential bugs
+* Incorrect patterns
+* Code quality issues
+* Configurable style violations
+
+---
+
+## Installing ESLint
+
+Install ESLint as a development dependency:
+
+```bash
+npm install eslint --save-dev
+```
+
+or:
+
+```bash
+npm install eslint -D
+```
+
+---
+
+## ESLint Configuration
+
+Modern ESLint projects commonly use:
+
+```text
+eslint.config.js
+```
+
+Example:
+
+```javascript
+export default [
+    {
+        rules: {
+            "no-unused-vars": "error",
+            "no-console": "warn"
+        }
+    }
+];
+```
+
+The rules determine how ESLint analyzes the code.
+
+---
+
+## ESLint Rules
+
+Example:
+
+```javascript
+const student_name = "Dinesh";
+```
+
+If the variable is never used, ESLint can report:
+
+```text
+student_name is assigned a value but never used
+```
+
+Another rule can detect undefined variables:
+
+```javascript
+console.log(student_name);
+```
+
+if `student_name` has not been declared.
+
+---
+
+## ESLint Severity
+
+ESLint rules can commonly have different severity levels.
+
+### Off
+
+```javascript
+"no-console": "off"
+```
+
+The rule is disabled.
+
+### Warning
+
+```javascript
+"no-console": "warn"
+```
+
+ESLint reports a warning.
+
+### Error
+
+```javascript
+"no-unused-vars": "error"
+```
+
+ESLint reports an error.
+
+---
+
+## Running ESLint
+
+A script can be added to `package.json`:
+
+```json
+{
+    "scripts": {
+        "lint": "eslint ."
+    }
+}
+```
+
+Run:
+
+```bash
+npm run lint
+```
+
+ESLint analyzes the project files.
+
+---
+
+# Formatters
+
+## What is a Formatter?
+
+A formatter automatically changes the formatting of source code according to predefined rules.
+
+For example, inconsistent code:
+
+```javascript
+const student_name="Dinesh";
+const student_age=21;
+```
+
+A formatter can convert it into:
+
+```javascript
+const student_name = "Dinesh";
+const student_age = 21;
+```
+
+Formatting focuses mainly on how code is written rather than whether the code contains logical bugs.
+
+---
+
+# Prettier
+
+## What is Prettier?
+
+**Prettier** is an opinionated code formatter.
+
+It supports many languages and formats, including:
+
+* JavaScript
+* TypeScript
+* HTML
+* CSS
+* JSON
+* Markdown
+
+---
+
+## Installing Prettier
+
+Install it as a development dependency:
+
+```bash
+npm install prettier --save-dev
+```
+
+or:
+
+```bash
+npm install prettier -D
+```
+
+---
+
+## Example
+
+Before formatting:
+
+```javascript
+function calculate_total(price, quantity){return price*quantity;}
+```
+
+After Prettier:
+
+```javascript
+function calculate_total(price, quantity) {
+    return price * quantity;
+}
+```
+
+Prettier automatically applies its formatting rules.
+
+---
+
+## Running Prettier
+
+Add a script:
+
+```json
+{
+    "scripts": {
+        "format": "prettier --write ."
+    }
+}
+```
+
+Run:
+
+```bash
+npm run format
+```
+
+Prettier formats the project files.
+
+---
+
+## Checking Formatting
+
+Instead of changing files, Prettier can check whether files are already formatted:
+
+```bash
+npx prettier --check .
+```
+
+This is useful in CI/CD pipelines.
+
+---
+
+# ESLint vs Prettier
+
+ESLint and Prettier have different primary purposes.
+
+| ESLint                      | Prettier                                 |
+| --------------------------- | ---------------------------------------- |
+| Code analysis               | Code formatting                          |
+| Finds potential problems    | Formats source code                      |
+| Detects unused variables    | Fixes indentation                        |
+| Detects undefined variables | Controls spacing                         |
+| Enforces coding rules       | Controls formatting style                |
+| Can identify bugs/patterns  | Generally does not analyze program logic |
+
+Example:
+
+```javascript
+const student_name = "Dinesh";
+```
+
+ESLint may check:
+
+```text
+Is student_name unused?
+```
+
+Prettier may check:
+
+```text
+Is the formatting consistent?
+```
+
+---
+
+# Bundlers
+
+## What is a Bundler?
+
+A **bundler** takes multiple project files and dependencies and processes them into files that can be efficiently delivered to the browser or other runtime environments.
+
+For example:
+
+```text
+src/
+├── main.js
+├── user.js
+├── product.js
+└── api.js
+```
+
+A bundler can analyze the dependencies:
+
+```text
+main.js
+   ↓
+user.js
+   ↓
+api.js
+
+product.js
+   ↓
+api.js
+```
+
+and produce optimized build output.
+
+---
+
+# Why Bundlers Are Used
+
+Modern applications can contain:
+
+* Hundreds of JavaScript modules
+* CSS files
+* Images
+* Fonts
+* Third-party dependencies
+* JSON files
+
+A bundler can process these resources as part of the application build.
+
+Common bundlers and build tools include:
+
+* Webpack
+* Vite
+* Rollup
+* Parcel
+* esbuild
+
+---
+
+# Webpack
+
+## What is Webpack?
+
+**Webpack** is a module bundler that analyzes dependencies and creates bundles for an application.
+
+Example project:
+
+```text
+src/
+├── main.js
+├── user.js
+└── api.js
+```
+
+`main.js`:
+
+```javascript
+import { get_user } from "./user.js";
+
+console.log(get_user());
+```
+
+`user.js`:
+
+```javascript
+import { fetch_user } from "./api.js";
+
+export function get_user() {
+    return fetch_user();
+}
+```
+
+Webpack analyzes these imports and creates the required build output.
+
+---
+
+# Vite
+
+## What is Vite?
+
+**Vite** is a modern frontend development tool that provides a fast development server and production build process.
+
+A Vite project commonly contains:
+
+```text
+project/
+├── src/
+├── public/
+├── index.html
+├── package.json
+└── vite.config.js
+```
+
+During development:
+
+```bash
+npm run dev
+```
+
+Vite starts a development server.
+
+For production:
+
+```bash
+npm run build
+```
+
+Vite creates production-ready output.
+
+---
+
+# Bundling Process
+
+A simplified bundling process looks like:
+
+```text
+Source Code
+    ↓
+Module Analysis
+    ↓
+Dependency Graph
+    ↓
+Transformation
+    ↓
+Optimization
+    ↓
+Production Build
+```
+
+---
+
+# Module Bundling
+
+Suppose an application has:
+
+```text
+main.js
+user.js
+product.js
+order.js
+```
+
+`main.js`:
+
+```javascript
+import { get_user } from "./user.js";
+import { get_product } from "./product.js";
+import { get_order } from "./order.js";
+```
+
+The bundler understands these relationships.
+
+```text
+                 main.js
+              /     |      \
+             ↓      ↓       ↓
+         user.js product.js order.js
+```
+
+The bundler creates the appropriate output files based on the build configuration.
+
+---
+
+# Code Splitting
+
+Bundlers can also support **code splitting**.
+
+Instead of loading the entire application immediately:
+
+```text
+Entire application
+        ↓
+Browser downloads everything
+```
+
+the application can load code when required:
+
+```text
+Initial application
+        ↓
+Load required code
+        ↓
+User opens another feature
+        ↓
+Load additional chunk
+```
+
+This can reduce the amount of JavaScript downloaded initially.
+
+---
+
+# Tree Shaking
+
+**Tree shaking** removes unused code from production builds when the tooling and module structure allow it.
+
+Suppose:
+
+```javascript
+export function calculate_total() {
+    return 100;
+}
+
+export function calculate_tax() {
+    return 20;
+}
+```
+
+If the application only imports:
+
+```javascript
+import { calculate_total } from "./billing.js";
+```
+
+the build tool may be able to remove unused exports such as `calculate_tax`.
+
+This can reduce production bundle size.
+
+---
+
+# Minification
+
+Bundlers or build tools can also perform **minification**.
+
+Before:
+
+```javascript
+function calculate_total(price, quantity) {
+    return price * quantity;
+}
+```
+
+After minification:
+
+```javascript
+function calculate_total(e,t){return e*t}
+```
+
+The code becomes smaller while preserving its behavior.
+
+Minification helps reduce the amount of data transferred to users.
+
+---
+
+# Source Maps
+
+Production JavaScript may be transformed and minified.
+
+For example:
+
+```text
+Original source
+      ↓
+Bundling
+      ↓
+Minification
+      ↓
+Production JavaScript
+```
+
+Debugging the transformed code directly can be difficult.
+
+**Source maps** connect the generated code back to the original source code.
+
+This allows browser developer tools to show the original source files while debugging.
+
+---
+
+# npm + ESLint + Prettier + Bundler
+
+These tools can work together in one project.
+
+```text
+                 JavaScript Project
+                         │
+          ┌──────────────┼──────────────┐
+          ↓              ↓              ↓
+         npm           ESLint        Prettier
+          │              │              │
+   Dependencies      Code analysis    Formatting
+          │
+          ↓
+       Bundler
+          │
+          ↓
+   Production build
+```
+
+Example `package.json`:
+
+```json
+{
+    "scripts": {
+        "dev": "vite",
+        "build": "vite build",
+        "lint": "eslint .",
+        "format": "prettier --write ."
+    },
+    "devDependencies": {
+        "eslint": "^9.0.0",
+        "prettier": "^3.0.0",
+        "vite": "^7.0.0"
+    }
+}
+```
+
+Commands:
+
+```bash
+npm install
+```
+
+```bash
+npm run dev
+```
+
+```bash
+npm run lint
+```
+
+```bash
+npm run format
+```
+
+```bash
+npm run build
+```
+
+Each tool has a different responsibility:
+
+```text
+npm
+→ Manage dependencies and scripts
+
+ESLint
+→ Analyze code
+
+Prettier
+→ Format code
+
+Bundler
+→ Build and optimize application
+```
+
+# JavaScript in the Browser
+
+## Introduction
+
+JavaScript can run inside a web browser and interact with the webpage, browser APIs, user actions, storage, navigation, and media devices.
+
+The browser provides several APIs that allow JavaScript to control and communicate with the webpage.
+
+The major concepts are:
+
+* DOM
+* Events
+* Rendering
+* Storage
+* History API
+* Media API
+
+---
+
+# DOM
+
+## What is the DOM?
+
+**DOM (Document Object Model)** is a programming interface that represents an HTML document as a tree of objects.
+
+Consider this HTML:
+
+```html
+<!DOCTYPE html>
+<html>
+    <body>
+        <h1>Student Dashboard</h1>
+        <p>Welcome to the dashboard</p>
+        <button>View Profile</button>
+    </body>
+</html>
+```
+
+The browser creates a DOM structure:
+
+```text
+Document
+   │
+   └── html
+       │
+       └── body
+           ├── h1
+           ├── p
+           └── button
+```
+
+JavaScript can access and modify these DOM elements.
+
+---
+
+## Selecting DOM Elements
+
+### `getElementById()`
+
+```html
+<h1 id="page_title">Student Dashboard</h1>
+```
+
+```javascript
+const page_title = document.getElementById("page_title");
+```
+
+---
+
+### `querySelector()`
+
+```javascript
+const page_title = document.querySelector("#page_title");
+```
+
+It returns the first element matching the CSS selector.
+
+Example:
+
+```javascript
+const submit_button = document.querySelector(".submit_button");
+```
+
+---
+
+### `querySelectorAll()`
+
+```javascript
+const menu_items = document.querySelectorAll(".menu_item");
+```
+
+This returns a collection of matching elements.
+
+You can iterate over them:
+
+```javascript
+menu_items.forEach((menu_item) => {
+    console.log(menu_item.textContent);
+});
+```
+
+---
+
+# Changing DOM Content
+
+You can change the text of an element using `textContent`.
+
+```javascript
+const page_title = document.querySelector("#page_title");
+
+page_title.textContent = "Student Profile";
+```
+
+HTML:
+
+```html
+<h1 id="page_title">Student Profile</h1>
+```
+
+---
+
+## Changing HTML
+
+You can modify HTML using `innerHTML`.
+
+```javascript
+const profile_container = document.querySelector("#profile");
+
+profile_container.innerHTML = `
+    <h2>Dinesh</h2>
+    <p>AI and Data Science</p>
+`;
+```
+
+`innerHTML` should be used carefully when the inserted content comes from an untrusted source because it can introduce XSS vulnerabilities.
+
+---
+
+# Changing Attributes
+
+HTML:
+
+```html
+<img id="profile_image" src="old-image.jpg">
+```
+
+JavaScript:
+
+```javascript
+const profile_image = document.querySelector("#profile_image");
+
+profile_image.setAttribute("src", "new-image.jpg");
+```
+
+You can also retrieve an attribute:
+
+```javascript
+const image_source = profile_image.getAttribute("src");
+```
+
+---
+
+# Changing Styles
+
+JavaScript can modify an element's inline styles.
+
+```javascript
+const profile_card = document.querySelector(".profile_card");
+
+profile_card.style.backgroundColor = "white";
+profile_card.style.padding = "20px";
+```
+
+For larger applications, modifying CSS classes is generally easier to maintain.
+
+---
+
+# Working with Classes
+
+Add a class:
+
+```javascript
+element.classList.add("active");
+```
+
+Remove a class:
+
+```javascript
+element.classList.remove("active");
+```
+
+Toggle a class:
+
+```javascript
+element.classList.toggle("active");
+```
+
+Check whether a class exists:
+
+```javascript
+const is_active = element.classList.contains("active");
+```
+
+---
+
+# Creating DOM Elements
+
+JavaScript can create new elements dynamically.
+
+```javascript
+const notification = document.createElement("div");
+
+notification.textContent = "Payment successful";
+
+document.body.appendChild(notification);
+```
+
+The flow is:
+
+```text
+Create element
+      ↓
+Set content
+      ↓
+Set attributes/classes
+      ↓
+Add to DOM
+```
+
+---
+
+# Removing DOM Elements
+
+```javascript
+const notification = document.querySelector(".notification");
+
+notification.remove();
+```
+
+This removes the element from the DOM.
+
+---
+
+# Events
+
+## What is an Event?
+
+An **event** is an action or occurrence that the browser can detect.
+
+Examples:
+
+* Mouse click
+* Keyboard input
+* Form submission
+* Mouse movement
+* Page loading
+* Scrolling
+* File selection
+* Window resizing
+
+JavaScript can respond to these events.
+
+---
+
+# Event Listener
+
+The most common way to handle events is:
+
+```javascript
+element.addEventListener("event_name", callback_function);
+```
+
+Example:
+
+```javascript
+const login_button = document.querySelector("#login_button");
+
+login_button.addEventListener("click", () => {
+    console.log("Login button clicked");
+});
+```
+
+---
+
+# Common Browser Events
+
+| Event       | Description                    |
+| ----------- | ------------------------------ |
+| `click`     | User clicks an element         |
+| `dblclick`  | User double-clicks             |
+| `input`     | Input value changes            |
+| `change`    | Form value changes             |
+| `submit`    | Form is submitted              |
+| `keydown`   | Keyboard key is pressed        |
+| `keyup`     | Keyboard key is released       |
+| `mouseover` | Pointer moves over an element  |
+| `mouseout`  | Pointer leaves an element      |
+| `scroll`    | Page or element is scrolled    |
+| `resize`    | Browser window is resized      |
+| `load`      | Resource/page finishes loading |
+
+---
+
+# Event Object
+
+The browser provides an event object to the event handler.
+
+```javascript
+login_button.addEventListener("click", (event) => {
+    console.log(event);
+});
+```
+
+The event object contains information about the event.
+
+For example:
+
+```javascript
+login_button.addEventListener("click", (event) => {
+    console.log(event.target);
+});
+```
+
+`event.target` identifies the element that triggered the event.
+
+---
+
+# Preventing Default Behavior
+
+Some browser actions have default behavior.
+
+For example, submitting a form normally reloads or navigates the page.
+
+```javascript
+login_form.addEventListener("submit", (event) => {
+    event.preventDefault();
+
+    console.log("Form handled using JavaScript");
+});
+```
+
+`preventDefault()` stops the browser's default action.
+
+---
+
+# Event Bubbling
+
+Events can move from the target element toward its ancestors.
+
+Example:
+
+```html
+<div id="container">
+    <button id="login_button">Login</button>
+</div>
+```
+
+JavaScript:
+
+```javascript
+const container = document.querySelector("#container");
+const login_button = document.querySelector("#login_button");
+
+container.addEventListener("click", () => {
+    console.log("Container clicked");
+});
+
+login_button.addEventListener("click", () => {
+    console.log("Button clicked");
+});
+```
+
+When the button is clicked:
+
+```text
+Button
+   ↓
+Container
+   ↓
+Body
+   ↓
+Document
+```
+
+This is event bubbling.
+
+---
+
+# Event Delegation
+
+Event delegation uses event bubbling to handle events from multiple child elements using one parent listener.
+
+```javascript
+const user_list = document.querySelector("#user_list");
+
+user_list.addEventListener("click", (event) => {
+    if (event.target.matches(".user_item")) {
+        console.log(event.target.textContent);
+    }
+});
+```
+
+This is useful for dynamically generated elements.
+
+---
+
+# Rendering
+
+## What is Rendering?
+
+Rendering is the process through which the browser converts HTML, CSS, and other resources into the visual webpage displayed to the user.
+
+A simplified process is:
+
+```text
+HTML
+ ↓
+DOM
+
+CSS
+ ↓
+CSSOM
+
+DOM + CSSOM
+ ↓
+Render Tree
+ ↓
+Layout
+ ↓
+Paint
+ ↓
+Composite
+ ↓
+Screen
+```
+
+---
+
+# DOM Construction
+
+The browser receives HTML:
+
+```html
+<h1>Student Dashboard</h1>
+```
+
+It creates a DOM representation:
+
+```text
+Document
+   ↓
+html
+   ↓
+body
+   ↓
+h1
+```
+
+JavaScript can then modify this structure.
+
+---
+
+# CSSOM
+
+The browser also processes CSS.
+
+Example:
+
+```css
+.page_title {
+    font-size: 32px;
+}
+```
+
+The browser creates an internal representation of the CSS rules called the **CSSOM**.
+
+The browser combines information from the DOM and CSSOM when determining what needs to be rendered.
+
+---
+
+# Layout
+
+During layout, the browser calculates the size and position of elements.
+
+For example:
+
+```text
+Header
+  ↓
+Navigation
+  ↓
+Main content
+  ↓
+Footer
+```
+
+The browser determines:
+
+* Width
+* Height
+* Position
+* Margins
+* Padding
+* Layout relationships
+
+---
+
+# Paint
+
+After layout, the browser paints visual elements.
+
+This includes:
+
+* Text
+* Colors
+* Borders
+* Shadows
+* Images
+* Backgrounds
+
+---
+
+# Composite
+
+The browser can divide visual content into layers and combine those layers to produce the final screen.
+
+Some CSS effects and animations can involve compositing.
+
+This is one reason browser rendering performance matters when building interactive applications.
+
+---
+
+# Storage
+
+Browsers provide several mechanisms for storing data on the client side.
+
+Common options include:
+
+* Cookies
+* localStorage
+* sessionStorage
+* IndexedDB
+
+---
+
+# localStorage
+
+`localStorage` stores data in the browser and keeps it available across browser sessions.
+
+Store data:
+
+```javascript
+localStorage.setItem("theme", "dark");
+```
+
+Read data:
+
+```javascript
+const theme = localStorage.getItem("theme");
+```
+
+Remove one item:
+
+```javascript
+localStorage.removeItem("theme");
+```
+
+Remove all local storage:
+
+```javascript
+localStorage.clear();
+```
+
+---
+
+# localStorage Stores Strings
+
+`localStorage` stores values as strings.
+
+Example:
+
+```javascript
+localStorage.setItem("user_age", 21);
+```
+
+When retrieved:
+
+```javascript
+const user_age = localStorage.getItem("user_age");
+
+console.log(typeof user_age);
+```
+
+The result is:
+
+```text
+string
+```
+
+For objects, use JSON.
+
+```javascript
+const user = {
+    user_name: "Dinesh",
+    department: "AI and Data Science"
+};
+
+localStorage.setItem("user", JSON.stringify(user));
+```
+
+Read it:
+
+```javascript
+const stored_user = JSON.parse(
+    localStorage.getItem("user")
+);
+
+console.log(stored_user.user_name);
+```
+
+---
+
+# sessionStorage
+
+`sessionStorage` works similarly to `localStorage`, but its lifetime is associated with the browser tab/session.
+
+```javascript
+sessionStorage.setItem("current_page", "dashboard");
+```
+
+Read:
+
+```javascript
+const current_page = sessionStorage.getItem("current_page");
+```
+
+Remove:
+
+```javascript
+sessionStorage.removeItem("current_page");
+```
+
+Clear:
+
+```javascript
+sessionStorage.clear();
+```
+
+---
+
+# localStorage vs sessionStorage
+
+| localStorage                      | sessionStorage                               |
+| --------------------------------- | -------------------------------------------- |
+| Persists across browser sessions  | Associated with the current page session/tab |
+| Data remains until removed        | Data is removed when the tab/session ends    |
+| Useful for persistent preferences | Useful for temporary page-session data       |
+| Stores strings                    | Stores strings                               |
+
+Neither should be treated as a secure place for highly sensitive data.
+
+---
+
+# Cookies
+
+Cookies are small pieces of data associated with a website.
+
+A server can send:
+
+```http
+Set-Cookie: session_id=abc123; HttpOnly; Secure; SameSite=Lax
+```
+
+Cookies can be automatically included with relevant HTTP requests depending on their attributes.
+
+Important cookie attributes include:
+
+* `HttpOnly`
+* `Secure`
+* `SameSite`
+* `Expires`
+* `Max-Age`
+* `Domain`
+* `Path`
+
+---
+
+# IndexedDB
+
+**IndexedDB** is a browser database API designed for storing larger amounts of structured data.
+
+It can store:
+
+* Objects
+* Records
+* Files
+* Blobs
+* Application data
+
+It is more powerful than `localStorage`.
+
+A simplified use case:
+
+```text
+Offline application
+        ↓
+Store application data
+        ↓
+IndexedDB
+        ↓
+Read data when needed
+```
+
+IndexedDB is commonly useful for offline-capable web applications and applications that need more structured client-side storage.
+
+---
+
+# History API
+
+The **History API** allows JavaScript to interact with the browser's session history.
+
+Important methods include:
+
+```javascript
+history.back();
+```
+
+```javascript
+history.forward();
+```
+
+```javascript
+history.go(-1);
+```
+
+---
+
+# history.pushState()
+
+`pushState()` adds a new history entry without performing a full page reload.
+
+```javascript
+history.pushState(
+    {
+        page: "profile"
+    },
+    "",
+    "/profile"
+);
+```
+
+The browser URL can change while JavaScript controls the displayed content.
+
+This is commonly used by single-page applications.
+
+---
+
+# history.replaceState()
+
+`replaceState()` changes the current history entry instead of creating a new one.
+
+```javascript
+history.replaceState(
+    {
+        page: "profile"
+    },
+    "",
+    "/profile"
+);
+```
+
+Difference:
+
+```text
+pushState()
+→ Creates a new history entry
+
+replaceState()
+→ Replaces the current history entry
+```
+
+---
+
+# popstate Event
+
+The `popstate` event occurs when the active history entry changes through browser history navigation.
+
+```javascript
+window.addEventListener("popstate", (event) => {
+    console.log(event.state);
+});
+```
+
+This is useful when implementing browser navigation in single-page applications.
+
+---
+
+# Single-Page Application Navigation
+
+A traditional website may work like:
+
+```text
+Home
+ ↓
+Server request
+ ↓
+New HTML page
+
+Profile
+ ↓
+Server request
+ ↓
+New HTML page
+```
+
+A single-page application can use the History API:
+
+```text
+Home
+ ↓
+JavaScript changes content
+ ↓
+pushState()
+
+Profile
+ ↓
+JavaScript changes content
+ ↓
+pushState()
+```
+
+The browser URL changes without requiring a complete page reload.
+
+---
+
+# Media API
+
+The browser provides APIs for working with media such as:
+
+* Audio
+* Video
+* Camera
+* Microphone
+* Screen capture
+
+---
+
+# HTML Audio and Video
+
+HTML provides built-in media elements.
+
+```html
+<audio id="audio_player" controls>
+    <source src="music.mp3" type="audio/mpeg">
+</audio>
+```
+
+JavaScript can control the audio:
+
+```javascript
+const audio_player = document.querySelector("#audio_player");
+
+audio_player.play();
+```
+
+Pause:
+
+```javascript
+audio_player.pause();
+```
+
+---
+
+# Video
+
+```html
+<video id="video_player" controls width="600">
+    <source src="video.mp4" type="video/mp4">
+</video>
+```
+
+JavaScript:
+
+```javascript
+const video_player = document.querySelector("#video_player");
+
+video_player.play();
+```
+
+Pause:
+
+```javascript
+video_player.pause();
+```
+
+---
+
+# Media Events
+
+Media elements provide events such as:
+
+* `play`
+* `pause`
+* `ended`
+* `timeupdate`
+* `loadedmetadata`
+* `volumechange`
+
+Example:
+
+```javascript
+video_player.addEventListener("play", () => {
+    console.log("Video started");
+});
+```
+
+```javascript
+video_player.addEventListener("pause", () => {
+    console.log("Video paused");
+});
+```
+
+---
+
+# Camera and Microphone
+
+The browser can request access to the user's camera and microphone through:
+
+```javascript
+navigator.mediaDevices.getUserMedia();
+```
+
+Example:
+
+```javascript
+const media_stream = await navigator.mediaDevices.getUserMedia({
+    video: true,
+    audio: true
+});
+```
+
+The browser asks the user for permission.
+
+If permission is granted, the application receives a `MediaStream`.
+
+---
+
+# Displaying Camera Video
+
+HTML:
+
+```html
+<video id="camera_video" autoplay></video>
+```
+
+JavaScript:
+
+```javascript
+const camera_video = document.querySelector("#camera_video");
+
+const media_stream = await navigator.mediaDevices.getUserMedia({
+    video: true,
+    audio: false
+});
+
+camera_video.srcObject = media_stream;
+```
+
+The camera stream is displayed in the video element.
+
+---
+
+# Stopping a Media Stream
+
+A media stream can contain tracks.
+
+```javascript
+media_stream.getTracks().forEach((track) => {
+    track.stop();
+});
+```
+
+This can stop camera and microphone tracks.
+
+---
+
+# Browser Permissions
+
+Browser APIs that access sensitive device capabilities generally require user permission.
+
+Examples include:
+
+* Camera
+* Microphone
+* Location
+* Notifications
+* Screen sharing
+
+The browser controls these permissions to protect the user.
+
+For example:
+
+```text
+JavaScript requests camera
+        ↓
+Browser permission prompt
+        ↓
+User allows/denies
+        ↓
+Application receives result
+```
+
+---
+
+# DOM, Events, Rendering, Storage, History and Media
+
+These browser capabilities work together in modern applications.
+
+A typical application might:
+
+```text
+DOM
+↓
+Create interface
+
+Events
+↓
+React to user actions
+
+Storage
+↓
+Save application preferences/data
+
+History API
+↓
+Control application navigation
+
+Media API
+↓
+Access audio/video/device capabilities
+
+Rendering
+↓
+Display changes on the screen
+```
+
+# JavaScript in Node.js
+
+## Introduction
+
+JavaScript was originally created to run inside web browsers.
+
+With **Node.js**, JavaScript can also run outside the browser.
+
+Node.js allows JavaScript to work with:
+
+* Files and folders
+* HTTP servers
+* APIs
+* Databases
+* Operating-system features
+* Environment variables
+* npm packages
+* Backend applications
+* Command-line applications
+
+For example, a browser JavaScript program can access the DOM:
+
+```javascript
+document.querySelector("#username");
+```
+
+But Node.js does not have a browser DOM.
+
+Instead, Node.js provides APIs such as:
+
+```javascript
+fs
+http
+path
+process
+```
+
+These allow JavaScript to interact with the operating system and network.
+
+---
+
+# Node.js Runtime
+
+Node.js is a **JavaScript runtime environment**.
+
+It uses the **V8 JavaScript engine**, the same JavaScript engine used by Chromium-based browsers.
+
+The important difference is the environment around the JavaScript engine.
+
+### Browser
+
+```text
+JavaScript
+     ↓
+Browser
+     ↓
+DOM
+BOM
+localStorage
+fetch
+Web APIs
+```
+
+### Node.js
+
+```text
+JavaScript
+     ↓
+Node.js
+     ↓
+Filesystem
+HTTP
+Process
+Operating System
+npm packages
+Network
+```
+
+Node.js is commonly used for backend development.
+
+For example:
+
+```text
+Browser
+   ↓
+HTTP Request
+   ↓
+Node.js Server
+   ↓
+Business Logic
+   ↓
+Database
+   ↓
+Response
+   ↓
+Browser
+```
+
+---
+
+# Node.js Modules
+
+A module is a reusable piece of JavaScript code.
+
+Instead of putting an entire application into one file, we can divide it into multiple files.
+
+For example:
+
+```text
+project/
+│
+├── server.js
+├── user_service.js
+├── product_service.js
+└── database.js
+```
+
+Each file can contain separate functionality.
+
+Modules help with:
+
+* Code organization
+* Reusability
+* Maintainability
+* Separation of responsibilities
+* Dependency management
+
+---
+
+# ES Modules
+
+Modern Node.js applications commonly use **ES Modules**.
+
+ES Modules use:
+
+```javascript
+export
+import
+```
+
+Example:
+
+```javascript
+export function calculate_total(price, quantity) {
+    return price * quantity;
+}
+```
+
+Another file can import it:
+
+```javascript
+import { calculate_total } from "./calculator.js";
+
+const total = calculate_total(500, 3);
+
+console.log(total);
+```
+
+Output:
+
+```text
+1500
+```
+
+---
+
+# Named Export
+
+You can export multiple values from a module.
+
+```javascript
+export const tax_rate = 0.18;
+
+export function calculate_tax(amount) {
+    return amount * tax_rate;
+}
+```
+
+Import:
+
+```javascript
+import { tax_rate, calculate_tax } from "./tax.js";
+
+console.log(tax_rate);
+
+console.log(calculate_tax(1000));
+```
+
+---
+
+# Default Export
+
+A module can also have one default export.
+
+```javascript
+export default function calculate_discount(price) {
+    return price * 0.10;
+}
+```
+
+Import:
+
+```javascript
+import calculate_discount from "./discount.js";
+
+console.log(calculate_discount(2000));
+```
+
+A default export does not need the same name during import.
+
+---
+
+# CommonJS Modules
+
+Node.js also supports the older **CommonJS** module system.
+
+CommonJS uses:
+
+```javascript
+require()
+module.exports
+```
+
+Example:
+
+```javascript
+function calculate_total(price, quantity) {
+    return price * quantity;
+}
+
+module.exports = {
+    calculate_total
+};
+```
+
+Import:
+
+```javascript
+const { calculate_total } = require("./calculator");
+```
+
+### ES Modules vs CommonJS
+
+| ES Modules                    | CommonJS                               |
+| ----------------------------- | -------------------------------------- |
+| `import`                      | `require()`                            |
+| `export`                      | `module.exports`                       |
+| Modern JavaScript             | Older Node.js module system            |
+| `.js` with `"type": "module"` | Default CommonJS in many Node projects |
+
+A Node.js project using ES Modules commonly has:
+
+```json
+{
+    "type": "module"
+}
+```
+
+in `package.json`.
+
+---
+
+# Built-in Node.js Modules
+
+Node.js provides many modules without requiring installation.
+
+Examples:
+
+```text
+fs
+path
+http
+url
+crypto
+os
+events
+stream
+process
+```
+
+You can use these modules directly.
+
+For example:
+
+```javascript
+import fs from "node:fs";
+```
+
+The `node:` prefix clearly indicates that the module is provided by Node.js itself.
+
+---
+
+# Filesystem Module
+
+The filesystem module allows Node.js to work with files and directories.
+
+It is imported using:
+
+```javascript
+import fs from "node:fs";
+```
+
+The module provides operations such as:
+
+```text
+Create file
+Read file
+Write file
+Update file
+Delete file
+Create directory
+Read directory
+Delete directory
+```
+
+---
+
+# Reading a File
+
+Suppose we have:
+
+```text
+data.txt
+```
+
+containing:
+
+```text
+Hello from Node.js
+```
+
+We can read it using:
+
+```javascript
+import fs from "node:fs";
+
+const file_data = fs.readFileSync("data.txt", "utf-8");
+
+console.log(file_data);
+```
+
+Output:
+
+```text
+Hello from Node.js
+```
+
+`readFileSync()` reads the file synchronously.
+
+---
+
+# Asynchronous File Reading
+
+For backend applications, asynchronous operations are generally preferred.
+
+```javascript
+import fs from "node:fs";
+
+fs.readFile("data.txt", "utf-8", (error, file_data) => {
+    if (error) {
+        console.log(error);
+        return;
+    }
+
+    console.log(file_data);
+});
+```
+
+The callback executes after the file has been read.
+
+---
+
+# Writing a File
+
+```javascript
+import fs from "node:fs";
+
+fs.writeFileSync(
+    "users.txt",
+    "Dinesh\nGowtham\nArul"
+);
+```
+
+If the file does not exist, Node.js creates it.
+
+If it already exists, the existing content is replaced.
+
+---
+
+# Appending to a File
+
+If you want to add content without removing existing content:
+
+```javascript
+import fs from "node:fs";
+
+fs.appendFileSync(
+    "users.txt",
+    "\nRahul"
+);
+```
+
+The existing data remains.
+
+---
+
+# Checking Whether a File Exists
+
+```javascript
+import fs from "node:fs";
+
+if (fs.existsSync("users.txt")) {
+    console.log("File exists");
+} else {
+    console.log("File does not exist");
+}
+```
+
+---
+
+# Creating a Directory
+
+```javascript
+import fs from "node:fs";
+
+fs.mkdirSync("data");
+```
+
+Create nested directories:
+
+```javascript
+fs.mkdirSync("data/users", {
+    recursive: true
+});
+```
+
+---
+
+# Reading a Directory
+
+```javascript
+import fs from "node:fs";
+
+const files = fs.readdirSync("data");
+
+console.log(files);
+```
+
+Output might be:
+
+```text
+[
+    "users.json",
+    "products.json",
+    "orders.json"
+]
+```
+
+---
+
+# Deleting a File
+
+```javascript
+import fs from "node:fs";
+
+fs.unlinkSync("users.txt");
+```
+
+---
+
+# Filesystem with JSON
+
+A very common backend use case is reading JSON data.
+
+Suppose:
+
+```text
+users.json
+```
+
+contains:
+
+```json
+[
+    {
+        "user_id": 1,
+        "user_name": "Dinesh"
+    },
+    {
+        "user_id": 2,
+        "user_name": "Gowtham"
+    }
+]
+```
+
+Read it:
+
+```javascript
+import fs from "node:fs";
+
+const file_data = fs.readFileSync(
+    "users.json",
+    "utf-8"
+);
+
+const users = JSON.parse(file_data);
+
+console.log(users);
+```
+
+Now `users` is a JavaScript array.
+
+---
+
+# Writing JSON
+
+```javascript
+import fs from "node:fs";
+
+const users = [
+    {
+        user_id: 1,
+        user_name: "Dinesh"
+    },
+    {
+        user_id: 2,
+        user_name: "Gowtham"
+    }
+];
+
+fs.writeFileSync(
+    "users.json",
+    JSON.stringify(users, null, 2)
+);
+```
+
+`JSON.stringify()` converts JavaScript data into JSON text.
+
+---
+
+# Path Module
+
+The `path` module helps create safe file and directory paths.
+
+```javascript
+import path from "node:path";
+
+const file_path = path.join(
+    "data",
+    "users",
+    "users.json"
+);
+
+console.log(file_path);
+```
+
+On Windows it can produce:
+
+```text
+data\users\users.json
+```
+
+On Linux:
+
+```text
+data/users/users.json
+```
+
+This makes `path` useful for cross-platform applications.
+
+---
+
+# HTTP Module
+
+Node.js provides a built-in `http` module.
+
+It can be used to create an HTTP server.
+
+```javascript
+import http from "node:http";
+
+const server = http.createServer((request, response) => {
+    response.end("Hello from Node.js");
+});
+
+server.listen(5000);
+```
+
+The server runs on:
+
+```text
+http://localhost:5000
+```
+
+When the browser sends a request, Node.js receives it.
+
+---
+
+# HTTP Request and Response
+
+The basic flow is:
+
+```text
+Browser
+   ↓
+HTTP Request
+   ↓
+Node.js Server
+   ↓
+Request Handler
+   ↓
+HTTP Response
+   ↓
+Browser
+```
+
+The callback receives two important objects:
+
+```javascript
+(request, response)
+```
+
+`request` contains information about the incoming request.
+
+`response` is used to send data back.
+
+---
+
+# Request URL
+
+```javascript
+import http from "node:http";
+
+const server = http.createServer((request, response) => {
+    console.log(request.url);
+
+    response.end("Request received");
+});
+
+server.listen(5000);
+```
+
+If the browser requests:
+
+```text
+http://localhost:5000/users
+```
+
+the output is:
+
+```text
+/users
+```
+
+---
+
+# Request Method
+
+You can check the HTTP method:
+
+```javascript
+const server = http.createServer((request, response) => {
+    console.log(request.method);
+
+    response.end("Request received");
+});
+```
+
+Possible methods include:
+
+```text
+GET
+POST
+PUT
+PATCH
+DELETE
+```
+
+---
+
+# Creating Simple Routes
+
+Node.js can handle different URLs manually.
+
+```javascript
+import http from "node:http";
+
+const server = http.createServer((request, response) => {
+
+    if (request.url === "/") {
+        response.end("Home");
+        return;
+    }
+
+    if (request.url === "/users") {
+        response.end("Users");
+        return;
+    }
+
+    if (request.url === "/products") {
+        response.end("Products");
+        return;
+    }
+
+    response.statusCode = 404;
+    response.end("Page not found");
+});
+
+server.listen(5000);
+```
+
+This is the basic idea behind backend routing.
+
+Frameworks such as Express make routing easier.
+
+---
+
+# Sending JSON from HTTP Server
+
+You can return JSON data.
+
+```javascript
+import http from "node:http";
+
+const server = http.createServer((request, response) => {
+
+    response.setHeader(
+        "Content-Type",
+        "application/json"
+    );
+
+    response.end(
+        JSON.stringify({
+            success: true,
+            message: "Server is running"
+        })
+    );
+});
+
+server.listen(5000);
+```
+
+The browser receives:
+
+```json
+{
+    "success": true,
+    "message": "Server is running"
+}
+```
+
+This is the basic structure of an API response.
+
+---
+
+# npm Packages
+
+**npm** stands for Node Package Manager.
+
+It is used to:
+
+* Install packages
+* Manage dependencies
+* Run scripts
+* Share packages
+* Manage project versions
+
+For example:
+
+```powershell
+npm install express
+```
+
+This installs Express into the project.
+
+---
+
+# package.json
+
+A Node.js project commonly contains:
+
+```text
+project/
+│
+├── package.json
+├── package-lock.json
+├── node_modules/
+└── server.js
+```
+
+Example:
+
+```json
+{
+    "name": "node-learning",
+    "version": "1.0.0",
+    "type": "module",
+    "dependencies": {
+        "express": "^5.2.1"
+    }
+}
+```
+
+`package.json` describes the project and its dependencies.
+
+---
+
+# Installing a Package
+
+```powershell
+npm install express
+```
+
+After installation:
+
+```text
+node_modules/
+package.json
+package-lock.json
+```
+
+are created or updated.
+
+---
+
+# Importing an npm Package
+
+After installing Express:
+
+```javascript
+import express from "express";
+
+const app = express();
+
+app.listen(5000);
+```
+
+Here:
+
+```javascript
+express
+```
+
+is not a built-in Node.js module.
+
+It is an external npm package.
+
+---
+
+# Built-in vs npm Packages
+
+### Built-in Node.js module
+
+```javascript
+import fs from "node:fs";
+```
+
+No installation required.
+
+### npm package
+
+```javascript
+import express from "express";
+```
+
+Installation required:
+
+```powershell
+npm install express
+```
+
+---
+
+# node_modules
+
+When you install packages:
+
+```powershell
+npm install express
+```
+
+npm downloads the package into:
+
+```text
+node_modules/
+```
+
+For example:
+
+```text
+node_modules/
+└── express/
+```
+
+You normally do not commit `node_modules` to Git.
+
+Instead, Git stores:
+
+```text
+package.json
+package-lock.json
+```
+
+Another developer can install everything using:
+
+```powershell
+npm install
+```
+
+---
+
+# package-lock.json
+
+`package-lock.json` records the exact dependency versions installed for the project.
+
+This helps different developers and environments install consistent dependencies.
+
+For example:
+
+```text
+package.json
+      ↓
+Required packages
+      ↓
+package-lock.json
+      ↓
+Exact dependency versions
+```
+
+---
+
+# npm Scripts
+
+You can define commands in `package.json`.
+
+```json
+{
+    "scripts": {
+        "start": "node server.js",
+        "dev": "node --watch server.js"
+    }
+}
+```
+
+Run:
+
+```powershell
+npm start
+```
+
+or:
+
+```powershell
+npm run dev
+```
+
+Scripts are commonly used for:
+
+```text
+Starting servers
+Running tests
+Running linters
+Building applications
+Starting development tools
+```
+
+---
+
+# Process Object
+
+Node.js provides a global `process` object.
+
+It gives information and control over the currently running Node.js process.
+
+Example:
+
+```javascript
+console.log(process);
+```
+
+The object contains information about:
+
+* Environment variables
+* Command-line arguments
+* Current working directory
+* Node.js version
+* Operating-system information
+* Process ID
+* Exit status
+
+---
+
+# process.version
+
+Check the Node.js version:
+
+```javascript
+console.log(process.version);
+```
+
+Example:
+
+```text
+v22.23.2
+```
+
+---
+
+# process.platform
+
+Check the operating system:
+
+```javascript
+console.log(process.platform);
+```
+
+On Windows:
+
+```text
+win32
+```
+
+On Linux:
+
+```text
+linux
+```
+
+---
+
+# process.cwd()
+
+`cwd()` means **current working directory**.
+
+```javascript
+console.log(process.cwd());
+```
+
+Example:
+
+```text
+D:\Web development Learning\JS learning\chap app\backend
+```
+
+This tells you where the Node.js process was started.
+
+---
+
+# process.argv
+
+`process.argv` contains command-line arguments.
+
+Suppose:
+
+```powershell
+node app.js Dinesh 22
+```
+
+Then:
+
+```javascript
+console.log(process.argv);
+```
+
+contains values representing:
+
+```text
+node
+app.js
+Dinesh
+22
+```
+
+You can access the custom arguments:
+
+```javascript
+const user_name = process.argv[2];
+const user_age = process.argv[3];
+
+console.log(user_name);
+console.log(user_age);
+```
+
+Output:
+
+```text
+Dinesh
+22
+```
+
+This is useful for command-line applications.
+
+---
+
+# Environment Variables
+
+One of the most important uses of `process` is accessing environment variables.
+
+Suppose the environment contains:
+
+```text
+PORT=5000
+```
+
+Node.js can access it:
+
+```javascript
+console.log(process.env.PORT);
+```
+
+Output:
+
+```text
+5000
+```
+
+Environment variables are commonly used for:
+
+```text
+PORT
+DATABASE_URL
+JWT_SECRET
+API_KEY
+CLIENT_URL
+```
+
+Sensitive values should not normally be hard-coded directly into source code.
+
+---
+
+# Using dotenv
+
+The `dotenv` npm package is commonly used to load variables from a `.env` file.
+
+Install:
+
+```powershell
+npm install dotenv
+```
+
+Create:
+
+```text
+.env
+```
+
+with:
+
+```text
+PORT=5000
+DATABASE_URL=example_database_url
+```
+
+Load it:
+
+```javascript
+import "dotenv/config";
+
+console.log(process.env.PORT);
+console.log(process.env.DATABASE_URL);
+```
+
+---
+
+# process.exit()
+
+A Node.js process can be terminated using:
+
+```javascript
+process.exit();
+```
+
+You can provide an exit code:
+
+```javascript
+process.exit(0);
+```
+
+Usually:
+
+```text
+0 → successful execution
+non-zero → error or abnormal termination
+```
+
+For example:
+
+```javascript
+const database_connected = false;
+
+if (!database_connected) {
+    console.log("Database connection failed");
+    process.exit(1);
+}
+```
+
+---
+
+# Handling Process Events
+
+Node.js can listen for process events.
+
+For example:
+
+```javascript
+process.on("SIGINT", () => {
+    console.log("Server is shutting down");
+    process.exit(0);
+});
+```
+
+`SIGINT` commonly occurs when you press:
+
+```text
+Ctrl + C
+```
+
+in the terminal.
+
+This can be useful for graceful server shutdown.
+
+---
+
+# Node.js Backend Structure
+
+A larger Node.js application can be organized like this:
+
+```text
+backend/
+│
+├── src/
+│   ├── server.js
+│   ├── routes/
+│   ├── controllers/
+│   ├── services/
+│   ├── utils/
+│   └── middleware/
+│
+├── data/
+├── .env
+├── package.json
+└── package-lock.json
+```
+
+The responsibilities can be separated.
+
+```text
+server.js
+    ↓
+Routes
+    ↓
+Controllers
+    ↓
+Services
+    ↓
+Database / Filesystem
+```
+
+---
+
+# Practical Example — Node.js API
+
+A simple Node.js API can combine modules, HTTP, filesystem, and JSON.
+
+`server.js`:
+
+```javascript
+import http from "node:http";
+import fs from "node:fs";
+
+const server = http.createServer((request, response) => {
+
+    if (request.url === "/users" && request.method === "GET") {
+
+        const file_data = fs.readFileSync(
+            "./users.json",
+            "utf-8"
+        );
+
+        response.setHeader(
+            "Content-Type",
+            "application/json"
+        );
+
+        response.end(file_data);
+
+        return;
+    }
+
+    response.statusCode = 404;
+    response.end("Route not found");
+});
+
+server.listen(5000, () => {
+    console.log("Server running on port 5000");
+});
+```
+
+Suppose `users.json` contains:
+
+```json
+[
+    {
+        "user_id": 1,
+        "user_name": "Dinesh"
+    },
+    {
+        "user_id": 2,
+        "user_name": "Gowtham"
+    }
+]
+```
+
+Request:
+
+```text
+GET http://localhost:5000/users
+```
+
+Flow:
+
+```text
+Browser
+   ↓
+GET /users
+   ↓
+Node.js HTTP Server
+   ↓
+Filesystem
+   ↓
+users.json
+   ↓
+JSON Response
+   ↓
+Browser
+```
+
+This demonstrates how Node.js can act as a backend without Express.
+
+Express is then commonly added to simplify routing, middleware, request parsing, and API development.
+
+# Node.js and the Browser
+
+Node.js and browser JavaScript share the JavaScript language, but they provide different APIs.
+
+| Browser        | Node.js               |
+| -------------- | --------------------- |
+| DOM            | Filesystem            |
+| `window`       | `process`             |
+| `document`     | `fs`                  |
+| `localStorage` | `process.env`         |
+| Browser events | Server/network events |
+| Web APIs       | Node.js APIs          |
+| `fetch()`      | HTTP/network APIs     |
+
+For example, this works in a browser:
+
+```javascript
+document.querySelector("#username");
+```
+
+But this does not work directly in Node.js:
+
+```javascript
+document.querySelector("#username");
+```
+
+Node.js does not have a browser DOM.
+
+Node.js instead provides server-side capabilities such as:
+
+```javascript
+import fs from "node:fs";
+```
+
+# Node.js Application Flow
+
+A typical backend application can follow this structure:
+
+```text
+Client
+  ↓
+HTTP Request
+  ↓
+Node.js
+  ↓
+Router
+  ↓
+Controller
+  ↓
+Service
+  ↓
+Database / Filesystem
+  ↓
+Service
+  ↓
+Controller
+  ↓
+HTTP Response
+  ↓
+Client
+```
+
+Node.js provides the runtime, while frameworks such as Express, Fastify, or NestJS can provide additional backend application structure.
+
+# WebSockets
+
+## Introduction
+
+WebSockets are a communication technology that allows a client and a server to exchange data in real time over a persistent connection.
+
+In a traditional HTTP application, the client sends a request and the server returns a response. If the client wants new information later, it usually needs to send another request or use a technique such as polling.
+
+With WebSockets, the client and server can send messages to each other through the same connection without starting a new HTTP request for every message.
+
+WebSockets are useful for:
+
+* Real-time chat applications
+* Live notifications
+* Multiplayer games
+* Live dashboards
+* Collaborative document editing
+* Real-time tracking
+* Live support systems
+* Online presence indicators
+
+## HTTP vs WebSockets
+
+<box gap={3}>
+  <box border radius="lg" padding={3} gap={2}>
+    <title size="md">HTTP communication</title>
+    <box background="surface-secondary" radius="md" padding={3} align="center">
+      **Client**
+    </box>
+    <box align="center" gap={1}>
+      <icon name="arrow-down" size="xl" />
+      <text color="secondary" size="sm">Request</text>
+    </box>
+    <box background="surface" border radius="md" padding={3} align="center">
+      **Server**
+    </box>
+    <box align="center" gap={1}>
+      <icon name="arrow-up" size="xl" />
+      <text color="secondary" size="sm">Response</text>
+    </box>
+    <box background="surface-secondary" radius="md" padding={3} align="center">
+      **Client**
+    </box>
+    <text color="secondary" size="sm">The client generally initiates each exchange. A new request is needed to ask for later updates.</text>
+  </box>
+  <box border radius="lg" padding={3} gap={2}>
+    <title size="md">WebSocket communication</title>
+    <grid columns={2} gap={2}>
+      <grid-item>
+        <box background="surface-secondary" radius="md" padding={3} align="center">
+          **Client**
+        </box>
+      </grid-item>
+      <grid-item>
+        <box background="surface-secondary" radius="md" padding={3} align="center">
+          **Server**
+        </box>
+      </grid-item>
+    </grid>
+    <box align="center" gap={1}>
+      <icon name="arrow-left-right" size="2xl" />
+      <text weight="medium">Persistent, two-way connection</text>
+      <text color="secondary" size="sm">Either side can send data when needed.</text>
+    </box>
+  </box>
+</box>
+
+| Feature                     | HTTP                                                  | WebSockets                            |
+| --------------------------- | ----------------------------------------------------- | ------------------------------------- |
+| Communication               | Request and response                                  | Two-way communication                 |
+| Connection                  | Requests are handled through HTTP connections         | A persistent connection is maintained |
+| Server can initiate updates | Not directly in an ordinary request-response exchange | Yes                                   |
+| Real-time updates           | Often uses polling or another mechanism               | Supported directly                    |
+| Common uses                 | CRUD APIs, page data, login                           | Chat, live updates, presence          |
+
+HTTP is still useful for ordinary API operations. WebSockets complement HTTP rather than replace it.
+
+## How WebSockets Work
+
+A WebSocket connection usually begins with an HTTP handshake.
+
+<box border radius="lg" padding={3} gap={2}>
+  <box background="surface-secondary" radius="md" padding={3} align="center">
+    **Browser or frontend**
+    <text color="secondary" size="sm">Creates a WebSocket connection</text>
+  </box>
+  <box align="center" gap={1}>
+    <icon name="arrow-down-up" size="xl" />
+    <text color="secondary" size="sm">HTTP upgrade handshake</text>
+  </box>
+  <box background="surface" border radius="md" padding={3} align="center">
+    **WebSocket server**
+    <text color="secondary" size="sm">Accepts the connection</text>
+  </box>
+  <divider color="subtle" />
+  <box background="rgba(22,163,74,0.10)" radius="md" padding={3} align="center">
+    <icon name="check-circle" color="success" size="lg" />
+    **Connection established**
+    <text color="secondary" size="sm">Messages can travel in both directions.</text>
+  </box>
+</box>
+
+The main stages are:
+
+1. The client requests a WebSocket connection.
+2. The server accepts the upgrade request.
+3. The connection remains open.
+4. The client and server exchange messages.
+5. Either side can close the connection.
+
+For a secure connection, the protocol is `wss://`. An unencrypted WebSocket connection uses `ws://`.
+
+## Native WebSocket API
+
+Browsers provide a built-in `WebSocket` API. A separate package is not required for the browser client.
+
+### Creating a WebSocket connection
+
+```javascript
+const socket = new WebSocket("ws://localhost:5000");
+```
+
+This attempts to connect to a WebSocket server running on port `5000`.
+
+Creating a browser WebSocket client does not automatically create a server. You need a compatible WebSocket server running at that address.
+
+### Connection events
+
+```javascript
+const socket = new WebSocket("ws://localhost:5000");
+
+socket.addEventListener("open", () => {
+    console.log("Connected to server");
+});
+
+socket.addEventListener("message", (event) => {
+    console.log("Message received:", event.data);
+});
+
+socket.addEventListener("error", (event) => {
+    console.log("WebSocket error:", event);
+});
+
+socket.addEventListener("close", () => {
+    console.log("Connection closed");
+});
+```
+
+| Event     | Purpose                     |
+| --------- | --------------------------- |
+| `open`    | Connection established      |
+| `message` | A message received          |
+| `error`   | A connection error occurred |
+| `close`   | Connection closed           |
+
+### Sending a message
+
+```javascript
+const socket = new WebSocket("ws://localhost:5000");
+
+socket.addEventListener("open", () => {
+    socket.send("Hello server");
+});
+```
+
+Only send after the connection is open.
+
+### Receiving a message
+
+```javascript
+socket.addEventListener("message", (event) => {
+    console.log(event.data);
+});
+```
+
+The `event.data` property contains the received message. Depending on the message type, it can be a string, a `Blob`, or another supported data representation.
+
+### Checking connection state
+
+```javascript
+console.log(socket.readyState);
+```
+
+Common values:
+
+| Constant               | Value | Meaning         |
+| ---------------------- | ----: | --------------- |
+| `WebSocket.CONNECTING` |   `0` | Connecting      |
+| `WebSocket.OPEN`       |   `1` | Connection open |
+| `WebSocket.CLOSING`    |   `2` | Closing         |
+| `WebSocket.CLOSED`     |   `3` | Closed          |
+
+Check before sending:
+
+```javascript
+if (socket.readyState === WebSocket.OPEN) {
+    socket.send("New message");
+}
+```
+
+## What Is Real-Time Communication?
+
+Real-time communication means delivering information with minimal delay after an event occurs.
+
+For example, consider a chat application.
+
+1. Dinesh sends a message to Gowtham.
+2. The server receives the message.
+3. The server delivers it to Gowtham's connected client.
+4. Gowtham sees the message without manually refreshing the page.
+
+Real-time does not mean zero latency. Network conditions, server load, and client processing can still introduce delays.
+
+### Polling
+
+Polling is a technique in which a client repeatedly requests updates.
+
+```javascript
+setInterval(async () => {
+    const response = await fetch("/api/notifications");
+    const notifications = await response.json();
+
+    console.log(notifications);
+}, 3000);
+```
+
+This example requests updates every three seconds.
+
+Polling is simple, but it can create unnecessary requests and may delay the discovery of new data until the next poll.
+
+### WebSockets
+
+With WebSockets, the server can push a notification through an already established connection as soon as the notification is available.
+
+This is often more suitable for frequent two-way communication.
+
+## What Is Socket.IO?
+
+<Entity value="Socket.IO" category="software" disambig="JavaScript real-time bidirectional communication library" /> is a JavaScript library for real-time, event-based communication between clients and servers.
+
+It commonly uses WebSockets when available and can fall back to HTTP long-polling when necessary.
+
+Socket.IO provides features such as:
+
+* Event-based messaging
+* Automatic reconnection attempts
+* Broadcasting messages
+* Rooms and namespaces
+* Acknowledgements
+* Transport fallback
+* Connection lifecycle events
+
+**Important:** Socket.IO is not the same protocol as native WebSockets. A native WebSocket client cannot directly communicate with a Socket.IO server, or vice versa, unless an appropriate compatible layer is used.
+
+## Installing Socket.IO
+
+For a Node.js backend, install Socket.IO in the backend project directory.
+
+```powershell
+npm install socket.io
+```
+
+For a browser frontend, you can use the Socket.IO client library. If your frontend is served separately, install it in that frontend's project if it uses a bundler:
+
+```powershell
+npm install socket.io-client
+```
+
+For a simple HTML page without a bundler, the client library can also be loaded from the Socket.IO server's client script endpoint.
+
+## Creating a Socket.IO Server
+
+Create `server.js`:
+
+```javascript
+import express from "express";
+import { createServer } from "node:http";
+import { Server } from "socket.io";
+
+const app = express();
+
+const http_server = createServer(app);
+
+const io = new Server(http_server, {
+    cors: {
+        origin: "http://127.0.0.1:5500"
+    }
+});
+
+app.get("/", (request, response) => {
+    response.send("Socket.IO server is running");
+});
+
+io.on("connection", (socket) => {
+    console.log("Client connected:", socket.id);
+
+    socket.on("disconnect", () => {
+        console.log("Client disconnected:", socket.id);
+    });
+});
+
+const port = 5000;
+
+http_server.listen(port, () => {
+    console.log(`Server running on port ${port}`);
+});
+```
+
+This server combines Express HTTP routes with Socket.IO communication.
+
+### Understanding the code
+
+**`createServer(app)`**
+
+Creates a Node.js HTTP server using the Express application.
+
+**`new Server(http_server)`**
+
+Attaches Socket.IO to the HTTP server.
+
+**`io.on("connection", callback)`**
+
+Runs when a client establishes a Socket.IO connection.
+
+**`socket.id`**
+
+Identifies a particular socket connection. It is not a permanent user ID; a user's socket ID can change after reconnecting.
+
+**`socket.on("disconnect", callback)`**
+
+Runs when that socket disconnects.
+
+Start the server with:
+
+```powershell
+node server.js
+```
+
+If your project uses a development script, you can use that instead.
+
+## Creating a Socket.IO Client
+
+For an HTML page served by Live Server, create `index.html`:
+
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Socket.IO Demo</title>
+</head>
+<body>
+    <h1>Real-Time Communication</h1>
+
+    <p id="connection_status">Connecting...</p>
+
+    <script src="http://localhost:5000/socket.io/socket.io.js"></script>
+    <script src="./client.js"></script>
+</body>
+</html>
+```
+
+Create `client.js`:
+
+```javascript
+const socket = io("http://localhost:5000");
+
+const connection_status = document.querySelector("#connection_status");
+
+socket.on("connect", () => {
+    connection_status.textContent = "Connected to server";
+    console.log("Socket ID:", socket.id);
+});
+
+socket.on("disconnect", () => {
+    connection_status.textContent = "Disconnected from server";
+});
+```
+
+Open the page through Live Server. When the connection succeeds, the status changes to `Connected to server`.
+
+The frontend origin must match the server's allowed CORS origin. If you use a different port or hostname, adjust the configuration.
+
+## Sending and Receiving Events
+
+Socket.IO uses named events to exchange data.
+
+The sender emits an event, and the receiver listens for that event.
+
+### Server
+
+```javascript
+io.on("connection", (socket) => {
+    socket.on("send_message", (message_data) => {
+        console.log(message_data);
+
+        socket.emit("message_received", {
+            success: true,
+            message: "Message received by server"
+        });
+    });
+});
+```
+
+### Client
+
+```javascript
+socket.emit("send_message", {
+    message: "Hello server",
+    sender_name: "Dinesh"
+});
+
+socket.on("message_received", (response) => {
+    console.log(response);
+});
+```
+
+The event name must match on both sides.
+
+Here:
+
+* `send_message` is sent by the client and handled by the server.
+* `message_received` is sent by the server and handled by the client.
+
+The data object is passed as the event payload.
+
+## `emit()` vs `on()`
+
+| Method                    | Purpose                                                    |
+| ------------------------- | ---------------------------------------------------------- |
+| `socket.emit()`           | Sends an event                                             |
+| `socket.on()`             | Listens for an event                                       |
+| `io.emit()`               | Sends an event to all connected sockets                    |
+| `socket.broadcast.emit()` | Sends to all other connected sockets, excluding the sender |
+| `socket.join()`           | Adds a socket to a room                                    |
+| `io.to(room).emit()`      | Sends an event to sockets in a room                        |
+
+These methods let you decide which clients should receive a message.
+
+## Broadcasting Messages
+
+Suppose multiple users are connected to a chat application.
+
+The server can broadcast a message to all connected clients:
+
+```javascript
+io.on("connection", (socket) => {
+    socket.on("send_message", (message_data) => {
+        io.emit("new_message", message_data);
+    });
+});
+```
+
+Client:
+
+```javascript
+socket.on("new_message", (message_data) => {
+    console.log("New message:", message_data);
+});
+```
+
+Every connected client receives the event, including the sender.
+
+If the sender should not receive the broadcast, use:
+
+```javascript
+socket.broadcast.emit("new_message", message_data);
+```
+
+Broadcasting to everyone is not appropriate for every chat system. Private conversations should target the intended recipient or a conversation room.
+
+## Socket.IO Rooms
+
+A room is a group of socket connections that can receive the same events.
+
+Rooms are useful for:
+
+* Private conversations
+* Group chats
+* Multiplayer game sessions
+* Team notifications
+* Project collaboration
+
+Example server code:
+
+```javascript
+io.on("connection", (socket) => {
+    socket.on("join_room", (room_id) => {
+        socket.join(room_id);
+    });
+
+    socket.on("send_room_message", (message_data) => {
+        io.to(message_data.room_id).emit(
+            "new_room_message",
+            message_data
+        );
+    });
+});
+```
+
+Client:
+
+```javascript
+socket.emit("join_room", "conversation_101");
+
+socket.emit("send_room_message", {
+    room_id: "conversation_101",
+    message: "Hello everyone"
+});
+
+socket.on("new_room_message", (message_data) => {
+    console.log(message_data.message);
+});
+```
+
+For a real application, the server must verify that the user is authorized to join the room and send messages there. Do not trust a client-provided room ID by itself.
+
+## Sending a Message to a Specific User
+
+For private messaging, the server needs a way to associate authenticated users with their active socket connections.
+
+A simplified illustration:
+
+```javascript
+const user_sockets = new Map();
+
+io.on("connection", (socket) => {
+    socket.on("register_user", (user_id) => {
+        user_sockets.set(user_id, socket.id);
+    });
+
+    socket.on("private_message", (message_data) => {
+        const receiver_socket_id = user_sockets.get(
+            message_data.receiver_id
+        );
+
+        if (receiver_socket_id) {
+            io.to(receiver_socket_id).emit(
+                "new_private_message",
+                message_data
+            );
+        }
+    });
+
+    socket.on("disconnect", () => {
+        for (const [user_id, socket_id] of user_sockets) {
+            if (socket_id === socket.id) {
+                user_sockets.delete(user_id);
+            }
+        }
+    });
+});
+```
+
+This demonstrates the basic idea, but it is not production-ready authentication or presence management.
+
+In a real application:
+
+* Derive the user's identity from a verified login session or token.
+* Never let a client claim another user's identity without verification.
+* Handle users with multiple devices or connections.
+* Remove stale connections and support reconnecting.
+* Persist messages in a database.
+* Check authorization before delivering private messages.
+
+A room named for an authenticated user's ID is often useful when that user has multiple active connections.
+
+## Acknowledgements
+
+Socket.IO acknowledgements allow the receiver to respond to a particular event.
+
+Client:
+
+```javascript
+socket.emit("save_message", {
+    message: "Hello"
+}, (response) => {
+    console.log(response);
+});
+```
+
+Server:
+
+```javascript
+io.on("connection", (socket) => {
+    socket.on("save_message", (message_data, callback) => {
+        callback({
+            success: true,
+            message: "Message processed"
+        });
+    });
+});
+```
+
+An acknowledgement is useful when the sender needs to know whether the server processed an operation.
+
+For durable messaging, acknowledge success only after the required validation and persistence have completed. Acknowledgements do not automatically guarantee that data has been stored permanently.
+
+## Automatic Reconnection
+
+Socket.IO can attempt to reconnect when a connection is lost.
+
+```javascript
+socket.on("connect", () => {
+    console.log("Connected:", socket.id);
+});
+
+socket.on("disconnect", (reason) => {
+    console.log("Disconnected:", reason);
+});
+
+socket.on("connect_error", (error) => {
+    console.log("Connection error:", error.message);
+});
+```
+
+The client can retry after temporary network failures, depending on its reconnection configuration.
+
+Reconnection does not automatically replay every missed application message. Applications should reload missed messages from a persistent store or use an appropriate recovery strategy.
+
+## Socket.IO vs Native WebSockets
+
+| Feature                    | Native WebSocket                                 | Socket.IO                          |
+| -------------------------- | ------------------------------------------------ | ---------------------------------- |
+| Browser API built in       | Yes                                              | No; client library needed          |
+| Named events               | You implement event handling or a message format | Built-in event API                 |
+| Automatic reconnection     | Must be implemented by the application           | Supported by the client            |
+| Rooms                      | Must be implemented by the application           | Built-in support                   |
+| HTTP long-polling fallback | No automatic fallback in the native API          | Supported                          |
+| Protocol compatibility     | Standard WebSocket protocol                      | Socket.IO protocol                 |
+| Best fit                   | Direct WebSocket communication                   | Event-based real-time applications |
+
+Socket.IO is convenient for many application-level real-time features. Native WebSockets can be a good choice when you want to work directly with the WebSocket protocol and manage reconnection and messaging behavior yourself.
+
+## Security Considerations
+
+Real-time connections need the same care as HTTP APIs.
+
+* Use HTTPS and `wss://` in production.
+* Validate the origin where appropriate.
+* Authenticate clients.
+* Authorize every private message and room operation.
+* Validate incoming payloads.
+* Apply rate limits to prevent message abuse.
+* Avoid logging passwords, access tokens, or other secrets.
+* Handle disconnects and stale connections.
+* Store important messages in a database rather than relying only on socket delivery.
+
+CORS settings alone do not authenticate users or authorize access to private data.
+
+## Practical Application Flow — Chat System
+
+A real-time chat application commonly combines HTTP APIs and Socket.IO.
+
+<box border radius="lg" padding={3} gap={2}>
+  <box background="surface-secondary" radius="md" padding={3} align="center">
+    **User logs in**
+    <text color="secondary" size="sm">HTTP API validates credentials</text>
+  </box>
+  <box align="center">
+    <icon name="arrow-down" size="lg" />
+  </box>
+  <box background="surface" border radius="md" padding={3} align="center">
+    **Socket.IO connects**
+    <text color="secondary" size="sm">Server authenticates the socket</text>
+  </box>
+  <box align="center">
+    <icon name="arrow-down" size="lg" />
+  </box>
+  <box background="surface" border radius="md" padding={3} align="center">
+    **User sends a message**
+    <text color="secondary" size="sm">Server validates recipient and content</text>
+  </box>
+  <box align="center">
+    <icon name="arrow-down" size="lg" />
+  </box>
+  <box background="surface" border radius="md" padding={3} align="center">
+    **Message is saved**
+    <text color="secondary" size="sm">Database confirms persistence</text>
+  </box>
+  <box align="center">
+    <icon name="arrow-down" size="lg" />
+  </box>
+  <box background="rgba(22,163,74,0.10)" radius="md" padding={3} align="center">
+    **Recipient receives the message**
+    <text color="secondary" size="sm">Socket.IO sends a real-time event</text>
+  </box>
+</box>
+
+The frontend can use HTTP to load conversation history and Socket.IO to receive new messages in real time. This avoids treating the live connection as the only source of stored message history.
+
+
+# Service Workers & PWA
+
+## Introduction
+
+A **Service Worker** is a JavaScript file that runs separately from the webpage and can intercept network requests, cache resources, handle notifications, and perform certain background tasks.
+
+A **Progressive Web App (PWA)** is a web application that uses modern browser capabilities to provide an app-like experience.
+
+A PWA can provide:
+
+* Offline access
+* Cached resources
+* Installability
+* Background synchronization
+* Push notifications
+* Fast loading
+* App-like behavior
+
+A typical architecture looks like:
+
+```text
+Browser
+   ↓
+Web Page
+   ↓
+Service Worker
+   ↓
+Cache / Network
+   ↓
+Server
+```
+
+The service worker sits between the web application and the network for requests that fall within its scope.
+
+---
+
+# Service Worker
+
+A service worker is a special JavaScript file registered by a web page.
+
+Example:
+
+```javascript
+if ("serviceWorker" in navigator) {
+    navigator.serviceWorker.register("/service-worker.js");
+}
+```
+
+The browser downloads the service worker and manages its lifecycle.
+
+Unlike normal JavaScript:
+
+```javascript
+console.log("Hello");
+```
+
+a service worker does not directly manipulate the page DOM.
+
+It operates independently from the page.
+
+---
+
+# Service Worker Lifecycle
+
+A service worker has an important lifecycle:
+
+```text
+Register
+   ↓
+Install
+   ↓
+Activate
+   ↓
+Fetch / Other Events
+```
+
+The main lifecycle events are:
+
+```javascript
+install
+activate
+fetch
+```
+
+There can also be other events, such as push and notification-related events.
+
+---
+
+# Registering a Service Worker
+
+Create:
+
+```text
+index.html
+service-worker.js
+app.js
+```
+
+In `app.js`:
+
+```javascript
+if ("serviceWorker" in navigator) {
+    navigator.serviceWorker.register("/service-worker.js")
+        .then((registration) => {
+            console.log("Service worker registered");
+            console.log(registration);
+        })
+        .catch((error) => {
+            console.log("Service worker registration failed");
+            console.log(error);
+        });
+}
+```
+
+The browser will register:
+
+```text
+/service-worker.js
+```
+
+The service worker's scope depends on where the worker file is located and the registration options.
+
+---
+
+# Secure Context Requirement
+
+Service workers require a **secure context**.
+
+They normally work on:
+
+```text
+https://example.com
+```
+
+For local development, browsers generally allow service workers on:
+
+```text
+http://localhost
+```
+
+and related loopback development addresses.
+
+This means you can develop a PWA locally without having HTTPS configured for your local machine.
+
+---
+
+# Service Worker Install Event
+
+The `install` event occurs when the browser installs the service worker.
+
+```javascript
+self.addEventListener("install", (event) => {
+    console.log("Service worker installed");
+});
+```
+
+The `self` object represents the service worker's global context.
+
+---
+
+# Caching During Installation
+
+A common use of the `install` event is caching application resources.
+
+```javascript
+const cache_name = "app-cache-v1";
+
+const files_to_cache = [
+    "/",
+    "/index.html",
+    "/app.js",
+    "/style.css"
+];
+
+self.addEventListener("install", (event) => {
+    event.waitUntil(
+        caches.open(cache_name)
+            .then((cache) => {
+                return cache.addAll(files_to_cache);
+            })
+    );
+});
+```
+
+The browser stores these resources in the Cache Storage API.
+
+The resources can potentially be used when the network is unavailable.
+
+---
+
+# Cache Storage API
+
+Service workers commonly use the Cache Storage API.
+
+Open a cache:
+
+```javascript
+const cache = await caches.open("app-cache-v1");
+```
+
+Add a resource:
+
+```javascript
+await cache.add("/index.html");
+```
+
+Add multiple resources:
+
+```javascript
+await cache.addAll([
+    "/index.html",
+    "/app.js",
+    "/style.css"
+]);
+```
+
+Retrieve a cached resource:
+
+```javascript
+const response = await cache.match("/index.html");
+```
+
+Delete a cache:
+
+```javascript
+await caches.delete("old-cache");
+```
+
+---
+
+# Activate Event
+
+The `activate` event occurs after installation when the service worker becomes active.
+
+```javascript
+self.addEventListener("activate", (event) => {
+    console.log("Service worker activated");
+});
+```
+
+The activation phase is commonly used to remove outdated caches.
+
+For example:
+
+```javascript
+const current_cache = "app-cache-v2";
+
+self.addEventListener("activate", (event) => {
+    event.waitUntil(
+        caches.keys()
+            .then((cache_names) => {
+                return Promise.all(
+                    cache_names
+                        .filter((cache_name) => {
+                            return cache_name !== current_cache;
+                        })
+                        .map((cache_name) => {
+                            return caches.delete(cache_name);
+                        })
+                );
+            })
+    );
+});
+```
+
+This prevents an old cache from remaining indefinitely.
+
+---
+
+# Fetch Event
+
+The `fetch` event allows a service worker to observe requests made within its scope.
+
+```javascript
+self.addEventListener("fetch", (event) => {
+    console.log("Request:", event.request.url);
+});
+```
+
+The service worker can decide whether to:
+
+```text
+Use the network
+Use the cache
+Use the network and update the cache
+Return a fallback response
+```
+
+This is the foundation of offline functionality.
+
+---
+
+# Cache First Strategy
+
+A **cache-first** strategy checks the cache before accessing the network.
+
+```javascript
+self.addEventListener("fetch", (event) => {
+    event.respondWith(
+        caches.match(event.request)
+            .then((cached_response) => {
+                if (cached_response) {
+                    return cached_response;
+                }
+
+                return fetch(event.request);
+            })
+    );
+});
+```
+
+Flow:
+
+```text
+Request
+   ↓
+Cache?
+ ┌─┴─┐
+Yes  No
+ ↓    ↓
+Cache Network
+response
+```
+
+This can provide very fast responses for resources that are already cached.
+
+---
+
+# Network First Strategy
+
+A **network-first** strategy tries the network first.
+
+```javascript
+self.addEventListener("fetch", (event) => {
+    event.respondWith(
+        fetch(event.request)
+            .catch(() => {
+                return caches.match(event.request);
+            })
+    );
+});
+```
+
+Flow:
+
+```text
+Request
+   ↓
+Network
+ ┌─┴─┐
+Yes  No
+ ↓    ↓
+Data  Cache
+```
+
+This is useful when fresh server data is more important than immediate cached data.
+
+---
+
+# Network First with Cache Update
+
+A more complete approach can update the cache when the network succeeds.
+
+```javascript
+self.addEventListener("fetch", (event) => {
+    event.respondWith(
+        fetch(event.request)
+            .then((network_response) => {
+
+                const response_clone =
+                    network_response.clone();
+
+                caches.open("app-cache-v1")
+                    .then((cache) => {
+                        cache.put(
+                            event.request,
+                            response_clone
+                        );
+                    });
+
+                return network_response;
+            })
+            .catch(() => {
+                return caches.match(event.request);
+            })
+    );
+});
+```
+
+The response is cloned because a response body generally cannot be consumed twice in the same way.
+
+One copy is returned to the browser and the other is stored in the cache.
+
+---
+
+# Offline Fallback
+
+A service worker can return a fallback page when the requested resource is unavailable.
+
+```javascript
+self.addEventListener("fetch", (event) => {
+    event.respondWith(
+        fetch(event.request)
+            .catch(() => {
+                return caches.match("/offline.html");
+            })
+    );
+});
+```
+
+Create:
+
+```text
+offline.html
+```
+
+and cache it during installation.
+
+```javascript
+const files_to_cache = [
+    "/",
+    "/index.html",
+    "/offline.html",
+    "/app.js",
+    "/style.css"
+];
+```
+
+When the user loses network connectivity:
+
+```text
+Browser
+   ↓
+Request
+   ↓
+Service Worker
+   ↓
+Network fails
+   ↓
+offline.html
+   ↓
+Browser
+```
+
+---
+
+# Offline Web Application
+
+Suppose an education application contains:
+
+```text
+courses.html
+course.js
+style.css
+offline.html
+```
+
+The service worker can cache the application shell.
+
+```javascript
+const cache_name = "education-app-v1";
+
+const app_files = [
+    "/",
+    "/courses.html",
+    "/course.js",
+    "/style.css",
+    "/offline.html"
+];
+
+self.addEventListener("install", (event) => {
+    event.waitUntil(
+        caches.open(cache_name)
+            .then((cache) => {
+                return cache.addAll(app_files);
+            })
+    );
+});
+```
+
+The user can then reopen the application even when the network is unavailable, provided the required resources have already been cached.
+
+Offline availability depends on what your application has cached and whether its data is available locally.
+
+---
+
+# Cache Storage vs localStorage
+
+These are different browser storage technologies.
+
+| Cache Storage                         | localStorage                       |
+| ------------------------------------- | ---------------------------------- |
+| Designed for request/response caching | Designed for key-value data        |
+| Commonly used by service workers      | Commonly used by page JavaScript   |
+| Stores `Request`/`Response` objects   | Stores strings                     |
+| Useful for offline web resources      | Useful for small application state |
+| Asynchronous API                      | Synchronous API                    |
+
+For example:
+
+```javascript
+localStorage.setItem(
+    "user_name",
+    "Dinesh"
+);
+```
+
+Cache Storage works more like:
+
+```javascript
+const cache = await caches.open("app-cache");
+
+await cache.put(
+    "/index.html",
+    response
+);
+```
+
+---
+
+# Service Worker Cannot Directly Access the DOM
+
+A service worker cannot do:
+
+```javascript
+document.querySelector("#message");
+```
+
+because it does not run inside the webpage.
+
+Instead, the page and service worker can communicate using messaging APIs.
+
+Page:
+
+```javascript
+navigator.serviceWorker.controller?.postMessage({
+    type: "SYNC_DATA"
+});
+```
+
+Service worker:
+
+```javascript
+self.addEventListener("message", (event) => {
+    console.log(event.data);
+});
+```
+
+This allows the page and service worker to exchange information.
+
+---
+
+# Background Sync
+
+Background Sync allows a web application to defer certain work until network connectivity is available.
+
+For example:
+
+```text
+User creates an assignment submission
+        ↓
+Network unavailable
+        ↓
+Store submission locally
+        ↓
+Wait for network
+        ↓
+Synchronize with server
+```
+
+The concept is useful for applications where users may temporarily lose connectivity.
+
+A service worker can register a sync event in browsers that support the Background Sync API.
+
+Example:
+
+```javascript
+self.addEventListener("sync", (event) => {
+    if (event.tag === "send_submission") {
+        event.waitUntil(
+            send_pending_submissions()
+        );
+    }
+});
+```
+
+A page can request synchronization:
+
+```javascript
+const registration =
+    await navigator.serviceWorker.ready;
+
+await registration.sync.register(
+    "send_submission"
+);
+```
+
+The actual availability of Background Sync varies by browser, so production applications should provide a fallback strategy.
+
+---
+
+# Storing Pending Data
+
+Background Sync generally needs persistent storage for work that has not yet reached the server.
+
+For example:
+
+```text
+IndexedDB
+    ↓
+Pending submissions
+    ↓
+Service Worker
+    ↓
+Network becomes available
+    ↓
+Server
+```
+
+IndexedDB is generally more appropriate than `localStorage` for structured offline application data.
+
+---
+
+# Push Notifications
+
+Service workers can also participate in web push notifications.
+
+The general flow is:
+
+```text
+User grants notification permission
+        ↓
+Browser creates push subscription
+        ↓
+Application sends subscription to server
+        ↓
+Server sends push message
+        ↓
+Browser receives push event
+        ↓
+Service Worker
+        ↓
+Notification displayed
+```
+
+A service worker can listen for a push event:
+
+```javascript
+self.addEventListener("push", (event) => {
+    const data = event.data?.json();
+
+    event.waitUntil(
+        self.registration.showNotification(
+            data.title,
+            {
+                body: data.message
+            }
+        )
+    );
+});
+```
+
+Push notifications require additional browser permission and a push service/server setup.
+
+---
+
+# Progressive Web App
+
+A **Progressive Web App** is a web application designed to provide enhanced capabilities such as:
+
+* Installability
+* Offline behavior
+* Responsive design
+* Secure delivery
+* App-like user experience
+* Optional push notifications
+* Background capabilities where supported
+
+A service worker is important for many PWA features, but a service worker alone does not automatically make an application a complete PWA.
+
+---
+
+# Web App Manifest
+
+A PWA commonly uses a **web app manifest**.
+
+Create:
+
+```text
+manifest.json
+```
+
+Example:
+
+```json
+{
+    "name": "Education Portal",
+    "short_name": "Education",
+    "start_url": "/",
+    "display": "standalone",
+    "background_color": "#ffffff",
+    "theme_color": "#ffffff",
+    "icons": [
+        {
+            "src": "/icons/icon-192.png",
+            "sizes": "192x192",
+            "type": "image/png"
+        },
+        {
+            "src": "/icons/icon-512.png",
+            "sizes": "512x512",
+            "type": "image/png"
+        }
+    ]
+}
+```
+
+Connect it to HTML:
+
+```html
+<link rel="manifest" href="/manifest.json">
+```
+
+The manifest describes how the web application should behave when installed.
+
+---
+
+# Important Manifest Properties
+
+### `name`
+
+Full application name.
+
+```json
+{
+    "name": "Education Portal"
+}
+```
+
+### `short_name`
+
+Short name used where space is limited.
+
+```json
+{
+    "short_name": "Education"
+}
+```
+
+### `start_url`
+
+The page opened when the installed application starts.
+
+```json
+{
+    "start_url": "/"
+}
+```
+
+### `display`
+
+Controls the preferred display mode.
+
+```json
+{
+    "display": "standalone"
+}
+```
+
+Common values include:
+
+```text
+browser
+standalone
+minimal-ui
+fullscreen
+```
+
+### `icons`
+
+Defines application icons.
+
+```json
+{
+    "icons": [
+        {
+            "src": "/icons/icon-192.png",
+            "sizes": "192x192",
+            "type": "image/png"
+        }
+    ]
+}
+```
+
+---
+
+# Installable Web App
+
+When a browser determines that a web application meets its current installability requirements, the user may be offered an installation option.
+
+The installed application can appear similarly to an application on the user's device.
+
+For example:
+
+```text
+Browser
+   ↓
+Install Web App
+   ↓
+Application icon
+   ↓
+Standalone application window
+```
+
+Installation behavior and requirements vary by browser and platform.
+
+---
+
+# `beforeinstallprompt`
+
+Some Chromium-based browsers expose the `beforeinstallprompt` event, allowing an application to provide a custom install experience.
+
+Example:
+
+```javascript
+let deferred_install_prompt;
+
+window.addEventListener(
+    "beforeinstallprompt",
+    (event) => {
+        event.preventDefault();
+
+        deferred_install_prompt = event;
+
+        console.log("Application can be installed");
+    }
+);
+```
+
+Later, after a user action:
+
+```javascript
+async function install_application() {
+    if (!deferred_install_prompt) {
+        return;
+    }
+
+    deferred_install_prompt.prompt();
+
+    const result =
+        await deferred_install_prompt.userChoice;
+
+    console.log(result.outcome);
+
+    deferred_install_prompt = null;
+}
+```
+
+This API is not universally available, so applications should not depend on it as the only installation mechanism.
+
+---
+
+# Service Worker Update Process
+
+Suppose the first version uses:
+
+```javascript
+const cache_name = "app-cache-v1";
+```
+
+Later, you release a new version:
+
+```javascript
+const cache_name = "app-cache-v2";
+```
+
+During activation, remove the old cache:
+
+```javascript
+self.addEventListener("activate", (event) => {
+    event.waitUntil(
+        caches.keys()
+            .then((cache_names) => {
+                return Promise.all(
+                    cache_names
+                        .filter((cache_name_item) => {
+                            return cache_name_item !== cache_name;
+                        })
+                        .map((cache_name_item) => {
+                            return caches.delete(
+                                cache_name_item
+                            );
+                        })
+                );
+            })
+    );
+});
+```
+
+This is a common cache-versioning technique.
+
+---
+
+# Complete Service Worker Example
+
+`service-worker.js`:
+
+```javascript
+const cache_name = "education-app-v1";
+
+const files_to_cache = [
+    "/",
+    "/index.html",
+    "/app.js",
+    "/style.css",
+    "/offline.html"
+];
+
+self.addEventListener("install", (event) => {
+    event.waitUntil(
+        caches.open(cache_name)
+            .then((cache) => {
+                return cache.addAll(files_to_cache);
+            })
+    );
+});
+
+self.addEventListener("activate", (event) => {
+    event.waitUntil(
+        caches.keys()
+            .then((cache_names) => {
+                return Promise.all(
+                    cache_names
+                        .filter((name) => {
+                            return name !== cache_name;
+                        })
+                        .map((name) => {
+                            return caches.delete(name);
+                        })
+                );
+            })
+    );
+});
+
+self.addEventListener("fetch", (event) => {
+    event.respondWith(
+        fetch(event.request)
+            .then((network_response) => {
+
+                const response_clone =
+                    network_response.clone();
+
+                caches.open(cache_name)
+                    .then((cache) => {
+                        cache.put(
+                            event.request,
+                            response_clone
+                        );
+                    });
+
+                return network_response;
+            })
+            .catch(() => {
+                return caches.match(event.request)
+                    .then((cached_response) => {
+                        return cached_response ||
+                            caches.match("/offline.html");
+                    });
+            })
+    );
+});
+```
+
+Register it from the page:
+
+```javascript
+if ("serviceWorker" in navigator) {
+    navigator.serviceWorker.register(
+        "/service-worker.js"
+    );
+}
+```
+
+The resulting flow is:
+
+```text
+                Web Application
+                      │
+                      ↓
+              Service Worker
+                 ↙        ↘
+              Cache      Network
+                │           │
+                ↓           ↓
+             Cached      Server
+             Response    Response
+```
+
+When the network is unavailable:
+
+```text
+Browser
+   ↓
+Service Worker
+   ↓
+Network fails
+   ↓
+Cache
+   ↓
+Cached resource / offline page
+```
+
+# PWA Application Structure
+
+A simple PWA can look like:
+
+```text
+education-pwa/
+│
+├── index.html
+├── app.js
+├── style.css
+├── service-worker.js
+├── manifest.json
+├── offline.html
+│
+└── icons/
+    ├── icon-192.png
+    └── icon-512.png
+```
+
+The major responsibilities are:
+
+```text
+index.html
+    ↓
+Application UI
+
+app.js
+    ↓
+Application logic
+
+service-worker.js
+    ↓
+Caching + background capabilities
+
+manifest.json
+    ↓
+Installation + application metadata
+
+offline.html
+    ↓
+Offline fallback
+```
+
+# PWA Data Flow
+
+An application that supports offline work might use:
+
+```text
+                    Web Application
+                           │
+             ┌─────────────┴─────────────┐
+             ↓                           ↓
+       Service Worker                IndexedDB
+             │                           │
+       Cache Storage              Offline application data
+             │                           │
+             └─────────────┬─────────────┘
+                           ↓
+                       Network
+                           ↓
+                         Server
+```
+
+For example, an education application could allow a user to:
+
+```text
+Open course
+    ↓
+Course files cached
+    ↓
+Network disconnected
+    ↓
+User continues reading
+    ↓
+User completes an activity
+    ↓
+Activity stored locally
+    ↓
+Network returns
+    ↓
+Data synchronized with server
+```
+
+This is one of the important patterns behind offline-capable web applications.
+
+
+# TypeScript Basics
+
+## Introduction
+
+TypeScript is a programming language built on top of JavaScript.
+
+It adds a **static type system** to JavaScript.
+
+JavaScript:
+
+```javascript
+let user_name = "Dinesh";
+
+user_name = 25;
+```
+
+JavaScript allows this because variables are dynamically typed.
+
+TypeScript can detect the problem:
+
+```typescript
+let user_name: string = "Dinesh";
+
+user_name = 25;
+```
+
+The TypeScript compiler reports an error because `user_name` was declared as a string.
+
+TypeScript code is normally compiled into JavaScript before it runs in the browser or Node.js.
+
+```text
+TypeScript
+    ↓
+TypeScript Compiler
+    ↓
+JavaScript
+    ↓
+Browser / Node.js
+```
+
+---
+
+# Why TypeScript Is Used
+
+TypeScript helps developers catch many errors before the application runs.
+
+For example:
+
+```javascript
+function calculate_total(price, quantity) {
+    return price * quantity;
+}
+
+calculate_total("500", "2");
+```
+
+JavaScript may allow this and produce an unexpected result.
+
+TypeScript lets you define the expected types:
+
+```typescript
+function calculate_total(
+    price: number,
+    quantity: number
+): number {
+    return price * quantity;
+}
+```
+
+Now:
+
+```typescript
+calculate_total("500", "2");
+```
+
+produces a type error during development.
+
+TypeScript is especially useful in:
+
+* Large JavaScript applications
+* Backend applications
+* Frontend frameworks
+* Team projects
+* APIs
+* Complex data models
+* Libraries and SDKs
+
+---
+
+# Installing TypeScript
+
+TypeScript can be installed globally:
+
+```powershell
+npm install -g typescript
+```
+
+Check the version:
+
+```powershell
+tsc --version
+```
+
+You can also install it as a project development dependency:
+
+```powershell
+npm install --save-dev typescript
+```
+
+For most projects, keeping TypeScript in the project dependencies is preferable because the project controls the compiler version.
+
+---
+
+# TypeScript File
+
+JavaScript files normally use:
+
+```text
+.js
+```
+
+TypeScript files use:
+
+```text
+.ts
+```
+
+Example:
+
+```text
+app.ts
+```
+
+A simple TypeScript program:
+
+```typescript
+const user_name: string = "Dinesh";
+
+console.log(user_name);
+```
+
+Compile it:
+
+```powershell
+tsc app.ts
+```
+
+TypeScript produces:
+
+```text
+app.js
+```
+
+The JavaScript file can then run in Node.js or the browser.
+
+---
+
+# Basic Types
+
+TypeScript provides several commonly used types.
+
+```typescript
+let user_name: string = "Dinesh";
+
+let user_age: number = 22;
+
+let is_logged_in: boolean = true;
+
+let user_id: bigint = 100n;
+```
+
+Common types include:
+
+```text
+string
+number
+boolean
+bigint
+symbol
+object
+null
+undefined
+unknown
+any
+never
+void
+```
+
+---
+
+# String
+
+```typescript
+let user_name: string = "Dinesh";
+```
+
+Only string values should be assigned:
+
+```typescript
+user_name = "Gowtham";
+```
+
+This is invalid:
+
+```typescript
+user_name = 100;
+```
+
+---
+
+# Number
+
+JavaScript has one main numeric type, `number`.
+
+```typescript
+let product_price: number = 1500;
+
+let quantity: number = 3;
+
+let total_price: number = product_price * quantity;
+```
+
+Both integers and floating-point values use `number`.
+
+```typescript
+let count: number = 10;
+
+let rating: number = 4.5;
+```
+
+---
+
+# Boolean
+
+```typescript
+let is_active: boolean = true;
+
+let is_verified: boolean = false;
+```
+
+A boolean can contain only:
+
+```text
+true
+false
+```
+
+---
+
+# Arrays
+
+You can define an array using:
+
+```typescript
+let user_names: string[] = [
+    "Dinesh",
+    "Gowtham",
+    "Arul"
+];
+```
+
+Another syntax is:
+
+```typescript
+let user_names: Array<string> = [
+    "Dinesh",
+    "Gowtham",
+    "Arul"
+];
+```
+
+Both represent an array of strings.
+
+For numbers:
+
+```typescript
+let scores: number[] = [
+    85,
+    90,
+    76
+];
+```
+
+This is invalid:
+
+```typescript
+scores.push("90");
+```
+
+because the array expects numbers.
+
+---
+
+# Objects
+
+You can define the expected structure of an object.
+
+```typescript
+let user: {
+    user_id: number;
+    user_name: string;
+    email: string;
+} = {
+    user_id: 1,
+    user_name: "Dinesh",
+    email: "dinesh@example.com"
+};
+```
+
+The object must follow the declared structure.
+
+---
+
+# Optional Properties
+
+A property can be optional using `?`.
+
+```typescript
+let user: {
+    user_id: number;
+    user_name: string;
+    phone?: string;
+} = {
+    user_id: 1,
+    user_name: "Dinesh"
+};
+```
+
+`phone` is allowed to be missing.
+
+It can also be present:
+
+```typescript
+let user: {
+    user_id: number;
+    user_name: string;
+    phone?: string;
+} = {
+    user_id: 1,
+    user_name: "Dinesh",
+    phone: "9876543210"
+};
+```
+
+---
+
+# Function Types
+
+TypeScript allows you to specify parameter types and return types.
+
+```typescript
+function calculate_total(
+    price: number,
+    quantity: number
+): number {
+    return price * quantity;
+}
+```
+
+The parameters are:
+
+```text
+price → number
+quantity → number
+```
+
+The return value is:
+
+```text
+number
+```
+
+Calling:
+
+```typescript
+const total_price = calculate_total(500, 3);
+```
+
+is valid.
+
+Calling:
+
+```typescript
+calculate_total("500", 3);
+```
+
+produces a type error.
+
+---
+
+# Void
+
+A function that does not return a value can use `void`.
+
+```typescript
+function print_message(message: string): void {
+    console.log(message);
+}
+```
+
+The function performs an operation but does not return a value.
+
+---
+
+# Type Inference
+
+TypeScript does not always require you to explicitly write the type.
+
+For example:
+
+```typescript
+let user_name = "Dinesh";
+```
+
+TypeScript infers:
+
+```text
+user_name → string
+```
+
+Similarly:
+
+```typescript
+let user_age = 22;
+```
+
+TypeScript infers:
+
+```text
+user_age → number
+```
+
+This is called **type inference**.
+
+You can therefore write:
+
+```typescript
+const product_price = 1500;
+```
+
+instead of:
+
+```typescript
+const product_price: number = 1500;
+```
+
+when the type is obvious.
+
+---
+
+# Inference from Function Return Values
+
+TypeScript can also infer function return types.
+
+```typescript
+function calculate_total(
+    price: number,
+    quantity: number
+) {
+    return price * quantity;
+}
+```
+
+TypeScript understands that the function returns a `number`.
+
+You can explicitly write it:
+
+```typescript
+function calculate_total(
+    price: number,
+    quantity: number
+): number {
+    return price * quantity;
+}
+```
+
+Both are valid.
+
+Explicit return types can make larger codebases easier to understand and can catch unintended changes.
+
+---
+
+# Union Types
+
+A variable can allow more than one type using `|`.
+
+```typescript
+let user_id: number | string;
+```
+
+Now both are valid:
+
+```typescript
+user_id = 1001;
+
+user_id = "USR1001";
+```
+
+But this is invalid:
+
+```typescript
+user_id = true;
+```
+
+Union types are useful when an API can return different valid representations.
+
+---
+
+# Literal Types
+
+You can restrict a value to specific strings.
+
+```typescript
+let order_status:
+    "pending" |
+    "confirmed" |
+    "cancelled";
+```
+
+Valid:
+
+```typescript
+order_status = "pending";
+
+order_status = "confirmed";
+```
+
+Invalid:
+
+```typescript
+order_status = "completed";
+```
+
+This is useful for fixed application states.
+
+---
+
+# Type Aliases
+
+A type alias allows you to give a name to a type definition.
+
+```typescript
+type User = {
+    user_id: number;
+    user_name: string;
+    email: string;
+};
+```
+
+Now:
+
+```typescript
+const user: User = {
+    user_id: 1,
+    user_name: "Dinesh",
+    email: "dinesh@example.com"
+};
+```
+
+You can reuse the type:
+
+```typescript
+const admin: User = {
+    user_id: 2,
+    user_name: "Gowtham",
+    email: "gowtham@example.com"
+};
+```
+
+This avoids repeatedly writing the same object structure.
+
+---
+
+# Interfaces
+
+An interface describes the structure that an object should follow.
+
+```typescript
+interface User {
+    user_id: number;
+    user_name: string;
+    email: string;
+}
+```
+
+Use it:
+
+```typescript
+const user: User = {
+    user_id: 1,
+    user_name: "Dinesh",
+    email: "dinesh@example.com"
+};
+```
+
+Interfaces are commonly used for:
+
+* Object structures
+* API responses
+* Class contracts
+* Function parameters
+* Application data models
+
+---
+
+# Interface with Optional Properties
+
+```typescript
+interface User {
+    user_id: number;
+    user_name: string;
+    email: string;
+    phone?: string;
+}
+```
+
+Now:
+
+```typescript
+const user: User = {
+    user_id: 1,
+    user_name: "Dinesh",
+    email: "dinesh@example.com"
+};
+```
+
+is valid.
+
+---
+
+# Interface with Readonly
+
+A property can be marked `readonly`.
+
+```typescript
+interface User {
+    readonly user_id: number;
+    user_name: string;
+}
+```
+
+You can read it:
+
+```typescript
+console.log(user.user_id);
+```
+
+But you cannot normally assign a new value to it:
+
+```typescript
+user.user_id = 10;
+```
+
+TypeScript reports an error.
+
+`readonly` protects the property at the type-checking level. It does not make the underlying JavaScript object deeply immutable at runtime.
+
+---
+
+# Extending Interfaces
+
+An interface can extend another interface.
+
+```typescript
+interface User {
+    user_id: number;
+    user_name: string;
+}
+
+interface Admin extends User {
+    permissions: string[];
+}
+```
+
+Now `Admin` contains:
+
+```text
+user_id
+user_name
+permissions
+```
+
+Example:
+
+```typescript
+const admin: Admin = {
+    user_id: 1,
+    user_name: "Dinesh",
+    permissions: [
+        "read_users",
+        "delete_users"
+    ]
+};
+```
+
+---
+
+# Type Alias vs Interface
+
+Both can describe object structures.
+
+### Type alias
+
+```typescript
+type User = {
+    user_id: number;
+    user_name: string;
+};
+```
+
+### Interface
+
+```typescript
+interface User {
+    user_id: number;
+    user_name: string;
+}
+```
+
+Both can be useful.
+
+Interfaces are particularly common for object-oriented contracts and extensible object structures.
+
+Type aliases are especially flexible for unions, intersections, tuples, and other type expressions.
+
+---
+
+# `any`
+
+The `any` type disables most type checking for that value.
+
+```typescript
+let user_data: any = "Dinesh";
+
+user_data = 100;
+
+user_data = true;
+```
+
+TypeScript allows all of these.
+
+`any` can be useful when migrating an existing JavaScript project, but excessive use removes many of the benefits of TypeScript.
+
+---
+
+# `unknown`
+
+`unknown` is safer than `any`.
+
+```typescript
+let user_data: unknown;
+
+user_data = "Dinesh";
+user_data = 100;
+user_data = true;
+```
+
+Before using an `unknown` value as a specific type, you must check it.
+
+```typescript
+if (typeof user_data === "string") {
+    console.log(user_data.toUpperCase());
+}
+```
+
+This is particularly useful when handling data from external sources such as APIs.
+
+---
+
+# Type Assertions
+
+Sometimes you know more about a value than TypeScript can determine.
+
+You can use a type assertion.
+
+```typescript
+const user_data: unknown = "Dinesh";
+
+const user_name = user_data as string;
+
+console.log(user_name.toUpperCase());
+```
+
+A type assertion tells TypeScript:
+
+> Treat this value as this type.
+
+It does not convert the actual value.
+
+For example:
+
+```typescript
+const value = "100" as unknown as number;
+```
+
+does not turn the string `"100"` into the number `100`.
+
+Runtime conversion would require:
+
+```typescript
+const value = Number("100");
+```
+
+---
+
+# Generics
+
+Generics allow code to work with different types while preserving type information.
+
+Without generics:
+
+```typescript
+function get_first_item(items: any[]) {
+    return items[0];
+}
+```
+
+The return type loses useful information.
+
+With a generic:
+
+```typescript
+function get_first_item<T>(items: T[]): T {
+    return items[0];
+}
+```
+
+Now:
+
+```typescript
+const first_name = get_first_item([
+    "Dinesh",
+    "Gowtham",
+    "Arul"
+]);
+```
+
+TypeScript knows:
+
+```text
+first_name → string
+```
+
+For numbers:
+
+```typescript
+const first_score = get_first_item([
+    90,
+    85,
+    76
+]);
+```
+
+TypeScript knows:
+
+```text
+first_score → number
+```
+
+The `T` represents a type that is determined when the function is used.
+
+---
+
+# Generic API Response
+
+Generics are especially useful for API response structures.
+
+```typescript
+interface ApiResponse<T> {
+    success: boolean;
+    data: T;
+    message: string;
+}
+```
+
+Define a user:
+
+```typescript
+interface User {
+    user_id: number;
+    user_name: string;
+}
+```
+
+Then:
+
+```typescript
+const response: ApiResponse<User> = {
+    success: true,
+    data: {
+        user_id: 1,
+        user_name: "Dinesh"
+    },
+    message: "User fetched successfully"
+};
+```
+
+For multiple users:
+
+```typescript
+const response: ApiResponse<User[]> = {
+    success: true,
+    data: [
+        {
+            user_id: 1,
+            user_name: "Dinesh"
+        },
+        {
+            user_id: 2,
+            user_name: "Gowtham"
+        }
+    ],
+    message: "Users fetched successfully"
+};
+```
+
+The same `ApiResponse` type can work with many different data types.
+
+---
+
+# Generic Constraints
+
+Sometimes you want a generic type to have certain properties.
+
+```typescript
+function get_user_name<T extends { user_name: string }>(
+    user: T
+): string {
+    return user.user_name;
+}
+```
+
+Any type passed to this function must contain:
+
+```text
+user_name: string
+```
+
+For example:
+
+```typescript
+const user = {
+    user_id: 1,
+    user_name: "Dinesh"
+};
+
+console.log(get_user_name(user));
+```
+
+---
+
+# Generic Interfaces
+
+Generics can also be used with interfaces.
+
+```typescript
+interface ApiResponse<T> {
+    success: boolean;
+    data: T;
+}
+```
+
+Example:
+
+```typescript
+interface Product {
+    product_id: number;
+    product_name: string;
+}
+
+const product_response: ApiResponse<Product> = {
+    success: true,
+    data: {
+        product_id: 101,
+        product_name: "Laptop"
+    }
+};
+```
+
+---
+
+# Tuples
+
+A tuple represents an array with a specific number and order of elements.
+
+```typescript
+let user_data: [number, string] = [
+    1,
+    "Dinesh"
+];
+```
+
+The first value must be a number.
+
+The second value must be a string.
+
+This is invalid:
+
+```typescript
+let user_data: [number, string] = [
+    "Dinesh",
+    1
+];
+```
+
+Tuples are useful when the position of each value has a defined meaning.
+
+---
+
+# Enums
+
+TypeScript supports enums for named sets of values.
+
+```typescript
+enum UserRole {
+    ADMIN,
+    USER,
+    MODERATOR
+}
+```
+
+Use:
+
+```typescript
+const role = UserRole.ADMIN;
+```
+
+String enums can make the values clearer:
+
+```typescript
+enum OrderStatus {
+    PENDING = "pending",
+    CONFIRMED = "confirmed",
+    CANCELLED = "cancelled"
+}
+```
+
+Use:
+
+```typescript
+const order_status = OrderStatus.CONFIRMED;
+```
+
+For many modern TypeScript codebases, string literal unions are also commonly used:
+
+```typescript
+type OrderStatus =
+    | "pending"
+    | "confirmed"
+    | "cancelled";
+```
+
+---
+
+# Classes with TypeScript
+
+TypeScript adds type information to JavaScript classes.
+
+```typescript
+class User {
+    user_id: number;
+    user_name: string;
+
+    constructor(
+        user_id: number,
+        user_name: string
+    ) {
+        this.user_id = user_id;
+        this.user_name = user_name;
+    }
+
+    get_user_name(): string {
+        return this.user_name;
+    }
+}
+```
+
+Create an object:
+
+```typescript
+const user = new User(
+    1,
+    "Dinesh"
+);
+
+console.log(user.get_user_name());
+```
+
+---
+
+# Access Modifiers
+
+TypeScript provides access modifiers such as:
+
+```text
+public
+private
+protected
+```
+
+Example:
+
+```typescript
+class BankAccount {
+    private balance: number;
+
+    constructor(balance: number) {
+        this.balance = balance;
+    }
+
+    get_balance(): number {
+        return this.balance;
+    }
+}
+```
+
+You can call:
+
+```typescript
+const account = new BankAccount(5000);
+
+console.log(account.get_balance());
+```
+
+But direct access is restricted:
+
+```typescript
+account.balance;
+```
+
+TypeScript reports an error.
+
+These modifiers primarily provide compile-time access checking.
+
+---
+
+# Decorators
+
+Decorators are a feature for attaching behavior or metadata to classes and class members.
+
+A decorator can be represented conceptually as:
+
+```typescript
+function log_class(target: Function) {
+    console.log("Class created:", target.name);
+}
+```
+
+Then:
+
+```typescript
+@log_class
+class User {
+}
+```
+
+The decorator is associated with the class.
+
+Decorators are commonly seen in frameworks and libraries that use metadata-driven class patterns.
+
+Examples include frameworks such as NestJS and Angular.
+
+Decorator support and syntax depend on the TypeScript configuration and the decorator model being used, so it is important to follow the configuration required by the framework or project.
+
+Decorators are an advanced TypeScript topic. Understanding the basic idea is more important initially than memorizing decorator implementation details.
+
+---
+
+# TypeScript Configuration
+
+A TypeScript project commonly has:
+
+```text
+tsconfig.json
+```
+
+This file controls how TypeScript compiles the project.
+
+Example:
+
+```json
+{
+    "compilerOptions": {
+        "target": "ES2022",
+        "module": "NodeNext",
+        "moduleResolution": "NodeNext",
+        "strict": true,
+        "outDir": "./dist"
+    },
+    "include": [
+        "src/**/*.ts"
+    ]
+}
+```
+
+Important options include:
+
+| Option             | Purpose                        |
+| ------------------ | ------------------------------ |
+| `target`           | JavaScript version to generate |
+| `module`           | Module system used in output   |
+| `strict`           | Enables stronger type checking |
+| `outDir`           | Output directory               |
+| `rootDir`          | Source directory               |
+| `moduleResolution` | How modules are resolved       |
+
+---
+
+# Strict Mode
+
+TypeScript can perform stronger checking using:
+
+```json
+{
+    "compilerOptions": {
+        "strict": true
+    }
+}
+```
+
+Strict mode catches more potential errors.
+
+For example, it can identify situations where a value may be `undefined` when your code expects a definite value.
+
+This is one of the most useful settings for serious TypeScript projects.
+
+---
+
+# TypeScript with Node.js
+
+A Node.js TypeScript project can look like:
+
+```text
+backend/
+│
+├── src/
+│   ├── server.ts
+│   ├── routes/
+│   ├── controllers/
+│   ├── services/
+│   └── types/
+│
+├── dist/
+├── package.json
+├── tsconfig.json
+└── node_modules/
+```
+
+Development flow:
+
+```text
+TypeScript source
+       ↓
+Type checking
+       ↓
+Compilation
+       ↓
+JavaScript
+       ↓
+Node.js
+```
+
+Modern Node.js tooling can also execute TypeScript directly in development in some setups, but compilation and type checking remain important concepts.
+
+---
+
+# JavaScript vs TypeScript
+
+| JavaScript                           | TypeScript                                                       |
+| ------------------------------------ | ---------------------------------------------------------------- |
+| Dynamically typed                    | Statically type-checked                                          |
+| `.js`                                | `.ts`                                                            |
+| Types checked mainly at runtime      | Types checked during development/compilation                     |
+| No interfaces                        | Interfaces available                                             |
+| No generics                          | Generics available                                               |
+| No TypeScript decorators/type system | Decorators and richer type features                              |
+| Runs directly in Node.js/browser     | Usually transformed or executed through TypeScript-aware tooling |
+| Flexible                             | More structured                                                  |
+
+TypeScript does not replace JavaScript at runtime.
+
+The final runtime environment still executes JavaScript.
+
+---
+
+# Practical Example — API Data
+
+Imagine an API returns user information.
+
+Define the structure:
+
+```typescript
+interface User {
+    user_id: number;
+    user_name: string;
+    email: string;
+    is_active: boolean;
+}
+```
+
+Define the response:
+
+```typescript
+interface ApiResponse<T> {
+    success: boolean;
+    data: T;
+}
+```
+
+Use it:
+
+```typescript
+async function get_user(): Promise<ApiResponse<User>> {
+    const response = await fetch(
+        "https://example.com/api/user"
+    );
+
+    return response.json();
+}
+```
+
+Now TypeScript knows that:
+
+```text
+get_user()
+    ↓
+Promise
+    ↓
+ApiResponse<User>
+    ↓
+data
+    ↓
+User
+```
+
+So:
+
+```typescript
+const response = await get_user();
+
+console.log(response.data.user_name);
+console.log(response.data.email);
+```
+
+TypeScript can provide autocomplete and detect invalid property access.
+
+---
+
+# TypeScript Compilation
+
+Suppose:
+
+```typescript
+const user_name: string = "Dinesh";
+
+console.log(user_name);
+```
+
+Run:
+
+```powershell
+tsc app.ts
+```
+
+The compiler produces JavaScript similar to:
+
+```javascript
+const user_name = "Dinesh";
+
+console.log(user_name);
+```
+
+The type annotation:
+
+```typescript
+: string
+```
+
+does not exist in the generated JavaScript because TypeScript types are primarily development-time information.
+
+# TypeScript Basics
+
+## Introduction
+
+TypeScript is a programming language built on top of JavaScript.
+
+It adds a **static type system** to JavaScript.
+
+JavaScript:
+
+```javascript
+let user_name = "Dinesh";
+
+user_name = 25;
+```
+
+JavaScript allows this because variables are dynamically typed.
+
+TypeScript can detect the problem:
+
+```typescript
+let user_name: string = "Dinesh";
+
+user_name = 25;
+```
+
+The TypeScript compiler reports an error because `user_name` was declared as a string.
+
+TypeScript code is normally compiled into JavaScript before it runs in the browser or Node.js.
+
+```text
+TypeScript
+    ↓
+TypeScript Compiler
+    ↓
+JavaScript
+    ↓
+Browser / Node.js
+```
+
+---
+
+# Why TypeScript Is Used
+
+TypeScript helps developers catch many errors before the application runs.
+
+For example:
+
+```javascript
+function calculate_total(price, quantity) {
+    return price * quantity;
+}
+
+calculate_total("500", "2");
+```
+
+JavaScript may allow this and produce an unexpected result.
+
+TypeScript lets you define the expected types:
+
+```typescript
+function calculate_total(
+    price: number,
+    quantity: number
+): number {
+    return price * quantity;
+}
+```
+
+Now:
+
+```typescript
+calculate_total("500", "2");
+```
+
+produces a type error during development.
+
+TypeScript is especially useful in:
+
+* Large JavaScript applications
+* Backend applications
+* Frontend frameworks
+* Team projects
+* APIs
+* Complex data models
+* Libraries and SDKs
+
+---
+
+# Installing TypeScript
+
+TypeScript can be installed globally:
+
+```powershell
+npm install -g typescript
+```
+
+Check the version:
+
+```powershell
+tsc --version
+```
+
+You can also install it as a project development dependency:
+
+```powershell
+npm install --save-dev typescript
+```
+
+For most projects, keeping TypeScript in the project dependencies is preferable because the project controls the compiler version.
+
+---
+
+# TypeScript File
+
+JavaScript files normally use:
+
+```text
+.js
+```
+
+TypeScript files use:
+
+```text
+.ts
+```
+
+Example:
+
+```text
+app.ts
+```
+
+A simple TypeScript program:
+
+```typescript
+const user_name: string = "Dinesh";
+
+console.log(user_name);
+```
+
+Compile it:
+
+```powershell
+tsc app.ts
+```
+
+TypeScript produces:
+
+```text
+app.js
+```
+
+The JavaScript file can then run in Node.js or the browser.
+
+---
+
+# Basic Types
+
+TypeScript provides several commonly used types.
+
+```typescript
+let user_name: string = "Dinesh";
+
+let user_age: number = 22;
+
+let is_logged_in: boolean = true;
+
+let user_id: bigint = 100n;
+```
+
+Common types include:
+
+```text
+string
+number
+boolean
+bigint
+symbol
+object
+null
+undefined
+unknown
+any
+never
+void
+```
+
+---
+
+# String
+
+```typescript
+let user_name: string = "Dinesh";
+```
+
+Only string values should be assigned:
+
+```typescript
+user_name = "Gowtham";
+```
+
+This is invalid:
+
+```typescript
+user_name = 100;
+```
+
+---
+
+# Number
+
+JavaScript has one main numeric type, `number`.
+
+```typescript
+let product_price: number = 1500;
+
+let quantity: number = 3;
+
+let total_price: number = product_price * quantity;
+```
+
+Both integers and floating-point values use `number`.
+
+```typescript
+let count: number = 10;
+
+let rating: number = 4.5;
+```
+
+---
+
+# Boolean
+
+```typescript
+let is_active: boolean = true;
+
+let is_verified: boolean = false;
+```
+
+A boolean can contain only:
+
+```text
+true
+false
+```
+
+---
+
+# Arrays
+
+You can define an array using:
+
+```typescript
+let user_names: string[] = [
+    "Dinesh",
+    "Gowtham",
+    "Arul"
+];
+```
+
+Another syntax is:
+
+```typescript
+let user_names: Array<string> = [
+    "Dinesh",
+    "Gowtham",
+    "Arul"
+];
+```
+
+Both represent an array of strings.
+
+For numbers:
+
+```typescript
+let scores: number[] = [
+    85,
+    90,
+    76
+];
+```
+
+This is invalid:
+
+```typescript
+scores.push("90");
+```
+
+because the array expects numbers.
+
+---
+
+# Objects
+
+You can define the expected structure of an object.
+
+```typescript
+let user: {
+    user_id: number;
+    user_name: string;
+    email: string;
+} = {
+    user_id: 1,
+    user_name: "Dinesh",
+    email: "dinesh@example.com"
+};
+```
+
+The object must follow the declared structure.
+
+---
+
+# Optional Properties
+
+A property can be optional using `?`.
+
+```typescript
+let user: {
+    user_id: number;
+    user_name: string;
+    phone?: string;
+} = {
+    user_id: 1,
+    user_name: "Dinesh"
+};
+```
+
+`phone` is allowed to be missing.
+
+It can also be present:
+
+```typescript
+let user: {
+    user_id: number;
+    user_name: string;
+    phone?: string;
+} = {
+    user_id: 1,
+    user_name: "Dinesh",
+    phone: "9876543210"
+};
+```
+
+---
+
+# Function Types
+
+TypeScript allows you to specify parameter types and return types.
+
+```typescript
+function calculate_total(
+    price: number,
+    quantity: number
+): number {
+    return price * quantity;
+}
+```
+
+The parameters are:
+
+```text
+price → number
+quantity → number
+```
+
+The return value is:
+
+```text
+number
+```
+
+Calling:
+
+```typescript
+const total_price = calculate_total(500, 3);
+```
+
+is valid.
+
+Calling:
+
+```typescript
+calculate_total("500", 3);
+```
+
+produces a type error.
+
+---
+
+# Void
+
+A function that does not return a value can use `void`.
+
+```typescript
+function print_message(message: string): void {
+    console.log(message);
+}
+```
+
+The function performs an operation but does not return a value.
+
+---
+
+# Type Inference
+
+TypeScript does not always require you to explicitly write the type.
+
+For example:
+
+```typescript
+let user_name = "Dinesh";
+```
+
+TypeScript infers:
+
+```text
+user_name → string
+```
+
+Similarly:
+
+```typescript
+let user_age = 22;
+```
+
+TypeScript infers:
+
+```text
+user_age → number
+```
+
+This is called **type inference**.
+
+You can therefore write:
+
+```typescript
+const product_price = 1500;
+```
+
+instead of:
+
+```typescript
+const product_price: number = 1500;
+```
+
+when the type is obvious.
+
+---
+
+# Inference from Function Return Values
+
+TypeScript can also infer function return types.
+
+```typescript
+function calculate_total(
+    price: number,
+    quantity: number
+) {
+    return price * quantity;
+}
+```
+
+TypeScript understands that the function returns a `number`.
+
+You can explicitly write it:
+
+```typescript
+function calculate_total(
+    price: number,
+    quantity: number
+): number {
+    return price * quantity;
+}
+```
+
+Both are valid.
+
+Explicit return types can make larger codebases easier to understand and can catch unintended changes.
+
+---
+
+# Union Types
+
+A variable can allow more than one type using `|`.
+
+```typescript
+let user_id: number | string;
+```
+
+Now both are valid:
+
+```typescript
+user_id = 1001;
+
+user_id = "USR1001";
+```
+
+But this is invalid:
+
+```typescript
+user_id = true;
+```
+
+Union types are useful when an API can return different valid representations.
+
+---
+
+# Literal Types
+
+You can restrict a value to specific strings.
+
+```typescript
+let order_status:
+    "pending" |
+    "confirmed" |
+    "cancelled";
+```
+
+Valid:
+
+```typescript
+order_status = "pending";
+
+order_status = "confirmed";
+```
+
+Invalid:
+
+```typescript
+order_status = "completed";
+```
+
+This is useful for fixed application states.
+
+---
+
+# Type Aliases
+
+A type alias allows you to give a name to a type definition.
+
+```typescript
+type User = {
+    user_id: number;
+    user_name: string;
+    email: string;
+};
+```
+
+Now:
+
+```typescript
+const user: User = {
+    user_id: 1,
+    user_name: "Dinesh",
+    email: "dinesh@example.com"
+};
+```
+
+You can reuse the type:
+
+```typescript
+const admin: User = {
+    user_id: 2,
+    user_name: "Gowtham",
+    email: "gowtham@example.com"
+};
+```
+
+This avoids repeatedly writing the same object structure.
+
+---
+
+# Interfaces
+
+An interface describes the structure that an object should follow.
+
+```typescript
+interface User {
+    user_id: number;
+    user_name: string;
+    email: string;
+}
+```
+
+Use it:
+
+```typescript
+const user: User = {
+    user_id: 1,
+    user_name: "Dinesh",
+    email: "dinesh@example.com"
+};
+```
+
+Interfaces are commonly used for:
+
+* Object structures
+* API responses
+* Class contracts
+* Function parameters
+* Application data models
+
+---
+
+# Interface with Optional Properties
+
+```typescript
+interface User {
+    user_id: number;
+    user_name: string;
+    email: string;
+    phone?: string;
+}
+```
+
+Now:
+
+```typescript
+const user: User = {
+    user_id: 1,
+    user_name: "Dinesh",
+    email: "dinesh@example.com"
+};
+```
+
+is valid.
+
+---
+
+# Interface with Readonly
+
+A property can be marked `readonly`.
+
+```typescript
+interface User {
+    readonly user_id: number;
+    user_name: string;
+}
+```
+
+You can read it:
+
+```typescript
+console.log(user.user_id);
+```
+
+But you cannot normally assign a new value to it:
+
+```typescript
+user.user_id = 10;
+```
+
+TypeScript reports an error.
+
+`readonly` protects the property at the type-checking level. It does not make the underlying JavaScript object deeply immutable at runtime.
+
+---
+
+# Extending Interfaces
+
+An interface can extend another interface.
+
+```typescript
+interface User {
+    user_id: number;
+    user_name: string;
+}
+
+interface Admin extends User {
+    permissions: string[];
+}
+```
+
+Now `Admin` contains:
+
+```text
+user_id
+user_name
+permissions
+```
+
+Example:
+
+```typescript
+const admin: Admin = {
+    user_id: 1,
+    user_name: "Dinesh",
+    permissions: [
+        "read_users",
+        "delete_users"
+    ]
+};
+```
+
+---
+
+# Type Alias vs Interface
+
+Both can describe object structures.
+
+### Type alias
+
+```typescript
+type User = {
+    user_id: number;
+    user_name: string;
+};
+```
+
+### Interface
+
+```typescript
+interface User {
+    user_id: number;
+    user_name: string;
+}
+```
+
+Both can be useful.
+
+Interfaces are particularly common for object-oriented contracts and extensible object structures.
+
+Type aliases are especially flexible for unions, intersections, tuples, and other type expressions.
+
+---
+
+# `any`
+
+The `any` type disables most type checking for that value.
+
+```typescript
+let user_data: any = "Dinesh";
+
+user_data = 100;
+
+user_data = true;
+```
+
+TypeScript allows all of these.
+
+`any` can be useful when migrating an existing JavaScript project, but excessive use removes many of the benefits of TypeScript.
+
+---
+
+# `unknown`
+
+`unknown` is safer than `any`.
+
+```typescript
+let user_data: unknown;
+
+user_data = "Dinesh";
+user_data = 100;
+user_data = true;
+```
+
+Before using an `unknown` value as a specific type, you must check it.
+
+```typescript
+if (typeof user_data === "string") {
+    console.log(user_data.toUpperCase());
+}
+```
+
+This is particularly useful when handling data from external sources such as APIs.
+
+---
+
+# Type Assertions
+
+Sometimes you know more about a value than TypeScript can determine.
+
+You can use a type assertion.
+
+```typescript
+const user_data: unknown = "Dinesh";
+
+const user_name = user_data as string;
+
+console.log(user_name.toUpperCase());
+```
+
+A type assertion tells TypeScript:
+
+> Treat this value as this type.
+
+It does not convert the actual value.
+
+For example:
+
+```typescript
+const value = "100" as unknown as number;
+```
+
+does not turn the string `"100"` into the number `100`.
+
+Runtime conversion would require:
+
+```typescript
+const value = Number("100");
+```
+
+---
+
+# Generics
+
+Generics allow code to work with different types while preserving type information.
+
+Without generics:
+
+```typescript
+function get_first_item(items: any[]) {
+    return items[0];
+}
+```
+
+The return type loses useful information.
+
+With a generic:
+
+```typescript
+function get_first_item<T>(items: T[]): T {
+    return items[0];
+}
+```
+
+Now:
+
+```typescript
+const first_name = get_first_item([
+    "Dinesh",
+    "Gowtham",
+    "Arul"
+]);
+```
+
+TypeScript knows:
+
+```text
+first_name → string
+```
+
+For numbers:
+
+```typescript
+const first_score = get_first_item([
+    90,
+    85,
+    76
+]);
+```
+
+TypeScript knows:
+
+```text
+first_score → number
+```
+
+The `T` represents a type that is determined when the function is used.
+
+---
+
+# Generic API Response
+
+Generics are especially useful for API response structures.
+
+```typescript
+interface ApiResponse<T> {
+    success: boolean;
+    data: T;
+    message: string;
+}
+```
+
+Define a user:
+
+```typescript
+interface User {
+    user_id: number;
+    user_name: string;
+}
+```
+
+Then:
+
+```typescript
+const response: ApiResponse<User> = {
+    success: true,
+    data: {
+        user_id: 1,
+        user_name: "Dinesh"
+    },
+    message: "User fetched successfully"
+};
+```
+
+For multiple users:
+
+```typescript
+const response: ApiResponse<User[]> = {
+    success: true,
+    data: [
+        {
+            user_id: 1,
+            user_name: "Dinesh"
+        },
+        {
+            user_id: 2,
+            user_name: "Gowtham"
+        }
+    ],
+    message: "Users fetched successfully"
+};
+```
+
+The same `ApiResponse` type can work with many different data types.
+
+---
+
+# Generic Constraints
+
+Sometimes you want a generic type to have certain properties.
+
+```typescript
+function get_user_name<T extends { user_name: string }>(
+    user: T
+): string {
+    return user.user_name;
+}
+```
+
+Any type passed to this function must contain:
+
+```text
+user_name: string
+```
+
+For example:
+
+```typescript
+const user = {
+    user_id: 1,
+    user_name: "Dinesh"
+};
+
+console.log(get_user_name(user));
+```
+
+---
+
+# Generic Interfaces
+
+Generics can also be used with interfaces.
+
+```typescript
+interface ApiResponse<T> {
+    success: boolean;
+    data: T;
+}
+```
+
+Example:
+
+```typescript
+interface Product {
+    product_id: number;
+    product_name: string;
+}
+
+const product_response: ApiResponse<Product> = {
+    success: true,
+    data: {
+        product_id: 101,
+        product_name: "Laptop"
+    }
+};
+```
+
+---
+
+# Tuples
+
+A tuple represents an array with a specific number and order of elements.
+
+```typescript
+let user_data: [number, string] = [
+    1,
+    "Dinesh"
+];
+```
+
+The first value must be a number.
+
+The second value must be a string.
+
+This is invalid:
+
+```typescript
+let user_data: [number, string] = [
+    "Dinesh",
+    1
+];
+```
+
+Tuples are useful when the position of each value has a defined meaning.
+
+---
+
+# Enums
+
+TypeScript supports enums for named sets of values.
+
+```typescript
+enum UserRole {
+    ADMIN,
+    USER,
+    MODERATOR
+}
+```
+
+Use:
+
+```typescript
+const role = UserRole.ADMIN;
+```
+
+String enums can make the values clearer:
+
+```typescript
+enum OrderStatus {
+    PENDING = "pending",
+    CONFIRMED = "confirmed",
+    CANCELLED = "cancelled"
+}
+```
+
+Use:
+
+```typescript
+const order_status = OrderStatus.CONFIRMED;
+```
+
+For many modern TypeScript codebases, string literal unions are also commonly used:
+
+```typescript
+type OrderStatus =
+    | "pending"
+    | "confirmed"
+    | "cancelled";
+```
+
+---
+
+# Classes with TypeScript
+
+TypeScript adds type information to JavaScript classes.
+
+```typescript
+class User {
+    user_id: number;
+    user_name: string;
+
+    constructor(
+        user_id: number,
+        user_name: string
+    ) {
+        this.user_id = user_id;
+        this.user_name = user_name;
+    }
+
+    get_user_name(): string {
+        return this.user_name;
+    }
+}
+```
+
+Create an object:
+
+```typescript
+const user = new User(
+    1,
+    "Dinesh"
+);
+
+console.log(user.get_user_name());
+```
+
+---
+
+# Access Modifiers
+
+TypeScript provides access modifiers such as:
+
+```text
+public
+private
+protected
+```
+
+Example:
+
+```typescript
+class BankAccount {
+    private balance: number;
+
+    constructor(balance: number) {
+        this.balance = balance;
+    }
+
+    get_balance(): number {
+        return this.balance;
+    }
+}
+```
+
+You can call:
+
+```typescript
+const account = new BankAccount(5000);
+
+console.log(account.get_balance());
+```
+
+But direct access is restricted:
+
+```typescript
+account.balance;
+```
+
+TypeScript reports an error.
+
+These modifiers primarily provide compile-time access checking.
+
+---
+
+# Decorators
+
+Decorators are a feature for attaching behavior or metadata to classes and class members.
+
+A decorator can be represented conceptually as:
+
+```typescript
+function log_class(target: Function) {
+    console.log("Class created:", target.name);
+}
+```
+
+Then:
+
+```typescript
+@log_class
+class User {
+}
+```
+
+The decorator is associated with the class.
+
+Decorators are commonly seen in frameworks and libraries that use metadata-driven class patterns.
+
+Examples include frameworks such as NestJS and Angular.
+
+Decorator support and syntax depend on the TypeScript configuration and the decorator model being used, so it is important to follow the configuration required by the framework or project.
+
+Decorators are an advanced TypeScript topic. Understanding the basic idea is more important initially than memorizing decorator implementation details.
+
+---
+
+# TypeScript Configuration
+
+A TypeScript project commonly has:
+
+```text
+tsconfig.json
+```
+
+This file controls how TypeScript compiles the project.
+
+Example:
+
+```json
+{
+    "compilerOptions": {
+        "target": "ES2022",
+        "module": "NodeNext",
+        "moduleResolution": "NodeNext",
+        "strict": true,
+        "outDir": "./dist"
+    },
+    "include": [
+        "src/**/*.ts"
+    ]
+}
+```
+
+Important options include:
+
+| Option             | Purpose                        |
+| ------------------ | ------------------------------ |
+| `target`           | JavaScript version to generate |
+| `module`           | Module system used in output   |
+| `strict`           | Enables stronger type checking |
+| `outDir`           | Output directory               |
+| `rootDir`          | Source directory               |
+| `moduleResolution` | How modules are resolved       |
+
+---
+
+# Strict Mode
+
+TypeScript can perform stronger checking using:
+
+```json
+{
+    "compilerOptions": {
+        "strict": true
+    }
+}
+```
+
+Strict mode catches more potential errors.
+
+For example, it can identify situations where a value may be `undefined` when your code expects a definite value.
+
+This is one of the most useful settings for serious TypeScript projects.
+
+---
+
+# TypeScript with Node.js
+
+A Node.js TypeScript project can look like:
+
+```text
+backend/
+│
+├── src/
+│   ├── server.ts
+│   ├── routes/
+│   ├── controllers/
+│   ├── services/
+│   └── types/
+│
+├── dist/
+├── package.json
+├── tsconfig.json
+└── node_modules/
+```
+
+Development flow:
+
+```text
+TypeScript source
+       ↓
+Type checking
+       ↓
+Compilation
+       ↓
+JavaScript
+       ↓
+Node.js
+```
+
+Modern Node.js tooling can also execute TypeScript directly in development in some setups, but compilation and type checking remain important concepts.
+
+---
+
+# JavaScript vs TypeScript
+
+| JavaScript                           | TypeScript                                                       |
+| ------------------------------------ | ---------------------------------------------------------------- |
+| Dynamically typed                    | Statically type-checked                                          |
+| `.js`                                | `.ts`                                                            |
+| Types checked mainly at runtime      | Types checked during development/compilation                     |
+| No interfaces                        | Interfaces available                                             |
+| No generics                          | Generics available                                               |
+| No TypeScript decorators/type system | Decorators and richer type features                              |
+| Runs directly in Node.js/browser     | Usually transformed or executed through TypeScript-aware tooling |
+| Flexible                             | More structured                                                  |
+
+TypeScript does not replace JavaScript at runtime.
+
+The final runtime environment still executes JavaScript.
+
+---
+
+# Practical Example — API Data
+
+Imagine an API returns user information.
+
+Define the structure:
+
+```typescript
+interface User {
+    user_id: number;
+    user_name: string;
+    email: string;
+    is_active: boolean;
+}
+```
+
+Define the response:
+
+```typescript
+interface ApiResponse<T> {
+    success: boolean;
+    data: T;
+}
+```
+
+Use it:
+
+```typescript
+async function get_user(): Promise<ApiResponse<User>> {
+    const response = await fetch(
+        "https://example.com/api/user"
+    );
+
+    return response.json();
+}
+```
+
+Now TypeScript knows that:
+
+```text
+get_user()
+    ↓
+Promise
+    ↓
+ApiResponse<User>
+    ↓
+data
+    ↓
+User
+```
+
+So:
+
+```typescript
+const response = await get_user();
+
+console.log(response.data.user_name);
+console.log(response.data.email);
+```
+
+TypeScript can provide autocomplete and detect invalid property access.
+
+---
+
+# TypeScript Compilation
+
+Suppose:
+
+```typescript
+const user_name: string = "Dinesh";
+
+console.log(user_name);
+```
+
+Run:
+
+```powershell
+tsc app.ts
+```
+
+The compiler produces JavaScript similar to:
+
+```javascript
+const user_name = "Dinesh";
+
+console.log(user_name);
+```
+
+The type annotation:
+
+```typescript
+: string
+```
+
+does not exist in the generated JavaScript because TypeScript types are primarily development-time information.
+
+
+# JavaScript Design Patterns
+
+## Introduction
+
+A **design pattern** is a commonly used solution structure for a recurring software-design problem.
+
+A design pattern is **not a ready-made piece of code**. Instead, it is a way of organizing classes, objects, functions, and modules.
+
+For example, imagine an education platform:
+
+```text
+User
+ ├── Student
+ ├── Teacher
+ └── Admin
+```
+
+Different parts of the application may need different ways to create objects, notify users, manage shared resources, or select algorithms.
+
+Design patterns provide established approaches for these problems.
+
+The major patterns covered here are:
+
+* Singleton
+* Factory
+* Observer
+* Module
+* MVC
+* Strategy
+
+---
+
+# Singleton Pattern
+
+## What is Singleton?
+
+The **Singleton pattern** ensures that only **one instance of an object** exists throughout the application.
+
+Instead of allowing multiple objects to be created, the application shares one object.
+
+### Real-world example
+
+An application may need one:
+
+* database connection manager
+* application configuration
+* logging service
+* cache manager
+
+You generally don't want every part of the application creating its own configuration manager.
+
+---
+
+## Basic Singleton Example
+
+```javascript
+class Database_connection {
+    constructor() {
+        if (Database_connection.instance) {
+            return Database_connection.instance;
+        }
+
+        this.connection_status = "connected";
+
+        Database_connection.instance = this;
+    }
+
+    get_status() {
+        return this.connection_status;
+    }
+}
+
+const connection_1 = new Database_connection();
+const connection_2 = new Database_connection();
+
+console.log(connection_1 === connection_2);
+```
+
+Output:
+
+```text
+true
+```
+
+Both variables point to the same object.
+
+```text
+connection_1
+      ↓
+ ┌──────────────┐
+ │   Singleton  │
+ │              │
+ │ connected    │
+ └──────────────┘
+      ↑
+connection_2
+```
+
+---
+
+## Singleton using a Module
+
+JavaScript modules naturally provide singleton-like behavior because a module is evaluated once and its exported values are reused.
+
+### config.js
+
+```javascript
+const application_config = {
+    api_url: "https://api.example.com",
+    environment: "production"
+};
+
+export default application_config;
+```
+
+### user_service.js
+
+```javascript
+import application_config from "./config.js";
+
+console.log(application_config.api_url);
+```
+
+### order_service.js
+
+```javascript
+import application_config from "./config.js";
+
+console.log(application_config.environment);
+```
+
+Both services use the same configuration object.
+
+---
+
+## When to use Singleton
+
+Useful for resources that should have one shared instance:
+
+```text
+Configuration
+Logger
+Cache
+Connection manager
+Application state
+```
+
+However, Singleton should not be used everywhere. Excessive use can create hidden global state and make testing harder.
+
+---
+
+# Factory Pattern
+
+## What is Factory?
+
+The **Factory pattern** provides a function or class responsible for creating objects.
+
+Instead of creating objects directly throughout the application, object creation is centralized.
+
+Without a factory:
+
+```javascript
+const student = new Student();
+const teacher = new Teacher();
+const admin = new Admin();
+```
+
+With a factory:
+
+```javascript
+const user = create_user("student");
+```
+
+The factory decides which object should be created.
+
+---
+
+## Example
+
+Suppose an education platform has different types of users.
+
+```javascript
+class Student {
+    constructor(name) {
+        this.name = name;
+        this.role = "student";
+    }
+}
+
+class Teacher {
+    constructor(name) {
+        this.name = name;
+        this.role = "teacher";
+    }
+}
+
+class Admin {
+    constructor(name) {
+        this.name = name;
+        this.role = "admin";
+    }
+}
+```
+
+Create a factory:
+
+```javascript
+function create_user(role, name) {
+    if (role === "student") {
+        return new Student(name);
+    }
+
+    if (role === "teacher") {
+        return new Teacher(name);
+    }
+
+    if (role === "admin") {
+        return new Admin(name);
+    }
+
+    throw new Error("Invalid user role");
+}
+```
+
+Now:
+
+```javascript
+const student = create_user("student", "Arun");
+const teacher = create_user("teacher", "Priya");
+const admin = create_user("admin", "Dinesh");
+
+console.log(student);
+console.log(teacher);
+console.log(admin);
+```
+
+The calling code does not need to know how each object is constructed.
+
+---
+
+## Factory Flow
+
+```text
+create_user()
+      |
+      ↓
+Check role
+      |
+ ┌────┼─────┐
+ ↓    ↓     ↓
+Student Teacher Admin
+```
+
+---
+
+## When to use Factory
+
+Factory is useful when:
+
+* many related object types exist
+* object creation contains logic
+* the exact object type is determined at runtime
+* you want to hide construction details
+
+For example:
+
+```text
+Payment
+ ├── UPI
+ ├── Card
+ └── Net Banking
+```
+
+A payment factory could create the appropriate payment processor.
+
+---
+
+# Observer Pattern
+
+## What is Observer?
+
+The **Observer pattern** allows one object to notify multiple other objects when something changes.
+
+There is usually:
+
+```text
+Subject
+   |
+   ├── Observer 1
+   ├── Observer 2
+   └── Observer 3
+```
+
+The subject maintains a list of observers.
+
+When something happens, all observers are notified.
+
+---
+
+## Real-world Example
+
+Consider a banking application.
+
+When a transaction occurs:
+
+```text
+Transaction completed
+       |
+       ├── Send email
+       ├── Send notification
+       └── Update transaction history
+```
+
+The transaction system doesn't need to directly manage every notification system.
+
+Instead, interested components subscribe to the event.
+
+---
+
+## JavaScript Example
+
+```javascript
+class Event_manager {
+    constructor() {
+        this.observers = [];
+    }
+
+    subscribe(observer) {
+        this.observers.push(observer);
+    }
+
+    notify(data) {
+        this.observers.forEach((observer) => {
+            observer(data);
+        });
+    }
+}
+```
+
+Create observers:
+
+```javascript
+function send_email(data) {
+    console.log(`Email sent for transaction ${data.transaction_id}`);
+}
+
+function send_notification(data) {
+    console.log(`Notification sent for transaction ${data.transaction_id}`);
+}
+
+function update_transaction_history(data) {
+    console.log(`Transaction ${data.transaction_id} added to history`);
+}
+```
+
+Subscribe them:
+
+```javascript
+const transaction_events = new Event_manager();
+
+transaction_events.subscribe(send_email);
+transaction_events.subscribe(send_notification);
+transaction_events.subscribe(update_transaction_history);
+```
+
+Notify them:
+
+```javascript
+transaction_events.notify({
+    transaction_id: 1001,
+    amount: 5000
+});
+```
+
+Output:
+
+```text
+Email sent for transaction 1001
+Notification sent for transaction 1001
+Transaction 1001 added to history
+```
+
+---
+
+## Why Observer is useful
+
+It creates **loose coupling**.
+
+The transaction system only says:
+
+```javascript
+transaction_events.notify(transaction);
+```
+
+It doesn't need to know how email, notifications, or history are implemented.
+
+---
+
+## JavaScript Events and Observer
+
+The browser's event system follows a similar idea.
+
+```javascript
+button.addEventListener("click", handle_click);
+```
+
+Here:
+
+```text
+Button
+  ↓
+click event
+  ↓
+handle_click()
+```
+
+The event listener acts like an observer waiting for a change/event.
+
+---
+
+# Module Pattern
+
+## What is Module Pattern?
+
+The **Module pattern** organizes related variables and functions into a single unit while controlling what is publicly accessible.
+
+It helps create:
+
+* private data
+* public functions
+* organized code
+* encapsulation
+
+---
+
+## Example
+
+```javascript
+const bank_account = (() => {
+    let balance = 0;
+
+    function deposit(amount) {
+        balance += amount;
+    }
+
+    function withdraw(amount) {
+        if (amount > balance) {
+            throw new Error("Insufficient balance");
+        }
+
+        balance -= amount;
+    }
+
+    function get_balance() {
+        return balance;
+    }
+
+    return {
+        deposit,
+        withdraw,
+        get_balance
+    };
+})();
+```
+
+Use it:
+
+```javascript
+bank_account.deposit(5000);
+
+console.log(bank_account.get_balance());
+
+bank_account.withdraw(1000);
+
+console.log(bank_account.get_balance());
+```
+
+Output:
+
+```text
+5000
+4000
+```
+
+But this does not work:
+
+```javascript
+console.log(bank_account.balance);
+```
+
+because `balance` is private.
+
+---
+
+## Module Structure
+
+```text
+Module
+ ├── Private data
+ ├── Private functions
+ │
+ └── Public API
+       ├── deposit()
+       ├── withdraw()
+       └── get_balance()
+```
+
+The outside code only interacts with the public API.
+
+---
+
+## Modern JavaScript Modules
+
+Modern ES modules provide a cleaner approach.
+
+### bank_account.js
+
+```javascript
+let balance = 0;
+
+function deposit(amount) {
+    balance += amount;
+}
+
+function withdraw(amount) {
+    if (amount > balance) {
+        throw new Error("Insufficient balance");
+    }
+
+    balance -= amount;
+}
+
+function get_balance() {
+    return balance;
+}
+
+export {
+    deposit,
+    withdraw,
+    get_balance
+};
+```
+
+### app.js
+
+```javascript
+import {
+    deposit,
+    withdraw,
+    get_balance
+} from "./bank_account.js";
+
+deposit(5000);
+
+withdraw(1000);
+
+console.log(get_balance());
+```
+
+The `balance` variable remains inside the module.
+
+---
+
+# MVC Pattern
+
+## What is MVC?
+
+MVC stands for:
+
+```text
+M → Model
+V → View
+C → Controller
+```
+
+It separates an application's responsibilities.
+
+```text
+              User
+               |
+               ↓
+          Controller
+          /         \
+         ↓           ↓
+      Model        View
+         |           ↑
+         └───────────┘
+```
+
+---
+
+# Model
+
+The **Model** manages application data and business logic.
+
+For example:
+
+```javascript
+const users = [
+    {
+        user_id: 1,
+        user_name: "Arun",
+        role: "student"
+    },
+    {
+        user_id: 2,
+        user_name: "Priya",
+        role: "teacher"
+    }
+];
+
+function get_users() {
+    return users;
+}
+
+export {
+    get_users
+};
+```
+
+The model is responsible for the data.
+
+---
+
+# View
+
+The **View** displays information to the user.
+
+For example:
+
+```javascript
+function render_users(users) {
+    const user_list = document.querySelector("#user_list");
+
+    user_list.innerHTML = "";
+
+    users.forEach((user) => {
+        const item = document.createElement("li");
+
+        item.textContent = `${user.user_name} - ${user.role}`;
+
+        user_list.appendChild(item);
+    });
+}
+```
+
+The view is responsible for presentation.
+
+---
+
+# Controller
+
+The **Controller** connects the Model and View.
+
+```javascript
+import { get_users } from "./user_model.js";
+
+function load_users() {
+    const users = get_users();
+
+    render_users(users);
+}
+
+load_users();
+```
+
+The controller decides what should happen when the user interacts with the application.
+
+---
+
+## MVC Flow
+
+Suppose a user clicks:
+
+```text
+"Show Users"
+```
+
+The flow becomes:
+
+```text
+User
+ ↓
+Controller
+ ↓
+Model
+ ↓
+Get data
+ ↓
+Controller
+ ↓
+View
+ ↓
+Display data
+```
+
+---
+
+## MVC in Backend Applications
+
+MVC is also commonly used with Node.js and Express.
+
+Example structure:
+
+```text
+backend/
+│
+├── models/
+│   └── user_model.js
+│
+├── controllers/
+│   └── user_controller.js
+│
+├── routes/
+│   └── user_routes.js
+│
+└── app.js
+```
+
+A request might flow like this:
+
+```text
+GET /api/users
+       ↓
+Route
+       ↓
+Controller
+       ↓
+Model
+       ↓
+Database
+       ↓
+Controller
+       ↓
+JSON response
+```
+
+MVC becomes particularly useful as applications become larger.
+
+---
+
+# Strategy Pattern
+
+## What is Strategy?
+
+The **Strategy pattern** allows you to define multiple algorithms or behaviors and choose one at runtime.
+
+Instead of writing:
+
+```javascript
+if (...)
+else if (...)
+else if (...)
+```
+
+for every possible behavior, you can create separate strategies.
+
+---
+
+## Real-world Example
+
+Consider payment processing.
+
+There may be:
+
+```text
+UPI
+Card
+Net Banking
+```
+
+Each payment method has different processing logic.
+
+Create separate strategies:
+
+```javascript
+function pay_with_upi(amount) {
+    return `Paid ₹${amount} using UPI`;
+}
+
+function pay_with_card(amount) {
+    return `Paid ₹${amount} using Card`;
+}
+
+function pay_with_net_banking(amount) {
+    return `Paid ₹${amount} using Net Banking`;
+}
+```
+
+Select a strategy:
+
+```javascript
+function process_payment(strategy, amount) {
+    return strategy(amount);
+}
+```
+
+Now:
+
+```javascript
+console.log(
+    process_payment(pay_with_upi, 1000)
+);
+
+console.log(
+    process_payment(pay_with_card, 2000)
+);
+```
+
+Output:
+
+```text
+Paid ₹1000 using UPI
+Paid ₹2000 using Card
+```
+
+The payment processor doesn't need to know the internal implementation of each payment method.
+
+---
+
+## Strategy using Objects
+
+Another approach:
+
+```javascript
+const payment_strategies = {
+    upi: pay_with_upi,
+    card: pay_with_card,
+    net_banking: pay_with_net_banking
+};
+```
+
+Then:
+
+```javascript
+const payment_method = "upi";
+
+const result = payment_strategies[payment_method](1500);
+
+console.log(result);
+```
+
+This is useful when the strategy is selected dynamically.
+
+---
+
+# Strategy vs Factory
+
+These patterns can look similar, but their purposes are different.
+
+| Pattern  | Main Purpose                 |
+| -------- | ---------------------------- |
+| Factory  | Creates an object            |
+| Strategy | Selects a behavior/algorithm |
+
+Example:
+
+```text
+Factory
+   ↓
+Which object should I create?
+
+Strategy
+   ↓
+Which behavior should I use?
+```
+
+For example:
+
+```javascript
+const payment_processor = create_payment_processor("upi");
+```
+
+Factory decides what object to create.
+
+Then:
+
+```javascript
+payment_processor.pay(1000);
+```
+
+The selected object determines how the payment works.
+
+---
+
+# Singleton vs Module
+
+Both can provide shared state, but they are conceptually different.
+
+| Singleton                                   | Module                                 |
+| ------------------------------------------- | -------------------------------------- |
+| Focuses on one instance                     | Focuses on code organization           |
+| Usually implemented with class/object logic | Built naturally into ES modules        |
+| Controls object creation                    | Controls exports and visibility        |
+| Common for shared services                  | Common for organizing application code |
+
+---
+
+# Observer vs Strategy
+
+| Observer                            | Strategy                           |
+| ----------------------------------- | ---------------------------------- |
+| Handles notifications/events        | Handles interchangeable behavior   |
+| One event can notify many observers | Usually one strategy is selected   |
+| Focuses on communication            | Focuses on algorithm selection     |
+| Useful for event-driven systems     | Useful for changing business logic |
+
+---
+
+# How These Patterns Work Together
+
+Large applications often use several patterns at the same time.
+
+For example, an education platform could have:
+
+```text
+Application
+│
+├── Singleton
+│     └── Application configuration
+│
+├── Factory
+│     └── Create Student / Teacher / Admin
+│
+├── Observer
+│     └── Notify users about events
+│
+├── Module
+│     └── Organize services
+│
+├── MVC
+│     └── Separate Model / View / Controller
+│
+└── Strategy
+      └── Select payment / notification behavior
+```
+
+They solve different problems.
+
+---
+
+# Practical Example
+
+Consider a banking application.
+
+A transaction is created:
+
+```javascript
+const transaction = {
+    transaction_id: 1001,
+    amount: 5000,
+    payment_method: "upi"
+};
+```
+
+A possible architecture could be:
+
+```text
+Controller
+     |
+     ↓
+Transaction Service
+     |
+     ├── Factory
+     │      ↓
+     │   Payment Processor
+     │
+     ├── Strategy
+     │      ↓
+     │   UPI/Card/Net Banking
+     │
+     └── Observer
+            ↓
+       ┌────┼─────────┐
+       ↓    ↓         ↓
+     Email Push   Transaction History
+```
+
+A Singleton could provide shared application configuration:
+
+```text
+Application Configuration
+          ↓
+      Singleton
+          ↓
+ ┌────────┼────────┐
+ ↓        ↓        ↓
+Auth   Payment   Notification
+```
+
+Modules keep these pieces separated into files.
+
+MVC can organize the overall application.
+
+---
+
+# Choosing a Design Pattern
+
+The important thing is **not to use patterns just because they exist**.
+
+First identify the problem.
+
+If the problem is:
+
+```text
+"I need exactly one shared instance."
+```
+
+Consider:
+
+```text
+Singleton
+```
+
+If the problem is:
+
+```text
+"I need to create different types of objects."
+```
+
+Consider:
+
+```text
+Factory
+```
+
+If the problem is:
+
+```text
+"When something happens, multiple components need to know."
+```
+
+Consider:
+
+```text
+Observer
+```
+
+If the problem is:
+
+```text
+"I need to organize code and hide internal implementation."
+```
+
+Consider:
+
+```text
+Module
+```
+
+If the problem is:
+
+```text
+"My application has separate data, UI, and request/control logic."
+```
+
+Consider:
+
+```text
+MVC
+```
+
+If the problem is:
+
+```text
+"I have multiple algorithms/behaviors and need to choose one."
+```
+
+Consider:
+
+```text
+Strategy
+```
+
+The key idea is that **design patterns are tools for organizing software**, not rules that every application must follow.
+
+# JavaScript Code Organization
+
+## Introduction
+
+Code organization means arranging application code in a way that makes it:
+
+* easy to understand
+* easy to modify
+* easy to test
+* easy to debug
+* easy for multiple developers to work on
+
+A small application may work with:
+
+```text
+app.js
+```
+
+But a larger application can contain hundreds of files.
+
+Without proper organization:
+
+```text
+app.js
+ ├── API calls
+ ├── database logic
+ ├── validation
+ ├── UI rendering
+ ├── authentication
+ ├── business logic
+ └── event handling
+```
+
+This quickly becomes difficult to maintain.
+
+Good architecture separates these responsibilities.
+
+---
+
+# Separation of Concerns
+
+One of the most important ideas in code organization is **Separation of Concerns**.
+
+Each part of the application should have a clear responsibility.
+
+For example:
+
+```text
+User Interface
+      ↓
+Controller
+      ↓
+Business Logic
+      ↓
+Database
+```
+
+Instead of putting everything into one function:
+
+```javascript
+function create_user() {
+    // validate user
+    // access database
+    // hash password
+    // send email
+    // generate response
+    // update UI
+}
+```
+
+Separate the responsibilities:
+
+```text
+Controller
+   ↓
+Validation
+   ↓
+Service
+   ↓
+Repository
+   ↓
+Database
+```
+
+This makes each part easier to understand and test.
+
+---
+
+# MVC
+
+MVC stands for:
+
+```text
+Model
+View
+Controller
+```
+
+It separates an application into three major responsibilities.
+
+```text
+             User
+               |
+               ↓
+          Controller
+          /         \
+         ↓           ↓
+      Model        View
+         |
+         ↓
+      Database
+```
+
+---
+
+## Model
+
+The Model manages:
+
+* application data
+* data-related operations
+* business rules related to data
+
+Example:
+
+```javascript
+const users = [
+    {
+        user_id: 1,
+        user_name: "Arun",
+        role: "student"
+    },
+    {
+        user_id: 2,
+        user_name: "Priya",
+        role: "teacher"
+    }
+];
+
+function get_users() {
+    return users;
+}
+
+export {
+    get_users
+};
+```
+
+The model doesn't need to know how the data is displayed.
+
+---
+
+## View
+
+The View handles presentation.
+
+```javascript
+function render_users(users) {
+    const user_list = document.querySelector("#user_list");
+
+    user_list.innerHTML = "";
+
+    users.forEach((user) => {
+        const list_item = document.createElement("li");
+
+        list_item.textContent =
+            `${user.user_name} - ${user.role}`;
+
+        user_list.appendChild(list_item);
+    });
+}
+```
+
+The View doesn't need to know where the users came from.
+
+---
+
+## Controller
+
+The Controller connects the Model and View.
+
+```javascript
+import { get_users } from "./user_model.js";
+
+function load_users() {
+    const users = get_users();
+
+    render_users(users);
+}
+```
+
+The controller coordinates the flow.
+
+---
+
+## MVC Request Flow
+
+For a web application:
+
+```text
+User
+ ↓
+Request
+ ↓
+Controller
+ ↓
+Model
+ ↓
+Database
+ ↓
+Model
+ ↓
+Controller
+ ↓
+View / JSON Response
+```
+
+For example:
+
+```text
+GET /users
+     ↓
+user_controller.js
+     ↓
+user_model.js
+     ↓
+Database
+     ↓
+Users
+     ↓
+JSON response
+```
+
+---
+
+# MVC in Express
+
+A Node.js application could be organized like this:
+
+```text
+backend/
+│
+├── controllers/
+│   └── user_controller.js
+│
+├── models/
+│   └── user_model.js
+│
+├── routes/
+│   └── user_routes.js
+│
+├── services/
+│   └── user_service.js
+│
+├── middleware/
+│   └── auth_middleware.js
+│
+├── config/
+│   └── database.js
+│
+└── app.js
+```
+
+The request might flow like:
+
+```text
+Route
+ ↓
+Controller
+ ↓
+Service
+ ↓
+Model
+ ↓
+Database
+```
+
+This is a common extension of MVC.
+
+---
+
+# MVVM
+
+MVVM stands for:
+
+```text
+Model
+View
+ViewModel
+```
+
+It is particularly useful for applications with dynamic user interfaces.
+
+The major difference is the **ViewModel**.
+
+```text
+             View
+              ↕
+         ViewModel
+              ↕
+             Model
+```
+
+The ViewModel acts as an intermediary between the UI and application data.
+
+---
+
+# Model in MVVM
+
+The Model represents the application's data.
+
+```javascript
+const user = {
+    user_id: 1,
+    user_name: "Arun",
+    email: "arun@example.com"
+};
+```
+
+---
+
+# View in MVVM
+
+The View is the UI.
+
+For example:
+
+```html
+<div>
+    <h2 id="user_name"></h2>
+    <p id="user_email"></p>
+</div>
+```
+
+---
+
+# ViewModel
+
+The ViewModel prepares data for the View.
+
+```javascript
+const user_view_model = {
+    user_name: "",
+    user_email: "",
+
+    load_user(user) {
+        this.user_name = user.user_name;
+        this.user_email = user.email;
+    }
+};
+```
+
+The View can use the ViewModel's data.
+
+```javascript
+function render_user() {
+    document.querySelector("#user_name").textContent =
+        user_view_model.user_name;
+
+    document.querySelector("#user_email").textContent =
+        user_view_model.user_email;
+}
+```
+
+---
+
+# MVC vs MVVM
+
+| MVC                                   | MVVM                                           |
+| ------------------------------------- | ---------------------------------------------- |
+| Model + View + Controller             | Model + View + ViewModel                       |
+| Controller handles application flow   | ViewModel manages UI state                     |
+| Common in backend applications        | Common in UI-heavy applications                |
+| Controller receives requests/events   | ViewModel exposes UI-ready data                |
+| Express applications commonly use MVC | Vue-style architectures resemble MVVM concepts |
+
+The distinction is not always strict. Modern frameworks often combine ideas from several architectural patterns.
+
+---
+
+# Folder Structure
+
+Folder structure determines how application files are grouped.
+
+There is no single folder structure that works for every project.
+
+The structure should reflect the application's architecture.
+
+---
+
+# Simple JavaScript Project
+
+For a small application:
+
+```text
+project/
+│
+├── index.html
+├── style.css
+└── app.js
+```
+
+This is perfectly reasonable when the application is small.
+
+You don't need 20 folders for a three-file project.
+
+---
+
+# Medium Frontend Application
+
+As the application grows:
+
+```text
+project/
+│
+├── index.html
+│
+├── css/
+│   ├── reset.css
+│   └── style.css
+│
+├── js/
+│   ├── app.js
+│   ├── api.js
+│   ├── validation.js
+│   └── utils.js
+│
+└── assets/
+    ├── images/
+    └── icons/
+```
+
+Each folder has a clear purpose.
+
+---
+
+# Feature-Based Structure
+
+For larger frontend applications, organizing by feature can be useful.
+
+```text
+src/
+│
+├── features/
+│   │
+│   ├── authentication/
+│   │   ├── login.js
+│   │   ├── register.js
+│   │   └── auth_api.js
+│   │
+│   ├── users/
+│   │   ├── user_list.js
+│   │   ├── user_profile.js
+│   │   └── user_api.js
+│   │
+│   └── payments/
+│       ├── payment.js
+│       └── payment_api.js
+│
+├── components/
+│   ├── button.js
+│   ├── modal.js
+│   └── navbar.js
+│
+├── utils/
+│   ├── date.js
+│   └── validation.js
+│
+└── app.js
+```
+
+This keeps related files together.
+
+---
+
+# Layer-Based Structure
+
+Another approach is organizing by technical responsibility.
+
+```text
+src/
+│
+├── controllers/
+├── services/
+├── models/
+├── repositories/
+├── routes/
+├── middleware/
+├── utils/
+└── config/
+```
+
+For a backend:
+
+```text
+Request
+   ↓
+Routes
+   ↓
+Controller
+   ↓
+Service
+   ↓
+Repository
+   ↓
+Database
+```
+
+Each layer has a specific responsibility.
+
+---
+
+# Routes
+
+Routes define application endpoints.
+
+```javascript
+router.get("/users", get_users);
+router.post("/users", create_user);
+```
+
+Routes should primarily describe **which endpoint maps to which controller**.
+
+Avoid putting large business logic directly inside routes.
+
+Instead of:
+
+```javascript
+router.post("/users", async (request, response) => {
+    // 100 lines of logic
+});
+```
+
+prefer:
+
+```javascript
+router.post("/users", create_user);
+```
+
+---
+
+# Controllers
+
+Controllers handle incoming requests and outgoing responses.
+
+```javascript
+async function create_user(request, response) {
+    const user_data = request.body;
+
+    const user = await user_service.create_user(user_data);
+
+    response.status(201).json({
+        success: true,
+        user
+    });
+}
+```
+
+The controller coordinates the request.
+
+---
+
+# Services
+
+Services contain business logic.
+
+```javascript
+async function create_user(user_data) {
+    if (!user_data.email) {
+        throw new Error("Email is required");
+    }
+
+    const user = await user_repository.create(user_data);
+
+    return user;
+}
+```
+
+The service answers:
+
+> What should the application do?
+
+---
+
+# Repository
+
+A repository handles data access.
+
+```javascript
+async function create(user_data) {
+    return database.query(
+        "INSERT INTO users (...) VALUES (...)",
+        user_data
+    );
+}
+```
+
+The repository answers:
+
+> How do I access the data?
+
+This creates a useful separation:
+
+```text
+Controller
+"What request did I receive?"
+
+Service
+"What should happen?"
+
+Repository
+"How do I access the data?"
+```
+
+---
+
+# Configuration
+
+Configuration should be separated from application logic.
+
+Example:
+
+```text
+config/
+└── database.js
+```
+
+```javascript
+const database_config = {
+    host: process.env.DB_HOST,
+    port: process.env.DB_PORT,
+    database: process.env.DB_NAME
+};
+
+export default database_config;
+```
+
+Environment-specific values should generally come from environment variables rather than being hardcoded.
+
+---
+
+# Utilities
+
+Utilities contain reusable functions that don't belong to a specific feature.
+
+Example:
+
+```text
+utils/
+├── date.js
+├── validation.js
+└── response.js
+```
+
+Example:
+
+```javascript
+function is_valid_email(email) {
+    return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+}
+
+export {
+    is_valid_email
+};
+```
+
+Avoid turning `utils` into a dumping ground for unrelated application logic.
+
+---
+
+# Clean Code
+
+Clean code means code that is easy for developers to understand and safely modify.
+
+It is not about making code look complicated or following one specific formatting style.
+
+---
+
+# Meaningful Names
+
+Bad:
+
+```javascript
+const x = 5000;
+const y = 1000;
+```
+
+Better:
+
+```javascript
+const account_balance = 5000;
+const withdrawal_amount = 1000;
+```
+
+The name should communicate the purpose.
+
+---
+
+# Functions Should Have One Main Responsibility
+
+Avoid:
+
+```javascript
+function process_user() {
+    // validate user
+    // save user
+    // send email
+    // generate report
+    // update UI
+}
+```
+
+Separate responsibilities:
+
+```javascript
+function validate_user(user_data) {
+    // validation
+}
+
+function save_user(user_data) {
+    // database operation
+}
+
+function send_welcome_email(user_data) {
+    // email operation
+}
+```
+
+Then coordinate them:
+
+```javascript
+async function process_user(user_data) {
+    validate_user(user_data);
+
+    const user = await save_user(user_data);
+
+    await send_welcome_email(user);
+
+    return user;
+}
+```
+
+---
+
+# Avoid Repetition
+
+This is called **DRY**:
+
+```text
+Don't Repeat Yourself
+```
+
+Bad:
+
+```javascript
+const student_name = user.first_name + " " + user.last_name;
+
+const teacher_name = teacher.first_name + " " + teacher.last_name;
+```
+
+If the same operation is repeated frequently, extract reusable logic:
+
+```javascript
+function get_full_name(user) {
+    return `${user.first_name} ${user.last_name}`;
+}
+```
+
+Then:
+
+```javascript
+const student_name = get_full_name(student);
+const teacher_name = get_full_name(teacher);
+```
+
+DRY does not mean forcing every similar-looking line into an abstraction. An abstraction should make the code clearer, not harder to understand.
+
+---
+
+# Avoid Deep Nesting
+
+Hard to read:
+
+```javascript
+if (user) {
+    if (user.is_active) {
+        if (user.has_permission) {
+            if (user.account_verified) {
+                process_user(user);
+            }
+        }
+    }
+}
+```
+
+Use early returns:
+
+```javascript
+function process_user(user) {
+    if (!user) {
+        return;
+    }
+
+    if (!user.is_active) {
+        return;
+    }
+
+    if (!user.has_permission) {
+        return;
+    }
+
+    if (!user.account_verified) {
+        return;
+    }
+
+    process_user_account(user);
+}
+```
+
+This keeps the main logic easier to see.
+
+---
+
+# Avoid Giant Functions
+
+Instead of:
+
+```javascript
+function checkout() {
+    // 300 lines
+}
+```
+
+break the process into meaningful operations:
+
+```text
+checkout()
+   |
+   ├── validate_cart()
+   ├── calculate_total()
+   ├── process_payment()
+   ├── create_order()
+   └── send_confirmation()
+```
+
+Then:
+
+```javascript
+async function checkout(cart) {
+    validate_cart(cart);
+
+    const total = calculate_total(cart);
+
+    await process_payment(total);
+
+    const order = await create_order(cart);
+
+    await send_confirmation(order);
+
+    return order;
+}
+```
+
+---
+
+# Keep Business Logic Out of the UI
+
+Avoid:
+
+```javascript
+button.addEventListener("click", () => {
+    const amount = Number(input.value);
+
+    if (amount > 50000) {
+        // complex banking rules
+    }
+
+    // database logic
+    // API logic
+    // UI logic
+});
+```
+
+The event handler should mainly coordinate the UI action.
+
+Better:
+
+```javascript
+button.addEventListener("click", async () => {
+    const amount = Number(input.value);
+
+    const result = await process_transaction(amount);
+
+    display_result(result);
+});
+```
+
+Business logic belongs elsewhere.
+
+---
+
+# Keep Files Focused
+
+Bad:
+
+```text
+utils.js
+```
+
+containing:
+
+```text
+database connection
+email service
+date formatting
+authentication
+payment logic
+HTML rendering
+```
+
+Better:
+
+```text
+utils/
+├── date.js
+└── validation.js
+
+services/
+├── payment_service.js
+└── email_service.js
+
+config/
+└── database.js
+```
+
+The file name should give you a reasonable idea of what is inside it.
+
+---
+
+# Dependency Direction
+
+A well-organized application usually has a clear dependency direction.
+
+For example:
+
+```text
+Controller
+    ↓
+Service
+    ↓
+Repository
+    ↓
+Database
+```
+
+The controller should not normally bypass everything and directly manipulate database details.
+
+Avoid:
+
+```text
+Controller
+    ↓
+Database
+    ↓
+UI
+```
+
+when the application has enough complexity to benefit from intermediate layers.
+
+---
+
+# A Practical Node.js Structure
+
+A larger Express application could look like:
+
+```text
+backend/
+│
+├── src/
+│   │
+│   ├── config/
+│   │   ├── database.js
+│   │   └── environment.js
+│   │
+│   ├── routes/
+│   │   ├── user_routes.js
+│   │   └── auth_routes.js
+│   │
+│   ├── controllers/
+│   │   ├── user_controller.js
+│   │   └── auth_controller.js
+│   │
+│   ├── services/
+│   │   ├── user_service.js
+│   │   └── auth_service.js
+│   │
+│   ├── repositories/
+│   │   ├── user_repository.js
+│   │   └── auth_repository.js
+│   │
+│   ├── middleware/
+│   │   ├── auth_middleware.js
+│   │   └── error_middleware.js
+│   │
+│   ├── models/
+│   │   └── user_model.js
+│   │
+│   ├── utils/
+│   │   ├── validation.js
+│   │   └── response.js
+│   │
+│   ├── app.js
+│   └── server.js
+│
+├── tests/
+│
+├── .env
+├── package.json
+└── package-lock.json
+```
+
+The request flow becomes:
+
+```text
+HTTP Request
+     ↓
+Route
+     ↓
+Controller
+     ↓
+Service
+     ↓
+Repository
+     ↓
+Database
+     ↓
+Repository
+     ↓
+Service
+     ↓
+Controller
+     ↓
+HTTP Response
+```
+
+This is a combination of architectural ideas rather than a requirement to follow one exact pattern.
+
+---
+
+# MVC vs MVVM vs Layered Architecture
+
+These concepts operate at somewhat different levels.
+
+| Concept                 | Main Purpose                                            |
+| ----------------------- | ------------------------------------------------------- |
+| MVC                     | Separates Model, View, Controller                       |
+| MVVM                    | Separates Model, View, ViewModel                        |
+| Layered architecture    | Separates application responsibilities into layers      |
+| Feature-based structure | Groups code by business feature                         |
+| Clean code              | Makes individual code easier to understand and maintain |
+
+They can also be combined.
+
+For example:
+
+```text
+Feature
+│
+├── Controller
+├── Service
+├── Repository
+└── Model
+```
+
+while the frontend might use:
+
+```text
+Feature
+│
+├── View
+├── ViewModel
+└── API
+```
+
+---
+
+# Code Organization in a Real Application
+
+Imagine an online learning platform.
+
+A user opens:
+
+```text
+/users/123
+```
+
+The backend might work like this:
+
+```text
+Route
+  ↓
+user_controller.js
+  ↓
+user_service.js
+  ↓
+user_repository.js
+  ↓
+Database
+```
+
+The frontend receives the response:
+
+```json
+{
+    "user_id": 123,
+    "user_name": "Arun",
+    "courses": 5
+}
+```
+
+The frontend might organize the data like:
+
+```text
+View
+  ↕
+ViewModel
+  ↕
+API module
+  ↓
+Backend
+```
+
+This keeps the frontend and backend responsibilities separate.
+
+---
+
+# Good Folder Structure Principles
+
+A good folder structure should answer three questions quickly:
+
+```text
+Where is the API logic?
+
+Where is the business logic?
+
+Where is the UI logic?
+```
+
+It should also make related code easy to find.
+
+A useful principle is:
+
+```text
+Small project
+    ↓
+Keep structure simple
+
+Growing project
+    ↓
+Introduce separation
+
+Large project
+    ↓
+Organize by features/layers
+```
+
+Don't create architecture just for the sake of architecture.
+
+The structure should solve an actual complexity problem.
+
+# JavaScript Data Structures and Algorithms
+
+## Introduction
+
+A **data structure** is a way of organizing and storing data so that it can be used efficiently.
+
+An **algorithm** is a sequence of steps used to solve a problem.
+
+For example, suppose an application has 1 million users.
+
+The question is not only:
+
+```text
+How do I store the users?
+```
+
+It is also:
+
+```text
+How quickly can I find a user?
+How quickly can I add a user?
+How quickly can I remove a user?
+```
+
+Data structures and algorithms help answer these questions.
+
+---
+
+# Data Structures
+
+The main structures covered here are:
+
+```text
+Stack
+Queue
+Linked List
+Set
+Map
+Tree
+Graph
+```
+
+JavaScript already provides some powerful built-in structures such as:
+
+```text
+Array
+Set
+Map
+```
+
+Other structures such as linked lists, trees, and graphs are usually implemented using objects, classes, arrays, or combinations of them.
+
+---
+
+# Big O Notation
+
+Before studying data structures, understand **Big O notation**.
+
+Big O describes how the amount of work grows as the input size increases.
+
+Common complexities:
+
+| Complexity | Meaning                  |
+| ---------- | ------------------------ |
+| O(1)       | Constant                 |
+| O(log n)   | Logarithmic              |
+| O(n)       | Linear                   |
+| O(n log n) | Common efficient sorting |
+| O(n²)      | Quadratic                |
+| O(2ⁿ)      | Exponential              |
+
+For example:
+
+```javascript
+function get_first_user(users) {
+    return users[0];
+}
+```
+
+The function directly accesses the first element.
+
+Complexity:
+
+```text
+O(1)
+```
+
+Now:
+
+```javascript
+function find_user(users, user_id) {
+    for (const user of users) {
+        if (user.user_id === user_id) {
+            return user;
+        }
+    }
+
+    return null;
+}
+```
+
+In the worst case, every user may need to be checked.
+
+Complexity:
+
+```text
+O(n)
+```
+
+---
+
+# Stack
+
+A **Stack** follows:
+
+```text
+LIFO
+Last In, First Out
+```
+
+The last item inserted is the first item removed.
+
+Think about a stack of books:
+
+```text
+      ┌────────┐
+      │ Book 3 │ ← removed first
+      ├────────┤
+      │ Book 2 │
+      ├────────┤
+      │ Book 1 │
+      └────────┘
+```
+
+---
+
+# Stack in JavaScript
+
+An array can behave as a stack.
+
+```javascript
+const browser_history = [];
+
+browser_history.push("/home");
+browser_history.push("/products");
+browser_history.push("/checkout");
+
+console.log(browser_history.pop());
+```
+
+Output:
+
+```text
+/checkout
+```
+
+The last page added was removed first.
+
+---
+
+## Stack Operations
+
+```javascript
+const stack = [];
+
+stack.push("A");
+stack.push("B");
+stack.push("C");
+
+console.log(stack.pop());
+console.log(stack.pop());
+```
+
+Output:
+
+```text
+C
+B
+```
+
+Common operations:
+
+```text
+push() → add
+pop()  → remove last
+peek   → inspect last
+```
+
+JavaScript does not have a dedicated `peek()` method, but:
+
+```javascript
+const top_item = stack[stack.length - 1];
+```
+
+---
+
+## Stack Use Cases
+
+Stacks are useful for:
+
+```text
+Browser history
+Undo/redo
+Function call stack
+Expression evaluation
+Backtracking
+DFS
+```
+
+JavaScript itself uses a **call stack** to manage function execution.
+
+---
+
+# Queue
+
+A **Queue** follows:
+
+```text
+FIFO
+First In, First Out
+```
+
+Think about a queue at a bank:
+
+```text
+First → Customer 1
+         Customer 2
+         Customer 3
+Last  → Customer 4
+```
+
+Customer 1 is served first.
+
+---
+
+# Queue in JavaScript
+
+A simple implementation:
+
+```javascript
+const print_queue = [];
+
+print_queue.push("document_1");
+print_queue.push("document_2");
+print_queue.push("document_3");
+
+const first_document = print_queue.shift();
+
+console.log(first_document);
+```
+
+Output:
+
+```text
+document_1
+```
+
+---
+
+## Queue Operations
+
+```text
+enqueue → add to end
+dequeue → remove from beginning
+front   → inspect first item
+```
+
+With an array:
+
+```javascript
+queue.push(item);
+queue.shift();
+```
+
+However, repeatedly using `shift()` can be inefficient for very large queues because remaining elements may need to be re-indexed.
+
+A custom queue can use an index:
+
+```javascript
+class Queue {
+    constructor() {
+        this.items = [];
+        this.front_index = 0;
+    }
+
+    enqueue(item) {
+        this.items.push(item);
+    }
+
+    dequeue() {
+        if (this.front_index >= this.items.length) {
+            return undefined;
+        }
+
+        const item = this.items[this.front_index];
+
+        this.front_index++;
+
+        return item;
+    }
+}
+```
+
+---
+
+## Queue Use Cases
+
+```text
+Print jobs
+Task processing
+Message queues
+Request processing
+Breadth-first search
+Background jobs
+```
+
+---
+
+# Linked List
+
+A **Linked List** consists of nodes.
+
+Each node contains:
+
+```text
+Data
+Next reference
+```
+
+Example:
+
+```text
+┌───────┐      ┌───────┐      ┌───────┐
+│   A   │ ───→ │   B   │ ───→ │   C   │
+└───────┘      └───────┘      └───────┘
+```
+
+Unlike an array, the elements do not need to be stored next to each other in memory.
+
+---
+
+# Linked List Node
+
+```javascript
+class Node {
+    constructor(value) {
+        this.value = value;
+        this.next = null;
+    }
+}
+```
+
+Create nodes:
+
+```javascript
+const node_1 = new Node("A");
+const node_2 = new Node("B");
+const node_3 = new Node("C");
+
+node_1.next = node_2;
+node_2.next = node_3;
+```
+
+The structure becomes:
+
+```text
+A → B → C → null
+```
+
+---
+
+# Linked List Class
+
+```javascript
+class Linked_list {
+    constructor() {
+        this.head = null;
+    }
+
+    append(value) {
+        const new_node = new Node(value);
+
+        if (!this.head) {
+            this.head = new_node;
+            return;
+        }
+
+        let current_node = this.head;
+
+        while (current_node.next) {
+            current_node = current_node.next;
+        }
+
+        current_node.next = new_node;
+    }
+}
+```
+
+Use it:
+
+```javascript
+const user_list = new Linked_list();
+
+user_list.append("Arun");
+user_list.append("Priya");
+user_list.append("Dinesh");
+```
+
+Structure:
+
+```text
+Arun → Priya → Dinesh → null
+```
+
+---
+
+# Linked List vs Array
+
+| Operation             |                 Array |      Linked List |
+| --------------------- | --------------------: | ---------------: |
+| Access by index       |                  O(1) |             O(n) |
+| Search                |                  O(n) |             O(n) |
+| Insert at beginning   |                  O(n) |             O(1) |
+| Remove from beginning |                  O(n) |             O(1) |
+| Memory                | Usually less overhead | Extra references |
+
+JavaScript applications commonly use arrays rather than manually implemented linked lists, but understanding linked lists is important for algorithms and interviews.
+
+---
+
+# Set
+
+A JavaScript `Set` stores **unique values**.
+
+```javascript
+const user_ids = new Set();
+
+user_ids.add(101);
+user_ids.add(102);
+user_ids.add(101);
+
+console.log(user_ids);
+```
+
+The duplicate `101` is ignored.
+
+```text
+101
+102
+```
+
+---
+
+## Set Operations
+
+```javascript
+const user_ids = new Set([101, 102, 103]);
+
+console.log(user_ids.has(102));
+
+user_ids.delete(102);
+
+console.log(user_ids.has(102));
+```
+
+Output:
+
+```text
+true
+false
+```
+
+---
+
+## Set Use Case
+
+Removing duplicates:
+
+```javascript
+const user_roles = [
+    "student",
+    "teacher",
+    "student",
+    "admin",
+    "teacher"
+];
+
+const unique_roles = [...new Set(user_roles)];
+
+console.log(unique_roles);
+```
+
+Output:
+
+```text
+["student", "teacher", "admin"]
+```
+
+---
+
+# Map
+
+A JavaScript `Map` stores:
+
+```text
+key → value
+```
+
+Example:
+
+```javascript
+const users = new Map();
+
+users.set(101, {
+    user_name: "Arun",
+    role: "student"
+});
+
+users.set(102, {
+    user_name: "Priya",
+    role: "teacher"
+});
+```
+
+Retrieve:
+
+```javascript
+console.log(users.get(101));
+```
+
+---
+
+## Map Operations
+
+```javascript
+users.set(103, {
+    user_name: "Dinesh",
+    role: "admin"
+});
+
+console.log(users.has(103));
+
+users.delete(103);
+
+console.log(users.size);
+```
+
+Common operations:
+
+```text
+set()
+get()
+has()
+delete()
+clear()
+```
+
+---
+
+# Map vs Object
+
+Both can store key-value data.
+
+Object:
+
+```javascript
+const user = {
+    user_id: 101,
+    user_name: "Arun"
+};
+```
+
+Map:
+
+```javascript
+const user = new Map();
+
+user.set("user_id", 101);
+user.set("user_name", "Arun");
+```
+
+Map is particularly useful when:
+
+* keys are dynamic
+* keys are not necessarily strings
+* frequent additions/removals are required
+* you need built-in map operations
+
+---
+
+# Tree
+
+A **Tree** is a hierarchical data structure.
+
+Example:
+
+```text
+             Root
+            /    \
+          A        B
+        /   \      \
+       C     D      E
+```
+
+Trees contain:
+
+```text
+Root
+Node
+Child
+Parent
+Leaf
+```
+
+A node without children is called a **leaf**.
+
+---
+
+# Binary Tree
+
+A binary tree allows each node to have at most two children.
+
+```text
+          10
+         /  \
+        5    20
+       / \   / \
+      3   7 15 25
+```
+
+---
+
+# Binary Search Tree
+
+A **Binary Search Tree**, or BST, follows:
+
+```text
+Left values < Node value < Right values
+```
+
+Example:
+
+```text
+          10
+         /  \
+        5    20
+       / \   / \
+      3   7 15 25
+```
+
+Searching can be efficient when the tree is balanced.
+
+---
+
+# Tree in JavaScript
+
+```javascript
+class Tree_node {
+    constructor(value) {
+        this.value = value;
+        this.left = null;
+        this.right = null;
+    }
+}
+```
+
+Insert:
+
+```javascript
+function insert_node(root, value) {
+    if (!root) {
+        return new Tree_node(value);
+    }
+
+    if (value < root.value) {
+        root.left = insert_node(root.left, value);
+    } else {
+        root.right = insert_node(root.right, value);
+    }
+
+    return root;
+}
+```
+
+Create a tree:
+
+```javascript
+let root = null;
+
+root = insert_node(root, 10);
+root = insert_node(root, 5);
+root = insert_node(root, 20);
+root = insert_node(root, 3);
+root = insert_node(root, 7);
+```
+
+---
+
+# Tree Traversal
+
+Traversal means visiting nodes.
+
+The major traversal methods are:
+
+```text
+Inorder
+Preorder
+Postorder
+Level-order
+```
+
+For:
+
+```text
+       10
+      /  \
+     5    20
+```
+
+Inorder:
+
+```text
+5 → 10 → 20
+```
+
+Preorder:
+
+```text
+10 → 5 → 20
+```
+
+Postorder:
+
+```text
+5 → 20 → 10
+```
+
+In a Binary Search Tree, inorder traversal produces values in sorted order.
+
+---
+
+# Graph
+
+A **Graph** represents relationships between objects.
+
+Example:
+
+```text
+A ───── B
+│       │
+│       │
+C ───── D
+```
+
+The objects are **vertices/nodes**.
+
+The connections are **edges**.
+
+Graphs can be:
+
+```text
+Directed
+Undirected
+Weighted
+Unweighted
+```
+
+---
+
+# Real-world Graph Example
+
+A social network can be represented as:
+
+```text
+Arun ─── Priya
+ │        │
+ │        │
+Dinesh ── Kumar
+```
+
+Each person is a node.
+
+Each relationship is an edge.
+
+---
+
+# Graph Using Adjacency List
+
+JavaScript can represent a graph using `Map`.
+
+```javascript
+const graph = new Map();
+
+graph.set("Arun", ["Priya", "Dinesh"]);
+graph.set("Priya", ["Arun", "Kumar"]);
+graph.set("Dinesh", ["Arun"]);
+graph.set("Kumar", ["Priya"]);
+```
+
+This means:
+
+```text
+Arun
+ ├── Priya
+ └── Dinesh
+```
+
+---
+
+# Graph Traversal
+
+Two important graph algorithms are:
+
+```text
+BFS
+Breadth-First Search
+
+DFS
+Depth-First Search
+```
+
+BFS uses a queue.
+
+DFS commonly uses a stack or recursion.
+
+---
+
+# BFS
+
+```javascript
+function breadth_first_search(graph, start_node) {
+    const queue = [start_node];
+    const visited = new Set([start_node]);
+
+    while (queue.length > 0) {
+        const current_node = queue.shift();
+
+        console.log(current_node);
+
+        for (const neighbor of graph.get(current_node) || []) {
+            if (!visited.has(neighbor)) {
+                visited.add(neighbor);
+                queue.push(neighbor);
+            }
+        }
+    }
+}
+```
+
+BFS explores nearby nodes first.
+
+---
+
+# DFS
+
+```javascript
+function depth_first_search(graph, node, visited = new Set()) {
+    if (visited.has(node)) {
+        return;
+    }
+
+    visited.add(node);
+
+    console.log(node);
+
+    for (const neighbor of graph.get(node) || []) {
+        depth_first_search(graph, neighbor, visited);
+    }
+}
+```
+
+DFS explores deeply before returning.
+
+---
+
+# Algorithms
+
+An algorithm is a sequence of operations used to solve a problem.
+
+Important categories here are:
+
+```text
+Sorting
+Searching
+Recursion
+Dynamic Programming
+```
+
+---
+
+# Searching
+
+Searching means finding a particular value.
+
+Two important approaches are:
+
+```text
+Linear Search
+Binary Search
+```
+
+---
+
+# Linear Search
+
+Linear search checks elements one by one.
+
+```javascript
+function linear_search(numbers, target) {
+    for (let index = 0; index < numbers.length; index++) {
+        if (numbers[index] === target) {
+            return index;
+        }
+    }
+
+    return -1;
+}
+```
+
+Example:
+
+```javascript
+const numbers = [10, 25, 40, 55, 70];
+
+console.log(linear_search(numbers, 40));
+```
+
+Output:
+
+```text
+2
+```
+
+Complexity:
+
+```text
+O(n)
+```
+
+---
+
+# Binary Search
+
+Binary search works on a **sorted array**.
+
+Example:
+
+```text
+[10, 20, 30, 40, 50, 60, 70]
+```
+
+Search for:
+
+```text
+60
+```
+
+Instead of checking every value:
+
+```text
+Check middle
+     ↓
+     40
+
+60 > 40
+
+Search right half
+     ↓
+50 60 70
+
+Check middle
+     ↓
+60
+```
+
+---
+
+## Binary Search Implementation
+
+```javascript
+function binary_search(numbers, target) {
+    let left = 0;
+    let right = numbers.length - 1;
+
+    while (left <= right) {
+        const middle = Math.floor((left + right) / 2);
+
+        if (numbers[middle] === target) {
+            return middle;
+        }
+
+        if (numbers[middle] < target) {
+            left = middle + 1;
+        } else {
+            right = middle - 1;
+        }
+    }
+
+    return -1;
+}
+```
+
+Complexity:
+
+```text
+O(log n)
+```
+
+The important requirement is that the data must be sorted.
+
+---
+
+# Sorting
+
+Sorting means arranging data in an order.
+
+Example:
+
+```text
+Before:
+40 10 30 20
+
+After:
+10 20 30 40
+```
+
+Common sorting algorithms include:
+
+```text
+Bubble Sort
+Selection Sort
+Insertion Sort
+Merge Sort
+Quick Sort
+```
+
+---
+
+# Bubble Sort
+
+Bubble Sort repeatedly compares neighboring elements.
+
+```javascript
+function bubble_sort(numbers) {
+    const result = [...numbers];
+
+    for (let i = 0; i < result.length; i++) {
+        for (let j = 0; j < result.length - i - 1; j++) {
+            if (result[j] > result[j + 1]) {
+                [result[j], result[j + 1]] =
+                    [result[j + 1], result[j]];
+            }
+        }
+    }
+
+    return result;
+}
+```
+
+Example:
+
+```javascript
+console.log(
+    bubble_sort([40, 10, 30, 20])
+);
+```
+
+Output:
+
+```text
+[10, 20, 30, 40]
+```
+
+Average/worst-case complexity:
+
+```text
+O(n²)
+```
+
+Bubble Sort is useful for learning algorithms, but it is generally not the first choice for production sorting.
+
+---
+
+# JavaScript Array Sort
+
+In real JavaScript applications, you will often use:
+
+```javascript
+const numbers = [40, 10, 30, 20];
+
+numbers.sort((a, b) => a - b);
+
+console.log(numbers);
+```
+
+Output:
+
+```text
+[10, 20, 30, 40]
+```
+
+JavaScript's built-in `sort()` is generally preferable to manually implementing Bubble Sort for ordinary application work.
+
+---
+
+# Recursion
+
+Recursion happens when a function calls itself.
+
+A recursive function needs:
+
+```text
+Base case
+Recursive case
+```
+
+Without a base case, recursion can continue indefinitely.
+
+---
+
+# Simple Recursion
+
+```javascript
+function countdown(number) {
+    if (number === 0) {
+        return;
+    }
+
+    console.log(number);
+
+    countdown(number - 1);
+}
+
+countdown(5);
+```
+
+Output:
+
+```text
+5
+4
+3
+2
+1
+```
+
+---
+
+# Factorial
+
+Mathematically:
+
+```text
+5! = 5 × 4 × 3 × 2 × 1
+```
+
+Recursive implementation:
+
+```javascript
+function factorial(number) {
+    if (number <= 1) {
+        return 1;
+    }
+
+    return number * factorial(number - 1);
+}
+```
+
+```javascript
+console.log(factorial(5));
+```
+
+Output:
+
+```text
+120
+```
+
+The call stack looks conceptually like:
+
+```text
+factorial(5)
+    ↓
+factorial(4)
+    ↓
+factorial(3)
+    ↓
+factorial(2)
+    ↓
+factorial(1)
+```
+
+Then the calls return in reverse order.
+
+---
+
+# Recursion and Trees
+
+Recursion is particularly useful for trees.
+
+For example:
+
+```javascript
+function traverse_tree(node) {
+    if (!node) {
+        return;
+    }
+
+    console.log(node.value);
+
+    traverse_tree(node.left);
+    traverse_tree(node.right);
+}
+```
+
+The recursive structure naturally follows the tree structure.
+
+---
+
+# Dynamic Programming
+
+Dynamic Programming, commonly called **DP**, is used when a problem contains:
+
+```text
+Overlapping subproblems
++
+Optimal substructure
+```
+
+The key idea is:
+
+> Solve smaller problems once and reuse their results.
+
+---
+
+# Fibonacci Problem
+
+Fibonacci:
+
+```text
+0 1 1 2 3 5 8 13 ...
+```
+
+A simple recursive solution:
+
+```javascript
+function fibonacci(number) {
+    if (number <= 1) {
+        return number;
+    }
+
+    return fibonacci(number - 1) +
+           fibonacci(number - 2);
+}
+```
+
+This creates many repeated calculations.
+
+For example:
+
+```text
+fibonacci(5)
+ ├── fibonacci(4)
+ │    ├── fibonacci(3)
+ │    └── fibonacci(2)
+ │
+ └── fibonacci(3)
+      ├── fibonacci(2)
+      └── fibonacci(1)
+```
+
+`fibonacci(3)` and other values are calculated repeatedly.
+
+---
+
+# Memoization
+
+Memoization stores previously calculated results.
+
+```javascript
+function fibonacci(number, memo = {}) {
+    if (number <= 1) {
+        return number;
+    }
+
+    if (memo[number] !== undefined) {
+        return memo[number];
+    }
+
+    memo[number] =
+        fibonacci(number - 1, memo) +
+        fibonacci(number - 2, memo);
+
+    return memo[number];
+}
+```
+
+Now previously calculated values are reused.
+
+---
+
+# Tabulation
+
+Another DP approach is **tabulation**.
+
+It builds results from the smallest problem upward.
+
+```javascript
+function fibonacci(number) {
+    if (number <= 1) {
+        return number;
+    }
+
+    const table = [0, 1];
+
+    for (let index = 2; index <= number; index++) {
+        table[index] =
+            table[index - 1] +
+            table[index - 2];
+    }
+
+    return table[number];
+}
+```
+
+The table might look like:
+
+```text
+Index:  0  1  2  3  4  5
+Value:  0  1  1  2  3  5
+```
+
+
+
+# Data Structure and Algorithm Relationship
+
+Data structures and algorithms work together.
+
+For example:
+
+```text
+Problem:
+Find nearby users
+       ↓
+Graph
+       ↓
+BFS
+       ↓
+Queue
+```
+
+Another example:
+
+```text
+Problem:
+Undo last action
+       ↓
+Stack
+       ↓
+pop()
+```
+
+Another:
+
+```text
+Problem:
+Quickly find user by ID
+       ↓
+Map
+       ↓
+get(user_id)
+```
+
+Another:
+
+```text
+Problem:
+Search sorted numbers
+       ↓
+Array
+       ↓
+Binary Search
+```
+
+---
+
+# Choosing a Data Structure
+
+| Requirement             | Useful Structure |
+| ----------------------- | ---------------- |
+| Last-in-first-out       | Stack            |
+| First-in-first-out      | Queue            |
+| Sequential linked nodes | Linked List      |
+| Unique values           | Set              |
+| Key-value lookup        | Map              |
+| Hierarchical data       | Tree             |
+| Relationships/networks  | Graph            |
+
+---
+
+# Choosing an Algorithm
+
+| Problem                    | Common Approach        |
+| -------------------------- | ---------------------- |
+| Find item in unsorted data | Linear Search          |
+| Find item in sorted data   | Binary Search          |
+| Arrange data               | Sorting                |
+| Hierarchical traversal     | DFS / BFS              |
+| Explore graph              | BFS / DFS              |
+| Repeated subproblems       | Dynamic Programming    |
+| Tree processing            | Recursion              |
+| Undo operations            | Stack-based processing |
+
+---
+
+
+Actual performance can depend on the implementation and data shape. For example, an unbalanced binary search tree can degrade toward O(n).
+
+---
+
+# Practical JavaScript Example
+
+Imagine an application that manages employees.
+
+You might choose:
+
+```text
+Employee lookup
+      ↓
+Map
+```
+
+```javascript
+const employee_map = new Map();
+
+employee_map.set(101, {
+    employee_name: "Arun",
+    department: "Engineering"
+});
+
+employee_map.set(102, {
+    employee_name: "Priya",
+    department: "Finance"
+});
+```
+
+For unique skills:
+
+```text
+Employee skills
+      ↓
+Set
+```
+
+```javascript
+const skills = new Set([
+    "JavaScript",
+    "Node.js",
+    "SQL"
+]);
+```
+
+For processing tasks:
+
+```text
+Background jobs
+      ↓
+Queue
+```
+
+For undo operations:
+
+```text
+User actions
+      ↓
+Stack
+```
+
+For organization hierarchy:
+
+```text
+CEO
+ ↓
+Manager
+ ↓
+Team
+```
+
+Use a tree.
+
+For relationships between employees:
+
+```text
+Employee ↔ Employee
+```
+
+A graph can represent those relationships.
+
+---
 
