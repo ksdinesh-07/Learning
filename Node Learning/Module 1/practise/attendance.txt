@@ -1,0 +1,23 @@
+Employee Attendance Report
+==========================
+Date: 2024-01-15
+
+ID      Name            Check-In    Check-Out   Status
+--------------------------------------------------------
+001     John Smith      09:00 AM    05:30 PM    Present
+002     Sarah Johnson   09:15 AM    05:45 PM    Present
+003     Michael Brown   08:55 AM    05:20 PM    Present
+004     Emily Davis     09:30 AM    06:00 PM    Late
+005     David Wilson    09:05 AM    05:35 PM    Present
+006     Jessica Moore   --:--       --:--       Absent
+007     Daniel Taylor   09:10 AM    05:40 PM    Present
+008     Ashley Thomas   09:00 AM    05:30 PM    Present
+009     Matthew White   09:45 AM    06:15 PM    Late
+010     Olivia Harris   08:50 AM    05:25 PM    Present
+
+Summary:
+--------
+Total Employees : 10
+Present         : 7
+Late            : 2
+Absent          : 1

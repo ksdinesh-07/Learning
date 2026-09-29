@@ -1,6 +1,6 @@
 import fs from "node:fs";
 import path from "node:path";
-import bcrypt from "bcrypt";
+// import bcrypt from "bcrypt";
 import { fileURLToPath } from "node:url";
 import { app_error } from "../utils/errors.js";
 
@@ -65,14 +65,14 @@ export async function register_user({user_name,email,password})
         throw new app_error("Email already registered",409);
     }
 
-    const password_hash=await bcrypt.hash(password,10);
+    // const password_hash=await bcrypt.hash(password,10);
 
     const next_user_id=get_next_user_id(users);
     const user = {
         user_id: next_user_id,
         user_name,
         email,
-        password_hash,
+        // password_hash,
         online_status: false,
         created_at: new Date().toISOString()
     };
@@ -99,11 +99,11 @@ export async function login_user({email,password}) {
         throw new app_error("Invalid email or password",401);
     }
 
-    const password_matches=await bcrypt.compare(password,user.password_hash)
+    // const password_matches=await bcrypt.compare(password,user.password_hash)
 
-    if (!password_matches) {
-        throw new app_error("Invalid email or password",401);
-    }
+    // if (!password_matches) {
+    //     throw new app_error("Invalid email or password",401);
+    // }
     
     return {
         user_id: user.user_id,

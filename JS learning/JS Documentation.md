@@ -10033,7 +10033,7 @@
 
 # Classes
 
-    JavaScript classes provide a way to create objects using a common structure.
+    A class in JavaScript is a blueprint used to create objects that share the same properties and methods.
 
     an e-commerce application may have many products.
 
@@ -10068,19 +10068,20 @@
     ## Class Syntax
 
         Basic syntax
+
         class Product {
 
         }
 
         A class is a blueprint for creating objects.
 
-        Product class
-            ↓
-        Blueprint
-            ↓
-        ┌────┴────┐
-        ↓         ↓
-        Product 1  Product 2
+            Product class
+                ↓
+            Blueprint
+                ↓
+            ┌────┴────┐
+            ↓         ↓
+            Product 1  Product 2
 
     ## Creating an Object from a Class
 
@@ -10136,7 +10137,7 @@
             T-Shirt
             499
 
-    ## What is this?
+    ## this?
 
         this refers to the current object.
 
@@ -10494,10 +10495,8 @@ Example:
 
     __proto__ is mainly useful for understanding prototypes. In modern JavaScript, Object.getPrototypeOf() and Object.setPrototypeOf() are preferred for programmatic prototype access.
 
-    ## Accessing a property through the prototype
-
         const product_details = {
-            product_name: "T-Shirt"
+            product_name: "TV"
         };
         const product = Object.create(product_details);
         console.log(product.product_name);
@@ -10542,7 +10541,7 @@ Example:
 
             prototype
             ↓
-            product_name ✅
+            product_name 
 
         So the output is:
 
@@ -10640,22 +10639,6 @@ Example:
             T-Shirt
             Jeans
 
-    ## working of Constructor Function
-
-        const product_1 = new Product("T-Shirt", 499);
-
-        JavaScript creates a new object and connects it to:
-
-            Product.prototype
-
-            new Product()
-                ↓
-            product_1
-                ↓
-            Product.prototype
-
-        This is one of the important reasons prototypes are useful.
-
     ## Adding a method to the Constructor Prototype
 
         Instead of putting the method inside every object, we can add it to the constructor's prototype.
@@ -10727,8 +10710,6 @@ Example:
 # this Keyword
 
     In JavaScript, the value of this depends on how a function is called.
-
-    To understand this properly, we need to understand different types of context:
 
         Global context
         Object context
@@ -10887,7 +10868,7 @@ Example:
 
     ## Function Context with this
 
-        Consider a student management application:
+        a student management application:
 
             function show_student() {
                 console.log(this.student_name);
@@ -11212,8 +11193,6 @@ Example:
 
             Callbacks are useful when we want to tell a function:
 
-            "Do this main task, and when you process each item or finish the task, use this function."
-
             For example, a student management system may have a list of students.
 
             We may want to:
@@ -11230,6 +11209,7 @@ Example:
 
             Imagine a hospital system that needs to display each patient's name.
 
+            //named callback
             const patients = [
                 "Arun",
                 "Priya",
@@ -11250,6 +11230,7 @@ Example:
 
             and
 
+            //ananymous callback
             students.forEach(function(student_name) {
                 console.log(student_name);
             });
@@ -11268,7 +11249,7 @@ Example:
 
         Syntax
 
-            const new_array = old_array.map(callback_function);
+            const new_array = old_array.map(function);
 
             For example, a bank application may store transaction amounts in rupees and need to convert them to another format.
 
@@ -11521,10 +11502,8 @@ Example:
                             (salary * increase_percentage / 100);
                     };
                 }
-                const calculate_5_percent =
-                    create_salary_calculator(5);
-                const calculate_10_percent =
-                    create_salary_calculator(10);
+                const calculate_5_percent =create_salary_calculator(5);
+                const calculate_10_percent =create_salary_calculator(10);
                 console.log(calculate_5_percent(30000));
                 console.log(calculate_10_percent(30000));
 
@@ -11535,7 +11514,7 @@ Example:
 
 # Pure Function,Immutability,Composition and Currying
 
-    These concepts are related to writing JavaScript code that is:
+    These concepts is to writing JavaScript code that is:
 
         -easier to understand
         -easier to test
@@ -11677,7 +11656,7 @@ Example:
 
         Uses of Immutability
 
-            1. Consider a student management application.
+            1.a student management application.
 
                 Suppose the application is displaying:
 

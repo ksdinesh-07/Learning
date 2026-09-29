@@ -12,5 +12,47 @@
         "receiver_id": 2,
         "message": "Hello Arul",
         "created_at": "2026-09-27T14:59:55.151Z"
+    },
+    {
+        "message_id": 3,
+        "sender_id": 2,
+        "receiver_id": 1,
+        "message": "hello",
+        "created_at": "2026-09-29T06:49:48.896Z"
+    },
+    {
+        "message_id": 4,
+        "sender_id": 2,
+        "receiver_id": 3,
+        "message": "hello",
+        "created_at": "2026-09-29T06:50:12.626Z"
+    },
+    {
+        "message_id": 5,
+        "sender_id": 1,
+        "receiver_id": 2,
+        "message": "hi",
+        "created_at": "2026-09-29T06:50:47.307Z"
+    },
+    {
+        "message_id": 6,
+        "sender_id": 1,
+        "receiver_id": 3,
+        "message": "hi",
+        "created_at": "2026-09-29T06:50:54.752Z"
+    },
+    {
+        "message_id": 7,
+        "sender_id": 1,
+        "receiver_id": 2,
+        "message": "hello gowtham",
+        "created_at": "2026-09-29T06:57:46.784Z"
+    },
+    {
+        "message_id": 8,
+        "sender_id": 1,
+        "receiver_id": 3,
+        "message": "hello arul boss",
+        "created_at": "2026-09-29T06:58:48.017Z"
     }
 ]

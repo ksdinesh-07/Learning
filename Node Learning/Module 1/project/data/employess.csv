@@ -1,0 +1,11 @@
+employee_id,employee_name,department,attendance_status
+101,Arun,IT,Present
+102,Priya,HR,Absent
+103,Rahul,IT,Present
+104,Meena,Finance,Late
+105,Karthik,IT,Present
+106,Divya,HR,Present
+107,Sanjay,Finance,Absent
+108,Anitha,IT,Late
+109,Vijay,Sales,Present
+110,Harini,IT,Present
