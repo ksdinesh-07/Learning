@@ -19,5 +19,7 @@ Thumbs.db
 # Editor files
 .vscode/
 
+node_modules/
+
 Node Learning/Module 1/practise/docs/copyhugefile.txt
 Node Learning/Module 1/practise/stream_buffer.txt
