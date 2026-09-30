@@ -24,9 +24,34 @@
 // console.log(user.name);
 
 
-let vehicle={
-    car:'Tata'
+// let vehicle={
+//     car:'Tata'
+// };
+
+
+// console.log(vehicle);
+// console.log(Object.prototype)
+// console.log(vehicle.__proto__);
+
+const person = {
+    introduce() {
+        console.log("I am a person");
+    }
 };
-console.log(vehicle);
-console.log(Object.prototype)
-console.log(vehicle.__proto__);
+
+const employee = Object.create(person);
+employee.name = "Dinesh";
+console.log(employee.name);
+employee.introduce();
+
+console.log(Object.getPrototypeOf(employee) === person);
+console.log(Object.getPrototypeOf(person) === Object.prototype);
+console.log(Object.getPrototypeOf(Object.prototype));
+
+// output
+
+// Dinesh
+// I am a person
+// true
+// true
+// null

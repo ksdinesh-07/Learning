@@ -1516,6 +1516,920 @@ Socket communication
 Other clients
 ```
 
-Node.js's asynchronous architecture is particularly useful for applications that maintain many active connections.
+# Express.js Routing & HTTP Architecture
+
+Express.js is a web framework for Node.js that makes it easier to build web servers and RESTful APIs.
+
+When using the built-in Node.js `http` module, we need to manually handle many things such as creating the server, checking request methods, checking URLs, and processing request data.
+
+Express.js provides a simpler structure for handling these operations.
+
+The main purpose of this module is to understand how to:
+
+* Create an Express application
+* Configure environment variables using `dotenv`
+* Handle HTTP request methods
+* Use HTTP status codes
+* Read data from requests
+* Process JSON request payloads
+* Organize routes using `express.Router()`
+* Build a clean RESTful API structure
 
 ---
+
+# Initializing an Express Application
+
+Before creating routes, we need to create an Express application.
+
+First, install Express:
+
+```bash
+npm install express
+```
+
+Then import Express:
+
+```js
+import express from 'express';
+```
+
+Create the Express application:
+
+```js
+const app = express();
+```
+
+Here:
+
+```js
+express()
+```
+
+creates an Express application.
+
+The returned application is stored inside:
+
+```js
+app
+```
+
+The `app` object is used to configure the server and create routes.
+
+For example:
+
+```js
+app.get('/', (req, res) => {
+    res.send('Server is running');
+});
+```
+
+Start the server:
+
+```js
+app.listen(5000, () => {
+    console.log('Server is running on port 5000');
+});
+```
+
+The basic flow is:
+
+```text
+Client
+   ↓
+HTTP Request
+   ↓
+Express Application
+   ↓
+Route
+   ↓
+Response
+```
+
+---
+
+# Why Express.js Is Used
+
+Node.js provides the built-in `http` module:
+
+```js
+import http from 'node:http';
+```
+
+We can create a server using it, but handling many routes manually can become difficult.
+
+For example, we may need to manually check:
+
+```text
+Request method
+Request URL
+Request body
+Request parameters
+Response status
+```
+
+Express provides methods such as:
+
+```js
+app.get()
+app.post()
+app.put()
+app.patch()
+app.delete()
+```
+
+This makes API development easier to organize.
+
+For example:
+
+```js
+app.get('/users', (req, res) => {
+    res.json({
+        message: 'Getting users'
+    });
+});
+```
+
+---
+
+# Configuring Environment Variables with dotenv
+
+Applications often contain values that can change depending on the environment.
+
+Examples include:
+
+```text
+Port number
+Database URL
+API keys
+Secret keys
+Application environment
+```
+
+Instead of writing these values directly inside JavaScript files, we can store them in an `.env` file.
+
+Install `dotenv`:
+
+```bash
+npm install dotenv
+```
+
+Create:
+
+```text
+.env
+```
+
+Example:
+
+```env
+PORT=5000
+NODE_ENV=development
+API_VERSION=v1
+```
+
+Load the environment variables:
+
+```js
+import dotenv from 'dotenv';
+
+dotenv.config();
+```
+
+Now the values can be accessed through:
+
+```js
+process.env.PORT
+```
+
+For example:
+
+```js
+const port = process.env.PORT;
+
+app.listen(port, () => {
+    console.log(`Server running on port ${port}`);
+});
+```
+
+The flow is:
+
+```text
+.env
+ ↓
+dotenv
+ ↓
+process.env
+ ↓
+Application
+```
+
+The `.env` file should normally not be committed to Git because it may contain sensitive information.
+
+Add it to `.gitignore`:
+
+```text
+.env
+```
+
+---
+
+# HTTP Request Methods
+
+HTTP methods tell the server what operation the client wants to perform.
+
+The commonly used methods in REST APIs are:
+
+```text
+GET
+POST
+PUT
+PATCH
+DELETE
+```
+
+Each method has a different purpose.
+
+---
+
+# GET
+
+`GET` is used to retrieve data from the server.
+
+Example:
+
+```http
+GET /api/v1/tasks
+```
+
+This means:
+
+> Give me the tasks.
+
+Express route:
+
+```js
+app.get('/api/v1/tasks', (req, res) => {
+    res.json({
+        message: 'Getting tasks'
+    });
+});
+```
+
+GET normally does not modify the server's data.
+
+Common uses:
+
+```text
+Get all users
+Get all products
+Get one task
+Get an employee
+Get order details
+```
+
+---
+
+# POST
+
+`POST` is generally used to create new data.
+
+Example:
+
+```http
+POST /api/v1/tasks
+```
+
+The client may send:
+
+```json
+{
+    "title": "Learn Express",
+    "priority": "high"
+}
+```
+
+Express route:
+
+```js
+app.post('/api/v1/tasks', (req, res) => {
+    res.status(201).json({
+        message: 'Task created'
+    });
+});
+```
+
+Common uses:
+
+```text
+Create a user
+Create a task
+Create an order
+Create a product
+Create a comment
+```
+
+---
+
+# PUT
+
+`PUT` is generally used when replacing the representation of an existing resource.
+
+Example:
+
+```http
+PUT /api/v1/tasks/10
+```
+
+The client may send the complete task information:
+
+```json
+{
+    "title": "Learn Express.js",
+    "description": "Learn routing and middleware",
+    "completed": true,
+    "priority": "high"
+}
+```
+
+The server replaces the existing representation with the supplied data.
+
+---
+
+# PATCH
+
+`PATCH` is used for a partial update.
+
+For example, suppose the current task is:
+
+```json
+{
+    "id": 10,
+    "title": "Learn Express",
+    "description": "Learn routing",
+    "completed": false,
+    "priority": "high"
+}
+```
+
+The client only wants to change `completed`:
+
+```http
+PATCH /api/v1/tasks/10
+```
+
+Request body:
+
+```json
+{
+    "completed": true
+}
+```
+
+Only that part is changed.
+
+The main difference is:
+
+```text
+PUT
+↓
+Replace the resource representation
+
+PATCH
+↓
+Modify part of the resource
+```
+
+---
+
+# DELETE
+
+`DELETE` is used to remove a resource.
+
+Example:
+
+```http
+DELETE /api/v1/tasks/10
+```
+
+This means:
+
+> Delete task 10.
+
+Express:
+
+```js
+app.delete('/api/v1/tasks/:task_id', (req, res) => {
+    res.status(200).json({
+        message: 'Task deleted'
+    });
+});
+```
+
+Common uses:
+
+```text
+Delete a user
+Delete a task
+Delete a comment
+Delete an order
+```
+
+---
+
+# HTTP Status Codes
+
+HTTP status codes tell the client what happened when processing the request.
+
+For REST APIs, it is important to return a status code that correctly describes the result.
+
+Some commonly used status codes are:
+
+```text
+200 → Successful request
+201 → Resource successfully created
+204 → Successful request with no response body
+400 → Bad request
+401 → Authentication required or failed
+403 → Forbidden
+404 → Resource not found
+409 → Conflict
+500 → Internal server error
+```
+
+---
+
+# 200 OK
+
+`200` means the request was successfully processed.
+
+Example:
+
+```js
+res.status(200).json({
+    success: true,
+    tasks: task_data
+});
+```
+
+Commonly used for successful GET, PUT, and PATCH operations.
+
+---
+
+# 201 Created
+
+`201` indicates that a new resource was successfully created.
+
+For example, after creating a task:
+
+```js
+res.status(201).json({
+    success: true,
+    message: 'Task created successfully',
+    task: new_task
+});
+```
+
+This is commonly used with POST requests that create resources.
+
+---
+
+# 204 No Content
+
+`204` means the request was successful but there is no response body to return.
+
+Example:
+
+```js
+res.status(204).send();
+```
+
+A common use is a successful deletion where the server does not need to return additional data.
+
+---
+
+# 400 Bad Request
+
+`400` means the request sent by the client is invalid.
+
+For example, an API requires:
+
+```json
+{
+    "title": "Learn Express"
+}
+```
+
+but the client sends invalid or missing required data.
+
+The server may return:
+
+```js
+res.status(400).json({
+    success: false,
+    message: 'Title is required'
+});
+```
+
+---
+
+# 401 Unauthorized
+
+`401` is generally used when authentication is required or the supplied authentication credentials are invalid.
+
+For example:
+
+```text
+Request
+   ↓
+Authentication required
+   ↓
+No valid authentication
+   ↓
+401
+```
+
+---
+
+# 403 Forbidden
+
+`403` means the server understood the request but the client does not have permission to perform the operation.
+
+For example:
+
+```text
+User
+ ↓
+Authenticated
+ ↓
+Does not have required permission
+ ↓
+403 Forbidden
+```
+
+---
+
+# 404 Not Found
+
+`404` means the requested resource could not be found.
+
+For example:
+
+```http
+GET /api/v1/tasks/999
+```
+
+If task `999` doesn't exist:
+
+```js
+res.status(404).json({
+    success: false,
+    message: 'Task not found'
+});
+```
+
+---
+
+# 409 Conflict
+
+`409` is used when the request conflicts with the current state of the resource.
+
+For example, if a system requires unique email addresses:
+
+```text
+Existing user:
+john@example.com
+
+New registration:
+john@example.com
+```
+
+The server could return:
+
+```js
+res.status(409).json({
+    success: false,
+    message: 'Email already exists'
+});
+```
+
+---
+
+# 500 Internal Server Error
+
+`500` indicates that an unexpected error occurred on the server.
+
+For example:
+
+```js
+res.status(500).json({
+    success: false,
+    message: 'Internal server error'
+});
+```
+
+The client should not assume that a `500` error is caused by invalid client input.
+
+---
+
+# Reading Request Parameters with req.params
+
+Route parameters are values included directly inside the URL path.
+
+Example:
+
+```js
+app.get('/tasks/:task_id', (req, res) => {
+    console.log(req.params);
+});
+```
+
+Request:
+
+```http
+GET /tasks/25
+```
+
+Express gives:
+
+```js
+req.params
+```
+
+as:
+
+```js
+{
+    task_id: '25'
+}
+```
+
+We can access the value using:
+
+```js
+req.params.task_id
+```
+
+The value is normally a string, so if we need a number:
+
+```js
+const task_id = Number(req.params.task_id);
+```
+
+Route parameters are useful when working with a specific resource.
+
+Examples:
+
+```text
+/users/10
+/products/25
+/orders/100
+/tasks/5
+```
+
+The general structure is:
+
+```text
+/resource/:id
+```
+
+---
+
+# Reading Query Parameters with req.query
+
+Query parameters are additional values added after `?` in the URL.
+
+Example:
+
+```http
+GET /api/v1/tasks?page=2&limit=10
+```
+
+The query parameters are:
+
+```text
+page = 2
+limit = 10
+```
+
+Express makes them available through:
+
+```js
+req.query
+```
+
+For example:
+
+```js
+console.log(req.query);
+```
+
+produces:
+
+```js
+{
+    page: '2',
+    limit: '10'
+}
+```
+
+Individual values can be accessed using:
+
+```js
+req.query.page
+req.query.limit
+```
+
+Because query parameter values are normally strings, convert them when numerical calculations are required:
+
+```js
+const page = Number(req.query.page);
+const limit = Number(req.query.limit);
+```
+
+Query parameters are commonly used for:
+
+```text
+Filtering
+Searching
+Sorting
+Pagination
+```
+
+Examples:
+
+```text
+/products?category=shoes
+/users?role=admin
+/tasks?status=completed
+/products?sort=price
+/tasks?page=2&limit=10
+```
+
+---
+
+# req.params vs req.query
+
+These two are commonly confused.
+
+### req.params
+
+Used to identify a specific resource or part of the URL path.
+
+```http
+GET /tasks/25
+```
+
+```js
+req.params.task_id
+```
+
+Result:
+
+```text
+25
+```
+
+### req.query
+
+Used for optional instructions or filters.
+
+```http
+GET /tasks?page=2&limit=10
+```
+
+```js
+req.query.page
+req.query.limit
+```
+
+Result:
+
+```text
+2
+10
+```
+
+A simple way to remember:
+
+```text
+/tasks/25
+       ↑
+    req.params
+
+
+/tasks?page=2
+      ↑
+   req.query
+```
+
+---
+
+# Processing JSON Payloads with express.json()
+
+A **payload** is the actual data sent in the request.
+
+For example, when creating a task, the client may send:
+
+```json
+{
+    "title": "Learn Express",
+    "description": "Learn routing",
+    "priority": "high"
+}
+```
+
+This JSON data is the request payload.
+
+Express provides the JSON middleware:
+
+```js
+app.use(express.json());
+```
+
+This middleware parses incoming JSON request bodies and makes the resulting JavaScript object available through:
+
+```js
+req.body
+```
+
+For example:
+
+```js
+app.post('/tasks', (req, res) => {
+
+    console.log(req.body);
+
+    res.json({
+        success: true
+    });
+});
+```
+
+If the client sends:
+
+```json
+{
+    "title": "Learn Express",
+    "priority": "high"
+}
+```
+
+then:
+
+```js
+req.body
+```
+
+contains the corresponding JavaScript object.
+
+We can access individual values:
+
+```js
+req.body.title
+req.body.priority
+```
+
+The request flow is:
+
+```text
+Client
+   ↓
+JSON request body
+   ↓
+express.json()
+   ↓
+req.body
+   ↓
+Route handler
+```
+
+`express.json()` is therefore middleware that allows Express to understand JSON request bodies.
+
+---
+
+# Structuring Routes with express.Router()
+
+As an application grows, putting every route inside `server.js` becomes difficult to maintain.
+
+For example, an application may have:
+
+```text
+Users
+Products
+Orders
+Tasks
+Comments
+```
+
+If every route is written in one file, the file can become very large.
+
+Express provides:
+
+```js
+express.Router()
+```
+
+to organize related routes into separate files.
+
+---
+

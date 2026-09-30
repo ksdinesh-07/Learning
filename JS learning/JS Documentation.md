@@ -10415,7 +10415,7 @@
             
             Litorox Store
 
-# Prototypes & Inheritance
+# Prototypes 
 
     JavaScript objects can get properties and methods from another object.
 
@@ -10628,7 +10628,6 @@ Example:
         Now we can create objects:
 
             const product_1 = new Product("T-Shirt", 499);
-
             const product_2 = new Product("Jeans", 999);
 
             console.log(product_1.product_name);
@@ -10669,25 +10668,6 @@ Example:
 
             Product.prototype
 
-    ## Constructor Function and prototype
-
-        Product.prototype
-
-            This is a property of the constructor function.
-
-            Product.prototype.show_product = function() {
-                console.log("Product");
-            };
-            
-        product_1.__proto__
-
-            This refers to the prototype of the created object.
-
-            console.log(product_1.__proto__ === Product.prototype);
-
-            Output:
-
-                true
 
     ## Constructor Property
 
@@ -10706,6 +10686,19 @@ Example:
         output
 
             true
+
+        function Employee(name, department) {
+            this.name = name;
+            this.department = department;
+        }
+
+        const employee_1 = new Employee("Dinesh", "Data Engineering");
+        const employee_2 = new Employee("Arul", "Cloud");
+        const employee_3 = new Employee("Gowtham", "Backend");
+
+        console.log(employee_1)
+        console.log(employee_2)
+        console.log(employee_3)
 
 # this Keyword
 
@@ -11011,6 +11004,24 @@ Example:
                 The first argument is the object used as this.
                 The remaining arguments are passed normally.
 
+        function display_account() {
+            console.log("Account holder:", this.account_holder);
+            console.log("Balance:", this.balance);
+        }
+
+        const savings_account = {
+            account_holder: "Dinesh",
+            balance: 50000
+        };
+
+        const current_account = {
+            account_holder: "Arul",
+            balance: 75000
+        };
+
+        display_account.call(savings_account);
+        display_account.call(current_account);
+
     ## apply()
 
         apply() works almost the same way as call().
@@ -11150,6 +11161,22 @@ Example:
 
                 When the button is clicked, the method still uses the correct student object.
 
+                class Bank_account {
+                    constructor(account_holder) {
+                        this.account_holder = account_holder;
+                    }
+
+                    show_account() {
+                        console.log(this.account_holder);
+                    }
+                }
+
+                const account = new Bank_account("Dinesh");
+
+                document
+                    .getElementById("account_button")
+                    .addEventListener("click", account.show_account.bind(account));
+
                 This is a common reason bind() is useful when passing methods as callbacks.
 
 # Higher-Order Functions
@@ -11190,8 +11217,6 @@ Example:
             Data processed
 
         need for callback
-
-            Callbacks are useful when we want to tell a function:
 
             For example, a student management system may have a list of students.
 
@@ -11498,8 +11523,7 @@ Example:
 
                 function create_salary_calculator(increase_percentage) {
                     return function(salary) {
-                        return salary +
-                            (salary * increase_percentage / 100);
+                        return salary + (salary * increase_percentage / 100);
                     };
                 }
                 const calculate_5_percent =create_salary_calculator(5);
@@ -11592,14 +11616,6 @@ Example:
                     245
 
                 The function only uses the values given to it.
-
-                    It does not depend on:
-
-                        -global variables
-                        -database
-                        -DOM
-                        -random values
-                        -current time
 
                     Therefore, it is pure.
 

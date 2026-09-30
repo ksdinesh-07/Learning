@@ -25,12 +25,16 @@ import { createInterface } from "node:readline";
 //     console.log("File reading error:", error.message);
 // });
 
+//args
+// node main.js employees.csv IT processed_employee.txt
+
 const input_file = process.argv[2];
 const department = process.argv[3];
 const output_file = process.argv[4];
 if (!input_file || !department || !output_file) {
     console.log("Usage:");
     console.log("node main.js <input_file> <department> <output_file>");
+    //stop program
     process.exit(1);
 }
 

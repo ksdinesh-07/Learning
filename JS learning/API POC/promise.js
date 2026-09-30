@@ -166,5 +166,6 @@ Promise.allSettled([user_request,post_request,todo_request])
 });
 
 
-//returns the first sucess api ignores the failed
+//returns the first sucess api ignores the failed 
+
 const result = await Promise.any([user_request,post_request,todo_request]);
