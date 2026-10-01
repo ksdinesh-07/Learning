@@ -10675,18 +10675,6 @@ Example:
 
         Example:
 
-            function Product(product_name) {
-                this.product_name = product_name;
-            }
-
-            const product_1 = new Product("T-Shirt");
-            console.log(product_1.constructor);
-            console.log(product_1.constructor === Product);
-
-        output
-
-            true
-
         function Employee(name, department) {
             this.name = name;
             this.department = department;

@@ -1,25 +1,17 @@
-# Dependencies
 node_modules/
-
-# Environment variables
 .env
 .env.*
+*.log
+*.tmp
 
-# Build/output folders
+# Ignore data files
+*.csv
+*.txt
+
+# Generated folders
+output/
 dist/
 build/
 
-# Logs
-*.log
-
-# OS files
 .DS_Store
 Thumbs.db
-
-# Editor files
-.vscode/
-
-node_modules/
-
-Node Learning/Module 1/practise/docs/copyhugefile.txt
-Node Learning/Module 1/practise/stream_buffer.txt

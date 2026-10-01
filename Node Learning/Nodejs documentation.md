@@ -2433,3 +2433,898 @@ to organize related routes into separate files.
 
 ---
 
+# Express Data Validation and Middleware
+
+Express middleware is one of the most important concepts in an Express.js application. Middleware allows us to execute code between receiving a request and sending a response.
+
+Middleware can be used for logging requests, authentication, validation, modifying request or response data, handling errors, and many other tasks.
+
+In this topic, we learn how middleware works as a pipeline, how to pass information between middleware using `res.locals`, how to handle errors using a custom `AppError` class, and how to validate incoming request data using Zod.
+
+## Middleware Execution Pipeline
+
+When a client sends a request to an Express server, the request does not always directly reach the route handler.
+
+The request can pass through multiple middleware functions first.
+
+For example:
+
+```text
+Client Request
+      ↓
+Application Middleware
+      ↓
+Router Middleware
+      ↓
+Custom Middleware
+      ↓
+Validation Middleware
+      ↓
+Route Handler
+      ↓
+Response
+```
+
+Each middleware performs a particular task and then decides whether the request should continue.
+
+The `next()` function is used to move execution to the next middleware.
+
+For example:
+
+```js
+function request_logger(req, res, next) {
+    console.log(`${req.method} ${req.originalUrl}`);
+
+    next();
+}
+```
+
+When `next()` is called, Express continues to the next middleware or route handler.
+
+If `next()` is not called and no response is sent, the request can remain waiting.
+
+## Application-Level Middleware
+
+Application-level middleware is middleware attached directly to the Express application using `app.use()`.
+
+Example:
+
+```js
+app.use(request_logger);
+```
+
+This middleware can run for requests that pass through the application.
+
+A common use case is request logging.
+
+```js
+export function request_logger(req, res, next) {
+    console.log(`${req.method} ${req.originalUrl}`);
+
+    next();
+}
+```
+
+If the client sends:
+
+```text
+GET /api/v1/tasks
+```
+
+the middleware can print:
+
+```text
+GET /api/v1/tasks
+```
+
+The middleware then calls:
+
+```js
+next();
+```
+
+so the request can continue.
+
+## Router-Level Middleware
+
+Router-level middleware is attached to an Express router instead of the entire application.
+
+Example:
+
+```js
+const task_router = express.Router();
+
+task_router.use((req, res, next) => {
+    console.log('Router level middleware');
+
+    next();
+});
+```
+
+This middleware belongs to `task_router`.
+
+It is useful when middleware should apply only to a particular group of routes.
+
+For example:
+
+```text
+/api/v1/tasks
+```
+
+can have its own router-level middleware.
+
+## Custom Middleware
+
+Custom middleware is middleware that we create ourselves for a specific application requirement.
+
+For example:
+
+```js
+export function check_task_request(req, res, next) {
+    console.log('Custom task middleware');
+
+    next();
+}
+```
+
+We can attach it to a particular route:
+
+```js
+task_router.post(
+    '/',
+    check_task_request,
+    (req, res) => {
+        // create task
+    }
+);
+```
+
+This means `check_task_request` runs before the route handler.
+
+## The Role of next()
+
+The `next()` function tells Express:
+
+> Continue processing this request.
+
+For example:
+
+```js
+function middleware_a(req, res, next) {
+    console.log('Middleware A');
+
+    next();
+}
+
+function middleware_b(req, res, next) {
+    console.log('Middleware B');
+
+    next();
+}
+```
+
+The execution is:
+
+```text
+Request
+   ↓
+Middleware A
+   ↓
+next()
+   ↓
+Middleware B
+   ↓
+next()
+   ↓
+Route Handler
+```
+
+Without `next()`, Express will not automatically move to the next middleware.
+
+## Passing State with res.locals
+
+Sometimes one middleware needs to create some information and another middleware or route needs to use that information.
+
+Express provides `res.locals` for this purpose.
+
+`res.locals` is an object that belongs to the current request and response cycle.
+
+For example:
+
+```js
+res.locals.task_info = {
+    request_method: req.method,
+    request_url: req.originalUrl,
+    received_at: new Date().toISOString()
+};
+```
+
+Here:
+
+```text
+res
+ ↓
+locals
+ ↓
+task_info
+```
+
+`res.locals` is provided by Express.
+
+`task_info` is a property name created by the developer.
+
+It is not a special Express keyword.
+
+## Reading Data from res.locals
+
+After one middleware stores information:
+
+```js
+res.locals.task_info = {
+    request_method: req.method,
+    request_url: req.originalUrl
+};
+```
+
+another middleware or route can access it:
+
+```js
+console.log(res.locals.task_info);
+```
+
+Individual properties can also be accessed:
+
+```js
+console.log(res.locals.task_info.request_method);
+```
+
+For a POST request, this could produce:
+
+```text
+POST
+```
+
+## Why Use res.locals
+
+`res.locals` is useful when information needs to move from one middleware to another during the same request.
+
+For example:
+
+```text
+Middleware A
+     ↓
+creates task_info
+     ↓
+res.locals.task_info
+     ↓
+Middleware B
+     ↓
+uses task_info
+```
+
+This avoids unnecessarily modifying `req.body` or creating global variables.
+
+The information stored in `res.locals` belongs to the current request. It is not intended to be permanent storage.
+
+## req.body and res.locals
+
+These two objects have different purposes.
+
+`req.body` contains data sent by the client.
+
+For example:
+
+```json
+{
+    "title": "Complete assignment"
+}
+```
+
+The application can access it using:
+
+```js
+req.body.title
+```
+
+`res.locals` contains information created by the application and passed between middleware during the current request.
+
+For example:
+
+```js
+res.locals.task_info = {
+    request_method: req.method
+};
+```
+
+So:
+
+```text
+req.body
+→ client-provided data
+
+res.locals
+→ application-generated request information
+```
+
+## Custom AppError Class
+
+Applications need to handle errors properly.
+
+JavaScript already provides the built-in `Error` class.
+
+For example:
+
+```js
+const error = new Error('Something went wrong');
+```
+
+However, an API often needs additional information such as an HTTP status code.
+
+For example:
+
+```text
+Task not found
+404
+```
+
+The normal `Error` class does not provide our application-specific `status_code`.
+
+We can create our own error class by extending `Error`.
+
+```js
+export class AppError extends Error {
+    constructor(message, status_code) {
+        super(message);
+
+        this.status_code = status_code;
+        this.is_operational = true;
+    }
+}
+```
+
+## Understanding extends
+
+The `extends` keyword creates inheritance between classes.
+
+```js
+class AppError extends Error
+```
+
+means:
+
+> AppError inherits from the built-in Error class.
+
+Therefore, `AppError` can use the features provided by `Error`.
+
+## Understanding super
+
+Inside the constructor:
+
+```js
+super(message);
+```
+
+calls the constructor of the parent class, which is `Error`.
+
+The message is passed to the built-in `Error` class.
+
+For example:
+
+```js
+const error = new AppError('Task not found', 404);
+```
+
+The resulting object contains information such as:
+
+```text
+message
+Task not found
+
+status_code
+404
+
+is_operational
+true
+```
+
+The `status_code` and `is_operational` properties are added by our `AppError` class.
+
+## Operational Errors
+
+An operational error is an error that the application expects can happen during normal operation.
+
+Examples include:
+
+```text
+Task not found
+User not found
+Invalid request
+Unauthorized request
+Resource not found
+```
+
+For example:
+
+```js
+next(new AppError('Task not found', 404));
+```
+
+This represents an expected API error.
+
+The `is_operational` property can be used to identify this type of application error.
+
+## Passing Errors with next
+
+An error can be passed to Express using:
+
+```js
+next(error);
+```
+
+For example:
+
+```js
+next(new AppError('Task not found', 404));
+```
+
+When an error is passed to `next()`, Express looks for error-handling middleware.
+
+The flow becomes:
+
+```text
+Route
+  ↓
+Error occurs
+  ↓
+next(error)
+  ↓
+Error-handling middleware
+  ↓
+Response
+```
+
+## Global Error-Handling Middleware
+
+Instead of handling errors separately in every route, we can create one central error handler.
+
+Example:
+
+```js
+export function error_handler(err, req, res, next) {
+    const status_code = err.status_code || 500;
+
+    res.status(status_code).json({
+        success: false,
+        message: err.message || 'Internal server error'
+    });
+}
+```
+
+The first parameter is `err`.
+
+This is important because Express identifies middleware with four parameters as error-handling middleware.
+
+```js
+(err, req, res, next)
+```
+
+## Why Use a Global Error Handler
+
+Without centralized error handling, different routes may return errors in different formats.
+
+For example, one route might return:
+
+```json
+{
+    "error": "Task not found"
+}
+```
+
+while another might return:
+
+```json
+{
+    "message": "Task does not exist"
+}
+```
+
+A global error handler allows the application to maintain a consistent error response.
+
+For example:
+
+```json
+{
+    "success": false,
+    "message": "Task not found"
+}
+```
+
+## Handling 404 Errors
+
+There are different types of 404 situations.
+
+One situation occurs when a route exists but the requested resource does not exist.
+
+For example:
+
+```text
+GET /api/v1/tasks/999
+```
+
+If task `999` does not exist:
+
+```js
+next(new AppError('Task not found', 404));
+```
+
+The error is passed to the global error handler.
+
+Another situation occurs when the requested route itself does not exist.
+
+For example:
+
+```text
+GET /api/v1/products
+```
+
+if there is no `/api/v1/products` route.
+
+A `not_found` middleware can handle this:
+
+```js
+import { AppError } from '../utils/app_error.js';
+
+export function not_found(req, res, next) {
+    next(
+        new AppError(
+            `Route not found: ${req.method} ${req.originalUrl}`,
+            404
+        )
+    );
+}
+```
+
+## Handling 500 Errors
+
+A `500 Internal Server Error` represents an unexpected server-side error.
+
+For example:
+
+```js
+throw new Error('Something went wrong');
+```
+
+This error does not contain our custom `status_code`.
+
+Therefore:
+
+```js
+const status_code = err.status_code || 500;
+```
+
+uses `500` as the default.
+
+The response can be:
+
+```json
+{
+    "success": false,
+    "message": "Something went wrong"
+}
+```
+
+with HTTP status:
+
+```text
+500
+```
+
+## Middleware Order
+
+Middleware order is very important in Express.
+
+A typical structure is:
+
+```js
+app.use(request_logger);
+
+app.use('/api/v1/tasks', task_router);
+
+app.use(not_found);
+
+app.use(error_handler);
+```
+
+The error handler should be placed after the routes and other middleware that can generate errors.
+
+The execution can be understood as:
+
+```text
+Request
+   ↓
+request_logger
+   ↓
+task_router
+   ↓
+not_found
+   ↓
+error_handler
+```
+
+When a route calls:
+
+```js
+next(error);
+```
+
+Express moves the error to the error-handling middleware.
+
+## Request Payload Validation
+
+Clients send data to an API through the request body.
+
+For example:
+
+```json
+{
+    "title": "Complete assignment",
+    "email": "dinesh@gmail.com",
+    "due_date": "2026-10-10"
+}
+```
+
+The server should not blindly trust this data.
+
+The client might send incorrect data such as:
+
+```json
+{
+    "title": "Complete assignment",
+    "email": "hello",
+    "due_date": "tomorrow"
+}
+```
+
+If this invalid data reaches the application logic, it can cause unexpected behavior or runtime problems.
+
+Validation allows us to check the data before processing it.
+
+## Zod
+
+Zod is a JavaScript and TypeScript library used for data validation.
+
+We can define the expected structure of request data using a schema.
+
+For example:
+
+```js
+import { z } from 'zod';
+
+export const task_schema = z.object({
+    title: z.string(),
+    email: z.email(),
+    due_date: z.string().date()
+});
+```
+
+This schema describes the expected data.
+
+The rules are:
+
+```text
+title
+→ must be a string
+
+email
+→ must be a valid email
+
+due_date
+→ must be a valid date string
+```
+
+## Zod Object Schema
+
+The request body is normally an object.
+
+For example:
+
+```json
+{
+    "title": "Complete assignment",
+    "email": "dinesh@gmail.com",
+    "due_date": "2026-10-10"
+}
+```
+
+Therefore, we use:
+
+```js
+z.object({
+    ...
+})
+```
+
+This tells Zod that the expected input should be an object containing the defined fields.
+
+## Email Validation
+
+Zod can validate an email using:
+
+```js
+email: z.email()
+```
+
+A valid email could be:
+
+```text
+dinesh@gmail.com
+```
+
+An invalid value could be:
+
+```text
+dinesh
+```
+
+If the email does not follow the expected email structure, validation fails.
+
+## Date Validation
+
+The task requires date-format validation.
+
+For example:
+
+```js
+due_date: z.string().date()
+```
+
+This validates a date string such as:
+
+```text
+2026-10-10
+```
+
+Invalid values include examples such as:
+
+```text
+tomorrow
+10/10/2026
+10-10-2026
+```
+
+depending on the format expected by the schema.
+
+## Validation Middleware
+
+The schema only defines the rules. We still need middleware to apply those rules to incoming requests.
+
+Example:
+
+```js
+import { task_schema } from '../schemas/task_schema.js';
+
+export function validate_task(req, res, next) {
+    const validation_result = task_schema.safeParse(req.body);
+
+    if (!validation_result.success) {
+        const error_messages = validation_result.error.issues.map(issue => ({
+            field: issue.path[0],
+            message: issue.message
+        }));
+
+        return res.status(400).json({
+            success: false,
+            errors: error_messages
+        });
+    }
+
+    next();
+}
+```
+
+The important operation is:
+
+```js
+task_schema.safeParse(req.body);
+```
+
+It gives the request body to Zod for validation.
+
+## Understanding safeParse
+
+`safeParse()` checks the data without directly throwing a validation exception for a normal validation failure.
+
+The result tells us whether validation succeeded.
+
+For valid data:
+
+```js
+validation_result.success
+```
+
+is:
+
+```text
+true
+```
+
+For invalid data:
+
+```text
+false
+```
+
+and Zod provides information about the validation errors.
+
+## Clean Validation Errors
+
+Zod provides detailed information about every validation problem.
+
+We can convert those details into a simpler API response:
+
+```js
+const error_messages = validation_result.error.issues.map(issue => ({
+    field: issue.path[0],
+    message: issue.message
+}));
+```
+
+The client can then receive:
+
+```json
+{
+    "success": false,
+    "errors": [
+        {
+            "field": "email",
+            "message": "Invalid email address"
+        },
+        {
+            "field": "due_date",
+            "message": "Invalid date"
+        }
+    ]
+}
+```
+
+This gives the client a clean list of fields that need to be corrected.
+
+## Validation Middleware in the Route
+
+The validation middleware can be placed before the route handler.
+
+For example:
+
+```js
+task_router.post(
+    '/',
+    check_task_request,
+    validate_task,
+    (req, res) => {
+        // create task
+    }
+);
+```
+
+The request must pass through `validate_task` before the route handler executes.
+
+The flow is:
+
+```text
+POST /api/v1/tasks
+        ↓
+check_task_request
+        ↓
+validate_task
+        ↓
+Zod validation
+        ↓
+    Valid?
+    /     \
+  Yes      No
+   ↓        ↓
+next()     400
+   ↓
+Route Handler
+```
+

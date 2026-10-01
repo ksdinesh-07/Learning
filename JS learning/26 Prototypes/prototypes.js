@@ -55,3 +55,55 @@ console.log(Object.getPrototypeOf(Object.prototype));
 // true
 // true
 // null
+
+//without prototyp
+// const account_1 = {
+//     account_number: "ACC001",
+//     balance: 50000,
+
+//     deposit(amount) {
+//         this.balance += amount;
+//     },
+//     withdraw(amount) {
+//         this.balance -= amount;
+//     }
+// };
+
+// const account_2 = {
+//     account_number: "ACC002",
+//     balance: 30000,
+
+//     deposit(amount) {
+//         this.balance += amount;
+//     },
+//     withdraw(amount) {
+//         this.balance -= amount;
+//     }
+// };
+
+//we can use prototype
+const account_methods = {
+    deposit(amount) {
+        this.balance += amount;
+    },
+    withdraw(amount) {
+        this.balance -= amount;
+    },
+    get_balance() {
+        return this.balance;
+    }
+};
+
+//create acc using the prototype
+const account_1 = Object.create(account_methods);
+account_1.account_number = "ACC001";
+account_1.balance = 50000;
+
+const account_2 = Object.create(account_methods);
+account_2.account_number = "ACC002";
+account_2.balance = 30000;
+
+
+//use
+account_1.deposit(5000);
+account_2.withdraw(2000);
