@@ -3327,4 +3327,647 @@ next()     400
    ↓
 Route Handler
 ```
+# Database Integration and Object Relational Mapping
 
+Database integration is an important part of a Node.js application because application data usually needs to be stored permanently rather than kept only in memory. A database allows an application to store, retrieve, update, and delete information whenever it is required.
+
+In a Node.js application, the database is normally accessed through a database driver, ORM, or ODM. The choice depends on the type of database being used and the way the application's data is structured.
+
+For example, an e-commerce application may need to store users, products, and orders. Instead of keeping this information inside JavaScript arrays, the application stores it in a database so the information remains available even after the server is restarted.
+
+## Relational Data Modeling
+
+A relational database stores information in tables. Each table contains rows and columns, and each row normally represents one record.
+
+Popular relational databases include MySQL, PostgreSQL, Microsoft SQL Server, and Oracle.
+
+For example, an e-commerce application could have separate tables for users, products, and orders.
+
+```text
+users
+--------------------------------
+user_id | name          | email
+1       | Gowtham       | gowtham@gmail.com
+2       | Arul          | arul@gmail.com
+```
+
+```text
+products
+--------------------------------
+product_id | name              | price
+101        | Dell Laptop       | 62000
+102        | Wireless Mouse    | 1200
+```
+
+```text
+orders
+--------------------------------
+order_id | user_id | total_amount
+5001     | 1       | 63200
+5002     | 2       | 1200
+```
+
+The `user_id` in the orders table connects an order with a user. This type of connection is called a relationship.
+
+Relational databases are useful when an application has structured data and requires strong relationships between different types of records.
+
+## Primary Keys
+
+A primary key is a column that uniquely identifies each record in a table.
+
+For example:
+
+```text
+user_id
+1
+2
+3
+```
+
+Each user has a different `user_id`. This allows the application to identify a particular user without depending on the user's name or email address.
+
+In MongoDB, a similar purpose is handled by the `_id` field.
+
+## Foreign Keys
+
+A foreign key is used to create a relationship between tables.
+
+For example:
+
+```text
+users
+user_id
+   1
+   2
+   3
+
+        ↓
+
+orders
+order_id | user_id
+5001     | 1
+5002     | 2
+```
+
+Here, `orders.user_id` refers to `users.user_id`.
+
+This allows the database to determine which user placed an order.
+
+## Non-Relational Data Modeling
+
+Non-relational databases, commonly called NoSQL databases, do not primarily store data using traditional tables and rows.
+
+MongoDB is a popular NoSQL database used with Node.js.
+
+MongoDB stores data as documents inside collections.
+
+A product document may look like this:
+
+```json
+{
+    "_id": "101",
+    "name": "Dell Laptop",
+    "price": 62000,
+    "stock": 15,
+    "category": "Laptops"
+}
+```
+
+Instead of having separate columns, the document contains fields that describe the product.
+
+MongoDB provides flexibility when the structure of documents may change or when an application needs to work naturally with JSON-like data.
+
+## SQL and NoSQL Modeling
+
+SQL and NoSQL databases approach data relationships differently.
+
+In SQL, related information is commonly separated into different tables and connected using keys.
+
+For example:
+
+```text
+users
+   |
+   | user_id
+   ↓
+orders
+```
+
+In MongoDB, related information can either be embedded inside a document or stored separately and referenced using an ID.
+
+For example, an order can contain its order items directly:
+
+```json
+{
+    "user_id": "user_101",
+    "items": [
+        {
+            "product_id": "product_201",
+            "quantity": 2,
+            "price_at_purchase": 62000
+        }
+    ]
+}
+```
+
+The appropriate approach depends on how the application reads and manages its data.
+
+## Embedding and Referencing
+
+MongoDB provides two common ways of representing relationships: embedding and referencing.
+
+Embedding means storing related information directly inside the parent document.
+
+For example, an order can contain its items:
+
+```json
+{
+    "order_id": "5001",
+    "user_id": "101",
+    "items": [
+        {
+            "product_id": "201",
+            "quantity": 2
+        },
+        {
+            "product_id": "202",
+            "quantity": 1
+        }
+    ]
+}
+```
+
+This is useful when the related data normally belongs to the parent and is usually retrieved together.
+
+Referencing means storing the ID of another document instead of storing the complete document.
+
+For example:
+
+```json
+{
+    "order_id": "5001",
+    "user_id": "101"
+}
+```
+
+The application can then use `user_id` to retrieve the corresponding user.
+
+Referencing is useful when the related data is large, shared by multiple documents, or managed independently.
+
+## Database Connection Pooling
+
+A database connection is the communication channel between the Node.js application and the database.
+
+Creating a new database connection for every request can be inefficient because establishing a connection takes time and resources.
+
+Connection pooling solves this problem by maintaining a group of reusable database connections.
+
+The general flow is:
+
+```text
+Node.js application
+        |
+        ↓
+Connection Pool
+   |    |    |
+   ↓    ↓    ↓
+ DB   DB   DB
+Connection Connections
+```
+
+When a request needs to access the database, it can use an available connection from the pool.
+
+After the operation is completed, the connection can be returned to the pool and reused for another request.
+
+This improves application performance and avoids repeatedly creating new database connections.
+
+Mongoose manages the underlying MongoDB connections and provides configuration options for connection pooling.
+
+## Database Connection Events
+
+Database connections can change state during the lifetime of an application. Mongoose provides connection events that allow the application to respond to these changes.
+
+For example:
+
+```js
+mongoose.connection.on("connected", () => {
+    console.log("MongoDB connection established");
+});
+
+mongoose.connection.on("error", (error) => {
+    console.error("MongoDB connection error:", error.message);
+});
+
+mongoose.connection.on("disconnected", () => {
+    console.log("MongoDB disconnected");
+});
+```
+
+The `connected` event is triggered when the connection has been successfully established.
+
+The `error` event is useful for detecting database connection errors.
+
+The `disconnected` event is triggered when the application loses its connection to MongoDB.
+
+The `on()` method is used to register a function that should execute when a particular event occurs.
+
+It is important to distinguish between starting a connection and listening for an event.
+
+```js
+await mongoose.connect(process.env.MONGODB_URI);
+```
+
+This starts the connection process.
+
+```js
+mongoose.connection.on("connected", () => {
+    console.log("MongoDB connection established");
+});
+```
+
+This listens for the connection event.
+
+## Indexing Strategies
+
+An index is a data structure that helps the database find records more efficiently.
+
+Without an appropriate index, the database may need to examine many documents to find the required record.
+
+For example, an e-commerce application may frequently search users by email:
+
+```text
+Find user where email = "gowtham@gmail.com"
+```
+
+Creating an index on the email field can make this type of lookup more efficient.
+
+In Mongoose, an index can be defined in a schema:
+
+```js
+const user_schema = new mongoose.Schema({
+    name: String,
+
+    email: {
+        type: String,
+        required: true,
+        unique: true
+    }
+});
+```
+
+The `unique` option creates a uniqueness constraint through an index.
+
+Indexes should be created based on actual query patterns. Adding too many indexes can also have a cost because the database needs to maintain those indexes when documents are inserted or updated.
+
+## ODM
+
+ODM stands for Object Document Mapping.
+
+An ODM provides a convenient way for a Node.js application to work with a document-oriented database such as MongoDB.
+
+Mongoose is a commonly used ODM for MongoDB.
+
+The basic flow is:
+
+```text
+Node.js
+   ↓
+Mongoose
+   ↓
+MongoDB Driver
+   ↓
+MongoDB
+```
+
+Mongoose provides features such as schemas, models, validation, middleware, and population.
+
+This allows developers to work with MongoDB documents using JavaScript objects and Mongoose models instead of writing every database operation directly through the MongoDB driver.
+
+## ORM
+
+ORM stands for Object Relational Mapping.
+
+An ORM is mainly used with relational databases such as PostgreSQL and MySQL.
+
+Popular Node.js ORM tools include Prisma and Sequelize.
+
+An ORM maps application objects and operations to database tables and SQL operations.
+
+For example, instead of manually writing SQL for every operation, an ORM can provide JavaScript or TypeScript methods for creating, reading, updating, and deleting records.
+
+The general flow is:
+
+```text
+Node.js
+   ↓
+ORM
+   ↓
+SQL Database
+```
+
+Prisma and Sequelize are examples of tools that can be used when building Node.js applications with relational databases.
+
+## Mongoose Schema
+
+A schema defines the structure and rules that documents should follow in a MongoDB collection.
+
+For example:
+
+```js
+const product_schema = new mongoose.Schema({
+    name: {
+        type: String,
+        required: true
+    },
+
+    price: {
+        type: Number,
+        required: true,
+        min: 1
+    },
+
+    stock: {
+        type: Number,
+        default: 0,
+        min: 0
+    }
+});
+```
+
+This schema says that a product must have a `name` and `price`.
+
+The price must be a number and cannot be less than `1`.
+
+The stock is also a number and defaults to `0` if a value is not provided.
+
+Schemas help maintain consistent data even though MongoDB itself is flexible about document structure.
+
+## Mongoose Model
+
+A model is created from a schema and provides the interface used to interact with a MongoDB collection.
+
+For example:
+
+```js
+export const product_model = mongoose.model(
+    "Product",
+    product_schema
+);
+```
+
+Once the model is created, it can be used to perform database operations.
+
+For example:
+
+```js
+const products = await product_model.find();
+```
+
+Here, `product_model` communicates with MongoDB and retrieves the product documents.
+
+The relationship between schema and model can be understood as:
+
+```text
+Schema
+  ↓
+Defines structure and rules
+  ↓
+Model
+  ↓
+Performs database operations
+  ↓
+MongoDB Collection
+```
+
+## One-to-Many Relationship
+
+A one-to-many relationship occurs when one record can be related to many records.
+
+For example, one user can place many orders.
+
+```text
+User
+  |
+  ├── Order 1001
+  ├── Order 1002
+  └── Order 1003
+```
+
+In MongoDB, the order can store a reference to the user.
+
+```js
+user_id: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "User",
+    required: true
+}
+```
+
+Here, `ref: "User"` tells Mongoose that the referenced document belongs to the `User` model.
+
+This prevents the application from having to duplicate the complete user information inside every order.
+
+## Many-to-Many Relationship
+
+A many-to-many relationship occurs when multiple records from one entity can be related to multiple records from another entity.
+
+In an e-commerce application, one order can contain many products, and one product can appear in many different orders.
+
+```text
+Order 1001 ─── Product 101
+          └── Product 102
+
+Order 1002 ─── Product 101
+          └── Product 103
+```
+
+An order item structure can represent this relationship:
+
+```json
+{
+    "product_id": "101",
+    "quantity": 2,
+    "price_at_purchase": 62000
+}
+```
+
+An order can contain an array of these items:
+
+```json
+{
+    "user_id": "501",
+    "items": [
+        {
+            "product_id": "101",
+            "quantity": 2,
+            "price_at_purchase": 62000
+        },
+        {
+            "product_id": "102",
+            "quantity": 1,
+            "price_at_purchase": 1200
+        }
+    ]
+}
+```
+
+This approach is especially useful for an order because the order needs to preserve information about what was purchased.
+
+The `price_at_purchase` field is important because the current product price may change later.
+
+For example, if a laptop costs ₹62,000 when the order is placed and its price later changes to ₹65,000, the old order should still show ₹62,000.
+
+## Population in Mongoose
+
+Population is a Mongoose feature that allows referenced documents to be retrieved along with the document containing the reference.
+
+Suppose an order contains:
+
+```js
+user_id: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "User"
+}
+```
+
+Normally, the order may contain only the user's ObjectId.
+
+Using `populate()`:
+
+```js
+const orders = await order_model
+    .find()
+    .populate("user_id");
+```
+
+Mongoose retrieves the referenced user and includes the user information in the result.
+
+Without population:
+
+```json
+{
+    "user_id": "66f123..."
+}
+```
+
+With population:
+
+```json
+{
+    "user_id": {
+        "_id": "66f123...",
+        "name": "Gowtham Kumar",
+        "email": "gowtham@gmail.com"
+    }
+}
+```
+
+Population is useful when the application needs information from related documents.
+
+## Joins in SQL
+
+In relational databases, related data is commonly combined using joins.
+
+For example, if users and orders are stored in separate tables, an SQL query can combine them:
+
+```sql
+SELECT users.name, orders.total_amount
+FROM users
+JOIN orders
+ON users.user_id = orders.user_id;
+```
+
+The join connects records using the relationship between the two tables.
+
+This is conceptually similar to retrieving related documents in MongoDB using population, although the underlying mechanisms are different.
+
+## Population and Joins
+
+Both population and joins help an application work with related data, but they belong to different database approaches.
+
+```text
+SQL
+ ↓
+Tables
+ ↓
+Foreign Keys
+ ↓
+JOIN
+```
+
+```text
+MongoDB + Mongoose
+ ↓
+Documents
+ ↓
+References
+ ↓
+populate()
+```
+
+For example, an order may contain a reference to a user.
+
+In SQL, the application can use a `JOIN` to retrieve the user's details.
+
+In Mongoose, the application can use:
+
+```js
+.populate("user_id")
+```
+
+to retrieve the referenced user.
+
+## Choosing SQL or NoSQL
+
+The choice between SQL and NoSQL depends on the application's requirements.
+
+A relational database can be useful when the application has strongly structured data, complex relationships, and operations that depend heavily on transactions and joins.
+
+A NoSQL database such as MongoDB can be useful when the application works naturally with document-based data, requires flexible document structures, or commonly retrieves related information as part of a document.
+
+Neither approach is universally suitable for every application. The data model and access patterns should be considered before choosing the database.
+
+## E-commerce Database Structure
+
+For the e-commerce API developed in this module, the main models are User, Product, and Order.
+
+```text
+User
+ ├── name
+ ├── email
+ ├── phone
+ └── role
+
+Product
+ ├── name
+ ├── description
+ ├── price
+ ├── stock
+ ├── category
+ └── status
+
+Order
+ ├── user_id
+ ├── items
+ │    ├── product_id
+ │    ├── quantity
+ │    └── price_at_purchase
+ ├── total_amount
+ └── status
+```
+
+The `Order` model connects users and products.
+
+```text
+User
+  │
+  │ user_id
+  ↓
+Order
+  │
+  ├── product_id → Product
+  ├── product_id → Product
+  └── product_id → Product
+```
+
+This structure allows the application to keep users, products, and orders as separate entities while still maintaining relationships between them.

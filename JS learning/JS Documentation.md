@@ -12631,7 +12631,6 @@ Example:
 
         Step 3
 
-
             console.log()
             second()
             first()
@@ -12844,7 +12843,7 @@ Example:
 
         This process is called Garbage Collection.
 
-        To understand garbage collection, we first need to understand references.
+        references.
 
             References
                 ↓
@@ -13089,6 +13088,13 @@ Example:
                             console.log("Clicked");
                         });
                     }
+
+                    function handle_button_click() {
+                        console.log("Clicked");
+                    }
+
+                    button.addEventListener("click", handle_button_click);
+                    button.removeEventListener("click", handle_button_click);
 
                 If an application repeatedly creates components and attaches listeners without cleaning them up when those components are removed, unnecessary references and callbacks can remain.
 
@@ -13501,7 +13507,7 @@ Example:
 
             The JavaScript engine cannot correctly parse the code.
 
-        ### untime Error
+        ### runtime Error
 
             A runtime error occurs while the program is executing.
 
@@ -14612,12 +14618,12 @@ Important ones include:
 
 They have different roles.
 
-| Tool          | Purpose                                |
-| ------------- | -------------------------------------- |
-| Jest          | Testing framework                      |
-| Mocha         | Testing framework                      |
-| Chai          | Assertion library                      |
-| Mocking tools | Replace real dependencies during tests |
+ Tool           Purpose          
+                      
+ Jest           Testing framework                      
+ Mocha          Testing framework                      
+ Chai           Assertion library                      
+ Mocking tools  Replace real dependencies during tests 
 
 ---
 
@@ -14629,10 +14635,8 @@ It provides features for:
 
 * Writing tests
 * Running tests
-* Assertions
 * Mocking
 * Test organization
-* Code coverage
 
 A basic Jest test looks like:
 
