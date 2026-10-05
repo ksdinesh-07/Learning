@@ -12,6 +12,6 @@ expenses.forEach((expense,index)=>{
     const y_position=250 -bar_height;
 
     context.fillRect(x_position,y_position,50,bar_height);
-    context/fillText(months[index],x_position+10,270);
-    context.fillText(`${expense}`)
+    context.fillText(months[index],x_position+10,270);
+    context/fillText(`${expense}`)
 })

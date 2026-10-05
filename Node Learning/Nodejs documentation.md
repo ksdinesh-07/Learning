@@ -3971,3 +3971,550 @@ Order
 ```
 
 This structure allows the application to keep users, products, and orders as separate entities while still maintaining relationships between them.
+
+# Secure Password Hashing with bcrypt
+
+## What is Password Hashing?
+
+Password hashing is the process of converting a user's plain-text password into a one-way hashed value before storing it in the database.
+
+For example, a user enters:
+
+```text
+Arul@123
+```
+
+The application should **never store**:
+
+```text
+Arul@123
+```
+
+Instead, bcrypt converts it into a hash similar to:
+
+```text
+$2b$10$N9qo8uLOickgx2ZMRZoMye...
+```
+
+The hash is stored in the database instead of the original password.
+
+The important point is that **hashing is one-way**. The application does not normally convert the hash back into the original password.
+
+---
+
+## Why Should Passwords Be Hashed?
+
+If passwords were stored as plain text and the database were compromised, an attacker could immediately see users' passwords.
+
+For example:
+
+```text
+Email                  Password
+--------------------------------------
+arul@example.com       Arul@123
+```
+
+This is unsafe.
+
+With password hashing:
+
+```text
+Email                  Password Hash
+----------------------------------------------
+arul@example.com       $2b$10$N9qo8uLOickgx...
+```
+
+Even if the database is exposed, the original password is not directly stored.
+
+---
+
+## Hashing vs Encryption
+
+Hashing and encryption are different.
+
+### Hashing
+
+```text
+Password
+   ↓
+Hashing
+   ↓
+Password Hash
+```
+
+Hashing is designed to be one-way.
+
+### Encryption
+
+```text
+Plain Text
+   ↓
+Encryption + Key
+   ↓
+Encrypted Data
+   ↓
+Decryption + Key
+   ↓
+Plain Text
+```
+
+Encryption is designed to be reversible when the correct key is available.
+
+Passwords should normally be **hashed**, not encrypted.
+
+---
+
+## What is bcrypt?
+
+`bcrypt` is a password-hashing algorithm designed specifically for securely storing passwords.
+
+In Node.js, it can be installed using:
+
+```powershell
+npm install bcrypt
+```
+
+Then imported using:
+
+```js
+import bcrypt from "bcrypt";
+```
+
+---
+
+## Password Registration Flow
+
+When a new user registers:
+
+```text
+User enters password
+        ↓
+Plain-text password
+        ↓
+bcrypt.hash()
+        ↓
+Password hash
+        ↓
+Store hash in MongoDB
+```
+
+For example:
+
+```js
+const hashed_password = await bcrypt.hash(password, 10);
+```
+
+The original password should not be stored.
+
+---
+
+## bcrypt.hash()
+
+The syntax is:
+
+```js
+bcrypt.hash(password, salt_rounds)
+```
+
+Example:
+
+```js
+const hashed_password = await bcrypt.hash(password, 10);
+```
+
+There are two important values here.
+
+### Password
+
+```js
+password
+```
+
+This is the password entered by the user.
+
+For example:
+
+```text
+Arul@123
+```
+
+### Salt Rounds
+
+```js
+10
+```
+
+This controls how much computational work bcrypt performs while generating the hash.
+
+A higher cost makes password hashing more computationally expensive, which makes large-scale password guessing more difficult.
+
+---
+
+## What is a Salt?
+
+A salt is random data incorporated into password hashing.
+
+Suppose two users choose the same password:
+
+```text
+User 1 → Arul@123
+User 2 → Arul@123
+```
+
+bcrypt uses different random salts, so their resulting hashes can be different.
+
+This prevents identical passwords from simply producing identical stored hash values.
+
+The salt information is incorporated into the bcrypt hash, so bcrypt can use it later during password verification.
+
+---
+
+## Why Do We Use Salt Rounds?
+
+Password hashing should intentionally be slower than normal hashing.
+
+A normal hash function such as SHA-256 is extremely fast.
+
+That is useful for many applications, but password hashing needs a different approach because attackers may try millions of password guesses.
+
+bcrypt deliberately makes each password hashing operation more expensive.
+
+The idea is:
+
+```text
+Attacker
+   ↓
+Millions of guesses
+   ↓
+bcrypt makes each guess expensive
+   ↓
+Attack becomes harder
+```
+
+---
+
+## Storing the Password Hash
+
+During registration:
+
+```js
+const hashed_password = await bcrypt.hash(password, 10);
+
+const user = await user_model.create({
+    name,
+    email,
+    password: hashed_password,
+    phone
+});
+```
+
+The database receives the hash:
+
+```text
+password
+    ↓
+$2b$10$...
+```
+
+not:
+
+```text
+Arul@123
+```
+
+---
+
+## Protecting the Password Field with select: false
+
+In the Mongoose user schema, the password field can be defined as:
+
+```js
+password: {
+    type: String,
+    required: true,
+    select: false
+}
+```
+
+`select: false` means Mongoose will exclude the password field from normal queries.
+
+For example:
+
+```js
+const user = await user_model.findOne({ email });
+```
+
+The result does not normally contain:
+
+```js
+user.password
+```
+
+This provides an additional layer of protection against accidentally returning password hashes.
+
+---
+
+## Retrieving the Password Hash During Login
+
+During login, we need the stored hash so that bcrypt can compare it with the password entered by the user.
+
+Because the field has:
+
+```js
+select: false
+```
+
+we explicitly request it:
+
+```js
+const user = await user_model
+    .findOne({ email })
+    .select("+password");
+```
+
+The `+password` means:
+
+> Include the normally excluded password field in this query.
+
+This does **not** mean the password is decrypted.
+
+It only retrieves the already-stored hash.
+
+---
+
+## bcrypt.compare()
+
+During login, the user enters a password again.
+
+For example:
+
+```text
+User enters:
+
+Arul@123
+```
+
+The database contains:
+
+```text
+$2b$10$...
+```
+
+We should not hash the entered password manually and compare the strings because bcrypt handles the salt and verification process.
+
+Instead:
+
+```js
+const password_match = await bcrypt.compare(
+    password,
+    user.password
+);
+```
+
+bcrypt internally checks whether the entered password corresponds to the stored hash.
+
+The result is:
+
+```js
+true
+```
+
+or:
+
+```js
+false
+```
+
+---
+
+## Login Flow
+
+The complete login process is:
+
+```text
+User enters email + password
+            ↓
+Find user by email
+            ↓
+Retrieve password hash
+            ↓
+bcrypt.compare()
+            ↓
+      Password correct?
+        ↙          ↘
+      No            Yes
+      ↓              ↓
+    401          Continue login
+                     ↓
+                 Create JWT
+```
+
+---
+
+## Why We Don't Return the Password
+
+Even though the password hash exists in the database, it should not be included in API responses.
+
+For example, this is unsafe:
+
+```js
+res.json({
+    user: user
+});
+```
+
+because the object could contain sensitive information depending on the query.
+
+Instead, return only the information required by the client:
+
+```js
+user: {
+    id: user._id,
+    name: user.name,
+    email: user.email,
+    phone: user.phone,
+    role: user.role
+}
+```
+
+The password and password hash should never be returned to the client.
+
+---
+
+## Handling Invalid Login Credentials
+
+When the email does not exist:
+
+```text
+Invalid email or password
+```
+
+When the email exists but the password is incorrect:
+
+```text
+Invalid email or password
+```
+
+Both cases should use the same response.
+
+For example:
+
+```js
+if (!user) {
+    return res.status(401).json({
+        success: false,
+        message: "Invalid email or password"
+    });
+}
+```
+
+and:
+
+```js
+if (!password_match) {
+    return res.status(401).json({
+        success: false,
+        message: "Invalid email or password"
+    });
+}
+```
+
+This prevents the API from unnecessarily revealing whether a particular email address is registered.
+
+---
+
+## bcrypt vs Argon2
+
+Both bcrypt and Argon2 are password-hashing algorithms.
+
+### bcrypt
+
+```text
+Widely used
+Easy Node.js integration
+Mature and well established
+```
+
+### Argon2
+
+```text
+Modern password-hashing algorithm
+Designed to be resistant to certain password-cracking attacks
+Supports memory-hard configuration
+```
+
+For this project, bcrypt was selected and implemented.
+
+---
+
+## Important Security Rules
+
+Never store:
+
+```text
+Plain-text passwords
+```
+
+Never return:
+
+```text
+Password hashes
+```
+
+Never put passwords inside a JWT payload.
+
+Use a password-hashing algorithm such as:
+
+```text
+bcrypt
+```
+
+or:
+
+```text
+Argon2
+```
+
+Use an appropriate cost/work factor.
+
+Use generic authentication error messages such as:
+
+```text
+Invalid email or password
+```
+
+---
+
+## Complete Authentication Password Flow
+
+The complete process implemented in the project is:
+
+```text
+                 REGISTRATION
+
+User Password
+      ↓
+bcrypt.hash()
+      ↓
+Password Hash
+      ↓
+MongoDB
+
+
+                   LOGIN
+
+Email + Password
+      ↓
+Find User
+      ↓
+Retrieve Password Hash
+      ↓
+bcrypt.compare()
+      ↓
+Password Correct?
+      ↓
+Generate JWT
+      ↓
+Return Token
+```
+

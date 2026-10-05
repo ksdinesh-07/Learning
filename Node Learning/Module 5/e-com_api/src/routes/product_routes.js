@@ -1,5 +1,6 @@
 import express from "express";
 import { product_model } from "../models/product_model.js";
+import { auth_middleware } from "../middleware/auth_middleware.js";
 
 const router=express.Router();
 
@@ -39,7 +40,7 @@ router.post('/',async(req,res)=>{
 })
 
 //delete the product
-router.delete('/:id',async (req,res)=>{
+router.delete('/:id',auth_middleware,async (req,res)=>{
     try{
         const product=await product_model.findByIdAndDelete(req.params.id);
         if (!product){

@@ -13014,28 +13014,6 @@ Example:
         The object becomes unreachable.
         The garbage collector can reclaim its memory.
 
-    ## Garbage Collection Example
-
-        function create_student() {
-            const student = {
-                name: "Arun",
-                mark: 85
-            };
-        }
-        create_student();
-
-        While the function is running:
-
-            create_student()
-                ↓
-            student
-                ↓
-            Student object
-
-        After the function finishes, if there are no other references,
-
-        The object is no longer reachable through that local variable.
-        It can eventually be garbage collected.
 
     ## Meamory Leak
 
@@ -13735,74 +13713,6 @@ Example:
                 const tax_amount = subtotal * 0.18;
 
                 The browser creates a breakpoint on that line.
-
-        ## Step Over
-
-            Step Over executes the current line and moves to the next line.
-
-            const subtotal = product_price * quantity;
-            const tax_amount = subtotal * 0.18;
-            const total_amount = subtotal + tax_amount;
-
-            If execution is currently paused at:
-                const subtotal = product_price * quantity;
-
-            Step Over executes that line and moves to:
-                const tax_amount = subtotal * 0.18;
-
-            Step Over is useful when we want to execute the program one line at a time without entering function calls.
-
-        ## Step Into
-
-            Step Into enters a function when the current line calls that function.
-
-            Example
-
-                const total_amount = calculate_total(1000, 2);
-
-            If we use Step Into, the debugger enters:
-            function calculate_total(product_price, quantity) {
-                const subtotal = product_price * quantity;
-                return subtotal;
-            }
-
-            This is useful when we suspect that the problem exists inside a function.
-
-        ## Step Out
-
-            Step Out finishes the current function and returns to the code that called it.
-
-            For example:
-
-                function calculate_total(product_price, quantity) {
-                    const subtotal = product_price * quantity;
-                    return subtotal;
-                }
-                const total_amount = calculate_total(1000, 2);
-
-            If we are already inside calculate_total() and do not need to inspect the remaining lines, Step Out returns execution to:
-
-            const total_amount = calculate_total(1000, 2);
-
-        ## Resume / continue
-
-            Resume or Continue allows the program to continue executing after it has been paused.
-
-            Example:
-
-                Breakpoint
-                    ↓
-                Program pauses
-                    ↓
-                Inspect variables
-                    ↓
-                Resume
-                    ↓
-                Program continues
-                    ↓
-                Next breakpoint
-
-            This is useful when we have inspected the current section and want the application to continue.
 
         ## Watch Expression
 
@@ -14623,7 +14533,6 @@ They have different roles.
  Jest           Testing framework                      
  Mocha          Testing framework                      
  Chai           Assertion library                      
- Mocking tools  Replace real dependencies during tests 
 
 ---
 
