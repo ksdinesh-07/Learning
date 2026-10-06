@@ -5,12 +5,25 @@ import product_routes from './routes/product_routes.js'
 import user_routes from './routes/user_routes.js';
 import order_routes from './routes/order_routes.js';
 import auth_routes from './routes/auth_routes.js'
+import helmet from "helmet";
+import cors from "cors";
+import rate_limit from "express-rate-limit";
 
+
+// const allowed_origins=["http://localhost:5173"]
+//for test
+const allowed_origins = ["http://127.0.0.1:5500"];
 const app=express()
+
+//helmet
+app.use(helmet());
+console.log("Helmet connected successfully")
+//cors 
+app.use(cors({origin:allowed_origins}))
+
 const port=process.env.PORT || 5000;
 console.log(process.env.PORT);
 console.log(process.env.MONGODB_URI);
-
 
 app.use(express.json());
 

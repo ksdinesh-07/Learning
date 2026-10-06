@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Exam Browser POC</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <header class="exam_header">
+        <h1>Online Examination</h1>
+        <div id="exam_timer">Time Left: 05:00</div>
+    </header>
+
+    <main class="exam_container">
+
+        <section class="candidate_card">
+            <h2>Candidate Information</h2>
+
+            <input
+                type="text"
+                id="candidate_name"
+                placeholder="Enter your name"
+            >
+
+            <button id="start_exam_button">
+                Start Exam
+            </button>
+
+            <p id="location_status">Location: Not captured</p>
+        </section>
+
+        <section id="exam_section" class="exam_section hidden">
+
+            <div class="question_header">
+                <h2 id="question_number"></h2>
+                <span id="question_progress"></span>
+            </div>
+
+            <div id="question_container"></div>
+
+            <div class="navigation_buttons">
+                <button id="previous_button">Previous</button>
+                <button id="next_button">Next</button>
+                <button id="submit_button">Submit Exam</button>
+            </div>
+
+        </section>
+
+        <section id="result_section" class="result_section hidden">
+
+            <h2>Exam Result</h2>
+
+            <p id="candidate_result"></p>
+            <p id="score_result"></p>
+            <p id="location_result"></p>
+
+            <canvas
+                id="score_canvas"
+                width="500"
+                height="300"
+            ></canvas>
+
+            <button id="restart_button">
+                Restart Exam
+            </button>
+
+        </section>
+
+    </main>
+
+    <script src="app.js"></script>
+</body>
+</html>

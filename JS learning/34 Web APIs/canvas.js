@@ -3,7 +3,7 @@ const context=canvas.getContext("2d");
 const expenses=[10000,8000,12000,9000];
 const months=['jan','Feb','Mar','Apr'];
 
-const max_expense=Math.max(...expense);
+const max_expense=Math.max(...expenses);
 
 expenses.forEach((expense,index)=>{
     const bar_height=(expense/max_expense) * 200;
@@ -13,5 +13,5 @@ expenses.forEach((expense,index)=>{
 
     context.fillRect(x_position,y_position,50,bar_height);
     context.fillText(months[index],x_position+10,270);
-    context/fillText(`${expense}`)
+    context.fillText(`${expense}`)
 })

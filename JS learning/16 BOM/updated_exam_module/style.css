@@ -1,0 +1,124 @@
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: Arial, sans-serif;
+    background: #f4f6f8;
+    min-height: 100vh;
+}
+
+.exam_header {
+    background: #1f2937;
+    color: white;
+    padding: 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.exam_header h1 {
+    font-size: 24px;
+}
+
+#exam_timer {
+    font-size: 18px;
+    font-weight: bold;
+}
+
+.exam_container {
+    max-width: 900px;
+    margin: 40px auto;
+    padding: 20px;
+}
+
+.candidate_card,
+.exam_section,
+.result_section {
+    background: white;
+    padding: 30px;
+    border-radius: 10px;
+    margin-bottom: 20px;
+}
+
+.candidate_card h2,
+.exam_section h2,
+.result_section h2 {
+    margin-bottom: 20px;
+}
+
+#candidate_name {
+    width: 100%;
+    padding: 12px;
+    margin-bottom: 15px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+
+button {
+    padding: 10px 18px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    background: #2563eb;
+    color: white;
+    margin: 5px;
+}
+
+button:hover {
+    opacity: 0.9;
+}
+
+.question_header {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 25px;
+}
+
+.question_text {
+    font-size: 20px;
+    margin-bottom: 20px;
+}
+
+.option {
+    display: block;
+    padding: 12px;
+    border: 1px solid #ddd;
+    margin-bottom: 10px;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.option:hover {
+    background: #f0f4ff;
+}
+
+.option input {
+    margin-right: 10px;
+}
+
+.navigation_buttons {
+    margin-top: 25px;
+    text-align: right;
+}
+
+.hidden {
+    display: none;
+}
+
+#location_status {
+    margin-top: 15px;
+    font-size: 14px;
+}
+
+.result_section {
+    text-align: center;
+}
+
+#score_canvas {
+    display: block;
+    margin: 30px auto;
+    border: 1px solid #ddd;
+}

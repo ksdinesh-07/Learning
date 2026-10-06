@@ -6,6 +6,7 @@
     <meta name="viewport"
         content="width=device-width, initial-scale=1.0">
     <title>Exam Result</title>
+    <script src="result.js" defer></script>
 </head>
 
 <body>
@@ -25,6 +26,15 @@
         Print Result
     </button>
     <br><br>
+
+    <h2>Score Visualization</h2>
+    <canvas id="score_canvas" width="400" height="200"></canvas>
+
+    <h2>Performance</h2>
+    <canvas id="performance_canvas" width="400" height="200"></canvas>
+
+    <h2>Exam Status</h2>
+    <canvas id="status_canvas" width="400" height="150"></canvas>
 
     <button onclick="history.back()">
         Go Back

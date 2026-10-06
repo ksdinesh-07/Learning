@@ -14886,7 +14886,6 @@ Mocha provides functionality for:
 * Organizing test suites
 * Running tests
 * Handling asynchronous tests
-* Managing test lifecycle hooks
 
 Mocha commonly works with an assertion library such as **Chai**.
 
@@ -15227,43 +15226,6 @@ This allows the test to focus on the function's behavior.
 
 ---
 
-#  Unit Test Isolation
-
-A unit test should ideally focus on one unit.
-
-For example:
-
-```text
-calculate_total()
-```
-
-should be tested independently from:
-
-```text
-Database
-API
-Payment Gateway
-File System
-External Services
-```
-
-Mocking helps isolate the function from those dependencies.
-
----
-
-# Setup and Cleanup
-
-Testing frameworks provide mechanisms for preparing and cleaning test data.
-
-Common concepts include:
-
-```text
-before
-beforeEach
-after
-afterEach
-```
-
 For example:
 
 ```javascript
@@ -15272,40 +15234,6 @@ beforeEach(() => {
 });
 ```
 This code runs before every test.
-
----
-
-# Test Lifecycle
-
-A typical test lifecycle is:
-
-```text
-Setup
-  ↓
-Run test
-  ↓
-Check result
-  ↓
-Cleanup
-```
-
-For multiple tests:
-
-```text
-beforeEach
-   ↓
-Test 1
-   ↓
-afterEach
-   ↓
-beforeEach
-   ↓
-Test 2
-   ↓
-afterEach
-```
-
-This helps ensure that tests do not unintentionally affect each other.
 
 ---
 
@@ -15332,53 +15260,6 @@ PASS / FAIL
 ```
 
 ---
-
-### Source code
-
-```javascript
-function calculate_order_total(
-    product_price,
-    quantity,
-    discount_percentage
-) {
-
-    const subtotal =product_price * quantity;
-    const discount_amount =subtotal *discount_percentage / 100;
-    return subtotal - discount_amount;
-}
-
-module.exports = {calculate_order_total};
-```
-
-### Test code
-
-```javascript
-const {
-    calculate_order_total
-} = require("./order_service");
-
-test("should calculate order total after discount", () => {
-
-    const result =
-        calculate_order_total(
-            1000,
-            2,
-            10
-        );
-
-    expect(result).toBe(1800);
-});
-```
-
-The calculation is:
-
-```text
-1000 × 2 = 2000
-
-10% discount = 200
-
-Final amount = 1800
-```
 
 # Testing Pyramid
 
@@ -15485,16 +15366,6 @@ const comment_text = "<script>alert('XSS')</script>";
 
 document.getElementById("comments").textContent = comment_text;
 ```
-
-The browser displays the content as normal text instead of interpreting it as HTML.
-
-| Method                 | Use                                                    |
-| ---------------------- | ------------------------------------------------------ |
-| `textContent`          | Display user-provided text                             |
-| `innerHTML`            | Insert HTML when the HTML is trusted/controlled        |
-| `insertAdjacentHTML()` | Insert HTML; requires the same security considerations |
-
----
 
 ## Real-Time XSS Example
 
@@ -15639,7 +15510,7 @@ Content Security Policy provides another layer of protection.
 
 ## What is CSRF?
 
-**CSRF (Cross-Site Request Forgery)** is an attack where a malicious website causes a user's browser to send an unwanted request to another website where the user is authenticated.
+**CSRF is a web security attack where an attacker tricks a logged-in user's browser into sending an unwanted request to another website.
 
 For example:
 
@@ -15742,29 +15613,6 @@ The appropriate setting depends on the application's authentication and cross-si
 
 ---
 
-# XSS vs CSRF
-
-These attacks are different.
-
-| XSS                                               | CSRF                                          |
-| ------------------------------------------------- | --------------------------------------------- |
-| Injects malicious content/script                  | Tricks browser into sending a request         |
-| Primarily targets page execution                  | Primarily targets unwanted actions            |
-| Often involves unsafe output handling             | Often involves authentication cookies         |
-| `textContent` can help prevent many DOM XSS cases | CSRF tokens and SameSite cookies can help     |
-| CSP provides an additional layer                  | CSRF-specific protections are still important |
-
-A simple way to remember:
-
-```text
-XSS
-→ Can malicious code execute in my page?
-
-CSRF
-→ Can another site make my browser perform an action?
-```
-
----
 
 # Input Sanitization
 
@@ -15786,9 +15634,6 @@ Application processing
 
 ---
 
-## Validation vs Sanitization
-
-These concepts are related but different.
 
 ### Validation
 
@@ -15843,18 +15688,6 @@ element.innerHTML = email_address;
 is still an inappropriate way to display untrusted content.
 
 ---
-
-## Never Trust Client-Side Validation Alone
-
-Consider a registration form:
-
-```javascript
-if (password.length >= 8) {
-    submit_form();
-}
-```
-
-This is useful for user experience.
 
 But an attacker can bypass JavaScript completely and send a request directly to the backend.
 
@@ -15974,36 +15807,6 @@ This allows scripts from the application's own origin.
 
 ---
 
-## CSP Nonce
-
-For applications that genuinely require specific inline scripts, CSP nonces can be used.
-
-The server generates a random nonce:
-
-```text
-random_nonce_value
-```
-
-Response header:
-
-```http
-Content-Security-Policy: script-src 'nonce-random_nonce_value'
-```
-
-HTML:
-
-```html
-<script nonce="random_nonce_value">
-    console.log("Allowed script");
-</script>
-```
-
-Only scripts with the matching nonce are permitted.
-
-The nonce should be unpredictable and newly generated for each response.
-
----
-
 # Security Headers
 
 CSP is one of several HTTP security mechanisms.
@@ -16082,87 +15885,6 @@ The server can also send an appropriate CSP header.
 
 ---
 
-# Security Layers
-
-A modern application should not depend on a single security technique.
-
-| Layer             | Example                          |
-| ----------------- | -------------------------------- |
-| Input validation  | Check email, length, type        |
-| Output handling   | `textContent`                    |
-| Sanitization      | Sanitize allowed HTML            |
-| Authentication    | Login/session/token              |
-| Authorization     | Check user permissions           |
-| CSRF protection   | Token + SameSite cookies         |
-| CSP               | Restrict script/resource sources |
-| HTTPS             | Encrypt network communication    |
-| Server validation | Never trust browser validation   |
-
----
-
-# Common Security Mistakes
-
-## Using `innerHTML` with untrusted data
-
-```javascript
-element.innerHTML = user_input;
-```
-
-## Relying only on frontend validation
-
-```javascript
-if (amount <= 10000) {
-    submit_payment();
-}
-```
-
-An attacker can bypass this JavaScript.
-
-The server must enforce the limit.
-
-## Storing sensitive information unnecessarily in localStorage
-
-```javascript
-localStorage.setItem("sensitive_data", data);
-```
-
-Client-side storage should be used carefully, especially for sensitive information.
-
-## Creating your own HTML sanitizer
-
-For example:
-
-```javascript
-input.replace("<script>", "");
-```
-
-This is not a reliable security mechanism.
-
-## Using `eval()` with untrusted input
-
-```javascript
-eval(user_input);
-```
-
-Avoid this pattern.
-
----
-
-# Encoding vs Sanitization
-
-These concepts are often confused.
-
-### Encoding
-
-Converts data so it is represented safely in a particular output context.
-
-For example, displaying:
-
-```text
-<hello>
-```
-
-as text rather than HTML.
 
 ### Sanitization
 

@@ -4517,4 +4517,1478 @@ Generate JWT
       ↓
 Return Token
 ```
+# Node.js Module 6 — Testing, Caching, PM2 & Production Deployment
+
+## Module Overview
+
+This module focuses on preparing a Node.js application for **testing, performance scaling, process management, and production deployment**.
+
+The major topics are:
+
+- Automated endpoint assertion testing using Jest and Supertest
+- Redis caching for performance scaling
+- PM2 process management and clustering
+- Production configuration, logs, and cloud deployment
+
+The overall production architecture can be represented as:
+
+```text
+                         Client
+                           │
+                           ▼
+                      Node.js API
+                           │
+             ┌─────────────┼─────────────┐
+             │             │             │
+             ▼             ▼             ▼
+          MongoDB        Redis          Logs
+             │             │
+             │             │
+             └─────────────┘
+                           │
+                         PM2
+                           │
+                 Multiple Node.js
+                    processes
+                           │
+                    Cloud Server
+```
+
+---
+
+# Automated Endpoint Testing
+
+## What is Automated Testing?
+
+Automated testing means using code to automatically verify that an application behaves correctly.
+
+Instead of manually doing this:
+
+```text
+Open Postman
+      ↓
+Send request
+      ↓
+Check status code
+      ↓
+Check response
+      ↓
+Check database
+```
+
+we can write a test:
+
+```text
+Test code
+   ↓
+Send HTTP request
+   ↓
+Receive response
+   ↓
+Check expected result
+   ↓
+Pass / Fail
+```
+
+This is especially useful when an application contains many API endpoints.
+
+---
+
+# Jest
+
+Jest is a JavaScript testing framework.
+
+It provides features such as:
+
+```text
+test()
+expect()
+describe()
+beforeAll()
+afterAll()
+```
+
+For example:
+
+```js
+test("addition should work", () => {
+    expect(2 + 3).toBe(5);
+});
+```
+
+The important part is:
+
+```js
+expect(2 + 3).toBe(5);
+```
+
+The test checks whether the actual result matches the expected result.
+
+---
+
+# Supertest
+
+Supertest is used to send HTTP requests to an application, particularly Express applications.
+
+For example:
+
+```js
+const response = await request(app)
+    .get("/");
+```
+
+Here:
+
+```text
+request(app)
+     ↓
+Express application
+     ↓
+GET /
+     ↓
+HTTP response
+```
+
+Jest performs the **testing and assertion**, while Supertest performs the **HTTP request**.
+
+---
+
+# Jest + Supertest
+
+The relationship is:
+
+```text
+Jest
+ │
+ │ controls the test
+ ▼
+Supertest
+ │
+ │ sends HTTP request
+ ▼
+Express
+ │
+ ▼
+Route
+ │
+ ▼
+Database
+ │
+ ▼
+Response
+ │
+ ▼
+Supertest
+ │
+ ▼
+Jest assertion
+```
+
+For an e-commerce API:
+
+```text
+Jest
+  ↓
+Supertest
+  ↓
+POST /api/auth/login
+  ↓
+MongoDB
+  ↓
+Login response
+  ↓
+Jest verifies response
+```
+
+---
+
+# Installing Jest and Supertest
+
+Install them as development dependencies:
+
+```powershell
+npm install --save-dev jest supertest
+```
+
+The packages are development dependencies because they are primarily required while developing and testing the application.
+
+---
+
+# Jest with ECMAScript Modules
+
+The project uses:
+
+```json
+"type": "module"
+```
+
+Therefore, the test script was configured as:
+
+```json
+"scripts": {
+    "test": "node --experimental-vm-modules node_modules/jest/bin/jest.js"
+}
+```
+
+Tests can then be executed with:
+
+```powershell
+npm test
+```
+
+---
+
+# Basic Endpoint Test
+
+Suppose the API has:
+
+```text
+GET /
+```
+
+which returns:
+
+```json
+{
+    "success": true,
+    "message": "E-com API is running"
+}
+```
+
+The test can be:
+
+```js
+test("GET / should return API status", async () => {
+    const response = await request(app)
+        .get("/");
+
+    expect(response.status).toBe(200);
+    expect(response.body.success).toBe(true);
+    expect(response.body.message).toBe("E-com API is running");
+});
+```
+
+---
+
+# Understanding response.body
+
+Suppose the server sends:
+
+```json
+{
+    "success": true,
+    "message": "E-com API is running"
+}
+```
+
+Supertest stores that JSON response in:
+
+```js
+response.body
+```
+
+Therefore:
+
+```js
+response.body.success
+```
+
+means:
+
+```text
+response
+   ↓
+body
+   ↓
+success
+```
+
+and returns:
+
+```text
+true
+```
+
+---
+
+# HTTP Status Code Testing
+
+Testing only the response body is not enough.
+
+We should also verify the HTTP status code.
+
+Example:
+
+```js
+expect(response.status).toBe(200);
+```
+
+For a successful resource creation:
+
+```js
+expect(response.status).toBe(201);
+```
+
+For authentication failure:
+
+```js
+expect(response.status).toBe(401);
+```
+
+For insufficient permissions:
+
+```js
+expect(response.status).toBe(403);
+```
+
+For a missing resource:
+
+```js
+expect(response.status).toBe(404);
+```
+
+---
+
+# Testing Login
+
+A login endpoint should be tested for both successful and unsuccessful authentication.
+
+Example:
+
+```js
+test("POST /api/auth/login should reject invalid credentials", async () => {
+    const response = await request(app)
+        .post("/api/auth/login")
+        .send({
+            email: "wrong@example.com",
+            password: "wrongpassword"
+        });
+
+    expect(response.status).toBe(401);
+    expect(response.body.message).toBe("Invalid email or password");
+});
+```
+
+A successful login can be tested with:
+
+```js
+test("POST /api/auth/login should return JWT token", async () => {
+    const response = await request(app)
+        .post("/api/auth/login")
+        .send({
+            email: "admin@test.com",
+            password: "admin12345"
+        });
+
+    expect(response.status).toBe(200);
+    expect(response.body.token).toBeDefined();
+    expect(response.body.user).toBeDefined();
+});
+```
+
+---
+
+# Testing Protected Endpoints
+
+Our product deletion endpoint requires authentication and admin authorization.
+
+```text
+DELETE /api/products/:id
+        │
+        ▼
+auth_middleware
+        │
+        ▼
+admin_middleware
+        │
+        ▼
+delete product
+```
+
+Therefore, multiple situations should be tested.
+
+## No Token
+
+```js
+const response = await request(app)
+    .delete(`/api/products/${product_id}`);
+
+expect(response.status).toBe(401);
+```
+
+## Customer Token
+
+```js
+expect(response.status).toBe(403);
+```
+
+## Admin Token
+
+```js
+expect(response.status).toBe(200);
+```
+
+This verifies the complete authentication and authorization chain.
+
+---
+
+# Integration Testing
+
+Integration testing verifies that multiple parts of the application work together.
+
+For example:
+
+```text
+POST /api/auth/register
+        ↓
+Express
+        ↓
+User route
+        ↓
+Password hashing
+        ↓
+MongoDB
+        ↓
+User stored
+```
+
+The test can then directly check MongoDB.
+
+For our project:
+
+```js
+const stored_user = await user_model
+    .findOne({ email: test_email })
+    .select("+password");
+```
+
+We verify that the user actually exists in the database.
+
+---
+
+# Password Hash Verification
+
+Passwords should never be stored as plain text.
+
+The test verifies that:
+
+```js
+expect(stored_user.password).not.toBe("Test@12345");
+```
+
+Then bcrypt verifies the hash:
+
+```js
+const password_match = await bcrypt.compare(
+    "Test@12345",
+    stored_user.password
+);
+
+expect(password_match).toBe(true);
+```
+
+Therefore the integration test verifies both:
+
+```text
+Registration
+     ↓
+Password hashing
+     ↓
+MongoDB storage
+     ↓
+Hash exists
+     ↓
+Original password matches hash
+```
+
+---
+
+# Test Database Connection Lifecycle
+
+Because integration tests use MongoDB, the database connection should be opened before tests and closed after tests.
+
+```js
+beforeAll(async () => {
+    await connect_db();
+});
+
+afterAll(async () => {
+    await mongoose.connection.close();
+});
+```
+
+The purpose is:
+
+```text
+beforeAll
+    ↓
+Connect MongoDB
+    ↓
+Run tests
+    ↓
+afterAll
+    ↓
+Close MongoDB
+```
+
+This prevents the test process from unnecessarily keeping the database connection open.
+
+---
+
+# Redis Performance Scaling
+
+## Why Redis?
+
+MongoDB queries can become expensive when:
+
+- The collection becomes large
+- Many users request the same data
+- A query is computationally expensive
+- The endpoint receives heavy traffic
+
+Suppose thousands of users request:
+
+```text
+GET /api/products
+```
+
+Without caching:
+
+```text
+Request 1 → MongoDB
+Request 2 → MongoDB
+Request 3 → MongoDB
+Request 4 → MongoDB
+Request 5 → MongoDB
+...
+```
+
+The database receives repeated queries for the same information.
+
+Redis can reduce this repeated database work.
+
+---
+
+# What is Redis?
+
+Redis is an in-memory data store.
+
+It stores data primarily in memory, which allows very fast access.
+
+A common caching architecture is:
+
+```text
+Client
+  ↓
+Express API
+  ↓
+Redis
+  │
+  ├── Cache HIT → return cached data
+  │
+  └── Cache MISS
+          ↓
+       MongoDB
+          ↓
+       Redis
+          ↓
+       Client
+```
+
+---
+
+# Cache Hit
+
+A cache hit occurs when the requested data already exists in Redis.
+
+```text
+GET /api/products
+        ↓
+Redis
+        ↓
+Data found
+        ↓
+CACHE HIT
+        ↓
+Return data
+```
+
+MongoDB does not need to be queried.
+
+---
+
+# Cache Miss
+
+A cache miss occurs when the requested data is not in Redis.
+
+```text
+GET /api/products
+        ↓
+Redis
+        ↓
+Data not found
+        ↓
+CACHE MISS
+        ↓
+MongoDB
+        ↓
+Store result in Redis
+        ↓
+Return response
+```
+
+---
+
+# Redis Client
+
+The Node.js Redis package can be installed using:
+
+```powershell
+npm install redis
+```
+
+A Redis client can be created using:
+
+```js
+import { createClient } from "redis";
+
+const redis_client = createClient({
+    url: process.env.REDIS_URL
+});
+```
+
+The Redis connection URL is stored in the environment file:
+
+```env
+REDIS_URL=redis://localhost:6379
+```
+
+---
+
+# Redis Connection
+
+The application connects to Redis before starting the server:
+
+```js
+await connect_redis();
+```
+
+The architecture becomes:
+
+```text
+server.js
+   │
+   ├── connect MongoDB
+   │
+   ├── connect Redis
+   │
+   └── start Express server
+```
+
+---
+
+# Basic Redis Cache
+
+For the product endpoint, a cache key can be created:
+
+```js
+const products_cache_key = "products";
+```
+
+The API first checks Redis:
+
+```js
+const cached_products = await redis_client.get(
+    products_cache_key
+);
+```
+
+If data exists:
+
+```js
+if (cached_products) {
+    const cached_data = JSON.parse(cached_products);
+
+    return res.status(200).json(cached_data);
+}
+```
+
+This is a cache hit.
+
+---
+
+# Cache Miss
+
+If Redis does not contain the products:
+
+```text
+Redis GET
+    ↓
+No data
+    ↓
+Cache MISS
+    ↓
+MongoDB query
+```
+
+The application queries MongoDB:
+
+```js
+const products = await product_model.find();
+```
+
+Then creates the response:
+
+```js
+const response_data = {
+    success: true,
+    count: products.length,
+    products
+};
+```
+
+The result can be stored in Redis:
+
+```js
+await redis_client.setEx(
+    products_cache_key,
+    60,
+    JSON.stringify(response_data)
+);
+```
+
+The `60` represents the TTL in seconds.
+
+Therefore:
+
+```text
+Cache lifetime = 60 seconds
+```
+
+---
+
+# TTL
+
+TTL means **Time To Live**.
+
+It defines how long a cached value should remain available.
+
+For example:
+
+```js
+setEx("products", 60, data)
+```
+
+means:
+
+```text
+Store products
+     ↓
+Keep for 60 seconds
+     ↓
+Expire automatically
+```
+
+After expiration:
+
+```text
+Redis
+ ↓
+Cache MISS
+ ↓
+MongoDB
+ ↓
+New cache
+```
+
+---
+
+# Cache Invalidation
+
+Caching introduces an important problem: **stale data**.
+
+Suppose Redis contains:
+
+```text
+Product price = ₹500
+```
+
+Then MongoDB is updated:
+
+```text
+Product price = ₹600
+```
+
+Redis might still contain:
+
+```text
+₹500
+```
+
+The application could therefore return outdated information.
+
+This is called **stale cache data**.
+
+---
+
+# Invalidating Product Cache
+
+After creating, updating, or deleting a product, the product cache should be removed.
+
+Example:
+
+```js
+await redis_client.del(products_cache_key);
+```
+
+The flow becomes:
+
+```text
+POST /api/products
+       ↓
+MongoDB
+       ↓
+Product created
+       ↓
+Delete products cache
+       ↓
+Next GET
+       ↓
+Cache MISS
+       ↓
+MongoDB
+       ↓
+Fresh cache
+```
+
+The same concept applies to PUT and DELETE operations.
+
+---
+
+# Cache Stampede
+
+A cache stampede can occur when many requests arrive at the same time after a cache expires.
+
+Example:
+
+```text
+Cache expires
+     ↓
+100 requests arrive
+     ↓
+Request 1 → MongoDB
+Request 2 → MongoDB
+Request 3 → MongoDB
+Request 4 → MongoDB
+...
+Request 100 → MongoDB
+```
+
+The database can suddenly receive a large number of identical queries.
+
+---
+
+# Redis Lock
+
+A Redis lock can ensure that only one request rebuilds the cache.
+
+A lock key can be defined:
+
+```js
+const products_lock_key = "products:lock";
+```
+
+The application tries to acquire the lock:
+
+```js
+const lock_acquired = await redis_client.set(
+    products_lock_key,
+    "1",
+    {
+        NX: true,
+        EX: 10
+    }
+);
+```
+
+`NX` means:
+
+```text
+Only create the key if it does not already exist.
+```
+
+`EX: 10` means:
+
+```text
+Expire the lock after 10 seconds.
+```
+
+Therefore:
+
+```text
+Request 1
+   ↓
+Acquires lock
+   ↓
+Queries MongoDB
+   ↓
+Builds cache
+   ↓
+Releases lock
+```
+
+Other requests can wait and retry the cache.
+
+---
+
+# Why Lock TTL Matters
+
+Suppose the application crashes while holding the lock.
+
+Without expiration:
+
+```text
+Lock remains forever
+      ↓
+Other requests cannot rebuild cache
+```
+
+With:
+
+```js
+EX: 10
+```
+
+the lock automatically expires.
+
+This prevents a permanently stuck cache rebuild.
+
+---
+
+# Cache Retry
+
+When another request finds that the cache rebuild lock is already held, it can wait briefly and check Redis again.
+
+Example:
+
+```js
+for (let retry_count = 0; retry_count < 5; retry_count++) {
+
+    await new Promise((resolve) => {
+        setTimeout(resolve, 100);
+    });
+
+    const retry_cached_products = await redis_client.get(
+        products_cache_key
+    );
+
+    if (retry_cached_products) {
+        return res.status(200).json(
+            JSON.parse(retry_cached_products)
+        );
+    }
+}
+```
+
+The idea is:
+
+```text
+Cache MISS
+   ↓
+Lock already exists
+   ↓
+Wait 100 ms
+   ↓
+Check Redis again
+   ↓
+Cache available?
+   ├── Yes → return cache
+   └── No → retry
+```
+
+---
+
+# PM2 Process Management
+
+## What is PM2?
+
+PM2 is a Node.js process manager.
+
+It helps manage Node.js applications in production.
+
+Without PM2:
+
+```text
+Node.js
+   ↓
+Crash
+   ↓
+Application stops
+```
+
+With PM2:
+
+```text
+PM2
+ ↓
+Node.js
+ ↓
+Crash
+ ↓
+PM2 detects crash
+ ↓
+Restart
+```
+
+---
+
+# Nodemon vs PM2
+
+Nodemon is mainly used during development.
+
+PM2 is mainly used for production process management.
+
+| Feature | Nodemon | PM2 |
+|---|---|---|
+| Development | Yes | Possible |
+| Restart after code changes | Yes | Not its main purpose |
+| Crash recovery | Yes | Yes |
+| Process management | Basic | Advanced |
+| Logs | Basic | Built-in |
+| Cluster mode | No | Yes |
+| Load balancing | No | Yes |
+| Production process manager | No | Yes |
+
+A simple way to remember:
+
+```text
+Nodemon
+→ "My code changed, restart my app."
+
+PM2
+→ "Keep my application running."
+```
+
+---
+
+# Installing PM2
+
+PM2 can be installed globally:
+
+```powershell
+npm install -g pm2
+```
+
+Check the installation:
+
+```powershell
+pm2 -v
+```
+
+---
+
+# Starting an Application
+
+A Node.js application can be started with:
+
+```powershell
+pm2 start src/server.js --name e-com-api
+```
+
+The `--name` option gives the process a meaningful name.
+
+Check the process:
+
+```powershell
+pm2 list
+```
+
+---
+
+# PM2 Basic Commands
+
+## List processes
+
+```powershell
+pm2 list
+```
+
+Shows:
+
+```text
+name
+status
+cpu
+memory
+```
+
+---
+
+## Start
+
+```powershell
+pm2 start src/server.js --name e-com-api
+```
+
+---
+
+## Stop
+
+```powershell
+pm2 stop e-com-api
+```
+
+This stops the process but keeps it registered with PM2.
+
+---
+
+## Restart
+
+```powershell
+pm2 restart e-com-api
+```
+
+This restarts the application.
+
+---
+
+## Delete
+
+```powershell
+pm2 delete e-com-api
+```
+
+This removes the process from PM2.
+
+---
+
+## Delete everything
+
+```powershell
+pm2 delete all
+```
+
+This removes all PM2-managed applications.
+
+---
+
+# PM2 Logs
+
+PM2 automatically captures application output.
+
+View all logs:
+
+```powershell
+pm2 logs
+```
+
+View one application:
+
+```powershell
+pm2 logs e-com-api
+```
+
+Detailed process information:
+
+```powershell
+pm2 show e-com-api
+```
+
+This can show information such as:
+
+- Process ID
+- Application path
+- Uptime
+- Restart count
+- CPU usage
+- Memory usage
+- Execution mode
+
+---
+
+# Fork Mode
+
+Fork mode normally runs one Node.js process.
+
+```text
+PM2
+ ↓
+Node.js process
+ ↓
+E-commerce API
+```
+
+Example:
+
+```powershell
+pm2 start src/server.js --name e-com-api
+```
+
+This is useful when one process is sufficient.
+
+---
+
+# Cluster Mode
+
+Node.js applications can be run as multiple processes using PM2 cluster mode.
+
+Example:
+
+```powershell
+pm2 start src/server.js -i 4 --name e-com-api
+```
+
+The `-i 4` option creates four instances.
+
+```text
+                PM2
+                 │
+       ┌─────────┼─────────┐
+       ↓         ↓         ↓
+   Node.js   Node.js   Node.js   Node.js
+   Process 1 Process 2 Process 3 Process 4
+```
+
+All processes run the same application.
+
+---
+
+# Multi-Core Scaling
+
+Modern servers can have multiple CPU cores.
+
+For example:
+
+```text
+CPU
+├── Core 1
+├── Core 2
+├── Core 3
+└── Core 4
+```
+
+A single Node.js process cannot simply become four independent Node.js processes by itself.
+
+PM2 cluster mode can create multiple Node.js processes.
+
+Conceptually:
+
+```text
+                PM2
+                 │
+       ┌─────────┼─────────┐
+       ↓         ↓         ↓
+   Process 1 Process 2 Process 3 Process 4
+       ↓         ↓         ↓         ↓
+    CPU       CPU       CPU       CPU
+    Core      Core      Core      Core
+```
+
+The processes can handle incoming requests concurrently.
+
+---
+
+# PM2 Load Balancing
+
+In cluster mode, PM2 distributes incoming connections between the application instances.
+
+Conceptually:
+
+```text
+              Incoming Requests
+                     │
+                     ▼
+                    PM2
+                     │
+          ┌──────────┼──────────┐
+          ↓          ↓          ↓
+       Worker 1   Worker 2   Worker 3
+          │          │          │
+          └──────────┼──────────┘
+                     ↓
+                Node.js API
+```
+
+Therefore, if traffic increases, multiple processes can handle the workload.
+
+---
+
+# Using All Available CPU Capacity
+
+PM2 provides:
+
+```powershell
+pm2 start src/server.js -i max --name e-com-api
+```
+
+`max` tells PM2 to create instances based on the available CPU capacity.
+
+This is useful when deploying to a server where the exact number of CPU cores may differ between environments.
+
+---
+
+# Graceful Reload
+
+When using multiple cluster processes, restarting every process simultaneously can cause unnecessary interruption.
+
+PM2 provides reload functionality:
+
+```powershell
+pm2 reload e-com-api
+```
+
+The idea is to gradually replace workers while keeping the application available.
+
+Conceptually:
+
+```text
+Worker 1 → old
+Worker 2 → running
+Worker 3 → running
+
+        ↓ reload
+
+Worker 1 → replaced
+Worker 2 → running
+Worker 3 → running
+
+        ↓
+
+New workers running
+```
+
+This is useful when deploying a new version of an application.
+
+---
+
+# PM2 Startup and Saved Processes
+
+In production, a server may restart.
+
+We want PM2 to restore our applications automatically.
+
+PM2 provides:
+
+```powershell
+pm2 save
+```
+
+This saves the currently managed process configuration.
+
+The startup configuration is generated using:
+
+```powershell
+pm2 startup
+```
+
+The general production flow is:
+
+```text
+Cloud server restarts
+        ↓
+Operating system starts
+        ↓
+PM2 starts
+        ↓
+Saved applications restored
+        ↓
+Node.js API available
+```
+
+The exact startup command generated by `pm2 startup` depends on the operating system and environment.
+
+---
+
+# Production Configuration
+
+## NODE_ENV
+
+`NODE_ENV` is an environment variable commonly used to identify the application's environment.
+
+Typical values include:
+
+```text
+development
+test
+production
+```
+
+For production:
+
+```env
+NODE_ENV=production
+```
+
+The application can check:
+
+```js
+if (process.env.NODE_ENV === "production") {
+    // production behavior
+}
+```
+
+---
+
+# Why NODE_ENV Matters
+
+Different environments can require different behavior.
+
+```text
+Development
+├── Detailed debugging
+├── Development tools
+└── Frequent code changes
+
+Test
+├── Automated tests
+└── Test database/configuration
+
+Production
+├── Secure configuration
+├── Production logs
+├── Real database
+└── Optimized behavior
+```
+
+`NODE_ENV` helps the application identify which environment it is running in.
+
+---
+
+# Environment Variables
+
+Production secrets should not be hardcoded into source code.
+
+Bad:
+
+```js
+const jwt_secret = "my-secret-key";
+```
+
+Better:
+
+```js
+const jwt_secret = process.env.JWT_SECRET;
+```
+
+Then configure it through the deployment environment:
+
+```env
+JWT_SECRET=production-secret-value
+```
+
+Important environment variables for this project include:
+
+```env
+NODE_ENV=production
+PORT=5000
+MONGO_URI=...
+REDIS_URL=...
+JWT_SECRET=...
+CLIENT_URL=...
+```
+
+Real production secrets should never be committed to Git.
+
+---
+
 

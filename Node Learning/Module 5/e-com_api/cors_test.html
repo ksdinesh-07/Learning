@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>CORS Test</title>
+</head>
+<body>
+    <button id="get_products">Get Products</button>
+    <script>
+        document.getElementById("get_products").addEventListener("click", async () => {
+            try {
+                const response = await fetch("http://localhost:5000/api/products");
+                const data = await response.json();
+                console.log(data);
+            }
+            catch (error) {
+                console.error(error);
+            }
+        });
+    </script>
+
+</body>
+</html>
