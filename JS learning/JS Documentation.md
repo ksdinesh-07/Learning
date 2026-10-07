@@ -14730,85 +14730,6 @@ result = 2500
 
 the test fails.
 
----
-
-#  Common Jest Matchers
-
-Jest provides several matchers.
-
-### `toBe()`
-
-Used for exact equality.
-
-```javascript
-expect(total_amount).toBe(2000);
-```
-
----
-
-### `toEqual()`
-
-Used to compare objects and arrays.
-
-```javascript
-expect(product).toEqual({
-    product_name: "Laptop",
-    product_price: 50000
-});
-```
-
----
-
-### `toBeTruthy()`
-
-Checks whether a value is truthy.
-
-```javascript
-expect(is_logged_in).toBeTruthy();
-```
-
----
-
-### `toBeFalsy()`
-
-Checks whether a value is falsy.
-
-```javascript
-expect(is_logged_in).toBeFalsy();
-```
-
----
-
-### `toBeNull()`
-
-Checks whether the value is `null`.
-
-```javascript
-expect(product).toBeNull();
-```
-
----
-
-### `toBeUndefined()`
-
-Checks whether the value is `undefined`.
-
-```javascript
-expect(product).toBeUndefined();
-```
-
----
-
-### `toContain()`
-
-Checks whether an array or string contains a value.
-
-```javascript
-expect(product_names).toContain("Laptop");
-```
-
----
-
 # Testing Multiple Cases
 
 A good unit test should test different possible inputs.
@@ -15027,11 +14948,8 @@ Test:
 
 ```javascript
 test("should throw error when balance is insufficient", () => {
-
     expect(() => {
-
         withdraw_money(1000, 1500);
-
     }).toThrow("Insufficient balance");
 });
 ```
@@ -15041,7 +14959,7 @@ This verifies the error behavior instead of only testing successful cases.
 ---
 
 
-## Mocking?
+## Mocking
 
 **Mocking** means replacing a real dependency with a controlled fake version during a test.
 

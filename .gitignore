@@ -1,8 +1,18 @@
 node_modules/
+
 .env
 .env.*
+
 *.log
 *.tmp
+
+# Package manager files
+.yarn/
+.yarn-cache/
+.pnp/
+.pnp.js
+.pnp.cjs
+yarn-error.log
 
 # Ignore data files
 *.csv
@@ -12,6 +22,17 @@ node_modules/
 output/
 dist/
 build/
+coverage/
 
+# Runtime and temporary files
+*.pid
+*.seed
+*.lock
+
+# OS files
 .DS_Store
 Thumbs.db
+
+# Editor files
+.vscode/
+.idea/
