@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Task & Habit Tracker</title>
+    <link rel="stylesheet" href="./css/style.css">
+</head>
+
+<body>
+    <main class="dashboard-container">
+        <!-- Header -->
+        <div id="header"></div>
+
+        <script type="module">
+            import { render_header,setup_theme } from "./js/components/header.js";
+            document.getElementById("header").innerHTML=render_header("dashboard");
+            setup_theme();
+        </script>
+
+        <!-- summary cards -->
+        <section class="summary-container">
+
+            <!-- completed Tasks -->
+            <article class="summary-card">
+                <div class="card-content">
+                    <p class="card-label">Completed tasks</p>
+                    <p class="card-value">0</p>
+                    <p class="card-description">In the last 7 Days</p>
+                </div>
+
+                <div class="card-icon completed-icon">
+                    <img src="./assets/Completed-task_icon.svg" alt="">
+                </div>
+            </article>
+
+
+            <!-- Overdue Tasks -->
+            <article class="summary-card">
+                <div class="card-content">
+                    <p class="card-label">Overdue tasks</p>
+                    <p class="card-value">0</p>
+                    <p class="card-description">Total overdue</p>
+                </div>
+
+                <div class="card-icon overdue-icon">
+                    <img src="./assets/overdue-task_icon.svg" alt="">
+                </div>
+            </article>
+
+
+            <!-- Active Habits -->
+            <article class="summary-card">
+                <div class="card-content">
+                    <p class="card-label">Active habits</p>
+                    <p class="card-value">0</p>
+                    <p class="card-description">Now active</p>
+                </div>
+
+                <div class="card-icon habits-icon">
+                    <img src="./assets/active-habbit_icom.svg" alt="">
+                </div>
+            </article>
+
+
+            <!-- Longest Streak -->
+            <article class="summary-card">
+                <div class="card-content">
+                    <p class="card-label">Longest Streak</p>
+                    <p class="card-value">0</p>
+                    <p class="card-description">All-time record</p>
+                </div>
+
+                <div class="card-icon streak-icon">
+                    <img src="./assets/long-streek_icon.svg" alt="">
+                </div>
+            </article>
+
+        </section>
+
+
+        <!-- Analytics -->
+        <section class="analytics-container">
+
+            <!-- Status Overview -->
+            <article class="analytics-card status-card">
+                <div class="analytics-header">
+                    <h2>Status Overview</h2>
+                    <p>Get a snapshot of the status of your work items.</p>
+                </div>
+
+                <div class="status-chart-container">
+                    <div class="donut-chart">
+                        <canvas id="status-chart"></canvas>
+                    </div>
+                    <div class="status-legend">
+                        <div class="legend-item">
+                            <span class="legend-dot todo"></span>
+                            <span>Todo - 0</span>
+                        </div>
+                        <div class="legend-item">
+                            <span class="legend-dot on-hold"></span>
+                            <span>On hold - 0</span>
+                        </div>
+                        <div class="legend-item">
+                            <span class="legend-dot in-progress"></span>
+                            <span>In progress - 0</span>
+                        </div>
+                        <div class="legend-item">
+                            <span class="legend-dot completed"></span>
+                            <span>Completed - 0</span>
+                        </div>
+                    </div>
+                </div>
+            </article>
+
+
+            <!-- Habit Completion Trend -->
+            <article class="analytics-card trend-card">
+                <div class="analytics-header">
+                    <h2>Habit Completion Trend</h2>
+                    <p>Track your daily habit completion over the past week.</p>
+                </div>
+
+                <div class="trend-chart-container">
+                    <canvas id="habit-trend-chart"></canvas>
+                </div>
+            </article>
+
+        </section>
+
+    </main>
+
+    <script src="./script.js"></script>
+
+</body>
+</html>

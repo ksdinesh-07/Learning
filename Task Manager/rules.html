@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rules</title>
+
+    <link rel="stylesheet" href="./css/style.css">
+</head>
+
+<body>
+
+    <main class="dashboard-container">
+
+        <div id="header"></div>
+
+        <!-- Tasks specific content -->
+
+    </main>
+
+    <script type="module">
+        import { render_header,setup_theme } from "./js/components/header.js";
+        document.getElementById("header").innerHTML =render_header("rules");
+        setup_theme();
+    </script>
+
+</body>
+
+</html>

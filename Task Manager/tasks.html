@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tasks - Task & Habit Tracker</title>
+    <link rel="stylesheet" href="./css/style.css">
+</head>
+
+<body>
+
+    <main class="page-container">
+        <div id="header"></div>
+        <!-- Task Filters -->
+        <section class="task-filters">
+            <div class="filter-left">
+                <div class="filter-title">
+                    <img src="./assets/Filter_icon.svg" alt="">
+                    <span>Filters:</span>
+                </div>
+
+                <select class="filter-select" id="status-filter">
+                    <option value="all">All status</option>
+                    <option value="todo">Todo</option>
+                    <option value="in-progress">In progress</option>
+                    <option value="on-hold">On hold</option>
+                    <option value="completed">Completed</option>
+                </select>
+
+                <select class="filter-select" id="priority-filter">
+                    <option value="all">All priority</option>
+                    <option value="high">High</option>
+                    <option value="medium">Medium</option>
+                    <option value="low">Low</option>
+                </select>
+
+            </div>
+
+            <div class="filter-right">
+
+                <div class="sort-label">
+                    <img src="./assets/Sort_icon.svg" alt="">
+                    <span>Sort by:</span>
+                </div>
+
+                <select class="filter-select sort-select" id="sort-filter">
+                    <option value="due-date">Due date</option>
+                    <option value="priority">Priority</option>
+                    <option value="created-at">Created at</option>
+                    <option value="ascending">Ascending</option>
+                    <option value="descending">Descending</option>
+                </select>
+            </div>
+
+        </section>
+        <!-- Task Toolbar -->
+        <section class="task-toolbar">
+            <h2 class="task-heading">Tasks</h2>
+            <div class="task-actions">
+                <div class="search-box">
+
+                    <img src="./assets/search_icon.svg" alt="">
+
+                    <input
+                        type="text"
+                        placeholder="Search"
+                        aria-label="Search tasks"
+                    >
+
+                </div>
+
+                <button class="add-task-button" type="button">
+
+                    <img src="./assets/add_icon.svg" alt="">
+
+                    <span>Add task</span>
+
+                </button>
+
+            </div>
+
+        </section>
+
+
+        <!-- Empty State -->
+
+        <section class="empty-task-state">
+
+            <img
+                class="empty-task-icon"
+                src="./assets/clipboard_icon.svg"
+                alt="No tasks"
+            >
+
+            <p class="empty-task-message">
+                No tasks found. Create your first task to get started!
+            </p>
+
+        </section>
+
+    </main>
+
+
+    <script type="module">
+        import { render_header,setup_theme } from "./js/components/header.js";
+        document.getElementById("header").innerHTML=render_header("tasks");
+        setup_theme();
+    </script>
+
+</body>
+
+</html>

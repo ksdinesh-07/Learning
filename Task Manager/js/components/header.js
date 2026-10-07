@@ -1,0 +1,96 @@
+export function render_header(active_page) {
+    return `
+        <header class="header-container">
+
+            <div class="header-content">
+                <h1 class="title">Task &amp; Habit Tracker</h1>
+
+                <p class="title-description">
+                    Manage your tasks and build lasting habits with analytics and custom rules
+                </p>
+            </div>
+
+            <button
+                class="icon-button"
+                id="theme-button"
+                type="button"
+                aria-label="Switch to dark theme"
+            >
+                <img
+                    id="theme-icon"
+                    src="./assets/dark_theme_icon.svg"
+                    alt="Switch to dark theme"
+                >
+            </button>
+
+        </header>
+
+        <nav class="navigation">
+
+            <a href="dashboard.html"
+               class="nav-item ${active_page === "dashboard" ? "active" : ""}">
+                <img src="./assets/Dashboard_icon.svg" alt="Dashboard icon">
+                <span>Dashboard</span>
+            </a>
+
+            <a href="tasks.html"
+               class="nav-item ${active_page === "tasks" ? "active" : ""}">
+                <img src="./assets/Task_icon.svg" alt="Tasks icon">
+                <span>Tasks</span>
+            </a>
+
+            <a href="habits.html"
+               class="nav-item ${active_page === "habits" ? "active" : ""}">
+                <img src="./assets/Habits_icon.svg" alt="Habits icon">
+                <span>Habits</span>
+            </a>
+
+            <a href="rules.html"
+               class="nav-item ${active_page === "rules" ? "active" : ""}">
+                <img src="./assets/Rules_icon.svg" alt="Rules icon">
+                <span>Rules</span>
+            </a>
+
+        </nav>
+    `;
+}
+
+
+export function setup_theme() {
+
+    const theme_button = document.getElementById("theme-button");
+    const theme_icon = document.getElementById("theme-icon");
+
+    const saved_theme = localStorage.getItem("theme");
+
+    if (saved_theme === "dark") {
+        document.body.classList.add("dark-theme");
+        theme_icon.src = "./assets/light_theme_icon.svg";
+        theme_icon.alt = "Switch to light theme";
+        theme_button.setAttribute("aria-label", "Switch to light theme");
+    }
+
+    theme_button.addEventListener("click", () => {
+
+        document.body.classList.toggle("dark-theme");
+
+        const dark_mode_enabled =
+            document.body.classList.contains("dark-theme");
+
+        if (dark_mode_enabled) {
+            localStorage.setItem("theme", "dark");
+            theme_icon.src = "./assets/light_theme_icon.svg";
+            theme_icon.alt = "Switch to light theme";
+            theme_button.setAttribute(
+                "aria-label",
+                "Switch to light theme"
+            );
+
+        } else {
+            localStorage.setItem("theme", "light");
+            theme_icon.src = "./assets/dark_theme_icon.svg";
+            theme_icon.alt = "Switch to dark theme";
+            theme_button.setAttribute("aria-label","Switch to dark theme");
+        }
+    });
+}
