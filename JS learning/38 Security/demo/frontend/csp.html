@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <title>CSP Vulnerable</title>
+
+</head>
+
+<body>
+
+    <h1>CSP Vulnerable Page</h1>
+
+    <p>
+        This page does not have a Content Security Policy.
+    </p>
+
+    <button onclick="run_attack()">
+        Run Unauthorized Script
+    </button>
+
+    <script>
+
+        function run_attack() {
+
+            alert("Unauthorized JavaScript executed ");
+
+        }
+
+    </script>
+
+</body>
+
+</html>

@@ -69,21 +69,54 @@
         <p id="current_route"></p>
     </section>
     <!-- Media API -->
-    <section>
-        <h2>4. Media API</h2>
-        <button id="camera_button">
-            Start Camera
-        </button>
-        <button id="stop_camera_button">
-            Stop Camera
-        </button>
-        <br><br>
-        <video
-            id="camera_preview"
-            width="400"
-            autoplay
-            playsinline
-        ></video>
-    </section>
-</body>
+<section>
+    <h2>4. Media API</h2>
+
+    <button id="camera_button">
+        Start Camera
+    </button>
+
+    <button id="stop_camera_button">
+        Stop Camera
+    </button>
+
+    <button id="microphone_button">
+        Start Microphone
+    </button>
+
+    <button id="screen_button">
+        Share Screen
+    </button>
+
+    <button id="record_button">
+        Start Recording
+    </button>
+
+    <button id="stop_record_button">
+        Stop Recording
+    </button>
+
+    <br><br>
+
+    <video
+        id="camera_preview"
+        width="400"
+        autoplay
+        playsinline
+        controls
+    ></video>
+
+    <audio
+        id="audio_preview"
+        controls
+    ></audio>
+
+    <a
+        id="download_recording"
+        download="recording.webm"
+        style="display: none;"
+    >
+        Download Recording
+    </a>
+</section></body>
 </html>

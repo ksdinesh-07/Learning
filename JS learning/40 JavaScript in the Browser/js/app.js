@@ -125,35 +125,164 @@ window.addEventListener("popstate", function () {
 current_route.textContent =`Current Route: ${window.location.pathname}`;
 
 // 5. MEDIA API
-const camera_button=document.getElementById("camera_button");
-const stop_camera_button=document.getElementById("stop_camera_button");
-const camera_preview=document.getElementById("camera_preview");
+
+const camera_button = document.getElementById("camera_button");
+const stop_camera_button = document.getElementById("stop_camera_button");
+const microphone_button = document.getElementById("microphone_button");
+const screen_button = document.getElementById("screen_button");
+const record_button = document.getElementById("record_button");
+const stop_record_button = document.getElementById("stop_record_button");
+
+const camera_preview = document.getElementById("camera_preview");
+const audio_preview = document.getElementById("audio_preview");
+const download_recording =
+    document.getElementById("download_recording");
+
 let camera_stream = null;
-// Start Camera
+let microphone_stream = null;
+let screen_stream = null;
+
+let media_recorder = null;
+let recorded_chunks = [];
+
+// Camera
 camera_button.addEventListener("click", async function () {
     try {
         camera_stream =
             await navigator.mediaDevices.getUserMedia({
                 video: true
             });
-        camera_preview.srcObject =
-            camera_stream;
+
+        camera_preview.srcObject = camera_stream;
     } catch (error) {
-        console.error("Camera access failed:",error);
-        alert(
-            "Camera permission was denied or unavailable."
-        );
+        console.error("Camera access failed:", error);
     }
 });
 
 // Stop Camera
 stop_camera_button.addEventListener("click", function () {
     if (camera_stream) {
-        const tracks =camera_stream.getTracks();
-        tracks.forEach(function (track) {
+        camera_stream.getTracks().forEach(function (track) {
             track.stop();
         });
+
         camera_preview.srcObject = null;
         camera_stream = null;
     }
 });
+
+// Microphone
+microphone_button.addEventListener("click", async function () {
+    try {
+        microphone_stream =
+            await navigator.mediaDevices.getUserMedia({
+                audio: true
+            });
+
+        const audio_context =
+            new AudioContext();
+
+        const source =
+            audio_context.createMediaStreamSource(
+                microphone_stream
+            );
+
+        const destination =
+            audio_context.createMediaStreamDestination();
+
+        source.connect(destination);
+
+        audio_preview.srcObject =
+            destination.stream;
+    } catch (error) {
+        console.error("Microphone access failed:", error);
+    }
+});
+
+// Screen Sharing
+screen_button.addEventListener("click", async function () {
+    try {
+        screen_stream =
+            await navigator.mediaDevices.getDisplayMedia({
+                video: true,
+                audio: true
+            });
+
+        camera_preview.srcObject =
+            screen_stream;
+    } catch (error) {
+        console.error("Screen sharing failed:", error);
+    }
+});
+
+// Start Recording
+record_button.addEventListener("click", async function () {
+    if (!camera_stream) {
+        camera_stream =await navigator.mediaDevices.getUserMedia({video: true,audio: true});
+        camera_preview.srcObject =camera_stream;
+    }
+    recorded_chunks = [];
+    media_recorder =new MediaRecorder(camera_stream);
+    media_recorder.addEventListener("dataavailable",function (event) {
+            if (event.data.size > 0) {
+                recorded_chunks.push(event.data);
+            }
+        }
+    );
+    media_recorder.addEventListener(
+        "stop",
+        function () {
+            const recorded_blob =new Blob(recorded_chunks, {type: "video/webm"});
+            const recording_url =URL.createObjectURL(recorded_blob);
+            download_recording.href =recording_url;
+            download_recording.style.display ="inline-block";
+            download_recording.textContent ="Download Recording";
+        }
+    );
+
+    media_recorder.start();
+});
+
+// Stop Recording
+stop_record_button.addEventListener("click", function () {
+    if (
+        media_recorder &&
+        media_recorder.state !== "inactive"
+    ) {
+        media_recorder.stop();
+    }
+});
+
+// # history.pushState()
+
+// `pushState()` adds a new history entry without performing a full page reload.
+
+// ```javascript
+// history.pushState(
+//     {
+//         page: "profile"
+//     },
+//     "",
+//     "/profile"
+// );
+// ```
+
+// The browser URL can change while JavaScript controls the displayed content.
+
+// This is commonly used by single-page applications.
+
+// ---
+
+// # history.replaceState()
+
+// `replaceState()` changes the current history entry instead of creating a new one.
+
+// ```javascript
+// history.replaceState(
+//     {
+//         page: "profile"
+//     },
+//     "",
+//     "/profile"
+// );
+// ```

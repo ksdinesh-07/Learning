@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Web Security POC</title>
+
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <main class="container">
+
+        <h1>Web Security Attack </h1>
+
+        <section class="security-card">
+
+            <h2>XSS — Cross-Site Scripting</h2>
+
+            <p>
+                Enter HTML or JavaScript as an attacker would.
+            </p>
+
+            <textarea
+                id="xss_input"
+                placeholder="Enter malicious input..."
+            ></textarea>
+
+            <div class="button-group">
+                <button id="xss_attack_button">
+                    Vulnerable
+                </button>
+
+                <button id="xss_protected_button">
+                    Protected
+                </button>
+            </div>
+
+            <div class="result-section">
+
+                <h3>Result</h3>
+
+                <div id="xss_result" class="result-box"></div>
+
+            </div>
+
+        </section>
+        
+        <section class="security-card">
+
+            <h2>Input Sanitization</h2>
+
+            <p>
+                Sanitization removes dangerous HTML while keeping safe content.
+            </p>
+
+            <textarea
+                id="sanitize_input"
+                placeholder="Enter HTML containing safe and dangerous content..."
+            ></textarea>
+
+            <div class="button-group">
+
+                <button id="sanitize_attack_button">
+                    Without Sanitization
+                </button>
+
+                <button id="sanitize_protected_button">
+                    With Sanitization
+                </button>
+
+            </div>
+
+            <div class="result-section">
+
+                <h3>Result</h3>
+
+                <div id="sanitize_result" class="result-box"></div>
+
+            </div>
+
+        </section>
+
+        <section class="security-card">
+
+            <h2>CSRF — Cross-Site Request Forgery</h2>
+
+            <p>
+                Simulate an attacker attempting to perform an action using the user's
+                authenticated session.
+            </p>
+
+            <div class="account-box">
+                <p>
+                    Logged-in user:
+                    <strong id="csrf_user">Dinesh</strong>
+                </p>
+
+                <p>
+                    Account balance:
+                    ₹<strong id="csrf_balance">10000</strong>
+                </p>
+            </div>
+
+            <div class="button-group">
+
+                <button id="csrf_attack_button">
+                    Simulate CSRF Attack
+                </button>
+
+                <button id="csrf_protected_button">
+                    Protected Request
+                </button>
+
+            </div>
+
+            <div class="result-section">
+
+                <h3>Result</h3>
+
+                <div id="csrf_result" class="result-box"></div>
+
+            </div>
+
+        </section>
+
+        <section class="security-card">
+
+            <h2>CSP — Content Security Policy</h2>
+
+            <p>
+                CSP controls which scripts the browser is allowed to execute.
+            </p>
+
+            <div class="button-group">
+
+                <button id="csp_without_button">
+                    Without CSP
+                </button>
+
+                <button id="csp_with_button">
+                    With CSP
+                </button>
+
+            </div>
+
+            <div class="result-section">
+
+                <h3>Result</h3>
+
+                <div id="csp_result" class="result-box"></div>
+
+            </div>
+
+        </section>
+
+    </main>
+
+    <script src="app.js"></script>
+</body>
+</html>

@@ -14531,7 +14531,9 @@ They have different roles.
  Tool           Purpose          
                       
  Jest           Testing framework                      
+ 
  Mocha          Testing framework                      
+ 
  Chai           Assertion library                      
 
 ---
@@ -14845,52 +14847,6 @@ test("should return zero when quantity is zero", () => {
 });
 ```
 
----
-
-# Testing Edge Cases
-
-An **edge case** is an unusual or boundary input.
-
-For example:
-
-```text
-Quantity = 0
-Quantity = 1
-Negative quantity
-Very large quantity
-Product price = 0
-```
-
-Tests should consider these situations when they are valid for the application.
-
-Example:
-
-```javascript
-test("should return zero when quantity is zero", () => {
-
-    expect(
-        calculate_total(1000, 0)
-    ).toBe(0);
-});
-```
-
----
-
-##  What Is Mocha?
-
-**Mocha** is a JavaScript testing framework.
-
-Mocha provides functionality for:
-
-* Defining tests
-* Organizing test suites
-* Running tests
-* Handling asynchronous tests
-
-Mocha commonly works with an assertion library such as **Chai**.
-
----
-
 # Installing Mocha
 
 Install Mocha:
@@ -14921,20 +14877,11 @@ npm test
 
 ```javascript
 const assert = require("assert");
-
 describe("calculate_total", () => {
-
     it("should calculate total price", () => {
-
-        const result =
-            calculate_total(1000, 2);
-
-        assert.strictEqual(
-            result,
-            2000
-        );
+        const result =calculate_total(1000, 2);
+        assert.strictEqual(result,2000);
     });
-
 });
 ```
 
@@ -14995,20 +14942,13 @@ Chai can make test assertions easier to read.
 #  Mocha + Chai Example
 
 ```javascript
-const {
-    expect
-} = require("chai");
+const {expect} = require("chai");
 
 describe("calculate_total", () => {
-
     it("should calculate total price", () => {
-
-        const result =
-            calculate_total(1000, 2);
-
+        const result =calculate_total(1000, 2);
         expect(result).to.equal(2000);
     });
-
 });
 ```
 
@@ -15035,9 +14975,7 @@ Example:
 ```javascript
 test("should calculate total price", () => {
 
-    expect(
-        calculate_total(500, 3)
-    ).toBe(1500);
+    expect(calculate_total(500, 3)).toBe(1500);
 });
 ```
 
@@ -15047,17 +14985,6 @@ This test checks one behavior:
 500 × 3 = 1500
 ```
 
----
-
-#  Good Test Case Structure
-
-A good test should clearly communicate:
-
-```text
-What is being tested?
-What input is provided?
-What output is expected?
-```
 
 Example:
 
@@ -15175,7 +15102,7 @@ The test becomes more isolated.
 
 ---
 
-# Simple Mock Example
+# Mock Example
 
 Suppose we have:
 
@@ -15197,9 +15124,7 @@ test("should return product name", () => {
         product_price: 50000
     };
 
-    const result =
-        get_product_name(mock_product);
-
+    const result =get_product_name(mock_product);
     expect(result).toBe("Laptop");
 });
 ```
@@ -15591,28 +15516,6 @@ If the token is missing or invalid, the server rejects the request.
 
 ---
 
-## SameSite Cookies
-
-Another important CSRF defense is the cookie's `SameSite` attribute.
-
-Example:
-
-```http
-Set-Cookie: session_id=abc123; Secure; HttpOnly; SameSite=Lax
-```
-
-Common values are:
-
-| SameSite | Meaning                                                                      |
-| -------- | ---------------------------------------------------------------------------- |
-| `Strict` | Strongly restricts cross-site cookie sending                                 |
-| `Lax`    | Allows some cross-site navigation while restricting many cross-site requests |
-| `None`   | Allows cross-site cookie usage and requires `Secure`                         |
-
-The appropriate setting depends on the application's authentication and cross-site requirements.
-
----
-
 
 # Input Sanitization
 
@@ -15743,8 +15646,6 @@ Is this script source allowed?
 No → Browser blocks it
 ```
 
-CSP is **defense in depth**.
-
 It should not replace proper input handling and secure coding.
 
 ---
@@ -15807,31 +15708,6 @@ This allows scripts from the application's own origin.
 
 ---
 
-# Security Headers
-
-CSP is one of several HTTP security mechanisms.
-
-Examples include:
-
-```http
-Content-Security-Policy
-```
-
-```http
-Strict-Transport-Security
-```
-
-```http
-X-Content-Type-Options: nosniff
-```
-
-```http
-Referrer-Policy
-```
-
-These headers provide browser-side security controls.
-
----
 
 # Practical Example — Product Review
 
@@ -16059,20 +15935,6 @@ Examples of development dependencies:
 * Testing tools
 * Build tools
 
----
-
-## dependencies vs devDependencies
-
-| dependencies                   | devDependencies                    |
-| ------------------------------ | ---------------------------------- |
-| Required by the application    | Mainly required during development |
-| Used by production application | Used for development/build/testing |
-| Express                        | ESLint                             |
-| Database drivers               | Prettier                           |
-| Authentication libraries       | Jest                               |
-| API libraries                  | Nodemon                            |
-
----
 
 ## package-lock.json
 
@@ -16214,16 +16076,6 @@ package-lock.json
 
 ---
 
-## npm vs Yarn
-
-| Feature            | npm                   | Yarn               |
-| ------------------ | --------------------- | ------------------ |
-| Package manager    | Yes                   | Yes                |
-| Uses package.json  | Yes                   | Yes                |
-| Lock file          | package-lock.json     | yarn.lock          |
-| Install package    | `npm install package` | `yarn add package` |
-| Run scripts        | `npm run script`      | `yarn script`      |
-| Comes with Node.js | Yes                   | No                 |
 
 Both can manage JavaScript dependencies.
 
@@ -16506,19 +16358,6 @@ This is useful in CI/CD pipelines.
 
 ---
 
-# ESLint vs Prettier
-
-ESLint and Prettier have different primary purposes.
-
-| ESLint                      | Prettier                                 |
-| --------------------------- | ---------------------------------------- |
-| Code analysis               | Code formatting                          |
-| Finds potential problems    | Formats source code                      |
-| Detects unused variables    | Fixes indentation                        |
-| Detects undefined variables | Controls spacing                         |
-| Enforces coding rules       | Controls formatting style                |
-| Can identify bugs/patterns  | Generally does not analyze program logic |
-
 Example:
 
 ```javascript
@@ -16539,366 +16378,6 @@ Is the formatting consistent?
 
 ---
 
-# Bundlers
-
-## What is a Bundler?
-
-A **bundler** takes multiple project files and dependencies and processes them into files that can be efficiently delivered to the browser or other runtime environments.
-
-For example:
-
-```text
-src/
-├── main.js
-├── user.js
-├── product.js
-└── api.js
-```
-
-A bundler can analyze the dependencies:
-
-```text
-main.js
-   ↓
-user.js
-   ↓
-api.js
-
-product.js
-   ↓
-api.js
-```
-
-and produce optimized build output.
-
----
-
-# Why Bundlers Are Used
-
-Modern applications can contain:
-
-* Hundreds of JavaScript modules
-* CSS files
-* Images
-* Fonts
-* Third-party dependencies
-* JSON files
-
-A bundler can process these resources as part of the application build.
-
-Common bundlers and build tools include:
-
-* Webpack
-* Vite
-* Rollup
-* Parcel
-* esbuild
-
----
-
-# Webpack
-
-## What is Webpack?
-
-**Webpack** is a module bundler that analyzes dependencies and creates bundles for an application.
-
-Example project:
-
-```text
-src/
-├── main.js
-├── user.js
-└── api.js
-```
-
-`main.js`:
-
-```javascript
-import { get_user } from "./user.js";
-
-console.log(get_user());
-```
-
-`user.js`:
-
-```javascript
-import { fetch_user } from "./api.js";
-
-export function get_user() {
-    return fetch_user();
-}
-```
-
-Webpack analyzes these imports and creates the required build output.
-
----
-
-# Vite
-
-## What is Vite?
-
-**Vite** is a modern frontend development tool that provides a fast development server and production build process.
-
-A Vite project commonly contains:
-
-```text
-project/
-├── src/
-├── public/
-├── index.html
-├── package.json
-└── vite.config.js
-```
-
-During development:
-
-```bash
-npm run dev
-```
-
-Vite starts a development server.
-
-For production:
-
-```bash
-npm run build
-```
-
-Vite creates production-ready output.
-
----
-
-# Bundling Process
-
-A simplified bundling process looks like:
-
-```text
-Source Code
-    ↓
-Module Analysis
-    ↓
-Dependency Graph
-    ↓
-Transformation
-    ↓
-Optimization
-    ↓
-Production Build
-```
-
----
-
-# Module Bundling
-
-Suppose an application has:
-
-```text
-main.js
-user.js
-product.js
-order.js
-```
-
-`main.js`:
-
-```javascript
-import { get_user } from "./user.js";
-import { get_product } from "./product.js";
-import { get_order } from "./order.js";
-```
-
-The bundler understands these relationships.
-
-```text
-                 main.js
-              /     |      \
-             ↓      ↓       ↓
-         user.js product.js order.js
-```
-
-The bundler creates the appropriate output files based on the build configuration.
-
----
-
-# Code Splitting
-
-Bundlers can also support **code splitting**.
-
-Instead of loading the entire application immediately:
-
-```text
-Entire application
-        ↓
-Browser downloads everything
-```
-
-the application can load code when required:
-
-```text
-Initial application
-        ↓
-Load required code
-        ↓
-User opens another feature
-        ↓
-Load additional chunk
-```
-
-This can reduce the amount of JavaScript downloaded initially.
-
----
-
-# Tree Shaking
-
-**Tree shaking** removes unused code from production builds when the tooling and module structure allow it.
-
-Suppose:
-
-```javascript
-export function calculate_total() {
-    return 100;
-}
-
-export function calculate_tax() {
-    return 20;
-}
-```
-
-If the application only imports:
-
-```javascript
-import { calculate_total } from "./billing.js";
-```
-
-the build tool may be able to remove unused exports such as `calculate_tax`.
-
-This can reduce production bundle size.
-
----
-
-# Minification
-
-Bundlers or build tools can also perform **minification**.
-
-Before:
-
-```javascript
-function calculate_total(price, quantity) {
-    return price * quantity;
-}
-```
-
-After minification:
-
-```javascript
-function calculate_total(e,t){return e*t}
-```
-
-The code becomes smaller while preserving its behavior.
-
-Minification helps reduce the amount of data transferred to users.
-
----
-
-# Source Maps
-
-Production JavaScript may be transformed and minified.
-
-For example:
-
-```text
-Original source
-      ↓
-Bundling
-      ↓
-Minification
-      ↓
-Production JavaScript
-```
-
-Debugging the transformed code directly can be difficult.
-
-**Source maps** connect the generated code back to the original source code.
-
-This allows browser developer tools to show the original source files while debugging.
-
----
-
-# npm + ESLint + Prettier + Bundler
-
-These tools can work together in one project.
-
-```text
-                 JavaScript Project
-                         │
-          ┌──────────────┼──────────────┐
-          ↓              ↓              ↓
-         npm           ESLint        Prettier
-          │              │              │
-   Dependencies      Code analysis    Formatting
-          │
-          ↓
-       Bundler
-          │
-          ↓
-   Production build
-```
-
-Example `package.json`:
-
-```json
-{
-    "scripts": {
-        "dev": "vite",
-        "build": "vite build",
-        "lint": "eslint .",
-        "format": "prettier --write ."
-    },
-    "devDependencies": {
-        "eslint": "^9.0.0",
-        "prettier": "^3.0.0",
-        "vite": "^7.0.0"
-    }
-}
-```
-
-Commands:
-
-```bash
-npm install
-```
-
-```bash
-npm run dev
-```
-
-```bash
-npm run lint
-```
-
-```bash
-npm run format
-```
-
-```bash
-npm run build
-```
-
-Each tool has a different responsibility:
-
-```text
-npm
-→ Manage dependencies and scripts
-
-ESLint
-→ Analyze code
-
-Prettier
-→ Format code
-
-Bundler
-→ Build and optimize application
-```
 
 # JavaScript in the Browser
 
@@ -17243,68 +16722,6 @@ login_form.addEventListener("submit", (event) => {
 
 `preventDefault()` stops the browser's default action.
 
----
-
-# Event Bubbling
-
-Events can move from the target element toward its ancestors.
-
-Example:
-
-```html
-<div id="container">
-    <button id="login_button">Login</button>
-</div>
-```
-
-JavaScript:
-
-```javascript
-const container = document.querySelector("#container");
-const login_button = document.querySelector("#login_button");
-
-container.addEventListener("click", () => {
-    console.log("Container clicked");
-});
-
-login_button.addEventListener("click", () => {
-    console.log("Button clicked");
-});
-```
-
-When the button is clicked:
-
-```text
-Button
-   ↓
-Container
-   ↓
-Body
-   ↓
-Document
-```
-
-This is event bubbling.
-
----
-
-# Event Delegation
-
-Event delegation uses event bubbling to handle events from multiple child elements using one parent listener.
-
-```javascript
-const user_list = document.querySelector("#user_list");
-
-user_list.addEventListener("click", (event) => {
-    if (event.target.matches(".user_item")) {
-        console.log(event.target.textContent);
-    }
-});
-```
-
-This is useful for dynamically generated elements.
-
----
 
 # Rendering
 
@@ -17547,22 +16964,6 @@ Clear:
 ```javascript
 sessionStorage.clear();
 ```
-
----
-
-# localStorage vs sessionStorage
-
-| localStorage                      | sessionStorage                               |
-| --------------------------------- | -------------------------------------------- |
-| Persists across browser sessions  | Associated with the current page session/tab |
-| Data remains until removed        | Data is removed when the tab/session ends    |
-| Useful for persistent preferences | Useful for temporary page-session data       |
-| Stores strings                    | Stores strings                               |
-
-Neither should be treated as a secure place for highly sensitive data.
-
----
-
 # Cookies
 
 Cookies are small pieces of data associated with a website.
@@ -17587,35 +16988,6 @@ Important cookie attributes include:
 
 ---
 
-# IndexedDB
-
-**IndexedDB** is a browser database API designed for storing larger amounts of structured data.
-
-It can store:
-
-* Objects
-* Records
-* Files
-* Blobs
-* Application data
-
-It is more powerful than `localStorage`.
-
-A simplified use case:
-
-```text
-Offline application
-        ↓
-Store application data
-        ↓
-IndexedDB
-        ↓
-Read data when needed
-```
-
-IndexedDB is commonly useful for offline-capable web applications and applications that need more structured client-side storage.
-
----
 
 # History API
 
@@ -17637,41 +17009,7 @@ history.go(-1);
 
 ---
 
-# history.pushState()
 
-`pushState()` adds a new history entry without performing a full page reload.
-
-```javascript
-history.pushState(
-    {
-        page: "profile"
-    },
-    "",
-    "/profile"
-);
-```
-
-The browser URL can change while JavaScript controls the displayed content.
-
-This is commonly used by single-page applications.
-
----
-
-# history.replaceState()
-
-`replaceState()` changes the current history entry instead of creating a new one.
-
-```javascript
-history.replaceState(
-    {
-        page: "profile"
-    },
-    "",
-    "/profile"
-);
-```
-
-Difference:
 
 ```text
 pushState()
@@ -17683,19 +17021,7 @@ replaceState()
 
 ---
 
-# popstate Event
 
-The `popstate` event occurs when the active history entry changes through browser history navigation.
-
-```javascript
-window.addEventListener("popstate", (event) => {
-    console.log(event.state);
-});
-```
-
-This is useful when implementing browser navigation in single-page applications.
-
----
 
 # Single-Page Application Navigation
 
@@ -17913,38 +17239,6 @@ Application receives result
 ```
 
 ---
-
-# DOM, Events, Rendering, Storage, History and Media
-
-These browser capabilities work together in modern applications.
-
-A typical application might:
-
-```text
-DOM
-↓
-Create interface
-
-Events
-↓
-React to user actions
-
-Storage
-↓
-Save application preferences/data
-
-History API
-↓
-Control application navigation
-
-Media API
-↓
-Access audio/video/device capabilities
-
-Rendering
-↓
-Display changes on the screen
-```
 
 # JavaScript in Node.js
 
