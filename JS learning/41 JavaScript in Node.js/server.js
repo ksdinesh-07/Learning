@@ -1,8 +1,5 @@
 const http = require("http");
-const {
-    get_products,
-    add_product
-} = require("./modules/product_service");
+const {get_products,add_product} = require("./modules/product_service");
 const PORT = 5000;
 const server = http.createServer(
     async function (request, response) {
@@ -19,8 +16,7 @@ const server = http.createServer(
             } catch (error) {
                 response.writeHead(500,{"Content-Type":"application/json"});
                 response.end(
-                    JSON.stringify({
-                        message:"Failed to read products"}));
+                    JSON.stringify({message:"Failed to read products"}));
             }
             return;
         }

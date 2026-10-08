@@ -15,25 +15,11 @@ async function get_products() {
     return products;
 }
 // Add product
-async function add_product(
-    product_name,
-    price,
-    category
-) {
-    const products =
-        await read_file(product_file)
-    const new_product = {
-        id: uuidv4(),
-        product_name,
-        price,
-        category
-    };
-
+async function add_product(product_name,price,category) {
+    const products=await read_file(product_file)
+    const new_product = {id: uuidv4(),product_name,price,category};
     products.push(new_product);
-    await write_file(
-        product_file,
-        products
-    );
+    await write_file(product_file,products);
     return new_product;
 }
 

@@ -16579,26 +16579,6 @@ login_button.addEventListener("click", () => {
 });
 ```
 
----
-
-# Common Browser Events
-
-| Event       | Description                    |
-| ----------- | ------------------------------ |
-| `click`     | User clicks an element         |
-| `dblclick`  | User double-clicks             |
-| `input`     | Input value changes            |
-| `change`    | Form value changes             |
-| `submit`    | Form is submitted              |
-| `keydown`   | Keyboard key is pressed        |
-| `keyup`     | Keyboard key is released       |
-| `mouseover` | Pointer moves over an element  |
-| `mouseout`  | Pointer leaves an element      |
-| `scroll`    | Page or element is scrolled    |
-| `resize`    | Browser window is resized      |
-| `load`      | Resource/page finishes loading |
-
----
 
 # Event Object
 
@@ -16754,18 +16734,6 @@ This includes:
 * Shadows
 * Images
 * Backgrounds
-
----
-
-# Composite
-
-The browser can divide visual content into layers and combine those layers to produce the final screen.
-
-Some CSS effects and animations can involve compositing.
-
-This is one reason browser rendering performance matters when building interactive applications.
-
----
 
 # Storage
 
@@ -16925,9 +16893,6 @@ history.forward();
 history.go(-1);
 ```
 
----
-
-
 
 ```text
 pushState()
@@ -16938,7 +16903,6 @@ replaceState()
 ```
 
 ---
-
 
 
 # Single-Page Application Navigation
@@ -17399,15 +17363,6 @@ Import:
 const { calculate_total } = require("./calculator");
 ```
 
-### ES Modules vs CommonJS
-
-| ES Modules                    | CommonJS                               |
-| ----------------------------- | -------------------------------------- |
-| `import`                      | `require()`                            |
-| `export`                      | `module.exports`                       |
-| Modern JavaScript             | Older Node.js module system            |
-| `.js` with `"type": "module"` | Default CommonJS in many Node projects |
-
 A Node.js project using ES Modules commonly has:
 
 ```json
@@ -17793,7 +17748,6 @@ import http from "node:http";
 
 const server = http.createServer((request, response) => {
     console.log(request.url);
-
     response.end("Request received");
 });
 
@@ -17821,7 +17775,6 @@ You can check the HTTP method:
 ```javascript
 const server = http.createServer((request, response) => {
     console.log(request.method);
-
     response.end("Request received");
 });
 ```
@@ -17838,7 +17791,7 @@ DELETE
 
 ---
 
-# Creating Simple Routes
+# Creating  Routes
 
 Node.js can handle different URLs manually.
 
@@ -18499,69 +18452,6 @@ This demonstrates how Node.js can act as a backend without Express.
 
 Express is then commonly added to simplify routing, middleware, request parsing, and API development.
 
-# Node.js and the Browser
-
-Node.js and browser JavaScript share the JavaScript language, but they provide different APIs.
-
-| Browser        | Node.js               |
-| -------------- | --------------------- |
-| DOM            | Filesystem            |
-| `window`       | `process`             |
-| `document`     | `fs`                  |
-| `localStorage` | `process.env`         |
-| Browser events | Server/network events |
-| Web APIs       | Node.js APIs          |
-| `fetch()`      | HTTP/network APIs     |
-
-For example, this works in a browser:
-
-```javascript
-document.querySelector("#username");
-```
-
-But this does not work directly in Node.js:
-
-```javascript
-document.querySelector("#username");
-```
-
-Node.js does not have a browser DOM.
-
-Node.js instead provides server-side capabilities such as:
-
-```javascript
-import fs from "node:fs";
-```
-
-# Node.js Application Flow
-
-A typical backend application can follow this structure:
-
-```text
-Client
-  ↓
-HTTP Request
-  ↓
-Node.js
-  ↓
-Router
-  ↓
-Controller
-  ↓
-Service
-  ↓
-Database / Filesystem
-  ↓
-Service
-  ↓
-Controller
-  ↓
-HTTP Response
-  ↓
-Client
-```
-
-Node.js provides the runtime, while frameworks such as Express, Fastify, or NestJS can provide additional backend application structure.
 
 # WebSockets
 
@@ -18584,86 +18474,8 @@ WebSockets are useful for:
 * Live support systems
 * Online presence indicators
 
-## HTTP vs WebSockets
-
-<box gap={3}>
-  <box border radius="lg" padding={3} gap={2}>
-    <title size="md">HTTP communication</title>
-    <box background="surface-secondary" radius="md" padding={3} align="center">
-      **Client**
-    </box>
-    <box align="center" gap={1}>
-      <icon name="arrow-down" size="xl" />
-      <text color="secondary" size="sm">Request</text>
-    </box>
-    <box background="surface" border radius="md" padding={3} align="center">
-      **Server**
-    </box>
-    <box align="center" gap={1}>
-      <icon name="arrow-up" size="xl" />
-      <text color="secondary" size="sm">Response</text>
-    </box>
-    <box background="surface-secondary" radius="md" padding={3} align="center">
-      **Client**
-    </box>
-    <text color="secondary" size="sm">The client generally initiates each exchange. A new request is needed to ask for later updates.</text>
-  </box>
-  <box border radius="lg" padding={3} gap={2}>
-    <title size="md">WebSocket communication</title>
-    <grid columns={2} gap={2}>
-      <grid-item>
-        <box background="surface-secondary" radius="md" padding={3} align="center">
-          **Client**
-        </box>
-      </grid-item>
-      <grid-item>
-        <box background="surface-secondary" radius="md" padding={3} align="center">
-          **Server**
-        </box>
-      </grid-item>
-    </grid>
-    <box align="center" gap={1}>
-      <icon name="arrow-left-right" size="2xl" />
-      <text weight="medium">Persistent, two-way connection</text>
-      <text color="secondary" size="sm">Either side can send data when needed.</text>
-    </box>
-  </box>
-</box>
-
-| Feature                     | HTTP                                                  | WebSockets                            |
-| --------------------------- | ----------------------------------------------------- | ------------------------------------- |
-| Communication               | Request and response                                  | Two-way communication                 |
-| Connection                  | Requests are handled through HTTP connections         | A persistent connection is maintained |
-| Server can initiate updates | Not directly in an ordinary request-response exchange | Yes                                   |
-| Real-time updates           | Often uses polling or another mechanism               | Supported directly                    |
-| Common uses                 | CRUD APIs, page data, login                           | Chat, live updates, presence          |
-
-HTTP is still useful for ordinary API operations. WebSockets complement HTTP rather than replace it.
 
 ## How WebSockets Work
-
-A WebSocket connection usually begins with an HTTP handshake.
-
-<box border radius="lg" padding={3} gap={2}>
-  <box background="surface-secondary" radius="md" padding={3} align="center">
-    **Browser or frontend**
-    <text color="secondary" size="sm">Creates a WebSocket connection</text>
-  </box>
-  <box align="center" gap={1}>
-    <icon name="arrow-down-up" size="xl" />
-    <text color="secondary" size="sm">HTTP upgrade handshake</text>
-  </box>
-  <box background="surface" border radius="md" padding={3} align="center">
-    **WebSocket server**
-    <text color="secondary" size="sm">Accepts the connection</text>
-  </box>
-  <divider color="subtle" />
-  <box background="rgba(22,163,74,0.10)" radius="md" padding={3} align="center">
-    <icon name="check-circle" color="success" size="lg" />
-    **Connection established**
-    <text color="secondary" size="sm">Messages can travel in both directions.</text>
-  </box>
-</box>
 
 The main stages are:
 
@@ -18712,7 +18524,7 @@ socket.addEventListener("close", () => {
 ```
 
 | Event     | Purpose                     |
-| --------- | --------------------------- |
+
 | `open`    | Connection established      |
 | `message` | A message received          |
 | `error`   | A connection error occurred |
@@ -18873,7 +18685,6 @@ http_server.listen(port, () => {
 
 This server combines Express HTTP routes with Socket.IO communication.
 
-### Understanding the code
 
 **`createServer(app)`**
 
@@ -18990,18 +18801,6 @@ Here:
 
 The data object is passed as the event payload.
 
-## `emit()` vs `on()`
-
-| Method                    | Purpose                                                    |
-| ------------------------- | ---------------------------------------------------------- |
-| `socket.emit()`           | Sends an event                                             |
-| `socket.on()`             | Listens for an event                                       |
-| `io.emit()`               | Sends an event to all connected sockets                    |
-| `socket.broadcast.emit()` | Sends to all other connected sockets, excluding the sender |
-| `socket.join()`           | Adds a socket to a room                                    |
-| `io.to(room).emit()`      | Sends an event to sockets in a room                        |
-
-These methods let you decide which clients should receive a message.
 
 ## Broadcasting Messages
 
@@ -19184,18 +18983,6 @@ The client can retry after temporary network failures, depending on its reconnec
 
 Reconnection does not automatically replay every missed application message. Applications should reload missed messages from a persistent store or use an appropriate recovery strategy.
 
-## Socket.IO vs Native WebSockets
-
-| Feature                    | Native WebSocket                                 | Socket.IO                          |
-| -------------------------- | ------------------------------------------------ | ---------------------------------- |
-| Browser API built in       | Yes                                              | No; client library needed          |
-| Named events               | You implement event handling or a message format | Built-in event API                 |
-| Automatic reconnection     | Must be implemented by the application           | Supported by the client            |
-| Rooms                      | Must be implemented by the application           | Built-in support                   |
-| HTTP long-polling fallback | No automatic fallback in the native API          | Supported                          |
-| Protocol compatibility     | Standard WebSocket protocol                      | Socket.IO protocol                 |
-| Best fit                   | Direct WebSocket communication                   | Event-based real-time applications |
-
 Socket.IO is convenient for many application-level real-time features. Native WebSockets can be a good choice when you want to work directly with the WebSocket protocol and manage reconnection and messaging behavior yourself.
 
 ## Security Considerations
@@ -19214,44 +19001,6 @@ Real-time connections need the same care as HTTP APIs.
 
 CORS settings alone do not authenticate users or authorize access to private data.
 
-## Practical Application Flow — Chat System
-
-A real-time chat application commonly combines HTTP APIs and Socket.IO.
-
-<box border radius="lg" padding={3} gap={2}>
-  <box background="surface-secondary" radius="md" padding={3} align="center">
-    **User logs in**
-    <text color="secondary" size="sm">HTTP API validates credentials</text>
-  </box>
-  <box align="center">
-    <icon name="arrow-down" size="lg" />
-  </box>
-  <box background="surface" border radius="md" padding={3} align="center">
-    **Socket.IO connects**
-    <text color="secondary" size="sm">Server authenticates the socket</text>
-  </box>
-  <box align="center">
-    <icon name="arrow-down" size="lg" />
-  </box>
-  <box background="surface" border radius="md" padding={3} align="center">
-    **User sends a message**
-    <text color="secondary" size="sm">Server validates recipient and content</text>
-  </box>
-  <box align="center">
-    <icon name="arrow-down" size="lg" />
-  </box>
-  <box background="surface" border radius="md" padding={3} align="center">
-    **Message is saved**
-    <text color="secondary" size="sm">Database confirms persistence</text>
-  </box>
-  <box align="center">
-    <icon name="arrow-down" size="lg" />
-  </box>
-  <box background="rgba(22,163,74,0.10)" radius="md" padding={3} align="center">
-    **Recipient receives the message**
-    <text color="secondary" size="sm">Socket.IO sends a real-time event</text>
-  </box>
-</box>
 
 The frontend can use HTTP to load conversation history and Socket.IO to receive new messages in real time. This avoids treating the live connection as the only source of stored message history.
 
