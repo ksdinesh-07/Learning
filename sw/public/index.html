@@ -1,0 +1,29 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Service Worker POC</title>
+    <link rel="stylesheet" href="./css/style.css">
+    <script src="./js/app.js" defer></script>
+</head>
+<body>
+    <main class="app-container">
+        <h1>Service Worker POC</h1>
+        <p>Explore caching and offline functionality.</p>
+
+        <div class="status-card">
+            <p>Network status: <strong id="network-status">Checking...</strong></p>
+            <p>Service Worker: <strong id="worker-status">Registering...</strong></p>
+        </div>
+
+        <button id="test-button" type="button">Test JavaScript</button>
+        <p id="test-result">Click the button to test the app.</p>
+
+        <p class="hint">
+            After the first load, try disconnecting your internet and reloading this page.
+        </p>
+    </main>
+</body>
+</html>

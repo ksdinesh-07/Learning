@@ -1,9 +1,14 @@
+/* Google Fonts */
 @import url('https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;500;600&family=Quicksand:wght@600&display=swap');
 
+
+/* Use border-box everywhere */
 * {
     box-sizing: border-box;
 }
 
+
+/* Theme color variables (light mode) */
 :root {
     --background-color: #ffffff;
     --card-background: #ffffff;
@@ -12,8 +17,10 @@
     --border-color: #dedede;
     --button-background: #ffffff;
     --accent-color: #10b981;
+    --error-color: #ff4d4f;
 }
 
+/* Override colors when dark theme is active */
 body.dark-theme {
     --background-color: #18181b;
     --card-background: #27272a;
@@ -22,8 +29,11 @@ body.dark-theme {
     --border-color: #3f3f46;
     --button-background: #27272a;
     --accent-color: #34d399;
+    --error-color: #ff4d4f;
 }
 
+
+/* Base page styles */
 body {
     margin: 0;
     background: var(--background-color);
@@ -33,10 +43,7 @@ body {
 }
 
 
-/* =========================
-   Page Containers
-========================= */
-
+/* Main page wrapper */
 .dashboard-container,
 .page-container {
     width: 100%;
@@ -45,10 +52,7 @@ body {
 }
 
 
-/* =========================
-   Header
-========================= */
-
+/* Header */
 .header-container {
     width: 100%;
     height: 68px;
@@ -87,10 +91,7 @@ body {
 }
 
 
-/* =========================
-   Theme Button
-========================= */
-
+/* Theme toggle button */
 .icon-button {
     width: 35.99px;
     height: 35.99px;
@@ -112,10 +113,7 @@ body {
 }
 
 
-/* =========================
-   Navigation
-========================= */
-
+/* Navigation */
 .navigation {
     height: 42px;
     margin-top: 18px;
@@ -149,6 +147,7 @@ body {
     color: var(--accent-color);
 }
 
+/* Underline for the active nav item */
 .nav-item.active::after {
     content: "";
     position: absolute;
@@ -160,10 +159,7 @@ body {
 }
 
 
-/* =========================
-   Summary Cards
-========================= */
-
+/* Summary cards grid */
 .summary-container {
     width: 100%;
     margin-top: 17px;
@@ -236,10 +232,7 @@ body {
 }
 
 
-/* =========================
-   Analytics
-========================= */
-
+/* Analytics cards grid */
 .analytics-container {
     width: 100%;
     margin-top: 40px;
@@ -276,10 +269,7 @@ body {
 }
 
 
-/* =========================
-   Status Overview
-========================= */
-
+/* Status donut chart + legend */
 .status-chart-container {
     height: 350px;
     display: flex;
@@ -325,27 +315,13 @@ body {
     display: block;
 }
 
-.todo {
-    background: #b5b5b5;
-}
-
-.on-hold {
-    background: #f59e0b;
-}
-
-.in-progress {
-    background: #3b82f6;
-}
-
-.completed {
-    background: #10b981;
-}
+.todo        { background: #b5b5b5; }
+.on-hold     { background: #f59e0b; }
+.in-progress { background: #3b82f6; }
+.completed   { background: #10b981; }
 
 
-/* =========================
-   Habit Completion Trend
-========================= */
-
+/* Habit trend chart */
 .trend-chart-container {
     width: 100%;
     height: 350px;
@@ -361,10 +337,7 @@ body {
 }
 
 
-/* =========================
-   Tasks Page
-========================= */
-
+/* Task filters bar */
 .task-filters {
     width: 100%;
     height: 70px;
@@ -400,42 +373,6 @@ body {
     height: 16px;
 }
 
-
-/* =========================
-   Filter Select
-========================= */
-
-.filter-select {
-    width: 150px;
-    height: 36px;
-    padding: 0 36px 0 12px;
-    border: 1px solid var(--border-color);
-    border-radius: 8px;
-    background-color: var(--card-background);
-    background-image: url("../assets/Chevron_down.svg");
-    background-repeat: no-repeat;
-    background-position: right 12px center;
-    background-size: 14px 14px;
-    font-family: "Open Sans", sans-serif;
-    font-size: 14px;
-    font-weight: 400;
-    line-height: 24px;
-    color: var(--text-color);
-    cursor: pointer;
-    appearance: none;
-    -webkit-appearance: none;
-}
-
-.filter-select:focus {
-    outline: none;
-    border-color: var(--accent-color);
-}
-
-
-/* =========================
-   Filter Right
-========================= */
-
 .filter-right {
     display: flex;
     align-items: center;
@@ -462,11 +399,35 @@ body {
     width: 150px;
 }
 
+/* Dropdown selects */
+.filter-select {
+    width: 150px;
+    height: 36px;
+    padding: 0 36px 0 12px;
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    background-color: var(--card-background);
+    background-image: url("../assets/markdown_icon.svg");
+    background-repeat: no-repeat;
+    background-position: right 12px center;
+    background-size: 14px 14px;
+    font-family: "Open Sans", sans-serif;
+    font-size: 14px;
+    font-weight: 400;
+    line-height: 24px;
+    color: var(--text-color);
+    cursor: pointer;
+    appearance: none;
+    -webkit-appearance: none;
+}
 
-/* =========================
-   Task Toolbar
-========================= */
+.filter-select:focus {
+    outline: none;
+    border-color: var(--accent-color);
+}
 
+
+/* Task toolbar: heading + search + add button */
 .task-toolbar {
     width: 100%;
     margin-top: 23px;
@@ -491,10 +452,7 @@ body {
 }
 
 
-/* =========================
-   Search
-========================= */
-
+/* Search box */
 .search-box {
     width: 270px;
     height: 44px;
@@ -529,10 +487,7 @@ body {
 }
 
 
-/* =========================
-   Add Task
-========================= */
-
+/* Add task button */
 .add-task-button {
     width: 100px;
     height: 44px;
@@ -557,10 +512,7 @@ body {
 }
 
 
-/* =========================
-   Empty Task State
-========================= */
-
+/* Empty state when there are no tasks */
 .empty-task-state {
     width: 100%;
     margin-top: 135px;
@@ -586,10 +538,309 @@ body {
 }
 
 
-/* =========================
-   Responsive
-========================= */
+/* Add task modal overlay */
+.add_model_overlay {
+    position: fixed;
+    inset: 0;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    background: rgba(0, 0, 0, 0.25);
+    z-index: 2000;
+}
 
+.add_model_overlay.show {
+    display: flex;
+}
+
+.add_task_page {
+    width: 380px;
+    background: var(--card-background);
+    border: 1px solid var(--border-color);
+    border-radius: 12px;
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.12);
+    overflow: hidden;
+}
+
+
+/* Modal header */
+.task_header {
+    padding: 20px 20px 16px;
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+}
+
+.task_header h2 {
+    margin: 0;
+    font-family: "Open Sans", sans-serif;
+    font-size: 18px;
+    font-weight: 600;
+    line-height: 24px;
+    color: var(--text-color);
+}
+
+.task_header p {
+    margin: 4px 0 0;
+    font-family: "Open Sans", sans-serif;
+    font-size: 12px;
+    font-weight: 400;
+    line-height: 20px;
+    color: var(--secondary-text-color);
+}
+
+/* Close (X) button */
+.modal-close-button {
+    width: 24px;
+    height: 24px;
+    padding: 0;
+    border: none;
+    background: transparent;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+}
+
+.modal-close-button img {
+    width: 16px;
+    height: 16px;
+    display: block;
+}
+
+
+/* Modal form */
+#add_task_form {
+    padding: 0 20px;
+}
+
+.form_group {
+    position: relative;
+    width: 100%;
+    margin-bottom: 20px;
+}
+
+/* Shared styles for inputs, textareas, selects */
+.form_group input,
+.form_group textarea,
+.form_group select {
+    box-sizing: border-box;
+    width: 100%;
+    border: 1px solid var(--border-color);
+    border-radius: 6px;
+    background: var(--card-background);
+    color: var(--text-color);
+    font-family: "Open Sans", sans-serif;
+    font-size: 14px;
+    font-weight: 400;
+    transition: border-color 0.2s ease;
+}
+
+.form_group input {
+    height: 36px;
+    padding: 0 36px 0 10px; /* right padding leaves room for icons */
+}
+
+.form_group textarea {
+    height: 98px;
+    padding: 10px;
+    resize: none;
+}
+
+.form_group select {
+    height: 36px;
+    padding: 0 36px 0 12px;
+    appearance: none;
+    -webkit-appearance: none;
+    cursor: pointer;
+}
+
+/* Hide the placeholder text so the floating label shows */
+.form_group input::placeholder,
+.form_group textarea::placeholder {
+    color: transparent;
+}
+
+.form_group input:focus,
+.form_group textarea:focus,
+.form_group select:focus {
+    outline: none;
+    border-color: var(--accent-color);
+}
+
+
+/* Floating labels */
+.floating_label {
+    position: absolute;
+    top: 50%;
+    left: 12px;
+    transform: translateY(-50%);
+    background-color: var(--card-background);
+    padding: 0 4px;
+    color: var(--secondary-text-color);
+    font-family: "Open Sans", sans-serif;
+    font-size: 14px;
+    transition: all 0.2s ease-out;
+    pointer-events: none;
+    z-index: 2;
+}
+
+/* Textarea label sits a bit lower */
+.form_group textarea ~ .floating_label {
+    top: 24px;
+}
+
+/* Float up when focused or filled */
+.form_group input:focus ~ .floating_label,
+.form_group input:not(:placeholder-shown) ~ .floating_label,
+.form_group textarea:focus ~ .floating_label,
+.form_group textarea:not(:placeholder-shown) ~ .floating_label,
+.form_group select:focus ~ .floating_label,
+.form_group select.has-value ~ .floating_label {
+    top: 0;
+    font-size: 12px;
+    color: var(--secondary-text-color);
+}
+
+.required_star {
+    color: var(--error-color);
+}
+
+
+/* Custom icons inside the form (dropdown arrow, date icon) */
+.select_arrow,
+.date_icon {
+    position: absolute;
+    right: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+    pointer-events: none;
+    color: var(--secondary-text-color);
+    z-index: 3;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* Hide the default date input icon */
+.date_input_wrapper input::-webkit-calendar-picker-indicator {
+    opacity: 0;
+    cursor: pointer;
+}
+
+
+/* Date input wrapper */
+.date_input_wrapper {
+    position: relative;
+}
+
+.date_input_wrapper input {
+    box-sizing: border-box;
+    width: 100%;
+    height: 36px;
+    padding: 0 42px 0 10px;
+    border: 1px solid var(--border-color);
+    border-radius: 6px;
+    background: var(--card-background);
+    color: var(--text-color);
+    font-family: "Open Sans", sans-serif;
+    font-size: 14px;
+}
+
+.date_input_wrapper input:focus {
+    outline: none;
+    border-color: var(--accent-color);
+}
+
+/* Clickable calendar icon */
+.date_icon {
+    position: absolute;
+    right: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 24px;
+    height: 24px;
+    padding: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: none;
+    background: transparent;
+    cursor: pointer;
+    pointer-events: auto; /* allow click */
+    z-index: 3;
+}
+
+.date_icon img {
+    width: 18px;
+    height: 18px;
+    display: block;
+}
+
+
+/* Validation error styles */
+.form_group.has-error input,
+.form_group.has-error textarea,
+.form_group.has-error select {
+    border-color: var(--error-color);
+}
+
+.form_group.has-error .floating_label {
+    color: var(--error-color);
+}
+
+.error_text {
+    display: none;
+    margin-top: 4px;
+    font-family: "Open Sans", sans-serif;
+    font-size: 12px;
+    line-height: 18px;
+    color: #dc2626;
+}
+
+.form_group.has-error .error_text {
+    display: block;
+}
+
+
+/* Modal footer */
+.add_task_footer {
+    margin: 18px -20px 0;
+    padding: 14px 20px;
+    border-top: 1px solid var(--border-color);
+    display: flex;
+    justify-content: flex-end;
+    gap: 12px;
+}
+
+
+/* Cancel and submit buttons */
+.cancel-button,
+.submit-button {
+    height: 36px;
+    padding: 0 12px;
+    border-radius: 5px;
+    font-family: "Open Sans", sans-serif;
+    font-size: 14px;
+    font-weight: 400;
+    line-height: 24px;
+    cursor: pointer;
+}
+
+.cancel-button {
+    border: 1px solid var(--accent-color);
+    background: transparent;
+    color: var(--accent-color);
+}
+
+.submit-button {
+    border: 1px solid var(--accent-color);
+    background: var(--accent-color);
+    color: #ffffff;
+}
+
+
+/* Tablet breakpoint */
 @media (max-width: 1100px) {
 
     .summary-container {
@@ -602,6 +853,7 @@ body {
 }
 
 
+/* Mobile breakpoint */
 @media (max-width: 650px) {
 
     .dashboard-container,
@@ -642,4 +894,120 @@ body {
         gap: 15px;
         overflow-x: auto;
     }
+
+    .task-filters {
+        height: auto;
+        min-height: 70px;
+        padding: 16px;
+        flex-direction: column;
+        align-items: stretch;
+        gap: 16px;
+    }
+
+    .filter-left,
+    .filter-right {
+        width: 100%;
+        flex-wrap: wrap;
+    }
+
+    .filter-select {
+        flex: 1;
+        min-width: 130px;
+    }
+
+    .task-toolbar {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 16px;
+    }
+
+    .task-actions {
+        width: 100%;
+    }
+
+    .search-box {
+        flex: 1;
+    }
+
+    .add_task_page {
+        width: calc(100% - 32px);
+        max-width: 380px;
+    }
+}
+
+.empty-task-state[hidden] {
+    display: none;
+}
+
+.task-list {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 16px;
+    margin-top: 24px;
+}
+
+.task-card {
+    padding: 20px;
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
+    background-color: #ffffff;
+    color: #222222;
+}
+
+.task-card-header {
+    margin-bottom: 12px;
+}
+
+.task-card-header h3 {
+    margin: 0;
+    font-size: 18px;
+}
+
+.task-card p {
+    margin: 8px 0 16px;
+    color: #666666;
+    overflow-wrap: anywhere;
+}
+
+.task-badges {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-bottom: 16px;
+}
+
+.priority-badge,
+.due-date-badge {
+    display: inline-block;
+    padding: 5px 10px;
+    border-radius: 4px;
+    font-size: 12px;
+}
+
+.priority-badge.high {
+    background-color: #fee2e2;
+    color: #b91c1c;
+}
+
+.priority-badge.medium {
+    background-color: #fef3c7;
+    color: #92400e;
+}
+
+.priority-badge.low {
+    background-color: #dcfce7;
+    color: #166534;
+}
+
+.due-date-badge {
+    background-color: #f3f4f6;
+    color: #374151;
+}
+
+.task-status-select {
+    width: 100%;
+    padding: 8px;
+    border: 1px solid #d1d5db;
+    border-radius: 5px;
+    background-color: #ffffff;
 }

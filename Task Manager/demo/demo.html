@@ -4,18 +4,19 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
     <title>Tasks - Task & Habit Tracker</title>
-    <link rel="stylesheet" href="./css/style.css">
+
+    <link rel="stylesheet" href="demo.css">
 </head>
 
 <body>
 
     <main class="page-container">
 
-        <!-- Header -->
         <div id="header"></div>
 
-        <!-- Task filters -->
+        <!-- Task Filters -->
         <section class="task-filters">
 
             <div class="filter-left">
@@ -29,7 +30,8 @@
                     <option value="all">All status</option>
                     <option value="todo">Todo</option>
                     <option value="in-progress">In progress</option>
-                    <option value="done">Completed</option>
+                    <option value="on-hold">On hold</option>
+                    <option value="completed">Completed</option>
                 </select>
 
                 <select class="filter-select" id="priority-filter">
@@ -52,15 +54,16 @@
                     <option value="due-date">Due date</option>
                     <option value="priority">Priority</option>
                     <option value="created-at">Created at</option>
-                    <option value="ascending">Title: A to Z</option>
-                    <option value="descending">Title: Z to A</option>
+                    <option value="ascending">Ascending</option>
+                    <option value="descending">Descending</option>
                 </select>
 
             </div>
 
         </section>
 
-        <!-- Task toolbar -->
+
+        <!-- Task Toolbar -->
         <section class="task-toolbar">
 
             <h2 class="task-heading">Tasks</h2>
@@ -68,22 +71,39 @@
             <div class="task-actions">
 
                 <div class="search-box">
+
                     <img src="./assets/search_icon.svg" alt="">
-                    <input type="search" id="task-search" placeholder="Search" aria-label="Search tasks">
+
+                    <input
+                        type="text"
+                        id="task-search"
+                        placeholder="Search"
+                        aria-label="Search tasks"
+                    >
+
                 </div>
 
                 <button class="add-task-button" type="button">
+
                     <img src="./assets/add_icon.svg" alt="">
+
                     <span>Add task</span>
+
                 </button>
 
             </div>
 
         </section>
 
-        <!-- Empty state -->
-        <section class="empty-task-state" id="empty-task-state" aria-live="polite">
-            <img class="empty-task-icon" src="./assets/clipboard_icon.svg" alt="" >
+
+        <!-- Empty Task State -->
+        <section class="empty-task-state" id="empty-task-state">
+
+            <img
+                class="empty-task-icon"
+                src="./assets/clipboard_icon.svg"
+                alt="No tasks"
+            >
 
             <p class="empty-task-message">
                 No tasks found. Create your first task to get started!
@@ -91,44 +111,56 @@
 
         </section>
 
-        <!-- Saved tasks are rendered here -->
-        <section class="task-list" id="task-list" aria-label="Task list"></section>
+
+        <!-- Task List -->
+        <section class="task-list" id="task-list"></section>
 
     </main>
 
-    <!-- Add task modal overlay -->
-    <div class="add_model_overlay" id="add_task_page" role="dialog" aria-modal="true" aria-labelledby="task-modal-title" >
+
+    <!-- Add Task Modal -->
+    <div class="add_model_overlay" id="add_task_page">
 
         <div class="add_task_page">
 
-            <!-- Modal header -->
+            <!-- Modal Header -->
             <div class="task_header">
 
                 <div>
-                    <h2 id="task-modal-title">Add task</h2>
+
+                    <h2>Add task</h2>
 
                     <p>
                         Add a new task with details, priority, and due date.
                     </p>
+
                 </div>
 
-                <button class="modal-close-button" id="close-task-modal" type="button" aria-label="Close">
-                    <img src="./assets/close_icon.svg" alt="">
+                <button
+                    class="modal-close-button"
+                    id="close-task-modal"
+                    type="button"
+                    aria-label="Close"
+                >
+
+                    <img src="./assets/close_icon.svg" alt="Close">
+
                 </button>
 
             </div>
 
-            <!-- Task form -->
+
+            <!-- Add Task Form -->
             <form id="add_task_form" novalidate>
 
-                <!-- Task title -->
+                <!-- Task Title -->
                 <div class="form_group">
 
                     <input
                         type="text"
                         id="task-title"
                         name="task_title"
-                        placeholder=" "
+                        placeholder="Task title"
                         required
                     >
 
@@ -143,14 +175,14 @@
 
                 </div>
 
+
                 <!-- Description -->
                 <div class="form_group">
 
                     <textarea
                         id="task-description"
                         name="task_description"
-                        placeholder=" "
-                        rows="3"
+                        placeholder="Description"
                     ></textarea>
 
                     <label class="floating_label" for="task-description">
@@ -159,13 +191,15 @@
 
                 </div>
 
-                <!-- Due date -->
+
+                <!-- Due Date -->
                 <div class="form_group date_input_wrapper">
 
                     <input
-                        type="date"
+                        type="text"
                         id="task-due-date"
                         name="due_date"
+                        placeholder="Due date"
                         required
                     >
 
@@ -189,18 +223,20 @@
 
                 </div>
 
+
                 <!-- Priority -->
                 <div class="form_group">
 
-                    <select
-                        id="task-priority"
-                        name="priority"
-                        required
-                    >
+                    <select id="task-priority" name="priority" required>
+
                         <option value="" disabled selected hidden></option>
+
                         <option value="high">High</option>
+
                         <option value="medium">Medium</option>
+
                         <option value="low">Low</option>
+
                     </select>
 
                     <label class="floating_label" for="task-priority">
@@ -213,22 +249,23 @@
                     </div>
 
                     <span class="error_text">
-                        Please select a priority
+                        Please fill the field
                     </span>
 
                 </div>
 
-                <!-- Status -->
+
+                <!-- Status (defaults to Todo) -->
                 <div class="form_group">
 
-                    <select
-                        id="task-status"
-                        name="status"
-                        required
-                    >
+                    <select id="task-status" name="status" required>
+
                         <option value="todo" selected>Todo</option>
+
                         <option value="in-progress">In Progress</option>
-                        <option value="done">Completed</option>
+
+                        <option value="completed">Completed</option>
+
                     </select>
 
                     <label class="floating_label" for="task-status">
@@ -240,9 +277,14 @@
                         <img src="./assets/markdown_icon.svg" alt="">
                     </div>
 
+                    <span class="error_text">
+                        Please fill the field
+                    </span>
+
                 </div>
 
-                <!-- Modal footer -->
+
+                <!-- Modal Footer -->
                 <div class="add_task_footer">
 
                     <button
@@ -265,28 +307,26 @@
 
     </div>
 
+
     <!-- JavaScript -->
     <script type="module">
 
-        import { render_header,setup_theme} from "./js/components/header.js";
-        import {setup_task_modal} from "./js/task.js";
+        import {
+            render_header,
+            setup_theme
+        } from "./js/components/header.js";
 
-        document.getElementById("header").innerHTML =render_header("tasks");
+        import {
+            setup_task_modal
+        } from "demo.js";
+
+
+        document.getElementById("header").innerHTML =
+            render_header("tasks");
 
         setup_theme();
+
         setup_task_modal();
-
-        // Open the native date picker
-        const task_due_date = document.getElementById("task-due-date");
-        const date_icon = document.getElementById("date-icon");
-
-        date_icon.addEventListener("click", () => {
-            if (typeof task_due_date.showPicker === "function") {
-                task_due_date.showPicker();
-            } else {
-                task_due_date.focus();
-            }
-        });
 
     </script>
 

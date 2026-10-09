@@ -16875,73 +16875,7 @@ Important cookie attributes include:
 ---
 
 
-# History API
 
-The **History API** allows JavaScript to interact with the browser's session history.
-
-Important methods include:
-
-```javascript
-history.back();
-```
-
-```javascript
-history.forward();
-```
-
-```javascript
-history.go(-1);
-```
-
-
-```text
-pushState()
-→ Creates a new history entry
-
-replaceState()
-→ Replaces the current history entry
-```
-
----
-
-
-# Single-Page Application Navigation
-
-A traditional website may work like:
-
-```text
-Home
- ↓
-Server request
- ↓
-New HTML page
-
-Profile
- ↓
-Server request
- ↓
-New HTML page
-```
-
-A single-page application can use the History API:
-
-```text
-Home
- ↓
-JavaScript changes content
- ↓
-pushState()
-
-Profile
- ↓
-JavaScript changes content
- ↓
-pushState()
-```
-
-The browser URL changes without requiring a complete page reload.
-
----
 
 # Media API
 
@@ -17864,29 +17798,7 @@ The browser receives:
 
 This is the basic structure of an API response.
 
----
 
-# npm Packages
-
-**npm** stands for Node Package Manager.
-
-It is used to:
-
-* Install packages
-* Manage dependencies
-* Run scripts
-* Share packages
-* Manage project versions
-
-For example:
-
-```powershell
-npm install express
-```
-
-This installs Express into the project.
-
----
 
 # package.json
 
@@ -17958,31 +17870,6 @@ is not a built-in Node.js module.
 
 It is an external npm package.
 
----
-
-# Built-in vs npm Packages
-
-### Built-in Node.js module
-
-```javascript
-import fs from "node:fs";
-```
-
-No installation required.
-
-### npm package
-
-```javascript
-import express from "express";
-```
-
-Installation required:
-
-```powershell
-npm install express
-```
-
----
 
 # node_modules
 
@@ -18309,30 +18196,6 @@ if (!database_connected) {
 
 ---
 
-# Handling Process Events
-
-Node.js can listen for process events.
-
-For example:
-
-```javascript
-process.on("SIGINT", () => {
-    console.log("Server is shutting down");
-    process.exit(0);
-});
-```
-
-`SIGINT` commonly occurs when you press:
-
-```text
-Ctrl + C
-```
-
-in the terminal.
-
-This can be useful for graceful server shutdown.
-
----
 
 # Node.js Backend Structure
 
@@ -18613,7 +18476,7 @@ This is often more suitable for frequent two-way communication.
 
 ## What Is Socket.IO?
 
-<Entity value="Socket.IO" category="software" disambig="JavaScript real-time bidirectional communication library" /> is a JavaScript library for real-time, event-based communication between clients and servers.
+io is a JavaScript library for real-time, event-based communication between clients and servers.
 
 It commonly uses WebSockets when available and can fall back to HTTP long-polling when necessary.
 

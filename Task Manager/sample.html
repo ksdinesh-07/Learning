@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add Task Modal - Floating Labels</title>
+    <style>
+        /* Base Reset & Font */
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+        }
+
+        body {
+            background-color: #f5f5f5;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        /* Modal Container */
+        .modal {
+            background-color: #ffffff;
+            width: 100%;
+            max-width: 500px;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            padding: 24px;
+            position: relative;
+        }
+
+        /* Header Section */
+        .modal-header {
+            margin-bottom: 24px;
+            position: relative;
+        }
+
+        .modal-title {
+            font-size: 20px;
+            font-weight: 600;
+            color: #1a1a1a;
+            margin-bottom: 8px;
+        }
+
+        .modal-subtitle {
+            font-size: 14px;
+            color: #888888;
+        }
+
+        .close-btn {
+            position: absolute;
+            top: 0;
+            right: 0;
+            background: none;
+            border: none;
+            cursor: pointer;
+            color: #999;
+            padding: 4px;
+        }
+
+        /* Form Elements */
+        .form-group {
+            margin-bottom: 24px;
+            position: relative;
+        }
+
+        /* --- Floating Label Styles --- */
+        .input-container {
+            position: relative;
+            width: 100%;
+        }
+
+        .form-input, .form-textarea, .form-select {
+            width: 100%;
+            padding: 14px 16px;
+            border: 1px solid #cccccc;
+            border-radius: 6px;
+            font-size: 16px;
+            color: #1a1a1a;
+            outline: none;
+            background-color: transparent;
+            transition: border-color 0.2s;
+            position: relative;
+            z-index: 1; /* Ensure input is above label background */
+        }
+
+        .form-input:focus, .form-textarea:focus, .form-select:focus {
+            border-color: #78be98; /* Green focus color */
+        }
+
+        /* The Label */
+        .floating-label {
+            position: absolute;
+            top: 50%;
+            left: 12px;
+            transform: translateY(-50%);
+            background-color: #ffffff;
+            padding: 0 4px;
+            color: #999999;
+            font-size: 16px;
+            transition: all 0.2s ease-out;
+            pointer-events: none;
+            z-index: 2;
+        }
+
+        /* Required Asterisk */
+        .required-star {
+            color: #ff4d4f;
+        }
+
+        /* Textarea specific label positioning */
+        .form-textarea + .floating-label {
+            top: 24px;
+        }
+
+        /* 
+           CSS Magic: When the input is focused OR has content (placeholder-shown trick), 
+           move the label up and shrink it.
+        */
+        .form-input:focus ~ .floating-label,
+        .form-input:not(:placeholder-shown) ~ .floating-label,
+        .form-textarea:focus ~ .floating-label,
+        .form-textarea:not(:placeholder-shown) ~ .floating-label,
+        .form-select:focus ~ .floating-label,
+        .form-select:valid ~ .floating-label {
+            top: 0;
+            font-size: 12px;
+            color: #888888;
+        }
+
+        /* Select specific adjustments */
+        .form-select {
+            appearance: none;
+            -webkit-appearance: none;
+            cursor: pointer;
+        }
+        
+        /* Make sure select text shows up correctly when empty */
+        .form-select:invalid {
+            color: #999; /* placeholder color */
+        }
+        
+        /* Hide placeholder text visually but keep for CSS logic */
+        .hidden-placeholder::placeholder {
+            color: transparent;
+        }
+
+        /* Validation Error Styles */
+        .has-error .form-input,
+        .has-error .form-textarea,
+        .has-error .form-select {
+            border-color: #ff4d4f;
+        }
+
+        .has-error .floating-label {
+            color: #ff4d4f;
+        }
+
+        .error-text {
+            color: #ff4d4f;
+            font-size: 12px;
+            margin-top: 4px;
+            display: block;
+        }
+
+        /* Icons (Calendar & Dropdown) */
+        .select-arrow, .date-icon {
+            position: absolute;
+            right: 16px;
+            top: 50%;
+            transform: translateY(-50%);
+            pointer-events: none;
+            color: #999;
+            z-index: 3;
+        }
+
+        /* Action Buttons */
+        .modal-footer {
+            display: flex;
+            justify-content: flex-end;
+            gap: 12px;
+            margin-top: 32px;
+            border-top: 1px solid #eee;
+            padding-top: 20px;
+        }
+
+        .btn {
+            padding: 10px 24px;
+            border-radius: 6px;
+            font-size: 15px;
+            font-weight: 500;
+            cursor: pointer;
+            border: 1px solid transparent;
+        }
+
+        .btn-cancel {
+            background-color: #fff;
+            border-color: #78be98;
+            color: #78be98;
+        }
+
+        .btn-submit {
+            background-color: #78be98;
+            color: white;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="modal">
+        <!-- Header -->
+        <div class="modal-header">
+            <h2 class="modal-title">Add task</h2>
+            <p class="modal-subtitle">Add a new task with details, priority, and due date.</p>
+            <button class="close-btn">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <line x1="18" y1="6" x2="6" y2="18"></line>
+                    <line x1="6" y1="6" x2="18" y2="18"></line>
+                </svg>
+            </button>
+        </div>
+
+        <!-- Form -->
+        <form>
+            <!-- Task Title (Error State) -->
+            <div class="form-group has-error">
+                <div class="input-container">
+                    <input type="text" class="form-input" placeholder="Task title *">
+                    <label class="floating-label">Task title <span class="required-star">*</span></label>
+                </div>
+                <span class="error-text">Please fill the field</span>
+            </div>
+
+            <!-- Description -->
+            <div class="form-group">
+                <div class="input-container">
+                    <textarea class="form-textarea" placeholder="Description"></textarea>
+                    <label class="floating-label">Description</label>
+                </div>
+            </div>
+
+            <!-- Due Date (Error State) -->
+            <div class="form-group has-error">
+                <div class="input-container">
+                    <!-- Using type="text" onfocus="(this.type='date')" simulates a date picker placeholder -->
+                    <input type="text" class="form-input" placeholder="Due date *" onfocus="(this.type='date')" onblur="(this.type='text')">
+                    <label class="floating-label">Due date <span class="required-star">*</span></label>
+                    <div class="date-icon">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+                            <line x1="16" y1="2" x2="16" y2="6"></line>
+                            <line x1="8" y1="2" x2="8" y2="6"></line>
+                            <line x1="3" y1="10" x2="21" y2="10"></line>
+                        </svg>
+                    </div>
+                </div>
+                <span class="error-text">Please fill the field</span>
+            </div>
+
+            <!-- Priority (Updated to Floating Label) -->
+            <div class="form-group">
+                <div class="input-container">
+                    <!-- "required" triggers the :valid pseudo-class when an option is selected -->
+                    <select class="form-select" required>
+                        <option value="" disabled selected hidden></option> <!-- Empty option to trigger placeholder state -->
+                        <option value="high">High</option>
+                        <option value="medium">Medium</option>
+                        <option value="low">Low</option>
+                    </select>
+                    <label class="floating-label">Priority <span class="required-star">*</span></label>
+                    <div class="select-arrow">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <polyline points="6 9 12 15 18 9"></polyline>
+                        </svg>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Status (Updated to Floating Label, showing 'Todo' selected) -->
+            <div class="form-group">
+                <div class="input-container">
+                    <select class="form-select" required>
+                        <!-- 'Todo' is selected by default. Because an option is selected, the label will float -->
+                        <option value="todo" selected>Todo</option>
+                        <option value="in-progress">In Progress</option>
+                        <option value="done">Done</option>
+                    </select>
+                    <label class="floating-label">Status <span class="required-star">*</span></label>
+                    <div class="select-arrow">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <polyline points="6 9 12 15 18 9"></polyline>
+                        </svg>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Footer Buttons -->
+            <div class="modal-footer">
+                <button type="button" class="btn btn-cancel">Cancel</button>
+                <button type="submit" class="btn btn-submit">Submit</button>
+            </div>
+        </form>
+    </div>
+
+</body>
+</html>
