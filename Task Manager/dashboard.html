@@ -13,19 +13,19 @@
         <div id="header"></div>
 
         <script type="module">
-            import { render_header,setup_theme } from "./js/components/header.js";
-            document.getElementById("header").innerHTML=render_header("dashboard");
+            import { render_header, setup_theme } from "./js/components/header.js";
+            document.getElementById("header").innerHTML = render_header("dashboard");
             setup_theme();
         </script>
 
-        <!-- summary cards -->
+        <!-- Summary cards -->
         <section class="summary-container">
 
-            <!-- completed Tasks -->
+            <!-- Completed Tasks -->
             <article class="summary-card">
                 <div class="card-content">
                     <p class="card-label">Completed tasks</p>
-                    <p class="card-value">0</p>
+                    <p class="card-value" id="completed-tasks-count">0</p>
                     <p class="card-description">In the last 7 Days</p>
                 </div>
 
@@ -34,12 +34,11 @@
                 </div>
             </article>
 
-
             <!-- Overdue Tasks -->
             <article class="summary-card">
                 <div class="card-content">
                     <p class="card-label">Overdue tasks</p>
-                    <p class="card-value">0</p>
+                    <p class="card-value" id="overdue-tasks-count">0</p>
                     <p class="card-description">Total overdue</p>
                 </div>
 
@@ -48,12 +47,11 @@
                 </div>
             </article>
 
-
             <!-- Active Habits -->
             <article class="summary-card">
                 <div class="card-content">
                     <p class="card-label">Active habits</p>
-                    <p class="card-value">0</p>
+                    <p class="card-value" id="active-habits-count">0</p>
                     <p class="card-description">Now active</p>
                 </div>
 
@@ -62,12 +60,11 @@
                 </div>
             </article>
 
-
             <!-- Longest Streak -->
             <article class="summary-card">
                 <div class="card-content">
                     <p class="card-label">Longest Streak</p>
-                    <p class="card-value">0</p>
+                    <p class="card-value" id="longest-streak-count">0</p>
                     <p class="card-description">All-time record</p>
                 </div>
 
@@ -77,7 +74,6 @@
             </article>
 
         </section>
-
 
         <!-- Analytics -->
         <section class="analytics-container">
@@ -96,24 +92,26 @@
                     <div class="status-legend">
                         <div class="legend-item">
                             <span class="legend-dot todo"></span>
-                            <span>Todo - 0</span>
+                            <span id="legend-todo">Todo - 0</span>
                         </div>
+
                         <div class="legend-item">
                             <span class="legend-dot on-hold"></span>
-                            <span>On hold - 0</span>
+                            <span id="legend-on-hold">On hold - 0</span>
                         </div>
+
                         <div class="legend-item">
                             <span class="legend-dot in-progress"></span>
-                            <span>In progress - 0</span>
+                            <span id="legend-in-progress">In progress - 0</span>
                         </div>
+
                         <div class="legend-item">
                             <span class="legend-dot completed"></span>
-                            <span>Completed - 0</span>
+                            <span id="legend-completed">Completed - 0</span>
                         </div>
                     </div>
                 </div>
             </article>
-
 
             <!-- Habit Completion Trend -->
             <article class="analytics-card trend-card">
@@ -131,7 +129,7 @@
 
     </main>
 
-    <script src="./script.js"></script>
+    <script type="module" src="./script.js"></script>
 
 </body>
 </html>

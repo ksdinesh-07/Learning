@@ -4,25 +4,170 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Habits</title>
-
+    <title>Rules - Task & Habit Tracker</title>
     <link rel="stylesheet" href="./css/style.css">
 </head>
 
 <body>
 
-    <main class="dashboard-container">
+    <main class="page-container">
 
+        <!-- Header -->
         <div id="header"></div>
 
-        <!-- Tasks specific content -->
+        <!-- Filter & Sort Bar -->
+        <div id="filter-sort-container">
+            <section class="task-filters">
+                <div class="filter-left">
+                    <div class="filter-title">
+                        <img src="./assets/Filter_icon.svg" alt="">
+                        <span>Filters:</span>
+                    </div>
+                    <select class="filter-select" id="status-filter">
+                        <option value="all">All Status</option>
+                        <option value="enabled">Enabled rule</option>
+                        <option value="disabled">Disabled rule</option>
+                    </select>
+                    <select class="filter-select" id="section-filter">
+                        <option value="all">All sections</option>
+                        <option value="tasks">Tasks</option>
+                        <option value="habits">Habits</option>
+                    </select>
+                </div>
+                <div class="filter-right">
+                    <div class="sort-label">
+                        <img src="./assets/Sort_icon.svg" alt="">
+                        <span>Sort by:</span>
+                    </div>
+                    <select class="filter-select sort-select" id="sort-filter">
+                        <option value="ascending">Ascending</option>
+                        <option value="descending">Descending</option>
+                        <option value="created-at">Created at</option>
+                    </select>
+                </div>
+            </section>
+        </div>
+
+        <!-- Toolbar -->
+        <section class="task-toolbar">
+            <h2 class="task-heading">Rules</h2>
+            <div class="task-actions">
+                <div class="search-box">
+                    <img src="./assets/search_icon.svg" alt="">
+                    <input type="search" id="rule-search" placeholder="Search" aria-label="Search rules">
+                </div>
+                <button class="add-task-button" type="button" id="open-rule-modal">
+                    <img src="./assets/add_icon.svg" alt="">
+                    <span>Add rule</span>
+                </button>
+            </div>
+        </section>
+
+        <!-- Empty state -->
+        <section class="empty-task-state" id="empty-rule-state" aria-live="polite">
+            <img class="empty-task-icon" src="./assets/rules_empty_icon.svg" alt="">
+            <p class="empty-task-message">
+                No rules yet. Create automation rules to manage your tasks and habits
+            </p>
+        </section>
+
+        <!-- Rule list -->
+        <section class="task-list" id="rule-list" aria-label="Rule list"></section>
 
     </main>
 
+    <!-- Add/Edit rule modal -->
+    <div class="add_model_overlay" id="add_rule_page" role="dialog" aria-modal="true" aria-labelledby="rule-modal-title">
+
+        <div class="add_task_page">
+
+            <div class="task_header">
+                <div>
+                    <h2 id="rule-modal-title">Add rule</h2>
+                    <p>Create an automation rule to manage your tasks and habits.</p>
+                </div>
+                <button class="modal-close-button" id="close-rule-modal" type="button" aria-label="Close">
+                    <img src="./assets/close_icon.svg" alt="">
+                </button>
+            </div>
+
+            <form id="add_rule_form" novalidate>
+
+                <div class="form_group">
+                    <input type="text" id="rule-title" name="rule_title" placeholder=" " required>
+                    <label class="floating_label" for="rule-title">
+                        Rule name <span class="required_star">*</span>
+                    </label>
+                    <span class="error_text">Please fill the field</span>
+                </div>
+
+                <div class="form_group">
+                    <textarea id="rule-description" name="rule_description" placeholder=" " rows="3"></textarea>
+                    <label class="floating_label" for="rule-description">Description</label>
+                </div>
+
+                <div class="form_group">
+                    <select id="rule-section" name="section" required>
+                        <option value="" disabled selected hidden></option>
+                        <option value="tasks">Tasks</option>
+                        <option value="habits">Habits</option>
+                    </select>
+                    <label class="floating_label" for="rule-section">
+                        Applies to <span class="required_star">*</span>
+                    </label>
+                    <div class="select_arrow">
+                        <img src="./assets/markdown_icon.svg" alt="">
+                    </div>
+                    <span class="error_text">Please select a section</span>
+                </div>
+
+                <div class="form_group">
+                    <select id="rule-status" name="status">
+                        <option value="enabled" selected>Enabled</option>
+                        <option value="disabled">Disabled</option>
+                    </select>
+                    <label class="floating_label" for="rule-status">Status</label>
+                    <div class="select_arrow">
+                        <img src="./assets/markdown_icon.svg" alt="">
+                    </div>
+                </div>
+
+                <div class="add_task_footer">
+                    <button class="cancel-button" id="cancel-rule-modal" type="button">Cancel</button>
+                    <button class="submit-button" type="submit">Submit</button>
+                </div>
+
+            </form>
+
+        </div>
+
+    </div>
+
+    <!-- Delete confirmation modal -->
+    <div id="delete-confirm-modal" class="modal-overlay" style="display: none;">
+        <div class="delete-modal">
+            <div class="delete-modal-header">
+                <h3>Delete</h3>
+                <button type="button" id="delete-modal-close" class="modal-close">&times;</button>
+            </div>
+            <div class="delete-modal-body">
+                <p id="delete-confirm-message"></p>
+            </div>
+            <div class="delete-modal-footer">
+                <button type="button" id="delete-cancel-btn" class="cancel-btn">Cancel</button>
+                <button type="button" id="delete-confirm-btn" class="confirm-delete-btn">Delete</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts -->
     <script type="module">
-        import { render_header,setup_theme } from "./js/components/header.js";
-        document.getElementById("header").innerHTML =render_header("habits");
+        import { render_header, setup_theme } from "./js/components/header.js";
+        import { setup_rules } from "./js/rules.js";
+
+        document.getElementById("header").innerHTML = render_header("rules");
         setup_theme();
+        setup_rules();
     </script>
 
 </body>
