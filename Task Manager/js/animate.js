@@ -1,5 +1,3 @@
-// js/animate.js
-
 export function animateRemove(element, callback, duration = 300) {
     if (!element) {
         callback?.();
