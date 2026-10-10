@@ -1,4 +1,3 @@
-
 import { getRuleEffects } from "./rule-engine.js";
 import { animateRemove } from "./animate.js";
 
@@ -161,6 +160,7 @@ export function setup_task_modal() {
         render_tasks();
     }
 
+    /* Move a task up (-1) or down (+1) in the stored array */
     function move_task(task_id, direction) {
         const tasks = get_tasks();
         const current_index = tasks.findIndex(
@@ -178,6 +178,7 @@ export function setup_task_modal() {
         render_tasks();
     }
 
+    /* Move a subtask up (-1) or down (+1) inside its parent task */
     function move_subtask(task_id, subtask_id, direction) {
         const tasks = get_tasks();
         const task = tasks.find(item => String(item.task_id) === String(task_id));
@@ -239,7 +240,8 @@ export function setup_task_modal() {
         function update_count() {
             const subtasks = get_subtasks(task);
             count.textContent = `Subtasks (${subtasks.length})`;
-            count.title = `${subtasks.filter(item => item.is_completed).length} completed`;
+            count.title =
+                `${subtasks.filter(item => item.is_completed).length} completed`;
         }
 
         function set_section_collapsed(collapsed) {
@@ -266,6 +268,8 @@ export function setup_task_modal() {
         function make_subtask_row(subtask) {
             const item = document.createElement("li");
             item.className = "subtask-item";
+            item.draggable = true;
+            item.dataset.subtaskId = String(subtask.subtask_id);
 
             const content = document.createElement("div");
             content.className = "subtask-content";
@@ -287,7 +291,8 @@ export function setup_task_modal() {
             checkbox.addEventListener("change", () => {
                 update_task(task.task_id, current_task => {
                     const target = get_subtasks(current_task).find(
-                        entry => String(entry.subtask_id) === String(subtask.subtask_id)
+                        entry =>
+                            String(entry.subtask_id) === String(subtask.subtask_id)
                     );
                     if (target) target.is_completed = checkbox.checked;
                 });
@@ -310,24 +315,16 @@ export function setup_task_modal() {
 
             const edit_button = make_button("edit-subtask-button", icon_paths.edit, "Edit");
             edit_button.addEventListener("click", () => {
-                const new_title = window.prompt("Edit subtask", subtask.subtask_title || "");
+                const new_title = window.prompt(
+                    "Edit subtask", subtask.subtask_title || ""
+                );
                 if (new_title === null || !new_title.trim()) return;
 
                 const updated_title = new_title.trim();
-                const current_tasks = get_tasks();
-                const current_task = current_tasks.find(
-                    entry => String(entry.task_id) === String(task.task_id)
-                );
-                const target = current_task
-                    ? get_subtasks(current_task).find(
-                        entry => String(entry.subtask_id) === String(subtask.subtask_id)
-                    )
-                    : null;
-                if (!target) return;
-
                 update_task(task.task_id, current_task => {
                     const target_subtask = get_subtasks(current_task).find(
-                        entry => String(entry.subtask_id) === String(subtask.subtask_id)
+                        entry =>
+                            String(entry.subtask_id) === String(subtask.subtask_id)
                     );
                     if (target_subtask) target_subtask.subtask_title = updated_title;
                 });
@@ -335,29 +332,22 @@ export function setup_task_modal() {
                 showToast("All set! Your changes have been saved successfully!");
             });
 
-            const delete_button = make_button("delete-subtask-button", icon_paths.delete, "Delete");
+            const delete_button = make_button(
+                "delete-subtask-button", icon_paths.delete, "Delete"
+            );
             delete_button.addEventListener("click", () => {
                 openDeleteConfirmation(
                     subtask.subtask_title || "Untitled subtask",
                     "subtask",
                     () => {
-                        const current_tasks = get_tasks();
-                        const current_task = current_tasks.find(
-                            entry => String(entry.task_id) === String(task.task_id)
-                        );
-                        if (!current_task) return;
-
-                        const exists = get_subtasks(current_task).some(
-                            entry => String(entry.subtask_id) === String(subtask.subtask_id)
-                        );
-                        if (!exists) return;
-
                         update_task(task.task_id, current_task => {
-                            current_task.task_subtasks = get_subtasks(current_task).filter(
-                                entry => String(entry.subtask_id) !== String(subtask.subtask_id)
-                            );
+                            current_task.task_subtasks =
+                                get_subtasks(current_task).filter(
+                                    entry =>
+                                        String(entry.subtask_id) !==
+                                        String(subtask.subtask_id)
+                                );
                         });
-
                         showToast("Done! Your item has been removed.");
                     }
                 );
@@ -365,6 +355,76 @@ export function setup_task_modal() {
 
             actions.append(up_button, down_button, edit_button, delete_button);
             item.append(content, actions);
+
+            /* --- Subtask drag & drop --- */
+            item.addEventListener("dragstart", event => {
+                event.stopPropagation();
+                event.dataTransfer.setData("subtask-id", String(subtask.subtask_id));
+                event.dataTransfer.setData("parent-task-id", String(task.task_id));
+                event.dataTransfer.effectAllowed = "move";
+                item.classList.add("is-dragging");
+            });
+
+            item.addEventListener("dragend", () => {
+                item.classList.remove("is-dragging");
+                document
+                    .querySelectorAll(".subtask-item.drag-over")
+                    .forEach(el => el.classList.remove("drag-over"));
+            });
+
+            item.addEventListener("dragover", event => {
+                const source_parent =
+                    event.dataTransfer.types.includes("parent-task-id");
+                if (!source_parent) return;
+
+                event.preventDefault();
+                event.stopPropagation();
+                item.classList.add("drag-over");
+            });
+
+            item.addEventListener("dragleave", () => {
+                item.classList.remove("drag-over");
+            });
+
+            item.addEventListener("drop", event => {
+                const source_id = event.dataTransfer.getData("subtask-id");
+                const source_parent =
+                    event.dataTransfer.getData("parent-task-id");
+                if (!source_id) return;
+
+                // Only allow within the same parent task
+                if (source_parent !== String(task.task_id)) return;
+
+                event.preventDefault();
+                event.stopPropagation();
+                item.classList.remove("drag-over");
+
+                const target_id = String(subtask.subtask_id);
+                if (source_id === target_id) return;
+
+                const tasks = get_tasks();
+                const current_task = tasks.find(
+                    entry => String(entry.task_id) === String(task.task_id)
+                );
+                if (!current_task) return;
+
+                const subtasks = get_subtasks(current_task);
+                const from = subtasks.findIndex(
+                    entry => String(entry.subtask_id) === source_id
+                );
+                const to = subtasks.findIndex(
+                    entry => String(entry.subtask_id) === target_id
+                );
+                if (from === -1 || to === -1) return;
+
+                const [moved] = subtasks.splice(from, 1);
+                const insert_at = from < to ? to - 1 : to;
+                subtasks.splice(insert_at, 0, moved);
+
+                save_tasks(tasks);
+                render_tasks();
+            });
+
             return item;
         }
 
@@ -379,7 +439,10 @@ export function setup_task_modal() {
         add_form.addEventListener("submit", event => {
             event.preventDefault();
             const value = add_input.value.trim();
-            if (!value) { add_input.focus(); return; }
+            if (!value) {
+                add_input.focus();
+                return;
+            }
 
             update_task(task.task_id, current_task => {
                 get_subtasks(current_task).push({
@@ -390,7 +453,9 @@ export function setup_task_modal() {
             });
 
             add_input.value = "";
-            showToast(`Nice work! Your new subtask "${value}" is now in the list!`);
+            showToast(
+                `Nice work! Your new subtask "${value}" is now in the list!`
+            );
         });
 
         heading.append(heading_toggle, count);
@@ -415,8 +480,14 @@ export function setup_task_modal() {
         const heading_group = document.createElement("div");
         heading_group.className = "task-heading-group";
 
-        const drag_handle = make_button("drag-handle", icon_paths.drag, "Drag to reorder task");
+        /* Drag handle is a <div>, not a <button>, so drag actually starts */
+        const drag_handle = document.createElement("div");
+        drag_handle.className = "drag-handle";
         drag_handle.draggable = true;
+        drag_handle.setAttribute("role", "button");
+        drag_handle.setAttribute("aria-label", "Drag to reorder task");
+        drag_handle.tabIndex = 0;
+        drag_handle.append(make_icon(icon_paths.drag));
 
         const title = document.createElement("h3");
         title.className = "task-title";
@@ -436,7 +507,9 @@ export function setup_task_modal() {
         const edit_button = make_button("edit-task-button", icon_paths.edit, "Edit");
         edit_button.addEventListener("click", () => open_edit_modal(task));
 
-        const delete_button = make_button("delete-task-button", icon_paths.delete, "Delete");
+        const delete_button = make_button(
+            "delete-task-button", icon_paths.delete, "Delete"
+        );
         delete_button.addEventListener("click", () => {
             openDeleteConfirmation(
                 task.task_title || "Untitled task",
@@ -444,7 +517,8 @@ export function setup_task_modal() {
                 () => {
                     animateRemove(card, () => {
                         const tasks = get_tasks().filter(
-                            entry => String(entry.task_id) !== String(task.task_id)
+                            entry =>
+                                String(entry.task_id) !== String(task.task_id)
                         );
                         save_tasks(tasks);
                         render_tasks();
@@ -479,7 +553,9 @@ export function setup_task_modal() {
                 ? `${date_parts[2]}/${date_parts[1]}/${date_parts[0]}`
                 : task.task_due_date;
 
-            badges.append(make_badge("due-date-badge", formatted_date, icon_paths.calendar));
+            badges.append(
+                make_badge("due-date-badge", formatted_date, icon_paths.calendar)
+            );
         }
 
         const status_row = document.createElement("div");
@@ -524,9 +600,11 @@ export function setup_task_modal() {
 
         const subtask_section = make_subtask_section(task);
 
-        card.append(header, description, badges, status_row, subtask_section.element);
+        card.append(
+            header, description, badges, status_row, subtask_section.element
+        );
 
-        // Apply custom rules
+        /* Apply custom rules */
         const effects = getRuleEffects(task, "tasks");
 
         if (effects.highlight) {
@@ -541,7 +619,7 @@ export function setup_task_modal() {
             heading_group.append(rule_badge);
         }
 
-        // Drag-and-drop
+        /* --- Task drag & drop --- */
         drag_handle.addEventListener("dragstart", event => {
             dragged_task_id = String(task.task_id);
             card.classList.add("is-dragging");
@@ -557,6 +635,9 @@ export function setup_task_modal() {
         });
 
         card.addEventListener("dragover", event => {
+            // Ignore subtask drags
+            if (event.dataTransfer.types.includes("subtask-id")) return;
+
             event.preventDefault();
             if (dragged_task_id !== String(task.task_id)) {
                 card.classList.add("drag-over");
@@ -571,6 +652,9 @@ export function setup_task_modal() {
         });
 
         card.addEventListener("drop", event => {
+            // Ignore subtask drops
+            if (event.dataTransfer.types.includes("subtask-id")) return;
+
             event.preventDefault();
             card.classList.remove("drag-over");
 
@@ -579,12 +663,20 @@ export function setup_task_modal() {
             if (!source_id || source_id === target_id) return;
 
             const tasks = get_tasks();
-            const from = tasks.findIndex(entry => String(entry.task_id) === source_id);
-            const to = tasks.findIndex(entry => String(entry.task_id) === target_id);
+            const from = tasks.findIndex(
+                entry => String(entry.task_id) === source_id
+            );
+            const to = tasks.findIndex(
+                entry => String(entry.task_id) === target_id
+            );
             if (from === -1 || to === -1) return;
 
             const [moved] = tasks.splice(from, 1);
-            tasks.splice(to, 0, moved);
+
+            // If we removed an item above the target, the target's
+            // index has shifted down by one.
+            const insert_at = from < to ? to - 1 : to;
+            tasks.splice(insert_at, 0, moved);
 
             save_tasks(tasks);
             render_tasks();
@@ -602,9 +694,13 @@ export function setup_task_modal() {
         let filtered_tasks = all_tasks.filter(task => {
             const title = String(task.task_title || "").toLowerCase();
             const description = String(task.task_description || "").toLowerCase();
-            const matches_search = title.includes(search_text) || description.includes(search_text);
+            const matches_search =
+                title.includes(search_text) ||
+                description.includes(search_text);
 
-            const raw_status = String(task.task_status || "Todo").trim().toLowerCase();
+            const raw_status = String(task.task_status || "Todo")
+                .trim()
+                .toLowerCase();
             const normalized_status = {
                 "todo": "todo",
                 "to do": "todo",
@@ -619,9 +715,14 @@ export function setup_task_modal() {
                 "done": "done"
             }[raw_status] || "todo";
 
-            const matches_status = selected_status === "all" || normalized_status === selected_status;
+            const matches_status =
+                selected_status === "all" ||
+                normalized_status === selected_status;
+
             const task_priority = priority_value(task.task_priority);
-            const matches_priority = selected_priority === "all" || task_priority === selected_priority;
+            const matches_priority =
+                selected_priority === "all" ||
+                task_priority === selected_priority;
 
             return matches_search && matches_status && matches_priority;
         });
@@ -629,25 +730,40 @@ export function setup_task_modal() {
         const sort_by = sort_filter?.value || "created-at";
         const priority_order = { high: 1, medium: 2, low: 3 };
 
-        filtered_tasks.sort((a, b) => {
-            switch (sort_by) {
-                case "due-date": {
-                    const date_a = a.task_due_date || "9999-12-31";
-                    const date_b = b.task_due_date || "9999-12-31";
-                    return date_a.localeCompare(date_b);
+        /* Skip sorting when "manual" is chosen, so drag order sticks */
+        if (sort_by !== "manual") {
+            filtered_tasks.sort((a, b) => {
+                switch (sort_by) {
+                    case "due-date": {
+                        const date_a = a.task_due_date || "9999-12-31";
+                        const date_b = b.task_due_date || "9999-12-31";
+                        return date_a.localeCompare(date_b);
+                    }
+                    case "priority":
+                        return (
+                            priority_order[priority_value(a.task_priority)] -
+                            priority_order[priority_value(b.task_priority)]
+                        );
+                    case "ascending":
+                        return (a.task_title || "").localeCompare(
+                            b.task_title || "",
+                            undefined,
+                            { sensitivity: "base" }
+                        );
+                    case "descending":
+                        return (b.task_title || "").localeCompare(
+                            a.task_title || "",
+                            undefined,
+                            { sensitivity: "base" }
+                        );
+                    case "created-at":
+                    default:
+                        return String(b.created_at || "").localeCompare(
+                            String(a.created_at || "")
+                        );
                 }
-                case "priority":
-                    return priority_order[priority_value(a.task_priority)] -
-                        priority_order[priority_value(b.task_priority)];
-                case "ascending":
-                    return (a.task_title || "").localeCompare(b.task_title || "", undefined, { sensitivity: "base" });
-                case "descending":
-                    return (b.task_title || "").localeCompare(a.task_title || "", undefined, { sensitivity: "base" });
-                case "created-at":
-                default:
-                    return String(b.created_at || "").localeCompare(String(a.created_at || ""));
-            }
-        });
+            });
+        }
 
         task_list.replaceChildren();
 
@@ -656,9 +772,11 @@ export function setup_task_modal() {
             if (all_tasks.length === 0) {
                 empty_state.textContent = "No tasks yet. Add your first task!";
             } else if (search_text && filtered_tasks.length === 0) {
-                empty_state.textContent = "No tasks found. Try a different search.";
+                empty_state.textContent =
+                    "No tasks found. Try a different search.";
             } else {
-                empty_state.textContent = "No tasks match your selected filters.";
+                empty_state.textContent =
+                    "No tasks match your selected filters.";
             }
         }
 
@@ -703,7 +821,10 @@ export function setup_task_modal() {
         event.preventDefault();
 
         const task_title = title_input.value.trim();
-        if (!task_title) { title_input.focus(); return; }
+        if (!task_title) {
+            title_input.focus();
+            return;
+        }
 
         const task = {
             task_title,
@@ -711,9 +832,10 @@ export function setup_task_modal() {
             task_due_date: due_date_input.value,
             task_priority: priority_value(priority_input.value),
             task_status: status_value(status_input.value),
-            completed_at: status_value(status_input.value) === "Completed"
-                ? new Date().toISOString()
-                : null
+            completed_at:
+                status_value(status_input.value) === "Completed"
+                    ? new Date().toISOString()
+                    : null
         };
 
         const tasks = get_tasks();
@@ -741,14 +863,22 @@ export function setup_task_modal() {
         close_modal();
         render_tasks();
 
-        showToast(is_editing
-            ? "All set! Your changes have been saved successfully!"
-            : `Nice work! Your new task "${task.task_title}" is now in the list!`);
+        showToast(
+            is_editing
+                ? "All set! Your changes have been saved successfully!"
+                : `Nice work! Your new task "${task.task_title}" is now in the list!`
+        );
     });
 
-    document.querySelector(".add-task-button")?.addEventListener("click", open_add_modal);
-    document.getElementById("close-task-modal")?.addEventListener("click", close_modal);
-    document.getElementById("cancel-task-modal")?.addEventListener("click", close_modal);
+    document
+        .querySelector(".add-task-button")
+        ?.addEventListener("click", open_add_modal);
+    document
+        .getElementById("close-task-modal")
+        ?.addEventListener("click", close_modal);
+    document
+        .getElementById("cancel-task-modal")
+        ?.addEventListener("click", close_modal);
 
     modal.addEventListener("click", event => {
         if (event.target === modal) close_modal();
@@ -768,7 +898,7 @@ export function setup_task_modal() {
     render_tasks();
 }
 
-/* DELETE CONFIRMATION POPUP */
+/* ---------- Delete confirmation popup ---------- */
 const deleteModal = document.getElementById("delete-confirm-modal");
 const deleteMessage = document.getElementById("delete-confirm-message");
 const deleteConfirmBtn = document.getElementById("delete-confirm-btn");
@@ -784,12 +914,17 @@ function openDeleteConfirmation(itemName, itemType, deleteAction) {
     }
 
     deleteMessage.replaceChildren();
-    deleteMessage.append(document.createTextNode("Are you sure you want to delete "));
+    deleteMessage.append(
+        document.createTextNode("Are you sure you want to delete ")
+    );
 
     const nameElement = document.createElement("strong");
     nameElement.textContent = itemName;
 
-    deleteMessage.append(nameElement, document.createTextNode(` (${itemType})?`));
+    deleteMessage.append(
+        nameElement, document.createTextNode(` (${itemType})?`)
+    );
+
     pendingDeleteAction = deleteAction;
     deleteModal.style.display = "flex";
 }

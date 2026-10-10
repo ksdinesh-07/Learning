@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Rules - Task & Habit Tracker</title>
+    <title>Habits - Task & Habit Tracker</title>
     <link rel="stylesheet" href="./css/style.css">
 </head>
 
@@ -15,125 +15,178 @@
         <!-- Header -->
         <div id="header"></div>
 
-        <!-- Filter & Sort Bar -->
-        <div id="filter-sort-container">
-            <section class="task-filters">
-                <div class="filter-left">
-                    <div class="filter-title">
-                        <img src="./assets/Filter_icon.svg" alt="">
-                        <span>Filters:</span>
-                    </div>
-                    <select class="filter-select" id="status-filter">
-                        <option value="all">All Status</option>
-                        <option value="enabled">Enabled rule</option>
-                        <option value="disabled">Disabled rule</option>
-                    </select>
-                    <select class="filter-select" id="section-filter">
-                        <option value="all">All sections</option>
-                        <option value="tasks">Tasks</option>
-                        <option value="habits">Habits</option>
-                    </select>
+        <!-- Filter & Sort bar -->
+        <section class="task-filters">
+            <div class="filter-left">
+                <div class="filter-title">
+                    <img src="./assets/Filter_icon.svg" alt="">
+                    <span>Filters:</span>
                 </div>
-                <div class="filter-right">
-                    <div class="sort-label">
-                        <img src="./assets/Sort_icon.svg" alt="">
-                        <span>Sort by:</span>
-                    </div>
-                    <select class="filter-select sort-select" id="sort-filter">
-                        <option value="ascending">Ascending</option>
-                        <option value="descending">Descending</option>
-                        <option value="created-at">Created at</option>
-                    </select>
+
+                <select class="filter-select" id="frequency-filter">
+                    <option value="all">All frequencies</option>
+                    <option value="daily">Daily</option>
+                    <option value="weekly">Weekly</option>
+                    <option value="custom">Custom</option>
+                </select>
+            </div>
+
+            <div class="filter-right">
+                <div class="sort-label">
+                    <img src="./assets/Sort_icon.svg" alt="">
+                    <span>Sort by:</span>
                 </div>
-            </section>
-        </div>
+
+                <select class="filter-select sort-select" id="sort-filter">
+                    <option value="streak">Streak</option>
+                    <option value="created-at">Created at</option>
+                    <option value="ascending">Ascending</option>
+                    <option value="descending">Descending</option>
+                </select>
+            </div>
+        </section>
 
         <!-- Toolbar -->
         <section class="task-toolbar">
-            <h2 class="task-heading">Rules</h2>
+            <h2 class="task-heading">Habits</h2>
+
             <div class="task-actions">
                 <div class="search-box">
                     <img src="./assets/search_icon.svg" alt="">
-                    <input type="search" id="rule-search" placeholder="Search" aria-label="Search rules">
+                    <input type="search" id="habit-search" placeholder="Search" aria-label="Search habits">
                 </div>
-                <button class="add-task-button" type="button" id="open-rule-modal">
+
+                <button class="add-task-button" type="button" id="open-habit-modal">
                     <img src="./assets/add_icon.svg" alt="">
-                    <span>Add rule</span>
+                    <span>Add habit</span>
                 </button>
             </div>
         </section>
 
         <!-- Empty state -->
-        <section class="empty-task-state" id="empty-rule-state" aria-live="polite">
-            <img class="empty-task-icon" src="./assets/rules_empty_icon.svg" alt="">
+        <section class="empty-task-state" id="empty-habit-state" aria-live="polite">
+            <img class="empty-task-icon" src="./assets/habit_fire_icon.svg" alt="">
             <p class="empty-task-message">
-                No rules yet. Create automation rules to manage your tasks and habits
+                No habits yet. Create your first habit to start building streaks!
             </p>
         </section>
 
-        <!-- Rule list -->
-        <section class="task-list" id="rule-list" aria-label="Rule list"></section>
+        <!-- Habit list -->
+        <section class="task-list" id="habit-list" aria-label="Habit list"></section>
 
     </main>
 
-    <!-- Add/Edit rule modal -->
-    <div class="add_model_overlay" id="add_rule_page" role="dialog" aria-modal="true" aria-labelledby="rule-modal-title">
+        <!-- Add / Edit habit modal -->
+        <div class="add_model_overlay" id="add_habit_page" role="dialog" aria-modal="true" aria-labelledby="habit-modal-title">
 
         <div class="add_task_page">
 
             <div class="task_header">
                 <div>
-                    <h2 id="rule-modal-title">Add rule</h2>
-                    <p>Create an automation rule to manage your tasks and habits.</p>
+                    <h2 id="habit-modal-title">Add habit</h2>
+                    <p>Create a habit and start building a streak.</p>
                 </div>
-                <button class="modal-close-button" id="close-rule-modal" type="button" aria-label="Close">
+
+                <button class="modal-close-button" id="close-habit-modal" type="button" aria-label="Close">
                     <img src="./assets/close_icon.svg" alt="">
                 </button>
             </div>
 
-            <form id="add_rule_form" novalidate>
+            <form id="add_habit_form" novalidate>
 
+                <!-- Title -->
                 <div class="form_group">
-                    <input type="text" id="rule-title" name="rule_title" placeholder=" " required>
-                    <label class="floating_label" for="rule-title">
-                        Rule name <span class="required_star">*</span>
+                    <input type="text" id="habit-title" name="habit_title" placeholder=" " required>
+                    <label class="floating_label" for="habit-title">
+                        Habit name <span class="required_star">*</span>
                     </label>
                     <span class="error_text">Please fill the field</span>
                 </div>
 
+                <!-- Description -->
                 <div class="form_group">
-                    <textarea id="rule-description" name="rule_description" placeholder=" " rows="3"></textarea>
-                    <label class="floating_label" for="rule-description">Description</label>
+                    <textarea id="habit-description" name="habit_description" placeholder=" " rows="3"></textarea>
+                    <label class="floating_label" for="habit-description">Description</label>
                 </div>
 
+                <!-- Frequency -->
                 <div class="form_group">
-                    <select id="rule-section" name="section" required>
+                    <select id="habit-frequency" name="habit_frequency" required>
                         <option value="" disabled selected hidden></option>
-                        <option value="tasks">Tasks</option>
-                        <option value="habits">Habits</option>
+                        <option value="daily">Daily</option>
+                        <option value="weekly">Weekly</option>
+                        <option value="custom">Custom</option>
                     </select>
-                    <label class="floating_label" for="rule-section">
-                        Applies to <span class="required_star">*</span>
+                    <label class="floating_label" for="habit-frequency">
+                        Frequency <span class="required_star">*</span>
                     </label>
                     <div class="select_arrow">
                         <img src="./assets/markdown_icon.svg" alt="">
                     </div>
-                    <span class="error_text">Please select a section</span>
+                    <span class="error_text">Please pick a frequency</span>
                 </div>
 
-                <div class="form_group">
-                    <select id="rule-status" name="status">
-                        <option value="enabled" selected>Enabled</option>
-                        <option value="disabled">Disabled</option>
+                <!-- Weekly day (only shown when frequency = weekly) -->
+                <div class="form_group" id="weekly-day-group" hidden>
+                    <select id="habit-weekly-day" name="weekly_day">
+                        <option value="" disabled selected hidden></option>
+                        <option value="Monday">Monday</option>
+                        <option value="Tuesday">Tuesday</option>
+                        <option value="Wednesday">Wednesday</option>
+                        <option value="Thursday">Thursday</option>
+                        <option value="Friday">Friday</option>
+                        <option value="Saturday">Saturday</option>
+                        <option value="Sunday">Sunday</option>
                     </select>
-                    <label class="floating_label" for="rule-status">Status</label>
+                    <label class="floating_label" for="habit-weekly-day">
+                        Choose day <span class="required_star">*</span>
+                    </label>
                     <div class="select_arrow">
                         <img src="./assets/markdown_icon.svg" alt="">
                     </div>
+                    <span class="error_text">Please pick a day</span>
+                </div>
+
+                <!-- Custom days (only shown when frequency = custom) -->
+                <div class="form_group" id="custom-days-group" hidden>
+                    <div id="custom-days-multiselect" class="multiselect">
+                        <div id="multiselect-control" class="multiselect-control">
+                            <div id="multiselect-chips" class="multiselect-chips"></div>
+                            <img class="multiselect-arrow" src="./assets/markdown_icon.svg" alt="">
+                        </div>
+
+                        <div id="multiselect-dropdown" class="multiselect-dropdown" hidden>
+                            <label class="multiselect-option">
+                                <input type="checkbox" data-day="all"> Select all
+                            </label>
+                            <label class="multiselect-option">
+                                <input type="checkbox" data-day="Monday"> Monday
+                            </label>
+                            <label class="multiselect-option">
+                                <input type="checkbox" data-day="Tuesday"> Tuesday
+                            </label>
+                            <label class="multiselect-option">
+                                <input type="checkbox" data-day="Wednesday"> Wednesday
+                            </label>
+                            <label class="multiselect-option">
+                                <input type="checkbox" data-day="Thursday"> Thursday
+                            </label>
+                            <label class="multiselect-option">
+                                <input type="checkbox" data-day="Friday"> Friday
+                            </label>
+                            <label class="multiselect-option">
+                                <input type="checkbox" data-day="Saturday"> Saturday
+                            </label>
+                            <label class="multiselect-option">
+                                <input type="checkbox" data-day="Sunday"> Sunday
+                            </label>
+                        </div>
+                    </div>
+                    <span class="error_text">Please pick at least one day</span>
                 </div>
 
                 <div class="add_task_footer">
-                    <button class="cancel-button" id="cancel-rule-modal" type="button">Cancel</button>
+                    <button class="cancel-button" id="cancel-habit-modal" type="button">Cancel</button>
                     <button class="submit-button" type="submit">Submit</button>
                 </div>
 
@@ -163,11 +216,11 @@
     <!-- Scripts -->
     <script type="module">
         import { render_header, setup_theme } from "./js/components/header.js";
-        import { setup_rules } from "./js/rules.js";
+        import { setup_habits } from "./js/habits.js";
 
-        document.getElementById("header").innerHTML = render_header("rules");
+        document.getElementById("header").innerHTML = render_header("habits");
         setup_theme();
-        setup_rules();
+        setup_habits();
     </script>
 
 </body>

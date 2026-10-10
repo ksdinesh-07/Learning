@@ -715,7 +715,7 @@ export function setup_habits() {
         if (frequency_input) frequency_input.value = "";
 
         modal.style.display = "flex";
-        modal.setAttribute("aria-hidden", "false");
+        // modal.setAttribute("aria-hidden", "false");
         title_input?.focus();
     }
 
@@ -764,14 +764,14 @@ export function setup_habits() {
         if (modal_title) modal_title.textContent = "Edit habit";
 
         modal.style.display = "flex";
-        modal.setAttribute("aria-hidden", "false");
+        // modal.setAttribute("aria-hidden", "false");
         title_input.focus();
     }
 
     // Close the habit modal and reset its state
     function close_modal() {
         modal.style.display = "none";
-        modal.setAttribute("aria-hidden", "true");
+        // modal.setAttribute("aria-hidden", "true");
         form.reset();
         clear_all_errors();
         reset_multiselect();
