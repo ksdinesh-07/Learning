@@ -1,5 +1,3 @@
-// script.js
-
 // Key used to save tasks in localStorage
 const TASK_STORAGE_KEY = "task_data";
 
