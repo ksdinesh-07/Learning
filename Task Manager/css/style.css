@@ -2246,14 +2246,6 @@ body.dark-theme .rule-badge-info {
     background: transparent !important;
 }
 
-/* ============================================
-   Drag & Drop fixes
-   ============================================ */
-
-/* CRITICAL: the inner <img> must not swallow the drag gesture.
-   Without this, the browser refuses to start an HTML5 drag
-   from a draggable="false" image, and the whole handle becomes
-   unresponsive to drag. */
 .drag-handle img {
     pointer-events: none;
     user-select: none;
