@@ -2,6 +2,7 @@ import { getRuleEffects } from "./rule-engine.js";
 import { animateRemove } from "./animate.js";
 
 const STORAGE_KEY = "task_data";
+const SORT_KEY = "task_sort_mode";
 
 const icon_paths = {
     drag: "./assets/drag_icon-light.svg",
@@ -75,6 +76,14 @@ export function setup_task_modal() {
     let editing_task_id = null;
     let dragged_task_id = null;
 
+    /* ---------- Restore saved sort mode ---------- */
+    const saved_sort = localStorage.getItem(SORT_KEY);
+    if (saved_sort && sort_filter) {
+        const option_exists = Array.from(sort_filter.options)
+            .some(opt => opt.value === saved_sort);
+        sort_filter.value = option_exists ? saved_sort : "manual";
+    }
+
     function create_id() {
         return globalThis.crypto?.randomUUID?.() ||
             `${Date.now()}-${Math.random()}`;
@@ -91,6 +100,14 @@ export function setup_task_modal() {
 
     function save_tasks(tasks) {
         localStorage.setItem(STORAGE_KEY, JSON.stringify(tasks));
+    }
+
+    /* Force the sort dropdown into "manual" and remember the choice */
+    function switch_to_manual_sort() {
+        if (sort_filter && sort_filter.value !== "manual") {
+            sort_filter.value = "manual";
+            localStorage.setItem(SORT_KEY, "manual");
+        }
     }
 
     function get_subtasks(task) {
@@ -175,6 +192,7 @@ export function setup_task_modal() {
             [tasks[new_index], tasks[current_index]];
 
         save_tasks(tasks);
+        switch_to_manual_sort();
         render_tasks();
     }
 
@@ -197,6 +215,7 @@ export function setup_task_modal() {
             [subtasks[new_index], subtasks[current_index]];
 
         save_tasks(tasks);
+        switch_to_manual_sort();
         render_tasks();
     }
 
@@ -356,11 +375,13 @@ export function setup_task_modal() {
             actions.append(up_button, down_button, edit_button, delete_button);
             item.append(content, actions);
 
-            /* --- Subtask drag & drop --- */
+            /* ---------- Subtask drag & drop ---------- */
+
+            // Start dragging a subtask
             item.addEventListener("dragstart", event => {
                 event.stopPropagation();
-                event.dataTransfer.setData("subtask-id", String(subtask.subtask_id));
-                event.dataTransfer.setData("parent-task-id", String(task.task_id));
+                event.dataTransfer.setData("text/subtask-id", String(subtask.subtask_id));
+                event.dataTransfer.setData("text/parent-task-id", String(task.task_id));
                 event.dataTransfer.effectAllowed = "move";
                 item.classList.add("is-dragging");
             });
@@ -372,35 +393,40 @@ export function setup_task_modal() {
                     .forEach(el => el.classList.remove("drag-over"));
             });
 
+            // Allow drop onto another subtask within the same parent
             item.addEventListener("dragover", event => {
-                const source_parent =
-                    event.dataTransfer.types.includes("parent-task-id");
-                if (!source_parent) return;
+                const types = Array.from(event.dataTransfer.types || []);
+                if (!types.includes("text/parent-task-id")) return;
 
                 event.preventDefault();
                 event.stopPropagation();
                 item.classList.add("drag-over");
+                event.dataTransfer.dropEffect = "move";
             });
 
-            item.addEventListener("dragleave", () => {
-                item.classList.remove("drag-over");
+            item.addEventListener("dragleave", event => {
+                if (!item.contains(event.relatedTarget)) {
+                    item.classList.remove("drag-over");
+                }
             });
 
             item.addEventListener("drop", event => {
-                const source_id = event.dataTransfer.getData("subtask-id");
-                const source_parent =
-                    event.dataTransfer.getData("parent-task-id");
-                if (!source_id) return;
-
-                // Only allow within the same parent task
-                if (source_parent !== String(task.task_id)) return;
+                const types = Array.from(event.dataTransfer.types || []);
+                if (!types.includes("text/parent-task-id")) return;
 
                 event.preventDefault();
                 event.stopPropagation();
                 item.classList.remove("drag-over");
 
+                const source_id = event.dataTransfer.getData("text/subtask-id");
+                const source_parent =
+                    event.dataTransfer.getData("text/parent-task-id");
                 const target_id = String(subtask.subtask_id);
-                if (source_id === target_id) return;
+
+                if (!source_id || source_id === target_id) return;
+
+                // Only allow within the same parent task
+                if (source_parent !== String(task.task_id)) return;
 
                 const tasks = get_tasks();
                 const current_task = tasks.find(
@@ -422,6 +448,7 @@ export function setup_task_modal() {
                 subtasks.splice(insert_at, 0, moved);
 
                 save_tasks(tasks);
+                switch_to_manual_sort();
                 render_tasks();
             });
 
@@ -474,16 +501,18 @@ export function setup_task_modal() {
         card.className = "task-card";
         card.dataset.taskId = String(task.task_id);
 
+        /* Card is draggable, but drag only starts from the handle */
+        card.setAttribute("draggable", "true");
+
         const header = document.createElement("div");
         header.className = "task-card-header";
 
         const heading_group = document.createElement("div");
         heading_group.className = "task-heading-group";
 
-        /* Drag handle is a <div>, not a <button>, so drag actually starts */
+        /* Drag handle — a div, not a button */
         const drag_handle = document.createElement("div");
         drag_handle.className = "drag-handle";
-        drag_handle.draggable = true;
         drag_handle.setAttribute("role", "button");
         drag_handle.setAttribute("aria-label", "Drag to reorder task");
         drag_handle.tabIndex = 0;
@@ -619,15 +648,21 @@ export function setup_task_modal() {
             heading_group.append(rule_badge);
         }
 
-        /* --- Task drag & drop --- */
-        drag_handle.addEventListener("dragstart", event => {
+        /* ---------- Task drag & drop ---------- */
+
+        card.addEventListener("dragstart", event => {
+            // Only allow drag to start from the handle
+            if (!event.target.closest(".drag-handle")) {
+                event.preventDefault();
+                return;
+            }
             dragged_task_id = String(task.task_id);
             card.classList.add("is-dragging");
             event.dataTransfer.setData("text/plain", dragged_task_id);
             event.dataTransfer.effectAllowed = "move";
         });
 
-        drag_handle.addEventListener("dragend", () => {
+        card.addEventListener("dragend", () => {
             dragged_task_id = null;
             task_list.querySelectorAll(".task-card").forEach(element => {
                 element.classList.remove("is-dragging", "drag-over");
@@ -635,8 +670,10 @@ export function setup_task_modal() {
         });
 
         card.addEventListener("dragover", event => {
+            const types = Array.from(event.dataTransfer.types || []);
+
             // Ignore subtask drags
-            if (event.dataTransfer.types.includes("subtask-id")) return;
+            if (types.includes("text/parent-task-id")) return;
 
             event.preventDefault();
             if (dragged_task_id !== String(task.task_id)) {
@@ -652,8 +689,10 @@ export function setup_task_modal() {
         });
 
         card.addEventListener("drop", event => {
+            const types = Array.from(event.dataTransfer.types || []);
+
             // Ignore subtask drops
-            if (event.dataTransfer.types.includes("subtask-id")) return;
+            if (types.includes("text/parent-task-id")) return;
 
             event.preventDefault();
             card.classList.remove("drag-over");
@@ -672,13 +711,11 @@ export function setup_task_modal() {
             if (from === -1 || to === -1) return;
 
             const [moved] = tasks.splice(from, 1);
-
-            // If we removed an item above the target, the target's
-            // index has shifted down by one.
             const insert_at = from < to ? to - 1 : to;
             tasks.splice(insert_at, 0, moved);
 
             save_tasks(tasks);
+            switch_to_manual_sort();
             render_tasks();
         });
 
@@ -727,7 +764,7 @@ export function setup_task_modal() {
             return matches_search && matches_status && matches_priority;
         });
 
-        const sort_by = sort_filter?.value || "created-at";
+        const sort_by = sort_filter?.value || "manual";
         const priority_order = { high: 1, medium: 2, low: 3 };
 
         /* Skip sorting when "manual" is chosen, so drag order sticks */
@@ -765,6 +802,8 @@ export function setup_task_modal() {
             });
         }
 
+        const is_manual = sort_by === "manual";
+
         task_list.replaceChildren();
 
         if (empty_state) {
@@ -781,7 +820,16 @@ export function setup_task_modal() {
         }
 
         filtered_tasks.forEach(task => {
-            task_list.append(make_task_card(task));
+            const card = make_task_card(task);
+
+            // Grey out and disable up/down buttons when not in manual mode
+            card.querySelectorAll(".task-move-up, .task-move-down").forEach(btn => {
+                btn.disabled = !is_manual;
+                btn.style.opacity = is_manual ? "1" : "0.4";
+                btn.style.cursor = is_manual ? "pointer" : "not-allowed";
+            });
+
+            task_list.append(card);
         });
     }
 
@@ -893,7 +941,12 @@ export function setup_task_modal() {
     task_search?.addEventListener("input", render_tasks);
     status_filter?.addEventListener("change", render_tasks);
     priority_filter?.addEventListener("change", render_tasks);
-    sort_filter?.addEventListener("change", render_tasks);
+    sort_filter?.addEventListener("change", () => {
+        if (sort_filter) {
+            localStorage.setItem(SORT_KEY, sort_filter.value);
+        }
+        render_tasks();
+    });
 
     render_tasks();
 }

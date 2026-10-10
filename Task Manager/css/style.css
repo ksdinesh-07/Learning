@@ -2235,3 +2235,100 @@ body.dark-theme .rule-badge-info {
     outline-offset: 2px;
     border-radius: 4px;
 }
+
+.icon-button:disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+    background: transparent !important;
+}
+
+.icon-button:disabled:hover {
+    background: transparent !important;
+}
+
+/* ============================================
+   Drag & Drop fixes
+   ============================================ */
+
+/* CRITICAL: the inner <img> must not swallow the drag gesture.
+   Without this, the browser refuses to start an HTML5 drag
+   from a draggable="false" image, and the whole handle becomes
+   unresponsive to drag. */
+.drag-handle img {
+    pointer-events: none;
+    user-select: none;
+    -webkit-user-drag: none;
+}
+
+/* Make the handle and its parent card participate in drag */
+.drag-handle {
+    user-select: none;
+    -webkit-user-drag: element;
+}
+
+.task-card {
+    -webkit-user-drag: element;
+}
+
+/* Subtask rows are draggable too — don't let inner text
+   accidentally select while dragging */
+.subtask-item {
+    user-select: none;
+    -webkit-user-drag: element;
+}
+
+.subtask-item .subtask-text {
+    user-select: none;
+}
+
+/* Checkbox must stay clickable */
+.subtask-content input[type="checkbox"] {
+    pointer-events: auto;
+    cursor: pointer;
+}
+
+/* Icon buttons inside task / subtask actions must stay clickable */
+.task-card-actions .icon-button,
+.subtask-actions .icon-button,
+.subtask-heading .icon-button {
+    pointer-events: auto;
+    position: relative;
+    z-index: 5;
+}
+
+.task-card-actions .icon-button img,
+.subtask-actions .icon-button img,
+.subtask-heading .icon-button img {
+    pointer-events: none;
+}
+
+/* Disabled arrows */
+.icon-button:disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+    background: transparent !important;
+}
+
+.icon-button:disabled:hover {
+    background: transparent !important;
+}
+
+/* Visual feedback while dragging */
+.task-card.is-dragging {
+    opacity: 0.45;
+}
+
+.task-card.drag-over {
+    border-color: #52BD9A;
+    box-shadow: 0 0 0 1px #52BD9A;
+}
+
+.subtask-item.is-dragging {
+    opacity: 0.45;
+}
+
+.subtask-item.drag-over {
+    outline: 1px dashed var(--accent-color);
+    outline-offset: 2px;
+    border-radius: 4px;
+}
