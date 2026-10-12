@@ -1,6 +1,5 @@
 const STORAGE_KEY = "rule_data";
 
-// Icon file paths used across the rule cards
 const icon_paths = {
     edit: "./assets/edit_icon-light.svg",
     delete: "./assets/delete_icon-light.svg",
@@ -8,7 +7,6 @@ const icon_paths = {
     habits: "./assets/active-habbit_icom.svg"
 };
 
-// What fields, operators and actions each section (tasks / habits) supports
 const SECTIONS = {
     tasks: {
         fields: [
@@ -111,10 +109,8 @@ const SECTIONS = {
     }
 };
 
-// Keeps track of the auto-hide timer for the toast
 let toastTimeout = null;
 
-// Show a small message in the corner of the screen
 function showToast(message) {
     document.querySelector(".toast-notification")?.remove();
     clearTimeout(toastTimeout);
@@ -146,11 +142,9 @@ function showToast(message) {
     toast.append(icon, text, close);
     document.body.appendChild(toast);
 
-    // Auto-hide after 4 seconds
     toastTimeout = setTimeout(() => toast.remove(), 4000);
 }
 
-// Wire up all the rule page features (list, modal, filters, delete popup)
 export function setup_rules() {
     const rule_list = document.getElementById("rule-list");
     const empty_state = document.getElementById("empty-rule-state");
@@ -173,7 +167,6 @@ export function setup_rules() {
     const section_filter = document.getElementById("section-filter");
     const sort_filter = document.getElementById("sort-filter");
 
-    // If the main elements are missing, stop here
     if (!rule_list || !modal || !form) {
         console.error("Check the rule HTML element IDs.");
         return;
@@ -182,20 +175,17 @@ export function setup_rules() {
     let editing_rule_id = null;
     let conditions = [];
 
-    // Current filter/sort choices from the toolbar
     const filter_state = {
         status: status_filter?.value || "all",
         section: section_filter?.value || "all",
         sort: sort_filter?.value || "ascending"
     };
 
-    // Create a unique id for a rule or condition
     function create_id() {
         return globalThis.crypto?.randomUUID?.() ||
             `${Date.now()}-${Math.random()}`;
     }
 
-    // Read all rules from localStorage
     function get_rules() {
         try {
             const data = JSON.parse(localStorage.getItem(STORAGE_KEY) || "[]");
@@ -203,24 +193,20 @@ export function setup_rules() {
         } catch { return []; }
     }
 
-    // Write rules back to localStorage
     function save_rules(rules) {
         localStorage.setItem(STORAGE_KEY, JSON.stringify(rules));
     }
 
-    // Make sure a section value is "tasks" or "habits"
     function section_value(v) {
         const s = String(v || "tasks").toLowerCase();
         return ["tasks", "habits"].includes(s) ? s : "tasks";
     }
 
-    // Make sure a status value is "enabled" or "disabled"
     function status_value(v) {
         const s = String(v || "enabled").toLowerCase();
         return ["enabled", "disabled"].includes(s) ? s : "enabled";
     }
 
-    // Create an <img> element for an icon
     function make_icon(path, alt = "") {
         const img = document.createElement("img");
         img.src = path;
@@ -229,7 +215,6 @@ export function setup_rules() {
         return img;
     }
 
-    // Create a small square icon button (edit, delete, etc.)
     function make_button(cls, path, label) {
         const btn = document.createElement("button");
         btn.type = "button";
@@ -240,16 +225,6 @@ export function setup_rules() {
         return btn;
     }
 
-    // Create a small badge (icon + text)
-    function make_badge(cls, label, icon_path) {
-        const b = document.createElement("span");
-        b.className = cls;
-        if (icon_path) b.append(make_icon(icon_path));
-        b.append(document.createTextNode(label));
-        return b;
-    }
-
-    // Fill the action dropdown based on the selected section
     function rebuild_action_options() {
         const section = section_value(section_input.value);
         const catalog = SECTIONS[section];
@@ -267,7 +242,6 @@ export function setup_rules() {
         });
     }
 
-    // Fill the second action dropdown with the values for the chosen action
     function rebuild_action_values() {
         const section = section_value(section_input.value);
         const catalog = SECTIONS[section];
@@ -286,7 +260,6 @@ export function setup_rules() {
         });
     }
 
-    // Build one row of the condition builder (field + operator + value + remove)
     function make_condition_row(condition) {
         const row = document.createElement("div");
         row.className = "rule-condition-row";
@@ -295,10 +268,10 @@ export function setup_rules() {
         const section = section_value(section_input.value);
         const catalog = SECTIONS[section];
 
-        // Field dropdown
         const field_select = document.createElement("select");
         field_select.className = "rule-select";
-        field_select.innerHTML = `<option value="" disabled hidden>Field</option>`;
+        field_select.innerHTML =
+            `<option value="" disabled hidden>Field</option>`;
         catalog.fields.forEach(f => {
             const opt = document.createElement("option");
             opt.value = f.value;
@@ -307,10 +280,10 @@ export function setup_rules() {
         });
         field_select.value = condition.field || "";
 
-        // Operator dropdown
         const op_select = document.createElement("select");
         op_select.className = "rule-select";
-        op_select.innerHTML = `<option value="" disabled hidden>Equals to</option>`;
+        op_select.innerHTML =
+            `<option value="" disabled hidden>Equals to</option>`;
         catalog.operators.forEach(o => {
             const opt = document.createElement("option");
             opt.value = o.value;
@@ -319,7 +292,6 @@ export function setup_rules() {
         });
         op_select.value = condition.operator || "";
 
-        // Value input — its type depends on the chosen field
         let value_el;
 
         function build_value_input() {
@@ -330,7 +302,8 @@ export function setup_rules() {
             if (!field) {
                 value_el = document.createElement("select");
                 value_el.className = "rule-select";
-                value_el.innerHTML = `<option value="" disabled selected hidden>Value</option>`;
+                value_el.innerHTML =
+                    `<option value="" disabled selected hidden>Value</option>`;
                 wrap.append(value_el);
                 return wrap;
             }
@@ -345,7 +318,8 @@ export function setup_rules() {
             } else {
                 value_el = document.createElement("select");
                 value_el.className = "rule-select";
-                value_el.innerHTML = `<option value="" disabled selected hidden>Value</option>`;
+                value_el.innerHTML =
+                    `<option value="" disabled selected hidden>Value</option>`;
                 field.values.forEach(v => {
                     const opt = document.createElement("option");
                     opt.value = v.value;
@@ -368,7 +342,6 @@ export function setup_rules() {
 
         let value_wrap = build_value_input();
 
-        // When the field changes, rebuild the value input
         field_select.addEventListener("change", () => {
             condition.field = field_select.value;
             condition.value = "";
@@ -381,7 +354,6 @@ export function setup_rules() {
             condition.operator = op_select.value;
         });
 
-        // Remove this condition row
         const remove_btn = document.createElement("button");
         remove_btn.type = "button";
         remove_btn.className = "rule-remove-btn";
@@ -396,21 +368,16 @@ export function setup_rules() {
         return row;
     }
 
-    // Redraw all condition rows in the modal
     function render_conditions() {
         condition_list.replaceChildren();
-
         conditions.forEach(c => {
             condition_list.append(make_condition_row(c));
         });
-
-        // Only show the AND/OR selector when there are 2 or more conditions
         if (join_wrap) {
             join_wrap.style.display = conditions.length > 1 ? "" : "none";
         }
     }
 
-    // Add a new empty condition row
     function add_condition() {
         conditions.push({
             id: create_id(),
@@ -421,21 +388,32 @@ export function setup_rules() {
         render_conditions();
     }
 
-    // When the section changes, reset conditions and rebuild action options
+    function update_add_condition_state() {
+        if (!add_condition_btn) return;
+        const has_section = Boolean(section_input.value);
+        add_condition_btn.disabled = !has_section;
+        add_condition_btn.style.opacity = has_section ? "1" : "0.4";
+        add_condition_btn.style.cursor =
+            has_section ? "pointer" : "not-allowed";
+    }
+
     section_input?.addEventListener("change", () => {
         conditions = [];
         render_conditions();
         rebuild_action_options();
         rebuild_action_values();
+        update_add_condition_state();
     });
 
     action_input?.addEventListener("change", () => {
         rebuild_action_values();
     });
 
-    add_condition_btn?.addEventListener("click", add_condition);
+    add_condition_btn?.addEventListener("click", () => {
+        if (!section_input.value) return;
+        add_condition();
+    });
 
-    // Toolbar filter / sort changes
     status_filter?.addEventListener("change", () => {
         filter_state.status = status_filter.value;
         render_rules();
@@ -449,7 +427,6 @@ export function setup_rules() {
         render_rules();
     });
 
-    // Build the visual card for one rule
     function make_rule_card(rule) {
         const card = document.createElement("article");
         card.className = "task-card rule-card";
@@ -465,7 +442,6 @@ export function setup_rules() {
         title.className = "task-title";
         title.textContent = rule.rule_title || "Untitled rule";
 
-        // Section badge next to the title
         const section = section_value(rule.rule_section);
         const section_badge = document.createElement("span");
         section_badge.className = "rule-section-badge";
@@ -477,7 +453,6 @@ export function setup_rules() {
         const actions = document.createElement("div");
         actions.className = "task-card-actions";
 
-        // Delete button
         const delete_button = make_button(
             "delete-task-button", icon_paths.delete, "Delete"
         );
@@ -496,19 +471,17 @@ export function setup_rules() {
             );
         });
 
-        // Edit button
         const edit_button = make_button(
             "edit-task-button", icon_paths.edit, "Edit"
         );
         edit_button.addEventListener("click", () => open_edit_modal(rule));
 
-        // On/off toggle switch
         const toggle = document.createElement("button");
         toggle.type = "button";
         const enabled = status_value(rule.rule_status) === "enabled";
         toggle.className = `rule-toggle ${enabled ? "is-on" : ""}`;
         toggle.setAttribute("role", "switch");
-        toggle.setAttribute("aria-checked", enabled);
+        toggle.setAttribute("aria-checked", String(enabled));
         toggle.setAttribute("aria-label",
             enabled ? "Disable rule" : "Enable rule");
         const knob = document.createElement("span");
@@ -529,7 +502,6 @@ export function setup_rules() {
         actions.append(delete_button, edit_button, toggle);
         header.append(heading_group, actions);
 
-        // Description line
         const description = document.createElement("p");
         description.className = "task-description";
         description.textContent = rule.rule_description || "";
@@ -538,10 +510,8 @@ export function setup_rules() {
         return card;
     }
 
-    // Draw the whole rule list, applying search, filters and sort
     function render_rules() {
         const all_rules = get_rules();
-
         const search_text = (rule_search?.value || "").trim().toLowerCase();
         const selected_status = filter_state.status || "all";
         const selected_section = filter_state.section || "all";
@@ -582,37 +552,34 @@ export function setup_rules() {
 
         rule_list.replaceChildren();
 
-        // Show or hide the empty state, with a message that fits the case
         if (empty_state) {
             empty_state.hidden = filtered.length > 0;
             const msg = empty_state.querySelector(".empty-task-message");
-
-            if (all_rules.length === 0) {
-                msg.textContent =
-                    "No rules yet. Create automation rules to manage your tasks and habits";
-            } else if (search_text && filtered.length === 0) {
-                msg.textContent = "No rules found. Try a different search.";
-            } else {
-                msg.textContent = "No rules match your selected filters.";
+            if (msg) {
+                if (all_rules.length === 0) {
+                    msg.textContent =
+                        "No rules yet. Create automation rules to manage your tasks and habits";
+                } else if (search_text && filtered.length === 0) {
+                    msg.textContent = "No rules found. Try a different search.";
+                } else {
+                    msg.textContent = "No rules match your selected filters.";
+                }
             }
         }
 
         filtered.forEach(r => rule_list.append(make_rule_card(r)));
     }
 
-    // Add or remove the red error look on a form field
     function set_error(field, has_error) {
         const group = field.closest(".form_group");
         if (group) group.classList.toggle("has-error", has_error);
     }
 
-    // Clear all error styles in the modal form
     function clear_all_errors() {
         form.querySelectorAll(".form_group.has-error")
             .forEach(g => g.classList.remove("has-error"));
     }
 
-    // Check the form has the required fields filled in
     function validate_form() {
         let valid = true;
 
@@ -628,10 +595,13 @@ export function setup_rules() {
         set_error(action_input, !action_ok);
         if (!action_ok) valid = false;
 
+        const action_val_ok = action_value_input.value.trim().length > 0;
+        set_error(action_value_input, !action_val_ok);
+        if (!action_val_ok) valid = false;
+
         return valid;
     }
 
-    // Open the modal in "add new rule" mode
     function open_add_modal() {
         editing_rule_id = null;
         form.reset();
@@ -644,13 +614,13 @@ export function setup_rules() {
         rebuild_action_options();
         rebuild_action_values();
         render_conditions();
+        update_add_condition_state();
 
         modal.style.display = "flex";
         modal.setAttribute("aria-hidden", "false");
         title_input?.focus();
     }
 
-    // Open the modal pre-filled with an existing rule for editing
     function open_edit_modal(rule) {
         editing_rule_id = rule.rule_id;
         clear_all_errors();
@@ -672,13 +642,13 @@ export function setup_rules() {
         if (submit_btn) submit_btn.textContent = "Save";
 
         render_conditions();
+        update_add_condition_state();
 
         modal.style.display = "flex";
         modal.setAttribute("aria-hidden", "false");
         title_input.focus();
     }
 
-    // Close the rule modal and reset its state
     function close_modal() {
         modal.style.display = "none";
         modal.setAttribute("aria-hidden", "true");
@@ -688,17 +658,21 @@ export function setup_rules() {
         editing_rule_id = null;
     }
 
-    // Save the form when the user submits
     form.addEventListener("submit", event => {
         event.preventDefault();
 
         if (!validate_form()) return;
 
+        const existing = editing_rule_id
+            ? get_rules().find(r =>
+                String(r.rule_id) === String(editing_rule_id))
+            : null;
+
         const rule = {
             rule_title: title_input.value.trim(),
             rule_description: description_input.value.trim(),
             rule_section: section_value(section_input.value),
-            rule_status: "enabled",
+            rule_status: existing?.rule_status || "enabled",
             rule_join: join_input?.value || "AND",
             rule_conditions: conditions.map(c => ({
                 id: c.id,
@@ -737,7 +711,6 @@ export function setup_rules() {
             : `Nice work! Your new rule "${rule.rule_title}" is now in the list!`);
     });
 
-    // Buttons and keys that open or close the rule modal
     document.getElementById("open-rule-modal")
         ?.addEventListener("click", open_add_modal);
     document.getElementById("close-rule-modal")
@@ -745,12 +718,10 @@ export function setup_rules() {
     document.getElementById("cancel-rule-modal")
         ?.addEventListener("click", close_modal);
 
-    // Clicking the dark backdrop closes the modal
     modal.addEventListener("click", e => {
         if (e.target === modal) close_modal();
     });
 
-    // Pressing Escape closes the modal
     document.addEventListener("keydown", e => {
         if (e.key === "Escape" && modal.style.display !== "none") {
             close_modal();
@@ -759,7 +730,6 @@ export function setup_rules() {
 
     rule_search?.addEventListener("input", render_rules);
 
-    // Delete confirmation popup
     const deleteModal = document.getElementById("delete-confirm-modal");
     const deleteMessage = document.getElementById("delete-confirm-message");
     const deleteConfirmBtn = document.getElementById("delete-confirm-btn");
@@ -768,7 +738,6 @@ export function setup_rules() {
 
     let pendingDeleteAction = null;
 
-    // Show the "Are you sure?" popup and remember what to run if confirmed
     function openDeleteConfirmation(itemName, itemType, deleteAction) {
         if (!deleteModal || !deleteMessage) return;
 

@@ -9,24 +9,15 @@ export function render_header(active_page) {
                 </p>
             </div>
 
-            <button
-                class="icon-button"
-                id="theme-button"
-                type="button"
-                aria-label="Switch to dark theme"
-            >
-                <img
-                    id="theme-icon"
-                    src="./assets/dark_theme_icon.svg"
-                    alt="Switch to dark theme"
-                >
+            <button class="icon-button" id="theme-button" type="button" >
+                <img id="theme-icon" src="./assets/dark_theme_icon.svg" alt="Switch to dark theme">
             </button>
+
         </header>
 
         <nav class="navigation">
 
-            <a href="dashboard.html"
-               class="nav-item ${active_page === "dashboard" ? "active" : ""}">
+            <a href="dashboard.html" class="nav-item ${active_page === "dashboard" ? "active" : ""}">
                 <img
                     class="theme-aware-icon"
                     src="./assets/dashboard_icon-light.svg"
@@ -77,25 +68,26 @@ export function render_header(active_page) {
     `;
 }
 
-
+//navigation icon theme change
 function update_theme_icons(is_dark) {
     const theme_aware_icons =document.querySelectorAll(".theme-aware-icon");
     theme_aware_icons.forEach((icon) => {
         if (is_dark) {
             icon.src = icon.dataset.dark;
-        } else {
+        } 
+        else {
             icon.src = icon.dataset.light;
         }
 
     });
 }
 
-
+//for managing theme switching
 export function setup_theme() {
-    const theme_button = document.getElementById("theme-button");
-    const theme_icon = document.getElementById("theme-icon");
-    const saved_theme = localStorage.getItem("theme");
-    const is_dark = saved_theme === "dark";
+    const theme_button= document.getElementById("theme-button");
+    const theme_icon =document.getElementById("theme-icon");
+    const saved_theme= localStorage.getItem("theme");
+    const is_dark =saved_theme==="dark";
     if (is_dark) {
         document.body.classList.add("dark-theme");
         theme_icon.src = "./assets/light_theme_icon.svg";
@@ -107,7 +99,6 @@ export function setup_theme() {
     }
 
     update_theme_icons(is_dark);
-
 
     theme_button.addEventListener("click", () => {
         document.body.classList.toggle("dark-theme");

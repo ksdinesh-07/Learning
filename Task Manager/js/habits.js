@@ -1,6 +1,7 @@
+import { getRuleEffects, highlightColorFor } from "./rule-engine.js";
+
 const STORAGE_KEY = "habit_data";
 
-// Icon file paths used on habit cards and in the form
 const icon_paths = {
     drag: "./assets/drag_icon-light.svg",
     edit: "./assets/edit_icon-light.svg",
@@ -11,17 +12,14 @@ const icon_paths = {
     settings: "./assets/settings_icon.svg"
 };
 
-// Day names shown in the weekly grid and used to save custom days
 const WEEK_DAYS_SHORT = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
 const WEEK_DAYS_FULL = [
     "Monday", "Tuesday", "Wednesday",
     "Thursday", "Friday", "Saturday", "Sunday"
 ];
 
-// Keeps track of the auto-hide timer for the toast
 let toastTimeout = null;
 
-// Show a small message in the corner of the screen
 function showToast(message) {
     document.querySelector(".toast-notification")?.remove();
     clearTimeout(toastTimeout);
@@ -53,13 +51,10 @@ function showToast(message) {
     toast.append(icon, text, close);
     document.body.appendChild(toast);
 
-    // Auto-hide after 4 seconds
     toastTimeout = setTimeout(() => toast.remove(), 4000);
 }
 
-// Wire up all the habit page features (list, modal, filters, delete popup)
 export function setup_habits() {
-    // DOM references
     const habit_list = document.getElementById("habit-list");
     const empty_state = document.getElementById("empty-habit-state");
     const modal = document.getElementById("add_habit_page");
@@ -81,23 +76,19 @@ export function setup_habits() {
     const multiselect_dropdown = document.getElementById("multiselect-dropdown");
     const multiselect_chips = document.getElementById("multiselect-chips");
 
-    // If the main elements are missing, stop here
     if (!habit_list || !modal || !form) {
         console.error("Check the habit HTML element IDs.");
         return;
     }
 
-    // State
     let editing_habit_id = null;
     let selected_days = [];
 
-    // Current filter/sort choices from the toolbar
     const filter_state = {
         frequency: frequency_filter?.value || "all",
         sort: sort_filter?.value || "streak"
     };
 
-    // Toolbar filter / sort changes
     frequency_filter?.addEventListener("change", () => {
         filter_state.frequency = frequency_filter.value;
         render_habits();
@@ -108,19 +99,16 @@ export function setup_habits() {
         render_habits();
     });
 
-    // Open the day picker dropdown
     function open_multiselect() {
         multiselect_dropdown.hidden = false;
         document.addEventListener("click", handle_outside_click);
     }
 
-    // Close the day picker dropdown
     function close_multiselect() {
         multiselect_dropdown.hidden = true;
         document.removeEventListener("click", handle_outside_click);
     }
 
-    // Close the day picker when clicking anywhere outside it
     function handle_outside_click(event) {
         const wrapper = document.getElementById("custom-days-multiselect");
         if (wrapper && !wrapper.contains(event.target)) {
@@ -128,14 +116,12 @@ export function setup_habits() {
         }
     }
 
-    // Toggle the day picker when its control is clicked
     multiselect_control?.addEventListener("click", (event) => {
         event.stopPropagation();
         if (multiselect_dropdown.hidden) open_multiselect();
         else close_multiselect();
     });
 
-    // Handle each checkbox in the day picker (single day or "Select all")
     multiselect_dropdown?.querySelectorAll('input[type="checkbox"]').forEach(cb => {
         cb.addEventListener("change", () => {
             const day = cb.dataset.day;
@@ -157,7 +143,6 @@ export function setup_habits() {
                     selected_days = selected_days.filter(d => d !== day);
                 }
 
-                // Keep "Select all" in sync with the individual days
                 const select_all = multiselect_dropdown
                     .querySelector('input[data-day="all"]');
                 if (select_all) {
@@ -171,7 +156,6 @@ export function setup_habits() {
         });
     });
 
-    // Redraw the small chips that show which days are picked
     function render_chips() {
         multiselect_chips.replaceChildren();
 
@@ -206,7 +190,6 @@ export function setup_habits() {
         });
     }
 
-    // Clear the day picker back to "nothing selected"
     function reset_multiselect() {
         selected_days = [];
         multiselect_dropdown
@@ -216,7 +199,6 @@ export function setup_habits() {
         close_multiselect();
     }
 
-    // Show the right "choose day" input based on the chosen frequency
     frequency_input?.addEventListener("change", () => {
         const value = frequency_input.value;
 
@@ -240,13 +222,11 @@ export function setup_habits() {
         custom_days_group.classList.remove("has-error");
     });
 
-    // Create a unique id for a habit
     function create_id() {
         return globalThis.crypto?.randomUUID?.() ||
             `${Date.now()}-${Math.random()}`;
     }
 
-    // Read all habits from localStorage
     function get_habits() {
         try {
             const data = JSON.parse(
@@ -258,12 +238,10 @@ export function setup_habits() {
         }
     }
 
-    // Write habits back to localStorage
     function save_habits(habits) {
         localStorage.setItem(STORAGE_KEY, JSON.stringify(habits));
     }
 
-    // Make sure a frequency value is "daily", "weekly" or "custom"
     function frequency_value(value) {
         const freq = String(value || "daily").toLowerCase();
         return ["daily", "weekly", "custom"].includes(freq)
@@ -271,7 +249,6 @@ export function setup_habits() {
             : "daily";
     }
 
-    // Create an <img> element for an icon
     function make_icon(path, alt = "") {
         const image = document.createElement("img");
         image.src = path;
@@ -280,7 +257,6 @@ export function setup_habits() {
         return image;
     }
 
-    // Create a small square icon button (edit, delete, etc.)
     function make_button(class_name, path, label) {
         const button = document.createElement("button");
         button.type = "button";
@@ -291,19 +267,20 @@ export function setup_habits() {
         return button;
     }
 
-    // Turn a Date into a "YYYY-MM-DD" key for saving completions
+    // Local-time "YYYY-MM-DD" key (avoids the UTC shift)
     function to_date_key(date) {
-        return date.toISOString().slice(0, 10);
+        const y = date.getFullYear();
+        const m = String(date.getMonth() + 1).padStart(2, "0");
+        const d = String(date.getDate()).padStart(2, "0");
+        return `${y}-${m}-${d}`;
     }
 
-    // Today's date at midnight (so comparisons ignore the time)
     function start_of_today() {
         const d = new Date();
         d.setHours(0, 0, 0, 0);
         return d;
     }
 
-    // Check if the habit was supposed to be done on a given date
     function is_expected_day(habit, date) {
         const freq = frequency_value(habit.habit_frequency);
 
@@ -314,13 +291,11 @@ export function setup_habits() {
             return habit.weekly_day === dayName;
         }
 
-        // custom
         const dayName = WEEK_DAYS_FULL[(date.getDay() + 6) % 7];
         return Array.isArray(habit.custom_days) &&
             habit.custom_days.includes(dayName);
     }
 
-    // Count how many expected days in a row have been completed
     function calculate_streak(habit) {
         const completions = Array.isArray(habit.completions)
             ? [...habit.completions].sort()
@@ -331,7 +306,6 @@ export function setup_habits() {
         const cursor = start_of_today();
         const today_key = to_date_key(cursor);
 
-        // Safety limit: only check the last 10 years
         for (let i = 0; i < 3650; i++) {
             const key = to_date_key(cursor);
 
@@ -341,31 +315,26 @@ export function setup_habits() {
                 continue;
             }
 
-            // Today not done yet — skip without breaking the streak
             if (key === today_key && is_expected_day(habit, cursor)) {
                 cursor.setDate(cursor.getDate() - 1);
                 continue;
             }
 
-            // Expected but missed — stop counting
             if (is_expected_day(habit, cursor)) {
                 break;
             }
 
-            // Not expected on this day — just skip it
             cursor.setDate(cursor.getDate() - 1);
         }
 
         return streak;
     }
 
-    // Has this habit already been marked done today?
     function is_completed_today(habit) {
         const key = to_date_key(new Date());
         return Array.isArray(habit.completions) && habit.completions.includes(key);
     }
 
-    // Add or remove today's date from the habit's completions
     function toggle_today_completion(habit) {
         const key = to_date_key(new Date());
         if (!Array.isArray(habit.completions)) habit.completions = [];
@@ -375,13 +344,11 @@ export function setup_habits() {
         else habit.completions.splice(idx, 1);
     }
 
-    // Build the visual card for one habit
     function make_habit_card(habit) {
         const card = document.createElement("article");
         card.className = "task-card habit-card";
         card.dataset.habitId = String(habit.habit_id);
 
-        // Header with title and action buttons
         const header = document.createElement("div");
         header.className = "task-card-header";
 
@@ -397,7 +364,6 @@ export function setup_habits() {
         const actions = document.createElement("div");
         actions.className = "task-card-actions";
 
-        // Delete button
         const delete_button = make_button(
             "delete-task-button",
             icon_paths.delete,
@@ -418,7 +384,6 @@ export function setup_habits() {
             );
         });
 
-        // Edit button
         const edit_button = make_button(
             "edit-task-button",
             icon_paths.edit,
@@ -426,7 +391,6 @@ export function setup_habits() {
         );
         edit_button.addEventListener("click", () => open_edit_modal(habit));
 
-        // Mark complete / un-complete button
         const mark_btn = document.createElement("button");
         mark_btn.type = "button";
         const done_today = is_completed_today(habit);
@@ -444,12 +408,10 @@ export function setup_habits() {
         actions.append(delete_button, edit_button, mark_btn);
         header.append(heading_group, actions);
 
-        // Description line
         const description = document.createElement("p");
         description.className = "task-description";
         description.textContent = habit.habit_description || "";
 
-        // Meta row — frequency badge + streak badge
         const meta_row = document.createElement("div");
         meta_row.className = "task-badges habit-meta";
 
@@ -457,7 +419,6 @@ export function setup_habits() {
         const freq_badge = document.createElement("span");
         freq_badge.className = "habit-badge habit-badge-freq";
 
-        // Custom frequency gets the settings icon, others get the calendar icon
         const freq_icon_path =
             freq === "custom" ? icon_paths.settings : icon_paths.calendar;
 
@@ -489,25 +450,31 @@ export function setup_habits() {
 
         meta_row.append(freq_badge, streak_badge);
 
-        // 7-day grid showing this week at a glance
+        // 7-day grid starting from the habit's creation date
         const grid_wrapper = document.createElement("div");
         grid_wrapper.className = "habit-week";
 
         const grid_title = document.createElement("p");
         grid_title.className = "habit-week-title";
-        grid_title.textContent = "Last 7 days";
+        grid_title.textContent = "First 7 days";
 
         const grid = document.createElement("div");
         grid.className = "habit-week-grid";
 
-        const today = start_of_today();
+        const created_raw = habit.created_at
+            ? new Date(habit.created_at)
+            : new Date();
+        const created_day = new Date(created_raw);
+        created_day.setHours(0, 0, 0, 0);
+
         const dates = [];
-        for (let i = 6; i >= 0; i--) {
-            const d = new Date(today);
-            d.setDate(d.getDate() - i);
+        for (let i = 0; i < 7; i++) {
+            const d = new Date(created_day);
+            d.setDate(d.getDate() + i);
             dates.push(d);
         }
 
+        const today = start_of_today();
         const completions = Array.isArray(habit.completions)
             ? habit.completions
             : [];
@@ -521,9 +488,19 @@ export function setup_habits() {
             const is_today = key === to_date_key(today);
             const is_future = date > today;
 
-            if (is_done) cell.classList.add("is-done");
-            else if (is_future) cell.classList.add("is-future");
-            else if (!is_today) cell.classList.add("is-missed");
+            if (is_done) {
+                cell.classList.add("is-done");
+            } else if (is_future) {
+                cell.classList.add("is-future");
+            } else if (is_today) {
+                cell.classList.add("is-future");
+            } else {
+                if (is_expected_day(habit, date)) {
+                    cell.classList.add("is-missed");
+                } else {
+                    cell.classList.add("is-future");
+                }
+            }
 
             const day_num = document.createElement("span");
             day_num.className = "habit-day-num";
@@ -538,12 +515,30 @@ export function setup_habits() {
         });
 
         grid_wrapper.append(grid_title, grid);
-
         card.append(header, description, meta_row, grid_wrapper);
+
+        //custom rules
+        const effects = getRuleEffects(habit, "habits", calculate_streak);
+
+        if (effects.highlight) {
+            const color = highlightColorFor(effects.highlight);
+            if (color) {
+                card.style.borderColor = color;
+                card.style.borderWidth = "2px";
+                card.dataset.ruleHighlight = effects.highlight;
+            }
+        }
+
+        if (effects.badge) {
+            const rule_badge = document.createElement("span");
+            rule_badge.className = `rule-badge rule-badge-${effects.badge}`;
+            rule_badge.textContent = effects.badge.toUpperCase();
+            heading_group.append(rule_badge);
+        }
+
         return card;
     }
 
-    // Draw the whole habit list, applying search, filters and sort
     function render_habits() {
         const all_habits = get_habits();
 
@@ -594,7 +589,6 @@ export function setup_habits() {
 
         habit_list.replaceChildren();
 
-        // Show or hide the empty state, with a message that fits the case
         if (empty_state) {
             empty_state.hidden = filtered.length > 0;
 
@@ -617,7 +611,6 @@ export function setup_habits() {
         });
     }
 
-    // Find a habit by id, change it, save and re-render
     function update_habit(habit_id, callback) {
         const habits = get_habits();
         const habit = habits.find(
@@ -629,41 +622,34 @@ export function setup_habits() {
         render_habits();
     }
 
-    // Add or remove the red error look on a form field
     function set_error(field, has_error) {
         const group = field.closest(".form_group");
         if (!group) return;
         group.classList.toggle("has-error", has_error);
     }
 
-    // Clear all error styles in the modal form
     function clear_all_errors() {
         form.querySelectorAll(".form_group.has-error")
             .forEach(group => group.classList.remove("has-error"));
     }
 
-    // Check the form has the required fields filled in
     function validate_form() {
         let valid = true;
 
-        // Title
         const title_ok = title_input.value.trim().length > 0;
         set_error(title_input, !title_ok);
         if (!title_ok) valid = false;
 
-        // Frequency
         const freq_ok = frequency_input.value.trim().length > 0;
         set_error(frequency_input, !freq_ok);
         if (!freq_ok) valid = false;
 
-        // Weekly day
         if (frequency_input.value === "weekly") {
             const day_ok = weekly_day_input.value.trim().length > 0;
             weekly_day_group.classList.toggle("has-error", !day_ok);
             if (!day_ok) valid = false;
         }
 
-        // Custom days
         if (frequency_input.value === "custom") {
             const days_ok = selected_days.length > 0;
             custom_days_group.classList.toggle("has-error", !days_ok);
@@ -673,7 +659,6 @@ export function setup_habits() {
         return valid;
     }
 
-    // Remove the red error look as soon as the user fixes a field
     [title_input, frequency_input, weekly_day_input].forEach(field => {
         field?.addEventListener("input", () => {
             const group = field.closest(".form_group");
@@ -700,7 +685,6 @@ export function setup_habits() {
         });
     });
 
-    // Open the modal in "add new habit" mode
     function open_add_modal() {
         editing_habit_id = null;
         form.reset();
@@ -715,11 +699,9 @@ export function setup_habits() {
         if (frequency_input) frequency_input.value = "";
 
         modal.style.display = "flex";
-        // modal.setAttribute("aria-hidden", "false");
         title_input?.focus();
     }
 
-    // Open the modal pre-filled with an existing habit for editing
     function open_edit_modal(habit) {
         editing_habit_id = habit.habit_id;
         clear_all_errors();
@@ -729,12 +711,10 @@ export function setup_habits() {
         description_input.value = habit.habit_description || "";
         frequency_input.value = frequency_value(habit.habit_frequency);
 
-        // Reset both day groups first
         weekly_day_group.hidden = true;
         custom_days_group.hidden = true;
         weekly_day_input.value = "";
 
-        // Then show whichever one this habit uses
         if (frequency_input.value === "weekly") {
             weekly_day_group.hidden = false;
             weekly_day_input.value = habit.weekly_day || "";
@@ -764,14 +744,11 @@ export function setup_habits() {
         if (modal_title) modal_title.textContent = "Edit habit";
 
         modal.style.display = "flex";
-        // modal.setAttribute("aria-hidden", "false");
         title_input.focus();
     }
 
-    // Close the habit modal and reset its state
     function close_modal() {
         modal.style.display = "none";
-        // modal.setAttribute("aria-hidden", "true");
         form.reset();
         clear_all_errors();
         reset_multiselect();
@@ -783,7 +760,6 @@ export function setup_habits() {
         editing_habit_id = null;
     }
 
-    // Save the form when the user submits
     form.addEventListener("submit", event => {
         event.preventDefault();
 
@@ -833,7 +809,6 @@ export function setup_habits() {
             : `Nice work! Your new habit "${habit.habit_title}" is now in the list!`);
     });
 
-    // Buttons that open or close the habit modal
     document.getElementById("open-habit-modal")
         ?.addEventListener("click", open_add_modal);
 
@@ -843,12 +818,10 @@ export function setup_habits() {
     document.getElementById("cancel-habit-modal")
         ?.addEventListener("click", close_modal);
 
-    // Clicking the dark backdrop closes the modal
     modal.addEventListener("click", event => {
         if (event.target === modal) close_modal();
     });
 
-    // Pressing Escape closes the modal
     document.addEventListener("keydown", event => {
         if (event.key === "Escape" && modal.style.display !== "none") {
             close_modal();
@@ -857,7 +830,6 @@ export function setup_habits() {
 
     habit_search?.addEventListener("input", render_habits);
 
-    // Delete confirmation popup
     const deleteModal = document.getElementById("delete-confirm-modal");
     const deleteMessage = document.getElementById("delete-confirm-message");
     const deleteConfirmBtn = document.getElementById("delete-confirm-btn");
@@ -866,7 +838,6 @@ export function setup_habits() {
 
     let pendingDeleteAction = null;
 
-    // Show the "Are you sure?" popup and remember what to run if confirmed
     function openDeleteConfirmation(itemName, itemType, deleteAction) {
         if (!deleteModal || !deleteMessage) return;
 

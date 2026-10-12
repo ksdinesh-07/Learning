@@ -1,6 +1,12 @@
-// js/rule-engine.js
-
 const RULE_STORAGE_KEY = "rule_data";
+
+const FIELD_MAP = {
+    priority:   "task_priority",
+    status:     "task_status",
+    "due-date": "task_due_date",
+    frequency:  "habit_frequency",
+    streak:     "habit_streak"
+};
 
 function getRules() {
     try {
@@ -11,12 +17,22 @@ function getRules() {
     }
 }
 
+function normalise(value) {
+    return String(value ?? "")
+        .trim()
+        .toLowerCase()
+        .replace(/\s+/g, "-");
+}
+
 function checkCondition(operator, itemValue, conditionValue) {
+    const a = normalise(itemValue);
+    const b = normalise(conditionValue);
+
     switch (operator) {
         case "equals":
-            return String(itemValue) === String(conditionValue);
+            return a === b;
         case "not-equals":
-            return String(itemValue) !== String(conditionValue);
+            return a !== b;
         case "greater":
             return Number(itemValue) > Number(conditionValue);
         case "less":
@@ -31,28 +47,36 @@ function checkCondition(operator, itemValue, conditionValue) {
 }
 
 function evaluateCondition(condition, item, streakFn) {
-    let itemValue = item[condition.field];
-
-    if (condition.field === "streak" && typeof streakFn === "function") {
-        itemValue = streakFn(item);
-    }
-
     if (condition.field === "due-date") {
         const today = new Date();
         today.setHours(0, 0, 0, 0);
         const due = item.task_due_date ? new Date(item.task_due_date) : null;
-        if (!due) return false;
 
-        const diffDays = Math.round((due - today) / (1000 * 60 * 60 * 24));
+        let matches = false;
+        if (due && !Number.isNaN(due.getTime())) {
+            const diffDays = Math.round(
+                (due - today) / (1000 * 60 * 60 * 24)
+            );
 
-        switch (condition.value) {
-            case "overdue":   return diffDays < 0;
-            case "today":     return diffDays === 0;
-            case "tomorrow":  return diffDays === 1;
-            case "this-week": return diffDays >= 0 && diffDays <= 7;
-            default:          return false;
+            switch (condition.value) {
+                case "overdue":   matches = diffDays < 0; break;
+                case "today":     matches = diffDays === 0; break;
+                case "tomorrow":  matches = diffDays === 1; break;
+                case "this-week": matches = diffDays >= 0 && diffDays <= 7; break;
+                default:          matches = false;
+            }
         }
+
+        return condition.operator === "not-equals" ? !matches : matches;
     }
+
+    if (condition.field === "streak" && typeof streakFn === "function") {
+        const streak = streakFn(item);
+        return checkCondition(condition.operator, streak, condition.value);
+    }
+
+    const actualKey = FIELD_MAP[condition.field] || condition.field;
+    const itemValue = item[actualKey];
 
     return checkCondition(condition.operator, itemValue, condition.value);
 }
@@ -87,11 +111,22 @@ export function getRuleEffects(item, section, streakFn) {
 
         switch (rule.rule_action) {
             case "highlight":  effects.highlight = rule.rule_action_value; break;
-            case "show-badge": effects.badge = rule.rule_action_value; break;
-            case "notify":     effects.notify = true; break;
-            case "complete":   effects.complete = true; break;
+            case "show-badge": effects.badge     = rule.rule_action_value; break;
+            case "notify":     effects.notify    = true; break;
+            case "complete":   effects.complete  = true; break;
         }
     });
 
     return effects;
+}
+
+export function highlightColorFor(value) {
+    const map = {
+        red:    "#fee2e2",
+        orange: "#ffedd5",
+        yellow: "#fef9c3",
+        blue:   "#dbeafe",
+        green:  "#dcfce7"
+    };
+    return map[value] || null;
 }

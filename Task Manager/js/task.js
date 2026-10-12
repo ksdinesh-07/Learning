@@ -1,4 +1,4 @@
-import { getRuleEffects } from "./rule-engine.js";
+import { getRuleEffects, highlightColorFor } from "./rule-engine.js";
 import { animateRemove } from "./animate.js";
 
 const STORAGE_KEY = "task_data";
@@ -52,22 +52,25 @@ function showToast(message) {
 }
 
 export function setup_task_modal() {
+    //html elements
     const task_list = document.getElementById("task-list");
     const empty_state = document.getElementById("empty-task-state");
     const modal = document.getElementById("add_task_page");
     const form = document.getElementById("add_task_form");
+    //task form inputs
     const title_input = document.getElementById("task-title");
     const description_input = document.getElementById("task-description");
     const due_date_input = document.getElementById("task-due-date");
     const priority_input = document.getElementById("task-priority");
     const status_input = document.getElementById("task-status");
     const modal_title = document.getElementById("task-modal-title");
+    //search ,filter ,sort input
     const task_search = document.getElementById("task-search");
-
     const status_filter = document.getElementById("status-filter");
     const priority_filter = document.getElementById("priority-filter");
     const sort_filter = document.getElementById("sort-filter");
 
+    //check for the require elements
     if (!task_list || !modal || !form) {
         console.error("Check the task HTML element IDs.");
         return;
@@ -76,7 +79,8 @@ export function setup_task_modal() {
     let editing_task_id = null;
     let dragged_task_id = null;
 
-    /* ---------- Restore saved sort mode ---------- */
+
+    //restore selecr sort option
     const saved_sort = localStorage.getItem(SORT_KEY);
     if (saved_sort && sort_filter) {
         const option_exists = Array.from(sort_filter.options)
@@ -84,11 +88,13 @@ export function setup_task_modal() {
         sort_filter.value = option_exists ? saved_sort : "manual";
     }
 
+    //create unique id for tasks
     function create_id() {
         return globalThis.crypto?.randomUUID?.() ||
             `${Date.now()}-${Math.random()}`;
     }
 
+    //fetch tasks
     function get_tasks() {
         try {
             const data = JSON.parse(localStorage.getItem(STORAGE_KEY) || "[]");
@@ -98,11 +104,12 @@ export function setup_task_modal() {
         }
     }
 
+    //save task
     function save_tasks(tasks) {
         localStorage.setItem(STORAGE_KEY, JSON.stringify(tasks));
     }
 
-    /* Force the sort dropdown into "manual" and remember the choice */
+    //used when drag and drop -switcj=hing to manual sort
     function switch_to_manual_sort() {
         if (sort_filter && sort_filter.value !== "manual") {
             sort_filter.value = "manual";
@@ -110,11 +117,13 @@ export function setup_task_modal() {
         }
     }
 
+    //fetch subtask
     function get_subtasks(task) {
         if (!Array.isArray(task.task_subtasks)) task.task_subtasks = [];
         return task.task_subtasks;
     }
 
+    //priority within 3 or medium
     function priority_value(value) {
         const priority = String(value || "medium").toLowerCase();
         return ["high", "medium", "low"].includes(priority) ? priority : "medium";
@@ -138,6 +147,7 @@ export function setup_task_modal() {
         return statuses[String(value || "Todo").toLowerCase()] || "Todo";
     }
 
+    //creating the icons 
     function make_icon(path, alt = "") {
         const image = document.createElement("img");
         image.src = path;
@@ -149,6 +159,7 @@ export function setup_task_modal() {
         return image;
     }
 
+    //creating the button
     function make_button(class_name, path, label) {
         const button = document.createElement("button");
         button.type = "button";
@@ -160,6 +171,7 @@ export function setup_task_modal() {
         return button;
     }
 
+    //creating the badge
     function make_badge(class_name, label, icon_path) {
         const badge = document.createElement("span");
         badge.className = class_name;
@@ -168,6 +180,36 @@ export function setup_task_modal() {
         return badge;
     }
 
+    //form validation 
+    function set_error(field, has_error) {
+        const group = field?.closest(".form_group");
+        if (group) group.classList.toggle("has-error", has_error);
+    }
+
+    function clear_all_errors() {
+        form.querySelectorAll(".form_group.has-error")
+            .forEach(group => group.classList.remove("has-error"));
+    }
+
+    function validate_form() {
+        let valid = true;
+
+        const title_ok = title_input.value.trim().length > 0;
+        set_error(title_input, !title_ok);
+        if (!title_ok) valid = false;
+
+        const date_ok = due_date_input.value.length > 0;
+        set_error(due_date_input, !date_ok);
+        if (!date_ok) valid = false;
+
+        const priority_ok = priority_input.value.length > 0;
+        set_error(priority_input, !priority_ok);
+        if (!priority_ok) valid = false;
+
+        return valid;
+    }
+
+    //updating the task
     function update_task(task_id, callback) {
         const tasks = get_tasks();
         const task = tasks.find(item => String(item.task_id) === String(task_id));
@@ -177,26 +219,26 @@ export function setup_task_modal() {
         render_tasks();
     }
 
-    /* Move a task up (-1) or down (+1) in the stored array */
+    //moving the task
     function move_task(task_id, direction) {
         const tasks = get_tasks();
         const current_index = tasks.findIndex(
             task => String(task.task_id) === String(task_id)
         );
         if (current_index === -1) return;
-
+        //move the task up by one position
         const new_index = current_index + direction;
+       
+        //check not to move outside the list
         if (new_index < 0 || new_index >= tasks.length) return;
-
-        [tasks[current_index], tasks[new_index]] =
-            [tasks[new_index], tasks[current_index]];
+        [tasks[current_index], tasks[new_index]] =[tasks[new_index], tasks[current_index]];
 
         save_tasks(tasks);
         switch_to_manual_sort();
         render_tasks();
     }
 
-    /* Move a subtask up (-1) or down (+1) inside its parent task */
+    //moving the subtask
     function move_subtask(task_id, subtask_id, direction) {
         const tasks = get_tasks();
         const task = tasks.find(item => String(item.task_id) === String(task_id));
@@ -219,6 +261,7 @@ export function setup_task_modal() {
         render_tasks();
     }
 
+    //creating the subtask section
     function make_subtask_section(task) {
         const section = document.createElement("section");
         section.className = "task-subtasks";
@@ -355,16 +398,10 @@ export function setup_task_modal() {
                 "delete-subtask-button", icon_paths.delete, "Delete"
             );
             delete_button.addEventListener("click", () => {
-                openDeleteConfirmation(
-                    subtask.subtask_title || "Untitled subtask",
-                    "subtask",
-                    () => {
+                openDeleteConfirmation(subtask.subtask_title || "Untitled subtask","subtask",() => {
                         update_task(task.task_id, current_task => {
-                            current_task.task_subtasks =
-                                get_subtasks(current_task).filter(
-                                    entry =>
-                                        String(entry.subtask_id) !==
-                                        String(subtask.subtask_id)
+                            current_task.task_subtasks =get_subtasks(current_task).filter(entry =>
+                                        String(entry.subtask_id) !==String(subtask.subtask_id)
                                 );
                         });
                         showToast("Done! Your item has been removed.");
@@ -375,9 +412,6 @@ export function setup_task_modal() {
             actions.append(up_button, down_button, edit_button, delete_button);
             item.append(content, actions);
 
-            /* ---------- Subtask drag & drop ---------- */
-
-            // Start dragging a subtask
             item.addEventListener("dragstart", event => {
                 event.stopPropagation();
                 event.dataTransfer.setData("text/subtask-id", String(subtask.subtask_id));
@@ -393,7 +427,6 @@ export function setup_task_modal() {
                     .forEach(el => el.classList.remove("drag-over"));
             });
 
-            // Allow drop onto another subtask within the same parent
             item.addEventListener("dragover", event => {
                 const types = Array.from(event.dataTransfer.types || []);
                 if (!types.includes("text/parent-task-id")) return;
@@ -424,8 +457,6 @@ export function setup_task_modal() {
                 const target_id = String(subtask.subtask_id);
 
                 if (!source_id || source_id === target_id) return;
-
-                // Only allow within the same parent task
                 if (source_parent !== String(task.task_id)) return;
 
                 const tasks = get_tasks();
@@ -500,8 +531,6 @@ export function setup_task_modal() {
         const card = document.createElement("article");
         card.className = "task-card";
         card.dataset.taskId = String(task.task_id);
-
-        /* Card is draggable, but drag only starts from the handle */
         card.setAttribute("draggable", "true");
 
         const header = document.createElement("div");
@@ -510,7 +539,6 @@ export function setup_task_modal() {
         const heading_group = document.createElement("div");
         heading_group.className = "task-heading-group";
 
-        /* Drag handle — a div, not a button */
         const drag_handle = document.createElement("div");
         drag_handle.className = "drag-handle";
         drag_handle.setAttribute("role", "button");
@@ -633,12 +661,16 @@ export function setup_task_modal() {
             header, description, badges, status_row, subtask_section.element
         );
 
-        /* Apply custom rules */
+        //custom rules
         const effects = getRuleEffects(task, "tasks");
 
         if (effects.highlight) {
-            card.style.background = effects.highlight;
-            card.dataset.ruleHighlight = effects.highlight;
+            const color = highlightColorFor(effects.highlight);
+            if (color) {
+                card.style.borderColor = color;
+                card.style.borderWidth = "2px";
+                card.dataset.ruleHighlight = effects.highlight;
+            }
         }
 
         if (effects.badge) {
@@ -648,10 +680,8 @@ export function setup_task_modal() {
             heading_group.append(rule_badge);
         }
 
-        /* ---------- Task drag & drop ---------- */
-
+        //drag and drop on cards
         card.addEventListener("dragstart", event => {
-            // Only allow drag to start from the handle
             if (!event.target.closest(".drag-handle")) {
                 event.preventDefault();
                 return;
@@ -671,8 +701,6 @@ export function setup_task_modal() {
 
         card.addEventListener("dragover", event => {
             const types = Array.from(event.dataTransfer.types || []);
-
-            // Ignore subtask drags
             if (types.includes("text/parent-task-id")) return;
 
             event.preventDefault();
@@ -690,8 +718,6 @@ export function setup_task_modal() {
 
         card.addEventListener("drop", event => {
             const types = Array.from(event.dataTransfer.types || []);
-
-            // Ignore subtask drops
             if (types.includes("text/parent-task-id")) return;
 
             event.preventDefault();
@@ -767,7 +793,6 @@ export function setup_task_modal() {
         const sort_by = sort_filter?.value || "manual";
         const priority_order = { high: 1, medium: 2, low: 3 };
 
-        /* Skip sorting when "manual" is chosen, so drag order sticks */
         if (sort_by !== "manual") {
             filtered_tasks.sort((a, b) => {
                 switch (sort_by) {
@@ -822,7 +847,6 @@ export function setup_task_modal() {
         filtered_tasks.forEach(task => {
             const card = make_task_card(task);
 
-            // Grey out and disable up/down buttons when not in manual mode
             card.querySelectorAll(".task-move-up, .task-move-down").forEach(btn => {
                 btn.disabled = !is_manual;
                 btn.style.opacity = is_manual ? "1" : "0.4";
@@ -836,6 +860,7 @@ export function setup_task_modal() {
     function open_add_modal() {
         editing_task_id = null;
         form.reset();
+        clear_all_errors();
         if (modal_title) modal_title.textContent = "Add Task";
         if (priority_input) priority_input.value = "medium";
         if (status_input) status_input.value = "Todo";
@@ -846,6 +871,7 @@ export function setup_task_modal() {
 
     function open_edit_modal(task) {
         editing_task_id = task.task_id;
+        clear_all_errors();
         title_input.value = task.task_title || "";
         description_input.value = task.task_description || "";
         due_date_input.value = task.task_due_date || "";
@@ -862,17 +888,22 @@ export function setup_task_modal() {
         modal.style.display = "none";
         modal.setAttribute("aria-hidden", "true");
         form.reset();
+        clear_all_errors();
         editing_task_id = null;
     }
 
     form.addEventListener("submit", event => {
         event.preventDefault();
 
-        const task_title = title_input.value.trim();
-        if (!task_title) {
-            title_input.focus();
+        if (!validate_form()) {
+            const first_bad = form.querySelector(
+                ".form_group.has-error input, .form_group.has-error select"
+            );
+            first_bad?.focus();
             return;
         }
+
+        const task_title = title_input.value.trim();
 
         const task = {
             task_title,
@@ -918,15 +949,28 @@ export function setup_task_modal() {
         );
     });
 
-    document
-        .querySelector(".add-task-button")
-        ?.addEventListener("click", open_add_modal);
-    document
-        .getElementById("close-task-modal")
-        ?.addEventListener("click", close_modal);
-    document
-        .getElementById("cancel-task-modal")
-        ?.addEventListener("click", close_modal);
+    //clear the error after fill the data 
+    title_input?.addEventListener("input", () => {
+        if (title_input.value.trim().length > 0) {
+            set_error(title_input, false);
+        }
+    });
+
+    due_date_input?.addEventListener("change", () => {
+        if (due_date_input.value.length > 0) {
+            set_error(due_date_input, false);
+        }
+    });
+
+    priority_input?.addEventListener("change", () => {
+        if (priority_input.value.length > 0) {
+            set_error(priority_input, false);
+        }
+    });
+
+    document.querySelector(".add-task-button") ?.addEventListener("click", open_add_modal);
+    document.getElementById("close-task-modal") ?.addEventListener("click", close_modal);
+    document.getElementById("cancel-task-modal")?.addEventListener("click", close_modal);
 
     modal.addEventListener("click", event => {
         if (event.target === modal) close_modal();
@@ -951,7 +995,7 @@ export function setup_task_modal() {
     render_tasks();
 }
 
-/* ---------- Delete confirmation popup ---------- */
+// delete confirm popup
 const deleteModal = document.getElementById("delete-confirm-modal");
 const deleteMessage = document.getElementById("delete-confirm-message");
 const deleteConfirmBtn = document.getElementById("delete-confirm-btn");
@@ -967,16 +1011,12 @@ function openDeleteConfirmation(itemName, itemType, deleteAction) {
     }
 
     deleteMessage.replaceChildren();
-    deleteMessage.append(
-        document.createTextNode("Are you sure you want to delete ")
-    );
+    deleteMessage.append(document.createTextNode("Are you sure you want to delete "));
 
     const nameElement = document.createElement("strong");
     nameElement.textContent = itemName;
 
-    deleteMessage.append(
-        nameElement, document.createTextNode(` (${itemType})?`)
-    );
+    deleteMessage.append(nameElement, document.createTextNode(` (${itemType})?`));
 
     pendingDeleteAction = deleteAction;
     deleteModal.style.display = "flex";
