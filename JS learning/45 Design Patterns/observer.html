@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html>
+<body>
+    <h2>Observer Pattern</h2>
+
+    <button id="btn">Click Me</button>
+    <p id="message"></p>
+
+    <script>
+        // 1. Create an event manager
+        const eventManager = {
+            observers: [],
+
+            subscribe(callback) {
+                this.observers.push(callback);
+            },
+
+            notify(message) {
+                this.observers.forEach(callback => callback(message));
+            }
+        };
+
+        // 2. Create Observer 1
+        eventManager.subscribe(function(message) {
+            console.log("Observer 1:", message);
+        });
+
+        // 3. Create Observer 2
+        eventManager.subscribe(function(message) {
+            document.getElementById("message").textContent = message;
+        });
+
+        // 4. Notify observers when button is clicked
+        document.getElementById("btn").addEventListener("click", function() {
+            eventManager.notify("Button was clicked!");
+        });
+    </script>
+</body>
+</html>

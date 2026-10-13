@@ -4,6 +4,7 @@ class EventEmitter {
         this.events = {};
     }
 
+    //method registers a function to listen for a particular event.
     subscribe(eventName, callback) {
         if (!this.events[eventName]) {
             this.events[eventName] = [];
