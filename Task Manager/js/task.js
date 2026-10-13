@@ -6,6 +6,8 @@ const SORT_KEY = "task_sort_mode";
 
 const icon_paths = {
     drag: "./assets/drag_icon-light.svg",
+    subtask_up: "./assets/subtask_up_icon.svg",
+    subtask_right: "./assets/subtask_right_icon.svg",
     up: "./assets/angle-up.svg",
     down: "./assets/subtask_icon-light.svg",
     edit: "./assets/edit_icon-light.svg",
@@ -15,10 +17,16 @@ const icon_paths = {
     plus: "./assets/add_icon-light.svg"
 };
 
+
 let toastTimeout = null;
 
 function showToast(message) {
-    document.querySelector(".toast-notification")?.remove();
+    // Fade out any existing toast before showing the new one
+    const existing = document.querySelector(".toast-notification");
+    if (existing) {
+        existing.classList.add("hiding");
+        existing.addEventListener("animationend", () => existing.remove(), { once: true });
+    }
     clearTimeout(toastTimeout);
 
     const toast = document.createElement("div");
@@ -26,14 +34,22 @@ function showToast(message) {
     toast.setAttribute("role", "status");
     toast.setAttribute("aria-live", "polite");
 
+    // Icon — just the tick SVG, background comes from CSS
     const icon = document.createElement("div");
     icon.className = "toast-icon";
-    icon.textContent = "✓";
 
+    const icon_img = document.createElement("img");
+    icon_img.src = "./assets/taster-tick icon.svg";
+    icon_img.alt = "";
+    icon_img.draggable = false;
+    icon.appendChild(icon_img);
+
+    // Message
     const text = document.createElement("div");
     text.className = "toast-message";
     text.textContent = message;
 
+    // Close button
     const close = document.createElement("button");
     close.type = "button";
     close.className = "toast-close";
@@ -42,13 +58,18 @@ function showToast(message) {
 
     close.addEventListener("click", () => {
         clearTimeout(toastTimeout);
-        toast.remove();
+        toast.classList.add("hiding");
+        toast.addEventListener("animationend", () => toast.remove(), { once: true });
     });
 
     toast.append(icon, text, close);
     document.body.appendChild(toast);
 
-    toastTimeout = setTimeout(() => toast.remove(), 4000);
+    // Auto-dismiss after 3000ms
+    toastTimeout = setTimeout(() => {
+        toast.classList.add("hiding");
+        toast.addEventListener("animationend", () => toast.remove(), { once: true });
+    }, 3000);
 }
 
 export function setup_task_modal() {
@@ -79,19 +100,32 @@ export function setup_task_modal() {
     let editing_task_id = null;
     let dragged_task_id = null;
 
+    //  which task's subtasks are expanded across re-renders
+    let expanded_subtask_task_id = null;
+
 
     //restore selecr sort option
     const saved_sort = localStorage.getItem(SORT_KEY);
     if (saved_sort && sort_filter) {
-        const option_exists = Array.from(sort_filter.options)
-            .some(opt => opt.value === saved_sort);
-        sort_filter.value = option_exists ? saved_sort : "manual";
+        let option_exists = false;
+
+        for (let i = 0; i < sort_filter.options.length; i++) {
+            if (sort_filter.options[i].value === saved_sort) {
+                option_exists = true;
+                break;
+            }
+        }
+
+        if (option_exists) {
+            sort_filter.value = saved_sort;
+        } else {
+            sort_filter.value = "manual";
+        }
     }
 
     //create unique id for tasks
     function create_id() {
-        return globalThis.crypto?.randomUUID?.() ||
-            `${Date.now()}-${Math.random()}`;
+        return globalThis.crypto?.randomUUID?.() || `${Date.now()}-${Math.random()}`;
     }
 
     //fetch tasks
@@ -109,7 +143,7 @@ export function setup_task_modal() {
         localStorage.setItem(STORAGE_KEY, JSON.stringify(tasks));
     }
 
-    //used when drag and drop -switcj=hing to manual sort
+    //used when drag and drop -switching to manual sort
     function switch_to_manual_sort() {
         if (sort_filter && sort_filter.value !== "manual") {
             sort_filter.value = "manual";
@@ -119,15 +153,25 @@ export function setup_task_modal() {
 
     //fetch subtask
     function get_subtasks(task) {
-        if (!Array.isArray(task.task_subtasks)) task.task_subtasks = [];
+        if (!task.task_subtasks) {
+            task.task_subtasks = [];
+        }
         return task.task_subtasks;
     }
 
+
     //priority within 3 or medium
     function priority_value(value) {
-        const priority = String(value || "medium").toLowerCase();
-        return ["high", "medium", "low"].includes(priority) ? priority : "medium";
+        if (!value) {
+            return "medium";
+        }
+        value = String(value).toLowerCase();
+        if (value === "high" || value === "medium" || value === "low") {
+            return value;
+        }
+        return "medium";
     }
+
 
     function status_value(value) {
         const statuses = {
@@ -182,15 +226,35 @@ export function setup_task_modal() {
 
     //form validation 
     function set_error(field, has_error) {
-        const group = field?.closest(".form_group");
-        if (group) group.classList.toggle("has-error", has_error);
+        if (!field) return;
+
+        const group = field.closest(".form_group");
+
+        if (group) {
+            if (has_error) {
+                group.classList.add("has-error");
+            } else {
+                group.classList.remove("has-error");
+            }
+        }
     }
 
+    //clearing all errors
     function clear_all_errors() {
-        form.querySelectorAll(".form_group.has-error")
-            .forEach(group => group.classList.remove("has-error"));
+        const groups = form.querySelectorAll(".form_group.has-error");
+
+        groups.forEach(function(group) {
+            group.classList.remove("has-error");
+        });
     }
 
+    // NEW: toggle .has-value on a select so its floating label moves up
+    function update_select_label(select_el) {
+        if (!select_el) return;
+        select_el.classList.toggle("has-value", Boolean(select_el.value));
+    }
+
+    //validation of the input field
     function validate_form() {
         let valid = true;
 
@@ -222,16 +286,38 @@ export function setup_task_modal() {
     //moving the task
     function move_task(task_id, direction) {
         const tasks = get_tasks();
-        const current_index = tasks.findIndex(
-            task => String(task.task_id) === String(task_id)
-        );
-        if (current_index === -1) return;
-        //move the task up by one position
-        const new_index = current_index + direction;
-       
-        //check not to move outside the list
-        if (new_index < 0 || new_index >= tasks.length) return;
-        [tasks[current_index], tasks[new_index]] =[tasks[new_index], tasks[current_index]];
+        let current_index = -1;
+
+        for (let i = 0; i < tasks.length; i++) {
+            if (String(tasks[i].task_id) === String(task_id)) {
+                current_index = i;
+                break;
+            }
+        }
+
+        if (current_index === -1) {
+            return;
+        }
+
+        let new_index = current_index;
+
+        if (direction === -1) {
+            new_index = current_index - 1;
+        } 
+        else if (direction === 1) {
+            new_index = current_index + 1;
+        } 
+        else {
+            return;
+        }
+
+        if (new_index < 0 || new_index >= tasks.length) {
+            return;
+        }
+
+        const temp = tasks[current_index];
+        tasks[current_index] = tasks[new_index];
+        tasks[new_index] = temp;
 
         save_tasks(tasks);
         switch_to_manual_sort();
@@ -241,20 +327,55 @@ export function setup_task_modal() {
     //moving the subtask
     function move_subtask(task_id, subtask_id, direction) {
         const tasks = get_tasks();
-        const task = tasks.find(item => String(item.task_id) === String(task_id));
-        if (!task) return;
+        let task = null;
 
+        // Find the parent task
+        for (let i = 0; i < tasks.length; i++) {
+            if (String(tasks[i].task_id) === String(task_id)) {
+                task = tasks[i];
+                break;
+            }
+        }
+
+        if (task === null) {
+            return;
+        }
+
+        // Get the subtasks
         const subtasks = get_subtasks(task);
-        const current_index = subtasks.findIndex(
-            subtask => String(subtask.subtask_id) === String(subtask_id)
-        );
-        if (current_index === -1) return;
 
-        const new_index = current_index + direction;
-        if (new_index < 0 || new_index >= subtasks.length) return;
+        let current_index = -1;
 
-        [subtasks[current_index], subtasks[new_index]] =
-            [subtasks[new_index], subtasks[current_index]];
+        // Find the subtask to move
+        for (let i = 0; i < subtasks.length; i++) {
+            if (String(subtasks[i].subtask_id) === String(subtask_id)) {
+                current_index = i;
+                break;
+            }
+        }
+
+        if (current_index === -1) {
+            return;
+        }
+
+        // Calculate the new position
+        let new_index = current_index;
+
+        if (direction === -1) {
+            new_index = current_index - 1;
+        } else if (direction === 1) {
+            new_index = current_index + 1;
+        } else {
+            return;
+        }
+
+        if (new_index < 0 || new_index >= subtasks.length) {
+            return;
+        }
+
+        const temp = subtasks[current_index];
+        subtasks[current_index] = subtasks[new_index];
+        subtasks[new_index] = temp;
 
         save_tasks(tasks);
         switch_to_manual_sort();
@@ -269,10 +390,27 @@ export function setup_task_modal() {
         const heading = document.createElement("div");
         heading.className = "subtask-heading";
 
+        // ---------- Decide initial collapsed state ----------
+        // If this task was expanded before the last render, keep it expanded.
+        // Otherwise default to collapsed.
+        const is_currently_expanded =
+            expanded_subtask_task_id !== null &&
+            String(expanded_subtask_task_id) === String(task.task_id);
+
         const heading_toggle = make_button(
-            "subtask-toggle-button", icon_paths.down, "Collapse subtasks"
+            is_currently_expanded
+                ? "subtask-toggle-button"
+                : "subtask-toggle-button is-collapsed",
+            is_currently_expanded
+                ? icon_paths.subtask_up
+                : icon_paths.subtask_right,
+            is_currently_expanded ? "Collapse subtasks" : "Expand subtasks"
         );
-        heading_toggle.setAttribute("aria-expanded", "true");
+        heading_toggle.setAttribute(
+            "aria-expanded",
+            String(is_currently_expanded)
+        );
+        // ----------------------------------------------------
 
         const count = document.createElement("span");
         count.className = "subtask-count";
@@ -297,31 +435,51 @@ export function setup_task_modal() {
 
         add_form.append(add_input, add_button);
 
-        let section_collapsed = false;
+        // ---------- initial collapsed state (mirrors the DOM above) ----------
+        let section_collapsed = !is_currently_expanded;
+        // --------------------------------------------------------------------
 
         function update_count() {
             const subtasks = get_subtasks(task);
             count.textContent = `Subtasks (${subtasks.length})`;
-            count.title =
-                `${subtasks.filter(item => item.is_completed).length} completed`;
+            count.title =`${subtasks.filter(item => item.is_completed).length} completed`;
         }
 
+        // ---------- swap icons between right (collapsed) and up (expanded) ----------
         function set_section_collapsed(collapsed) {
             section_collapsed = collapsed;
             list.hidden = collapsed;
             add_form.hidden = collapsed;
 
-            const icon_path = collapsed ? icon_paths.up : icon_paths.down;
+            const icon_path = collapsed ? icon_paths.subtask_right : icon_paths.subtask_up;
             const label = collapsed ? "Expand subtasks" : "Collapse subtasks";
 
             const img = heading_toggle.querySelector("img");
             if (img) img.src = icon_path;
 
+            heading_toggle.classList.toggle("is-collapsed", collapsed);
+
             heading_toggle.setAttribute("aria-label", label);
             heading_toggle.setAttribute("data-tooltip", label);
             heading_toggle.title = label;
             heading_toggle.setAttribute("aria-expanded", String(!collapsed));
+
+            // ---------- remember expanded state across re-renders ----------
+            if (collapsed) {
+                // If this task was the expanded one, clear it.
+                if (
+                    expanded_subtask_task_id !== null &&
+                    String(expanded_subtask_task_id) === String(task.task_id)
+                ) {
+                    expanded_subtask_task_id = null;
+                }
+            } else {
+                // Track this as the currently expanded task.
+                expanded_subtask_task_id = String(task.task_id);
+            }
+            // ---------------------------------------------------------------
         }
+        // -----------------------------------------------------------------------------
 
         heading_toggle.addEventListener("click", () => {
             set_section_collapsed(!section_collapsed);
@@ -518,6 +676,10 @@ export function setup_task_modal() {
 
         heading.append(heading_toggle, count);
         section.append(heading, add_form, list);
+
+        // Apply the initial collapsed / expanded state to the DOM
+        set_section_collapsed(!is_currently_expanded);
+
         render_subtasks();
 
         return {
@@ -695,24 +857,50 @@ export function setup_task_modal() {
         card.addEventListener("dragend", () => {
             dragged_task_id = null;
             task_list.querySelectorAll(".task-card").forEach(element => {
-                element.classList.remove("is-dragging", "drag-over");
+                element.classList.remove(
+                    "is-dragging",
+                    "drag-over",
+                    "drop-above",
+                    "drop-below"
+                );
             });
         });
 
         card.addEventListener("dragover", event => {
-            const types = Array.from(event.dataTransfer.types || []);
+            const types = Array.from(event.dataTransfer.types || []);   
             if (types.includes("text/parent-task-id")) return;
 
             event.preventDefault();
-            if (dragged_task_id !== String(task.task_id)) {
-                card.classList.add("drag-over");
-                event.dataTransfer.dropEffect = "move";
+            if (dragged_task_id === String(task.task_id)) return;
+
+            // Determine if the cursor is in the top half or bottom half of the card
+            const rect = card.getBoundingClientRect();
+            const midpoint = rect.top + rect.height / 2;
+            const is_top_half = event.clientY < midpoint;
+
+            // Clear previous indicators on this card
+            card.classList.remove("drop-above", "drop-below");
+
+            // Clear indicators on ALL other cards
+            task_list.querySelectorAll(".task-card").forEach(el => {
+                if (el !== card) el.classList.remove("drop-above", "drop-below");
+            });
+
+            // Add the correct indicator
+            if (is_top_half) {
+                card.classList.add("drop-above");
+            } else {
+                card.classList.add("drop-below");
             }
+
+            event.dataTransfer.dropEffect = "move";
         });
 
-        card.addEventListener("dragleave", event => {
-            if (!card.contains(event.relatedTarget)) {
-                card.classList.remove("drag-over");
+        task_list.addEventListener("dragleave", event => {
+            if (!task_list.contains(event.relatedTarget)) {
+                task_list.querySelectorAll(".task-card").forEach(el => {
+                    el.classList.remove("drop-above", "drop-below");
+                });
             }
         });
 
@@ -721,23 +909,38 @@ export function setup_task_modal() {
             if (types.includes("text/parent-task-id")) return;
 
             event.preventDefault();
-            card.classList.remove("drag-over");
+
+            // Capture where the drop happened BEFORE clearing classes
+            const drop_above = card.classList.contains("drop-above");
+            const drop_below = card.classList.contains("drop-below");
+
+            // Clean up all visual state
+            task_list.querySelectorAll(".task-card").forEach(el => {
+                el.classList.remove("drop-above", "drop-below", "is-dragging", "drag-over");
+            });
 
             const source_id = event.dataTransfer.getData("text/plain");
             const target_id = String(task.task_id);
             if (!source_id || source_id === target_id) return;
 
             const tasks = get_tasks();
-            const from = tasks.findIndex(
-                entry => String(entry.task_id) === source_id
-            );
-            const to = tasks.findIndex(
-                entry => String(entry.task_id) === target_id
-            );
-            if (from === -1 || to === -1) return;
+            const from = tasks.findIndex(t => String(t.task_id) === source_id);
+            const target_index = tasks.findIndex(t => String(t.task_id) === target_id);
+            if (from === -1 || target_index === -1) return;
 
+            // Remove the source first
             const [moved] = tasks.splice(from, 1);
-            const insert_at = from < to ? to - 1 : to;
+
+            // Recompute the target's index in the shortened array
+            const new_target_index = tasks.findIndex(t => String(t.task_id) === target_id);
+
+            // Compute the insertion point
+            let insert_at = new_target_index;
+            if (drop_below) {
+                insert_at = new_target_index + 1;
+            }
+            // If drop_above, insert_at stays at new_target_index
+
             tasks.splice(insert_at, 0, moved);
 
             save_tasks(tasks);
@@ -833,14 +1036,19 @@ export function setup_task_modal() {
 
         if (empty_state) {
             empty_state.hidden = filtered_tasks.length > 0;
-            if (all_tasks.length === 0) {
-                empty_state.textContent = "No tasks yet. Add your first task!";
-            } else if (search_text && filtered_tasks.length === 0) {
-                empty_state.textContent =
-                    "No tasks found. Try a different search.";
-            } else {
-                empty_state.textContent =
-                    "No tasks match your selected filters.";
+
+            const message_el = empty_state.querySelector(".empty-task-message");
+
+            if (message_el) {
+                if (all_tasks.length === 0) {
+                    message_el.textContent = "No tasks yet. Add your first task!";
+                } else if (search_text && filtered_tasks.length === 0) {
+                    message_el.textContent =
+                        "No tasks found. Try a different search.";
+                } else {
+                    message_el.textContent =
+                        "No tasks match your selected filters.";
+                }
             }
         }
 
@@ -864,6 +1072,10 @@ export function setup_task_modal() {
         if (modal_title) modal_title.textContent = "Add Task";
         if (priority_input) priority_input.value = "medium";
         if (status_input) status_input.value = "Todo";
+
+        update_select_label(priority_input);
+        update_select_label(status_input);
+
         modal.style.display = "flex";
         modal.setAttribute("aria-hidden", "false");
         title_input?.focus();
@@ -878,6 +1090,9 @@ export function setup_task_modal() {
         priority_input.value = priority_value(task.task_priority);
         status_input.value = status_value(task.task_status);
 
+        update_select_label(priority_input);
+        update_select_label(status_input);
+
         if (modal_title) modal_title.textContent = "Edit Task";
         modal.style.display = "flex";
         modal.setAttribute("aria-hidden", "false");
@@ -889,6 +1104,10 @@ export function setup_task_modal() {
         modal.setAttribute("aria-hidden", "true");
         form.reset();
         clear_all_errors();
+
+        update_select_label(priority_input);
+        update_select_label(status_input);
+
         editing_task_id = null;
     }
 
@@ -966,15 +1185,20 @@ export function setup_task_modal() {
         if (priority_input.value.length > 0) {
             set_error(priority_input, false);
         }
+        update_select_label(priority_input);
+    });
+
+    status_input?.addEventListener("change", () => {
+        update_select_label(status_input);
     });
 
     document.querySelector(".add-task-button") ?.addEventListener("click", open_add_modal);
     document.getElementById("close-task-modal") ?.addEventListener("click", close_modal);
     document.getElementById("cancel-task-modal")?.addEventListener("click", close_modal);
 
-    modal.addEventListener("click", event => {
-        if (event.target === modal) close_modal();
-    });
+    // modal.addEventListener("click", event => {
+    //     if (event.target === modal) close_modal();
+    // });
 
     document.addEventListener("keydown", event => {
         if (event.key === "Escape" && modal.style.display !== "none") {
@@ -1030,9 +1254,9 @@ function closeDeleteConfirmation() {
 deleteCloseBtn?.addEventListener("click", closeDeleteConfirmation);
 deleteCancelBtn?.addEventListener("click", closeDeleteConfirmation);
 
-deleteModal?.addEventListener("click", event => {
-    if (event.target === deleteModal) closeDeleteConfirmation();
-});
+// deleteModal?.addEventListener("click", event => {
+//     if (event.target === deleteModal) closeDeleteConfirmation();
+// });
 
 deleteConfirmBtn?.addEventListener("click", () => {
     if (typeof pendingDeleteAction !== "function") return;

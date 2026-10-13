@@ -1,0 +1,43 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Observer Pattern Demo</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="app.js" defer></script>
+</head>
+<body>
+    <main class="container">
+        <h1>Observer Pattern</h1>
+        <p>One event can notify multiple subscribers.</p>
+
+        <section class="card">
+            <form id="taskForm">
+                <label for="taskTitle">Task title</label>
+                <input id="taskTitle" placeholder="Enter a task" required>
+                <button type="submit">Add task</button>
+            </form>
+        </section>
+
+        <section class="card">
+            <h2>Dashboard</h2>
+            <p>Total tasks: <strong id="totalCount">0</strong></p>
+            <p>Completed tasks: <strong id="completedCount">0</strong></p>
+        </section>
+
+        <section class="card">
+            <h2>Tasks</h2>
+            <div id="taskList"></div>
+        </section>
+
+        <section class="card">
+            <h2>Activity Log</h2>
+            <ul id="activityLog">
+                <li>Waiting for task events...</li>
+            </ul>
+        </section>
+    </main>
+</body>
+</html>

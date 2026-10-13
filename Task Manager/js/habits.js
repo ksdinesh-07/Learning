@@ -21,7 +21,12 @@ const WEEK_DAYS_FULL = [
 let toastTimeout = null;
 
 function showToast(message) {
-    document.querySelector(".toast-notification")?.remove();
+    // Fade out any existing toast before showing the new one
+    const existing = document.querySelector(".toast-notification");
+    if (existing) {
+        existing.classList.add("hiding");
+        existing.addEventListener("animationend", () => existing.remove(), { once: true });
+    }
     clearTimeout(toastTimeout);
 
     const toast = document.createElement("div");
@@ -29,14 +34,22 @@ function showToast(message) {
     toast.setAttribute("role", "status");
     toast.setAttribute("aria-live", "polite");
 
+    // Icon — just the tick SVG, background comes from CSS
     const icon = document.createElement("div");
     icon.className = "toast-icon";
-    icon.textContent = "✓";
 
+    const icon_img = document.createElement("img");
+    icon_img.src = "./assets/taster-tick icon.svg";
+    icon_img.alt = "";
+    icon_img.draggable = false;
+    icon.appendChild(icon_img);
+
+    // Message
     const text = document.createElement("div");
     text.className = "toast-message";
     text.textContent = message;
 
+    // Close button
     const close = document.createElement("button");
     close.type = "button";
     close.className = "toast-close";
@@ -45,13 +58,18 @@ function showToast(message) {
 
     close.addEventListener("click", () => {
         clearTimeout(toastTimeout);
-        toast.remove();
+        toast.classList.add("hiding");
+        toast.addEventListener("animationend", () => toast.remove(), { once: true });
     });
 
     toast.append(icon, text, close);
     document.body.appendChild(toast);
 
-    toastTimeout = setTimeout(() => toast.remove(), 4000);
+    // Auto-dismiss after 3000ms
+    toastTimeout = setTimeout(() => {
+        toast.classList.add("hiding");
+        toast.addEventListener("animationend", () => toast.remove(), { once: true });
+    }, 3000);
 }
 
 export function setup_habits() {
@@ -220,6 +238,10 @@ export function setup_habits() {
 
         weekly_day_group.classList.remove("has-error");
         custom_days_group.classList.remove("has-error");
+
+        // Update floating labels
+        update_select_label(frequency_input);
+        update_select_label(weekly_day_input);
     });
 
     function create_id() {
@@ -342,6 +364,18 @@ export function setup_habits() {
         const idx = habit.completions.indexOf(key);
         if (idx === -1) habit.completions.push(key);
         else habit.completions.splice(idx, 1);
+    }
+
+    // Toggle a specific past/today date (used by clicking any day cell)
+    function toggle_completion_for_date(habit, date_key) {
+        if (!Array.isArray(habit.completions)) habit.completions = [];
+
+        const idx = habit.completions.indexOf(date_key);
+        if (idx === -1) {
+            habit.completions.push(date_key);
+        } else {
+            habit.completions.splice(idx, 1);
+        }
     }
 
     function make_habit_card(habit) {
@@ -487,19 +521,51 @@ export function setup_habits() {
             const is_done = completions.includes(key);
             const is_today = key === to_date_key(today);
             const is_future = date > today;
+            const was_expected = is_expected_day(habit, date);
 
+            // ---------- Classify the cell ----------
             if (is_done) {
+                // Completed → green
                 cell.classList.add("is-done");
             } else if (is_future) {
+                // Future → neutral grey
                 cell.classList.add("is-future");
             } else if (is_today) {
+                // Today, not done → neutral grey
                 cell.classList.add("is-future");
             } else {
-                if (is_expected_day(habit, date)) {
-                    cell.classList.add("is-missed");
-                } else {
-                    cell.classList.add("is-future");
-                }
+                // Any past day, not completed → RED
+                cell.classList.add("is-missed");
+            }
+            // ---------- Click to toggle (only for past + today) ----------
+            if (!is_future) {
+                cell.classList.add("is-clickable");
+                cell.setAttribute("role", "button");
+                cell.setAttribute("tabindex", "0");
+                cell.setAttribute(
+                    "aria-label",
+                    is_done
+                        ? `Mark ${key} as not done`
+                        : `Mark ${key} as done`
+                );
+
+                cell.addEventListener("click", () => {
+                    update_habit(habit.habit_id, current => {
+                        toggle_completion_for_date(current, key);
+                    });
+                    showToast(
+                        is_done
+                            ? `Marked ${key} as not done.`
+                            : `Nice work! Marked ${key} as done.`
+                    );
+                });
+
+                cell.addEventListener("keydown", event => {
+                    if (event.key === "Enter" || event.key === " ") {
+                        event.preventDefault();
+                        cell.click();
+                    }
+                });
             }
 
             const day_num = document.createElement("span");
@@ -517,7 +583,7 @@ export function setup_habits() {
         grid_wrapper.append(grid_title, grid);
         card.append(header, description, meta_row, grid_wrapper);
 
-        //custom rules
+        // custom rules
         const effects = getRuleEffects(habit, "habits", calculate_streak);
 
         if (effects.highlight) {
@@ -633,6 +699,12 @@ export function setup_habits() {
             .forEach(group => group.classList.remove("has-error"));
     }
 
+    // Toggle .has-value on a select so its floating label moves up
+    function update_select_label(select_el) {
+        if (!select_el) return;
+        select_el.classList.toggle("has-value", Boolean(select_el.value));
+    }
+
     function validate_form() {
         let valid = true;
 
@@ -682,7 +754,16 @@ export function setup_habits() {
                     set_error(field, field.value.trim().length === 0);
                 }
             }
+            update_select_label(field);
         });
+    });
+
+    frequency_input?.addEventListener("change", () => {
+        update_select_label(frequency_input);
+    });
+
+    weekly_day_input?.addEventListener("change", () => {
+        update_select_label(weekly_day_input);
     });
 
     function open_add_modal() {
@@ -697,6 +778,9 @@ export function setup_habits() {
 
         if (modal_title) modal_title.textContent = "Add habit";
         if (frequency_input) frequency_input.value = "";
+
+        update_select_label(frequency_input);
+        update_select_label(weekly_day_input);
 
         modal.style.display = "flex";
         title_input?.focus();
@@ -743,6 +827,9 @@ export function setup_habits() {
 
         if (modal_title) modal_title.textContent = "Edit habit";
 
+        update_select_label(frequency_input);
+        update_select_label(weekly_day_input);
+
         modal.style.display = "flex";
         title_input.focus();
     }
@@ -756,6 +843,9 @@ export function setup_habits() {
         weekly_day_group.hidden = true;
         custom_days_group.hidden = true;
         weekly_day_input.value = "";
+
+        update_select_label(frequency_input);
+        update_select_label(weekly_day_input);
 
         editing_habit_id = null;
     }
@@ -818,9 +908,8 @@ export function setup_habits() {
     document.getElementById("cancel-habit-modal")
         ?.addEventListener("click", close_modal);
 
-    modal.addEventListener("click", event => {
-        if (event.target === modal) close_modal();
-    });
+    // NOTE: clicking outside the modal does NOT close it.
+    // The modal closes only via X, Cancel, or Escape key.
 
     document.addEventListener("keydown", event => {
         if (event.key === "Escape" && modal.style.display !== "none") {
@@ -864,9 +953,7 @@ export function setup_habits() {
     deleteCloseBtn?.addEventListener("click", closeDeleteConfirmation);
     deleteCancelBtn?.addEventListener("click", closeDeleteConfirmation);
 
-    deleteModal?.addEventListener("click", event => {
-        if (event.target === deleteModal) closeDeleteConfirmation();
-    });
+    // NOTE: clicking outside the delete modal does NOT close it.
 
     deleteConfirmBtn?.addEventListener("click", () => {
         if (typeof pendingDeleteAction !== "function") return;

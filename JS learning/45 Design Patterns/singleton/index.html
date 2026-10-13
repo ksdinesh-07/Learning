@@ -1,0 +1,35 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Singleton Pattern Demo</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="app.js" defer></script>
+</head>
+<body>
+    <main class="container">
+        <h1>Singleton Pattern</h1>
+        <p>One shared settings manager for the application.</p>
+
+        <section class="card">
+            <label for="theme">Choose theme</label>
+            <select id="theme">
+                <option value="light">Light</option>
+                <option value="dark">Dark</option>
+            </select>
+
+            <label for="language">Choose language</label>
+            <select id="language">
+                <option value="English">English</option>
+                <option value="Tamil">Tamil</option>
+                <option value="French">French</option>
+            </select>
+
+            <button id="showSettings">Show shared settings</button>
+            <pre id="output">Your settings will appear here.</pre>
+        </section>
+    </main>
+</body>
+</html>

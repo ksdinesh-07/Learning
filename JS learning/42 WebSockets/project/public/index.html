@@ -1,0 +1,54 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Real-Time Chat</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="/socket.io/socket.io.js"></script>
+    <script src="client.js" defer></script>
+</head>
+<body>
+    <main class="app">
+        <section id="join-screen" class="panel">
+            <h1>Real-Time Chat</h1>
+            <p>Join a room to start chatting.</p>
+
+            <form id="join-form">
+                <label for="username">Username</label>
+                <input id="username" placeholder="e.g. Alice"
+                    maxlength="30" required>
+
+                <label for="room-id">Session ID</label>
+                <input id="room-id" placeholder="e.g. DEMO123"
+                    maxlength="30" required>
+
+                <button type="submit">Join Chat</button>
+            </form>
+        </section>
+
+        <section id="chat-screen" class="panel hidden">
+            <header class="chat-header">
+                <div>
+                    <h2>Chat Room</h2>
+                    <p>Session: <strong id="current-room"></strong></p>
+                    <p id="connection-status">Connecting...</p>
+                </div>
+                <button id="leave-button" class="secondary">
+                    Leave
+                </button>
+            </header>
+
+            <div id="messages" aria-live="polite"></div>
+
+            <form id="message-form">
+                <input id="message-input"
+                    placeholder="Type your message..."
+                    maxlength="2000" autocomplete="off" required>
+                <button type="submit">Send</button>
+            </form>
+        </section>
+    </main>
+</body>
+</html>

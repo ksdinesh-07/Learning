@@ -1,0 +1,36 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Factory Pattern Demo</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="app.js" defer></script>
+</head>
+<body>
+    <main class="container">
+        <h1>Factory Pattern</h1>
+        <p>Create different objects using one factory.</p>
+
+        <section class="card">
+            <form id="taskForm">
+                <label for="taskTitle">Task title</label>
+                <input id="taskTitle" placeholder="Enter a task" required>
+
+                <label for="taskType">Task type</label>
+                <select id="taskType">
+                    <option value="task">Regular Task</option>
+                    <option value="habit">Daily Habit</option>
+                    <option value="reminder">Reminder</option>
+                </select>
+
+                <button type="submit">Create task</button>
+            </form>
+        </section>
+
+        <h2>Created Objects</h2>
+        <div id="taskList" class="task-list"></div>
+    </main>
+</body>
+</html>

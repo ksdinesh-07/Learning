@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Service Worker Demo</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="app.js" defer></script>
+</head>
+<body>
+    <main class="container">
+        <h1>Task & Habit Tracker</h1>
+
+        <p id="network-status">Checking connection...</p>
+
+        <form id="task-form">
+            <input
+                id="task-input"
+                type="text"
+                placeholder="Enter a task"
+                required
+            >
+            <button type="submit">Add Task</button>
+        </form>
+
+        <ul id="task-list"></ul>
+
+        <p id="sw-status">Service Worker status: checking...</p>
+    </main>
+</body>
+</html>

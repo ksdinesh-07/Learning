@@ -1,0 +1,116 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#171717">
+
+  <title>PWA Task Reminder</title>
+
+  <link rel="stylesheet" href="./style.css">
+  <link rel="manifest" href="./manifest.json">
+  <link rel="icon" href="./icon.svg" type="image/svg+xml">
+</head>
+
+<body>
+  <main class="app-container">
+    <header class="app-header">
+      <div>
+        <p class="eyebrow">PROGRESSIVE WEB APP</p>
+        <h1>Task Tracker</h1>
+        <p class="subtitle">Manage your tasks and never miss a reminder.</p>
+      </div>
+
+      <div class="connection-badge">
+        <span id="connection-dot"></span>
+        <span id="connection-status">Checking...</span>
+      </div>
+    </header>
+
+    <section class="panel">
+      <h2>Add a task</h2>
+
+      <form id="task-form">
+        <label for="task-input">Task name</label>
+
+        <div class="input-row">
+          <input
+            type="text"
+            id="task-input"
+            placeholder="What do you need to do?"
+            maxlength="150"
+            required
+          >
+
+          <button type="submit" class="primary-button">
+            Add Task
+          </button>
+        </div>
+      </form>
+    </section>
+
+    <section class="panel reminder-panel">
+      <div class="section-heading">
+        <div>
+          <h2>Task Reminder</h2>
+          <p>Get a browser notification when it's time.</p>
+        </div>
+
+        <span class="bell-icon" aria-hidden="true">🔔</span>
+      </div>
+
+      <form id="reminder-form">
+        <label for="reminder-task">Choose a task</label>
+
+        <select id="reminder-task" required>
+          <option value="">Select a task</option>
+        </select>
+
+        <label for="reminder-delay">Remind me after</label>
+
+        <select id="reminder-delay">
+          <option value="10">10 seconds (demo)</option>
+          <option value="30">30 seconds</option>
+          <option value="60">1 minute</option>
+          <option value="300">5 minutes</option>
+        </select>
+
+        <button type="submit" class="primary-button full-width">
+          Set Reminder
+        </button>
+      </form>
+
+      <p id="reminder-status" class="status-message" role="status"
+         aria-live="polite">
+        No reminder scheduled.
+      </p>
+    </section>
+
+    <section class="panel">
+      <div class="section-heading">
+        <div>
+          <h2>Your tasks</h2>
+          <p id="task-count">0 tasks</p>
+        </div>
+
+        <button type="button" id="clear-completed" class="secondary-button">
+          Clear completed
+        </button>
+      </div>
+
+      <ul id="task-list" class="task-list"></ul>
+
+      <p id="empty-message" class="empty-message">
+        No tasks yet. Add your first task above.
+      </p>
+    </section>
+
+    <footer>
+      <p>PWA Task Reminder · Tasks are stored on this device.</p>
+    </footer>
+  </main>
+
+  <script src="./app.js"></script>
+</body>
+</html>

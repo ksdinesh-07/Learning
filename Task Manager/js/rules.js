@@ -112,7 +112,11 @@ const SECTIONS = {
 let toastTimeout = null;
 
 function showToast(message) {
-    document.querySelector(".toast-notification")?.remove();
+    const existing = document.querySelector(".toast-notification");
+    if (existing) {
+        existing.classList.add("hiding");
+        existing.addEventListener("animationend", () => existing.remove(), { once: true });
+    }
     clearTimeout(toastTimeout);
 
     const toast = document.createElement("div");
@@ -122,7 +126,12 @@ function showToast(message) {
 
     const icon = document.createElement("div");
     icon.className = "toast-icon";
-    icon.textContent = "✓";
+
+    const icon_img = document.createElement("img");
+    icon_img.src = "./assets/taster-tick icon.svg";
+    icon_img.alt = "";
+    icon_img.draggable = false;
+    icon.appendChild(icon_img);
 
     const text = document.createElement("div");
     text.className = "toast-message";
@@ -136,13 +145,17 @@ function showToast(message) {
 
     close.addEventListener("click", () => {
         clearTimeout(toastTimeout);
-        toast.remove();
+        toast.classList.add("hiding");
+        toast.addEventListener("animationend", () => toast.remove(), { once: true });
     });
 
     toast.append(icon, text, close);
     document.body.appendChild(toast);
 
-    toastTimeout = setTimeout(() => toast.remove(), 4000);
+    toastTimeout = setTimeout(() => {
+        toast.classList.add("hiding");
+        toast.addEventListener("animationend", () => toast.remove(), { once: true });
+    }, 3000);
 }
 
 export function setup_rules() {
@@ -225,6 +238,11 @@ export function setup_rules() {
         return btn;
     }
 
+    function update_select_label(select_el) {
+        if (!select_el) return;
+        select_el.classList.toggle("has-value", Boolean(select_el.value));
+    }
+
     function rebuild_action_options() {
         const section = section_value(section_input.value);
         const catalog = SECTIONS[section];
@@ -240,6 +258,9 @@ export function setup_rules() {
             opt.textContent = a.label;
             action_input.append(opt);
         });
+
+        update_select_label(action_input);
+        update_select_label(action_value_input);
     }
 
     function rebuild_action_values() {
@@ -250,7 +271,11 @@ export function setup_rules() {
         action_value_input.innerHTML =
             `<option value="" disabled selected hidden></option>`;
 
-        if (!action) return;
+        if (!action) {
+            update_select_label(action_input);
+            update_select_label(action_value_input);
+            return;
+        }
 
         action.values.forEach(v => {
             const opt = document.createElement("option");
@@ -258,6 +283,9 @@ export function setup_rules() {
             opt.textContent = v.label;
             action_value_input.append(opt);
         });
+
+        update_select_label(action_input);
+        update_select_label(action_value_input);
     }
 
     function make_condition_row(condition) {
@@ -382,7 +410,7 @@ export function setup_rules() {
         conditions.push({
             id: create_id(),
             field: "",
-            operator: "",
+            operator: "equals",
             value: ""
         });
         render_conditions();
@@ -403,10 +431,15 @@ export function setup_rules() {
         rebuild_action_options();
         rebuild_action_values();
         update_add_condition_state();
+        update_select_label(section_input);
     });
 
     action_input?.addEventListener("change", () => {
         rebuild_action_values();
+    });
+
+    action_value_input?.addEventListener("change", () => {
+        update_select_label(action_value_input);
     });
 
     add_condition_btn?.addEventListener("click", () => {
@@ -418,10 +451,12 @@ export function setup_rules() {
         filter_state.status = status_filter.value;
         render_rules();
     });
+
     section_filter?.addEventListener("change", () => {
         filter_state.section = section_filter.value;
         render_rules();
     });
+
     sort_filter?.addEventListener("change", () => {
         filter_state.sort = sort_filter.value;
         render_rules();
@@ -608,6 +643,14 @@ export function setup_rules() {
         clear_all_errors();
         conditions = [];
 
+        // Add one default empty condition row
+        conditions.push({
+            id: create_id(),
+            field: "",
+            operator: "equals",
+            value: ""
+        });
+
         if (modal_title) modal_title.textContent = "Add rule";
         if (submit_btn) submit_btn.textContent = "Submit";
 
@@ -615,6 +658,11 @@ export function setup_rules() {
         rebuild_action_values();
         render_conditions();
         update_add_condition_state();
+
+        // Refresh floating labels so stale has-value classes are removed
+        update_select_label(section_input);
+        update_select_label(action_input);
+        update_select_label(action_value_input);
 
         modal.style.display = "flex";
         modal.setAttribute("aria-hidden", "false");
@@ -644,6 +692,11 @@ export function setup_rules() {
         render_conditions();
         update_add_condition_state();
 
+        // Update all floating labels to reflect the loaded values
+        update_select_label(section_input);
+        update_select_label(action_input);
+        update_select_label(action_value_input);
+
         modal.style.display = "flex";
         modal.setAttribute("aria-hidden", "false");
         title_input.focus();
@@ -655,6 +708,12 @@ export function setup_rules() {
         form.reset();
         clear_all_errors();
         conditions = [];
+
+        // Reset floating label states
+        update_select_label(section_input);
+        update_select_label(action_input);
+        update_select_label(action_value_input);
+
         editing_rule_id = null;
     }
 
@@ -677,7 +736,7 @@ export function setup_rules() {
             rule_conditions: conditions.map(c => ({
                 id: c.id,
                 field: c.field,
-                operator: c.operator,
+                operator: c.operator || "equals",
                 value: c.value
             })),
             rule_action: action_input.value,
@@ -718,9 +777,8 @@ export function setup_rules() {
     document.getElementById("cancel-rule-modal")
         ?.addEventListener("click", close_modal);
 
-    modal.addEventListener("click", e => {
-        if (e.target === modal) close_modal();
-    });
+    // NOTE: clicking outside the modal does NOT close it.
+    // The modal closes only via X, Cancel, or Escape key.
 
     document.addEventListener("keydown", e => {
         if (e.key === "Escape" && modal.style.display !== "none") {
@@ -761,9 +819,7 @@ export function setup_rules() {
     deleteCloseBtn?.addEventListener("click", closeDeleteConfirmation);
     deleteCancelBtn?.addEventListener("click", closeDeleteConfirmation);
 
-    deleteModal?.addEventListener("click", e => {
-        if (e.target === deleteModal) closeDeleteConfirmation();
-    });
+    // NOTE: clicking outside the delete modal does NOT close it.
 
     deleteConfirmBtn?.addEventListener("click", () => {
         if (typeof pendingDeleteAction !== "function") return;
