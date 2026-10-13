@@ -18886,20 +18886,6 @@ A PWA can provide:
 * Fast loading
 * App-like behavior
 
-A typical architecture looks like:
-
-```text
-Browser
-   ↓
-Web Page
-   ↓
-Service Worker
-   ↓
-Cache / Network
-   ↓
-Server
-```
-
 The service worker sits between the web application and the network for requests that fall within its scope.
 
 ---
@@ -19065,7 +19051,7 @@ Service workers commonly use the Cache Storage API.
 Open a cache:
 
 ```javascript
-const cache = await caches.open("app-cache-v1");
+const cache = await caches.ope("app-cache-v1");
 ```
 
 Add a resource:
