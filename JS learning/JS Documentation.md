@@ -19952,2767 +19952,6 @@ Data synchronized with server
 This is one of the important patterns behind offline-capable web applications.
 
 
-# TypeScript Basics
-
-## Introduction
-
-TypeScript is a programming language built on top of JavaScript.
-
-It adds a **static type system** to JavaScript.
-
-JavaScript:
-
-```javascript
-let user_name = "Dinesh";
-
-user_name = 25;
-```
-
-JavaScript allows this because variables are dynamically typed.
-
-TypeScript can detect the problem:
-
-```typescript
-let user_name: string = "Dinesh";
-
-user_name = 25;
-```
-
-The TypeScript compiler reports an error because `user_name` was declared as a string.
-
-TypeScript code is normally compiled into JavaScript before it runs in the browser or Node.js.
-
-```text
-TypeScript
-    ↓
-TypeScript Compiler
-    ↓
-JavaScript
-    ↓
-Browser / Node.js
-```
-
----
-
-# Why TypeScript Is Used
-
-TypeScript helps developers catch many errors before the application runs.
-
-For example:
-
-```javascript
-function calculate_total(price, quantity) {
-    return price * quantity;
-}
-
-calculate_total("500", "2");
-```
-
-JavaScript may allow this and produce an unexpected result.
-
-TypeScript lets you define the expected types:
-
-```typescript
-function calculate_total(
-    price: number,
-    quantity: number
-): number {
-    return price * quantity;
-}
-```
-
-Now:
-
-```typescript
-calculate_total("500", "2");
-```
-
-produces a type error during development.
-
-TypeScript is especially useful in:
-
-* Large JavaScript applications
-* Backend applications
-* Frontend frameworks
-* Team projects
-* APIs
-* Complex data models
-* Libraries and SDKs
-
----
-
-# Installing TypeScript
-
-TypeScript can be installed globally:
-
-```powershell
-npm install -g typescript
-```
-
-Check the version:
-
-```powershell
-tsc --version
-```
-
-You can also install it as a project development dependency:
-
-```powershell
-npm install --save-dev typescript
-```
-
-For most projects, keeping TypeScript in the project dependencies is preferable because the project controls the compiler version.
-
----
-
-# TypeScript File
-
-JavaScript files normally use:
-
-```text
-.js
-```
-
-TypeScript files use:
-
-```text
-.ts
-```
-
-Example:
-
-```text
-app.ts
-```
-
-A simple TypeScript program:
-
-```typescript
-const user_name: string = "Dinesh";
-
-console.log(user_name);
-```
-
-Compile it:
-
-```powershell
-tsc app.ts
-```
-
-TypeScript produces:
-
-```text
-app.js
-```
-
-The JavaScript file can then run in Node.js or the browser.
-
----
-
-# Basic Types
-
-TypeScript provides several commonly used types.
-
-```typescript
-let user_name: string = "Dinesh";
-
-let user_age: number = 22;
-
-let is_logged_in: boolean = true;
-
-let user_id: bigint = 100n;
-```
-
-Common types include:
-
-```text
-string
-number
-boolean
-bigint
-symbol
-object
-null
-undefined
-unknown
-any
-never
-void
-```
-
----
-
-# String
-
-```typescript
-let user_name: string = "Dinesh";
-```
-
-Only string values should be assigned:
-
-```typescript
-user_name = "Gowtham";
-```
-
-This is invalid:
-
-```typescript
-user_name = 100;
-```
-
----
-
-# Number
-
-JavaScript has one main numeric type, `number`.
-
-```typescript
-let product_price: number = 1500;
-
-let quantity: number = 3;
-
-let total_price: number = product_price * quantity;
-```
-
-Both integers and floating-point values use `number`.
-
-```typescript
-let count: number = 10;
-
-let rating: number = 4.5;
-```
-
----
-
-# Boolean
-
-```typescript
-let is_active: boolean = true;
-
-let is_verified: boolean = false;
-```
-
-A boolean can contain only:
-
-```text
-true
-false
-```
-
----
-
-# Arrays
-
-You can define an array using:
-
-```typescript
-let user_names: string[] = [
-    "Dinesh",
-    "Gowtham",
-    "Arul"
-];
-```
-
-Another syntax is:
-
-```typescript
-let user_names: Array<string> = [
-    "Dinesh",
-    "Gowtham",
-    "Arul"
-];
-```
-
-Both represent an array of strings.
-
-For numbers:
-
-```typescript
-let scores: number[] = [
-    85,
-    90,
-    76
-];
-```
-
-This is invalid:
-
-```typescript
-scores.push("90");
-```
-
-because the array expects numbers.
-
----
-
-# Objects
-
-You can define the expected structure of an object.
-
-```typescript
-let user: {
-    user_id: number;
-    user_name: string;
-    email: string;
-} = {
-    user_id: 1,
-    user_name: "Dinesh",
-    email: "dinesh@example.com"
-};
-```
-
-The object must follow the declared structure.
-
----
-
-# Optional Properties
-
-A property can be optional using `?`.
-
-```typescript
-let user: {
-    user_id: number;
-    user_name: string;
-    phone?: string;
-} = {
-    user_id: 1,
-    user_name: "Dinesh"
-};
-```
-
-`phone` is allowed to be missing.
-
-It can also be present:
-
-```typescript
-let user: {
-    user_id: number;
-    user_name: string;
-    phone?: string;
-} = {
-    user_id: 1,
-    user_name: "Dinesh",
-    phone: "9876543210"
-};
-```
-
----
-
-# Function Types
-
-TypeScript allows you to specify parameter types and return types.
-
-```typescript
-function calculate_total(
-    price: number,
-    quantity: number
-): number {
-    return price * quantity;
-}
-```
-
-The parameters are:
-
-```text
-price → number
-quantity → number
-```
-
-The return value is:
-
-```text
-number
-```
-
-Calling:
-
-```typescript
-const total_price = calculate_total(500, 3);
-```
-
-is valid.
-
-Calling:
-
-```typescript
-calculate_total("500", 3);
-```
-
-produces a type error.
-
----
-
-# Void
-
-A function that does not return a value can use `void`.
-
-```typescript
-function print_message(message: string): void {
-    console.log(message);
-}
-```
-
-The function performs an operation but does not return a value.
-
----
-
-# Type Inference
-
-TypeScript does not always require you to explicitly write the type.
-
-For example:
-
-```typescript
-let user_name = "Dinesh";
-```
-
-TypeScript infers:
-
-```text
-user_name → string
-```
-
-Similarly:
-
-```typescript
-let user_age = 22;
-```
-
-TypeScript infers:
-
-```text
-user_age → number
-```
-
-This is called **type inference**.
-
-You can therefore write:
-
-```typescript
-const product_price = 1500;
-```
-
-instead of:
-
-```typescript
-const product_price: number = 1500;
-```
-
-when the type is obvious.
-
----
-
-# Inference from Function Return Values
-
-TypeScript can also infer function return types.
-
-```typescript
-function calculate_total(
-    price: number,
-    quantity: number
-) {
-    return price * quantity;
-}
-```
-
-TypeScript understands that the function returns a `number`.
-
-You can explicitly write it:
-
-```typescript
-function calculate_total(
-    price: number,
-    quantity: number
-): number {
-    return price * quantity;
-}
-```
-
-Both are valid.
-
-Explicit return types can make larger codebases easier to understand and can catch unintended changes.
-
----
-
-# Union Types
-
-A variable can allow more than one type using `|`.
-
-```typescript
-let user_id: number | string;
-```
-
-Now both are valid:
-
-```typescript
-user_id = 1001;
-
-user_id = "USR1001";
-```
-
-But this is invalid:
-
-```typescript
-user_id = true;
-```
-
-Union types are useful when an API can return different valid representations.
-
----
-
-# Literal Types
-
-You can restrict a value to specific strings.
-
-```typescript
-let order_status:
-    "pending" |
-    "confirmed" |
-    "cancelled";
-```
-
-Valid:
-
-```typescript
-order_status = "pending";
-
-order_status = "confirmed";
-```
-
-Invalid:
-
-```typescript
-order_status = "completed";
-```
-
-This is useful for fixed application states.
-
----
-
-# Type Aliases
-
-A type alias allows you to give a name to a type definition.
-
-```typescript
-type User = {
-    user_id: number;
-    user_name: string;
-    email: string;
-};
-```
-
-Now:
-
-```typescript
-const user: User = {
-    user_id: 1,
-    user_name: "Dinesh",
-    email: "dinesh@example.com"
-};
-```
-
-You can reuse the type:
-
-```typescript
-const admin: User = {
-    user_id: 2,
-    user_name: "Gowtham",
-    email: "gowtham@example.com"
-};
-```
-
-This avoids repeatedly writing the same object structure.
-
----
-
-# Interfaces
-
-An interface describes the structure that an object should follow.
-
-```typescript
-interface User {
-    user_id: number;
-    user_name: string;
-    email: string;
-}
-```
-
-Use it:
-
-```typescript
-const user: User = {
-    user_id: 1,
-    user_name: "Dinesh",
-    email: "dinesh@example.com"
-};
-```
-
-Interfaces are commonly used for:
-
-* Object structures
-* API responses
-* Class contracts
-* Function parameters
-* Application data models
-
----
-
-# Interface with Optional Properties
-
-```typescript
-interface User {
-    user_id: number;
-    user_name: string;
-    email: string;
-    phone?: string;
-}
-```
-
-Now:
-
-```typescript
-const user: User = {
-    user_id: 1,
-    user_name: "Dinesh",
-    email: "dinesh@example.com"
-};
-```
-
-is valid.
-
----
-
-# Interface with Readonly
-
-A property can be marked `readonly`.
-
-```typescript
-interface User {
-    readonly user_id: number;
-    user_name: string;
-}
-```
-
-You can read it:
-
-```typescript
-console.log(user.user_id);
-```
-
-But you cannot normally assign a new value to it:
-
-```typescript
-user.user_id = 10;
-```
-
-TypeScript reports an error.
-
-`readonly` protects the property at the type-checking level. It does not make the underlying JavaScript object deeply immutable at runtime.
-
----
-
-# Extending Interfaces
-
-An interface can extend another interface.
-
-```typescript
-interface User {
-    user_id: number;
-    user_name: string;
-}
-
-interface Admin extends User {
-    permissions: string[];
-}
-```
-
-Now `Admin` contains:
-
-```text
-user_id
-user_name
-permissions
-```
-
-Example:
-
-```typescript
-const admin: Admin = {
-    user_id: 1,
-    user_name: "Dinesh",
-    permissions: [
-        "read_users",
-        "delete_users"
-    ]
-};
-```
-
----
-
-# Type Alias vs Interface
-
-Both can describe object structures.
-
-### Type alias
-
-```typescript
-type User = {
-    user_id: number;
-    user_name: string;
-};
-```
-
-### Interface
-
-```typescript
-interface User {
-    user_id: number;
-    user_name: string;
-}
-```
-
-Both can be useful.
-
-Interfaces are particularly common for object-oriented contracts and extensible object structures.
-
-Type aliases are especially flexible for unions, intersections, tuples, and other type expressions.
-
----
-
-# `any`
-
-The `any` type disables most type checking for that value.
-
-```typescript
-let user_data: any = "Dinesh";
-
-user_data = 100;
-
-user_data = true;
-```
-
-TypeScript allows all of these.
-
-`any` can be useful when migrating an existing JavaScript project, but excessive use removes many of the benefits of TypeScript.
-
----
-
-# `unknown`
-
-`unknown` is safer than `any`.
-
-```typescript
-let user_data: unknown;
-
-user_data = "Dinesh";
-user_data = 100;
-user_data = true;
-```
-
-Before using an `unknown` value as a specific type, you must check it.
-
-```typescript
-if (typeof user_data === "string") {
-    console.log(user_data.toUpperCase());
-}
-```
-
-This is particularly useful when handling data from external sources such as APIs.
-
----
-
-# Type Assertions
-
-Sometimes you know more about a value than TypeScript can determine.
-
-You can use a type assertion.
-
-```typescript
-const user_data: unknown = "Dinesh";
-
-const user_name = user_data as string;
-
-console.log(user_name.toUpperCase());
-```
-
-A type assertion tells TypeScript:
-
-> Treat this value as this type.
-
-It does not convert the actual value.
-
-For example:
-
-```typescript
-const value = "100" as unknown as number;
-```
-
-does not turn the string `"100"` into the number `100`.
-
-Runtime conversion would require:
-
-```typescript
-const value = Number("100");
-```
-
----
-
-# Generics
-
-Generics allow code to work with different types while preserving type information.
-
-Without generics:
-
-```typescript
-function get_first_item(items: any[]) {
-    return items[0];
-}
-```
-
-The return type loses useful information.
-
-With a generic:
-
-```typescript
-function get_first_item<T>(items: T[]): T {
-    return items[0];
-}
-```
-
-Now:
-
-```typescript
-const first_name = get_first_item([
-    "Dinesh",
-    "Gowtham",
-    "Arul"
-]);
-```
-
-TypeScript knows:
-
-```text
-first_name → string
-```
-
-For numbers:
-
-```typescript
-const first_score = get_first_item([
-    90,
-    85,
-    76
-]);
-```
-
-TypeScript knows:
-
-```text
-first_score → number
-```
-
-The `T` represents a type that is determined when the function is used.
-
----
-
-# Generic API Response
-
-Generics are especially useful for API response structures.
-
-```typescript
-interface ApiResponse<T> {
-    success: boolean;
-    data: T;
-    message: string;
-}
-```
-
-Define a user:
-
-```typescript
-interface User {
-    user_id: number;
-    user_name: string;
-}
-```
-
-Then:
-
-```typescript
-const response: ApiResponse<User> = {
-    success: true,
-    data: {
-        user_id: 1,
-        user_name: "Dinesh"
-    },
-    message: "User fetched successfully"
-};
-```
-
-For multiple users:
-
-```typescript
-const response: ApiResponse<User[]> = {
-    success: true,
-    data: [
-        {
-            user_id: 1,
-            user_name: "Dinesh"
-        },
-        {
-            user_id: 2,
-            user_name: "Gowtham"
-        }
-    ],
-    message: "Users fetched successfully"
-};
-```
-
-The same `ApiResponse` type can work with many different data types.
-
----
-
-# Generic Constraints
-
-Sometimes you want a generic type to have certain properties.
-
-```typescript
-function get_user_name<T extends { user_name: string }>(
-    user: T
-): string {
-    return user.user_name;
-}
-```
-
-Any type passed to this function must contain:
-
-```text
-user_name: string
-```
-
-For example:
-
-```typescript
-const user = {
-    user_id: 1,
-    user_name: "Dinesh"
-};
-
-console.log(get_user_name(user));
-```
-
----
-
-# Generic Interfaces
-
-Generics can also be used with interfaces.
-
-```typescript
-interface ApiResponse<T> {
-    success: boolean;
-    data: T;
-}
-```
-
-Example:
-
-```typescript
-interface Product {
-    product_id: number;
-    product_name: string;
-}
-
-const product_response: ApiResponse<Product> = {
-    success: true,
-    data: {
-        product_id: 101,
-        product_name: "Laptop"
-    }
-};
-```
-
----
-
-# Tuples
-
-A tuple represents an array with a specific number and order of elements.
-
-```typescript
-let user_data: [number, string] = [
-    1,
-    "Dinesh"
-];
-```
-
-The first value must be a number.
-
-The second value must be a string.
-
-This is invalid:
-
-```typescript
-let user_data: [number, string] = [
-    "Dinesh",
-    1
-];
-```
-
-Tuples are useful when the position of each value has a defined meaning.
-
----
-
-# Enums
-
-TypeScript supports enums for named sets of values.
-
-```typescript
-enum UserRole {
-    ADMIN,
-    USER,
-    MODERATOR
-}
-```
-
-Use:
-
-```typescript
-const role = UserRole.ADMIN;
-```
-
-String enums can make the values clearer:
-
-```typescript
-enum OrderStatus {
-    PENDING = "pending",
-    CONFIRMED = "confirmed",
-    CANCELLED = "cancelled"
-}
-```
-
-Use:
-
-```typescript
-const order_status = OrderStatus.CONFIRMED;
-```
-
-For many modern TypeScript codebases, string literal unions are also commonly used:
-
-```typescript
-type OrderStatus =
-    | "pending"
-    | "confirmed"
-    | "cancelled";
-```
-
----
-
-# Classes with TypeScript
-
-TypeScript adds type information to JavaScript classes.
-
-```typescript
-class User {
-    user_id: number;
-    user_name: string;
-
-    constructor(
-        user_id: number,
-        user_name: string
-    ) {
-        this.user_id = user_id;
-        this.user_name = user_name;
-    }
-
-    get_user_name(): string {
-        return this.user_name;
-    }
-}
-```
-
-Create an object:
-
-```typescript
-const user = new User(
-    1,
-    "Dinesh"
-);
-
-console.log(user.get_user_name());
-```
-
----
-
-# Access Modifiers
-
-TypeScript provides access modifiers such as:
-
-```text
-public
-private
-protected
-```
-
-Example:
-
-```typescript
-class BankAccount {
-    private balance: number;
-
-    constructor(balance: number) {
-        this.balance = balance;
-    }
-
-    get_balance(): number {
-        return this.balance;
-    }
-}
-```
-
-You can call:
-
-```typescript
-const account = new BankAccount(5000);
-
-console.log(account.get_balance());
-```
-
-But direct access is restricted:
-
-```typescript
-account.balance;
-```
-
-TypeScript reports an error.
-
-These modifiers primarily provide compile-time access checking.
-
----
-
-# Decorators
-
-Decorators are a feature for attaching behavior or metadata to classes and class members.
-
-A decorator can be represented conceptually as:
-
-```typescript
-function log_class(target: Function) {
-    console.log("Class created:", target.name);
-}
-```
-
-Then:
-
-```typescript
-@log_class
-class User {
-}
-```
-
-The decorator is associated with the class.
-
-Decorators are commonly seen in frameworks and libraries that use metadata-driven class patterns.
-
-Examples include frameworks such as NestJS and Angular.
-
-Decorator support and syntax depend on the TypeScript configuration and the decorator model being used, so it is important to follow the configuration required by the framework or project.
-
-Decorators are an advanced TypeScript topic. Understanding the basic idea is more important initially than memorizing decorator implementation details.
-
----
-
-# TypeScript Configuration
-
-A TypeScript project commonly has:
-
-```text
-tsconfig.json
-```
-
-This file controls how TypeScript compiles the project.
-
-Example:
-
-```json
-{
-    "compilerOptions": {
-        "target": "ES2022",
-        "module": "NodeNext",
-        "moduleResolution": "NodeNext",
-        "strict": true,
-        "outDir": "./dist"
-    },
-    "include": [
-        "src/**/*.ts"
-    ]
-}
-```
-
-Important options include:
-
-| Option             | Purpose                        |
-| ------------------ | ------------------------------ |
-| `target`           | JavaScript version to generate |
-| `module`           | Module system used in output   |
-| `strict`           | Enables stronger type checking |
-| `outDir`           | Output directory               |
-| `rootDir`          | Source directory               |
-| `moduleResolution` | How modules are resolved       |
-
----
-
-# Strict Mode
-
-TypeScript can perform stronger checking using:
-
-```json
-{
-    "compilerOptions": {
-        "strict": true
-    }
-}
-```
-
-Strict mode catches more potential errors.
-
-For example, it can identify situations where a value may be `undefined` when your code expects a definite value.
-
-This is one of the most useful settings for serious TypeScript projects.
-
----
-
-# TypeScript with Node.js
-
-A Node.js TypeScript project can look like:
-
-```text
-backend/
-│
-├── src/
-│   ├── server.ts
-│   ├── routes/
-│   ├── controllers/
-│   ├── services/
-│   └── types/
-│
-├── dist/
-├── package.json
-├── tsconfig.json
-└── node_modules/
-```
-
-Development flow:
-
-```text
-TypeScript source
-       ↓
-Type checking
-       ↓
-Compilation
-       ↓
-JavaScript
-       ↓
-Node.js
-```
-
-Modern Node.js tooling can also execute TypeScript directly in development in some setups, but compilation and type checking remain important concepts.
-
----
-
-# JavaScript vs TypeScript
-
-| JavaScript                           | TypeScript                                                       |
-| ------------------------------------ | ---------------------------------------------------------------- |
-| Dynamically typed                    | Statically type-checked                                          |
-| `.js`                                | `.ts`                                                            |
-| Types checked mainly at runtime      | Types checked during development/compilation                     |
-| No interfaces                        | Interfaces available                                             |
-| No generics                          | Generics available                                               |
-| No TypeScript decorators/type system | Decorators and richer type features                              |
-| Runs directly in Node.js/browser     | Usually transformed or executed through TypeScript-aware tooling |
-| Flexible                             | More structured                                                  |
-
-TypeScript does not replace JavaScript at runtime.
-
-The final runtime environment still executes JavaScript.
-
----
-
-# Practical Example — API Data
-
-Imagine an API returns user information.
-
-Define the structure:
-
-```typescript
-interface User {
-    user_id: number;
-    user_name: string;
-    email: string;
-    is_active: boolean;
-}
-```
-
-Define the response:
-
-```typescript
-interface ApiResponse<T> {
-    success: boolean;
-    data: T;
-}
-```
-
-Use it:
-
-```typescript
-async function get_user(): Promise<ApiResponse<User>> {
-    const response = await fetch(
-        "https://example.com/api/user"
-    );
-
-    return response.json();
-}
-```
-
-Now TypeScript knows that:
-
-```text
-get_user()
-    ↓
-Promise
-    ↓
-ApiResponse<User>
-    ↓
-data
-    ↓
-User
-```
-
-So:
-
-```typescript
-const response = await get_user();
-
-console.log(response.data.user_name);
-console.log(response.data.email);
-```
-
-TypeScript can provide autocomplete and detect invalid property access.
-
----
-
-# TypeScript Compilation
-
-Suppose:
-
-```typescript
-const user_name: string = "Dinesh";
-
-console.log(user_name);
-```
-
-Run:
-
-```powershell
-tsc app.ts
-```
-
-The compiler produces JavaScript similar to:
-
-```javascript
-const user_name = "Dinesh";
-
-console.log(user_name);
-```
-
-The type annotation:
-
-```typescript
-: string
-```
-
-does not exist in the generated JavaScript because TypeScript types are primarily development-time information.
-
-# TypeScript Basics
-
-## Introduction
-
-TypeScript is a programming language built on top of JavaScript.
-
-It adds a **static type system** to JavaScript.
-
-JavaScript:
-
-```javascript
-let user_name = "Dinesh";
-
-user_name = 25;
-```
-
-JavaScript allows this because variables are dynamically typed.
-
-TypeScript can detect the problem:
-
-```typescript
-let user_name: string = "Dinesh";
-
-user_name = 25;
-```
-
-The TypeScript compiler reports an error because `user_name` was declared as a string.
-
-TypeScript code is normally compiled into JavaScript before it runs in the browser or Node.js.
-
-```text
-TypeScript
-    ↓
-TypeScript Compiler
-    ↓
-JavaScript
-    ↓
-Browser / Node.js
-```
-
----
-
-# Why TypeScript Is Used
-
-TypeScript helps developers catch many errors before the application runs.
-
-For example:
-
-```javascript
-function calculate_total(price, quantity) {
-    return price * quantity;
-}
-
-calculate_total("500", "2");
-```
-
-JavaScript may allow this and produce an unexpected result.
-
-TypeScript lets you define the expected types:
-
-```typescript
-function calculate_total(
-    price: number,
-    quantity: number
-): number {
-    return price * quantity;
-}
-```
-
-Now:
-
-```typescript
-calculate_total("500", "2");
-```
-
-produces a type error during development.
-
-TypeScript is especially useful in:
-
-* Large JavaScript applications
-* Backend applications
-* Frontend frameworks
-* Team projects
-* APIs
-* Complex data models
-* Libraries and SDKs
-
----
-
-# Installing TypeScript
-
-TypeScript can be installed globally:
-
-```powershell
-npm install -g typescript
-```
-
-Check the version:
-
-```powershell
-tsc --version
-```
-
-You can also install it as a project development dependency:
-
-```powershell
-npm install --save-dev typescript
-```
-
-For most projects, keeping TypeScript in the project dependencies is preferable because the project controls the compiler version.
-
----
-
-# TypeScript File
-
-JavaScript files normally use:
-
-```text
-.js
-```
-
-TypeScript files use:
-
-```text
-.ts
-```
-
-Example:
-
-```text
-app.ts
-```
-
-A simple TypeScript program:
-
-```typescript
-const user_name: string = "Dinesh";
-
-console.log(user_name);
-```
-
-Compile it:
-
-```powershell
-tsc app.ts
-```
-
-TypeScript produces:
-
-```text
-app.js
-```
-
-The JavaScript file can then run in Node.js or the browser.
-
----
-
-# Basic Types
-
-TypeScript provides several commonly used types.
-
-```typescript
-let user_name: string = "Dinesh";
-
-let user_age: number = 22;
-
-let is_logged_in: boolean = true;
-
-let user_id: bigint = 100n;
-```
-
-Common types include:
-
-```text
-string
-number
-boolean
-bigint
-symbol
-object
-null
-undefined
-unknown
-any
-never
-void
-```
-
----
-
-# String
-
-```typescript
-let user_name: string = "Dinesh";
-```
-
-Only string values should be assigned:
-
-```typescript
-user_name = "Gowtham";
-```
-
-This is invalid:
-
-```typescript
-user_name = 100;
-```
-
----
-
-# Number
-
-JavaScript has one main numeric type, `number`.
-
-```typescript
-let product_price: number = 1500;
-
-let quantity: number = 3;
-
-let total_price: number = product_price * quantity;
-```
-
-Both integers and floating-point values use `number`.
-
-```typescript
-let count: number = 10;
-
-let rating: number = 4.5;
-```
-
----
-
-# Boolean
-
-```typescript
-let is_active: boolean = true;
-
-let is_verified: boolean = false;
-```
-
-A boolean can contain only:
-
-```text
-true
-false
-```
-
----
-
-# Arrays
-
-You can define an array using:
-
-```typescript
-let user_names: string[] = [
-    "Dinesh",
-    "Gowtham",
-    "Arul"
-];
-```
-
-Another syntax is:
-
-```typescript
-let user_names: Array<string> = [
-    "Dinesh",
-    "Gowtham",
-    "Arul"
-];
-```
-
-Both represent an array of strings.
-
-For numbers:
-
-```typescript
-let scores: number[] = [
-    85,
-    90,
-    76
-];
-```
-
-This is invalid:
-
-```typescript
-scores.push("90");
-```
-
-because the array expects numbers.
-
----
-
-# Objects
-
-You can define the expected structure of an object.
-
-```typescript
-let user: {
-    user_id: number;
-    user_name: string;
-    email: string;
-} = {
-    user_id: 1,
-    user_name: "Dinesh",
-    email: "dinesh@example.com"
-};
-```
-
-The object must follow the declared structure.
-
----
-
-# Optional Properties
-
-A property can be optional using `?`.
-
-```typescript
-let user: {
-    user_id: number;
-    user_name: string;
-    phone?: string;
-} = {
-    user_id: 1,
-    user_name: "Dinesh"
-};
-```
-
-`phone` is allowed to be missing.
-
-It can also be present:
-
-```typescript
-let user: {
-    user_id: number;
-    user_name: string;
-    phone?: string;
-} = {
-    user_id: 1,
-    user_name: "Dinesh",
-    phone: "9876543210"
-};
-```
-
----
-
-# Function Types
-
-TypeScript allows you to specify parameter types and return types.
-
-```typescript
-function calculate_total(
-    price: number,
-    quantity: number
-): number {
-    return price * quantity;
-}
-```
-
-The parameters are:
-
-```text
-price → number
-quantity → number
-```
-
-The return value is:
-
-```text
-number
-```
-
-Calling:
-
-```typescript
-const total_price = calculate_total(500, 3);
-```
-
-is valid.
-
-Calling:
-
-```typescript
-calculate_total("500", 3);
-```
-
-produces a type error.
-
----
-
-# Void
-
-A function that does not return a value can use `void`.
-
-```typescript
-function print_message(message: string): void {
-    console.log(message);
-}
-```
-
-The function performs an operation but does not return a value.
-
----
-
-# Type Inference
-
-TypeScript does not always require you to explicitly write the type.
-
-For example:
-
-```typescript
-let user_name = "Dinesh";
-```
-
-TypeScript infers:
-
-```text
-user_name → string
-```
-
-Similarly:
-
-```typescript
-let user_age = 22;
-```
-
-TypeScript infers:
-
-```text
-user_age → number
-```
-
-This is called **type inference**.
-
-You can therefore write:
-
-```typescript
-const product_price = 1500;
-```
-
-instead of:
-
-```typescript
-const product_price: number = 1500;
-```
-
-when the type is obvious.
-
----
-
-# Inference from Function Return Values
-
-TypeScript can also infer function return types.
-
-```typescript
-function calculate_total(
-    price: number,
-    quantity: number
-) {
-    return price * quantity;
-}
-```
-
-TypeScript understands that the function returns a `number`.
-
-You can explicitly write it:
-
-```typescript
-function calculate_total(
-    price: number,
-    quantity: number
-): number {
-    return price * quantity;
-}
-```
-
-Both are valid.
-
-Explicit return types can make larger codebases easier to understand and can catch unintended changes.
-
----
-
-# Union Types
-
-A variable can allow more than one type using `|`.
-
-```typescript
-let user_id: number | string;
-```
-
-Now both are valid:
-
-```typescript
-user_id = 1001;
-
-user_id = "USR1001";
-```
-
-But this is invalid:
-
-```typescript
-user_id = true;
-```
-
-Union types are useful when an API can return different valid representations.
-
----
-
-# Literal Types
-
-You can restrict a value to specific strings.
-
-```typescript
-let order_status:
-    "pending" |
-    "confirmed" |
-    "cancelled";
-```
-
-Valid:
-
-```typescript
-order_status = "pending";
-
-order_status = "confirmed";
-```
-
-Invalid:
-
-```typescript
-order_status = "completed";
-```
-
-This is useful for fixed application states.
-
----
-
-# Type Aliases
-
-A type alias allows you to give a name to a type definition.
-
-```typescript
-type User = {
-    user_id: number;
-    user_name: string;
-    email: string;
-};
-```
-
-Now:
-
-```typescript
-const user: User = {
-    user_id: 1,
-    user_name: "Dinesh",
-    email: "dinesh@example.com"
-};
-```
-
-You can reuse the type:
-
-```typescript
-const admin: User = {
-    user_id: 2,
-    user_name: "Gowtham",
-    email: "gowtham@example.com"
-};
-```
-
-This avoids repeatedly writing the same object structure.
-
----
-
-# Interfaces
-
-An interface describes the structure that an object should follow.
-
-```typescript
-interface User {
-    user_id: number;
-    user_name: string;
-    email: string;
-}
-```
-
-Use it:
-
-```typescript
-const user: User = {
-    user_id: 1,
-    user_name: "Dinesh",
-    email: "dinesh@example.com"
-};
-```
-
-Interfaces are commonly used for:
-
-* Object structures
-* API responses
-* Class contracts
-* Function parameters
-* Application data models
-
----
-
-# Interface with Optional Properties
-
-```typescript
-interface User {
-    user_id: number;
-    user_name: string;
-    email: string;
-    phone?: string;
-}
-```
-
-Now:
-
-```typescript
-const user: User = {
-    user_id: 1,
-    user_name: "Dinesh",
-    email: "dinesh@example.com"
-};
-```
-
-is valid.
-
----
-
-# Interface with Readonly
-
-A property can be marked `readonly`.
-
-```typescript
-interface User {
-    readonly user_id: number;
-    user_name: string;
-}
-```
-
-You can read it:
-
-```typescript
-console.log(user.user_id);
-```
-
-But you cannot normally assign a new value to it:
-
-```typescript
-user.user_id = 10;
-```
-
-TypeScript reports an error.
-
-`readonly` protects the property at the type-checking level. It does not make the underlying JavaScript object deeply immutable at runtime.
-
----
-
-# Extending Interfaces
-
-An interface can extend another interface.
-
-```typescript
-interface User {
-    user_id: number;
-    user_name: string;
-}
-
-interface Admin extends User {
-    permissions: string[];
-}
-```
-
-Now `Admin` contains:
-
-```text
-user_id
-user_name
-permissions
-```
-
-Example:
-
-```typescript
-const admin: Admin = {
-    user_id: 1,
-    user_name: "Dinesh",
-    permissions: [
-        "read_users",
-        "delete_users"
-    ]
-};
-```
-
----
-
-# Type Alias vs Interface
-
-Both can describe object structures.
-
-### Type alias
-
-```typescript
-type User = {
-    user_id: number;
-    user_name: string;
-};
-```
-
-### Interface
-
-```typescript
-interface User {
-    user_id: number;
-    user_name: string;
-}
-```
-
-Both can be useful.
-
-Interfaces are particularly common for object-oriented contracts and extensible object structures.
-
-Type aliases are especially flexible for unions, intersections, tuples, and other type expressions.
-
----
-
-# `any`
-
-The `any` type disables most type checking for that value.
-
-```typescript
-let user_data: any = "Dinesh";
-
-user_data = 100;
-
-user_data = true;
-```
-
-TypeScript allows all of these.
-
-`any` can be useful when migrating an existing JavaScript project, but excessive use removes many of the benefits of TypeScript.
-
----
-
-# `unknown`
-
-`unknown` is safer than `any`.
-
-```typescript
-let user_data: unknown;
-
-user_data = "Dinesh";
-user_data = 100;
-user_data = true;
-```
-
-Before using an `unknown` value as a specific type, you must check it.
-
-```typescript
-if (typeof user_data === "string") {
-    console.log(user_data.toUpperCase());
-}
-```
-
-This is particularly useful when handling data from external sources such as APIs.
-
----
-
-# Type Assertions
-
-Sometimes you know more about a value than TypeScript can determine.
-
-You can use a type assertion.
-
-```typescript
-const user_data: unknown = "Dinesh";
-
-const user_name = user_data as string;
-
-console.log(user_name.toUpperCase());
-```
-
-A type assertion tells TypeScript:
-
-> Treat this value as this type.
-
-It does not convert the actual value.
-
-For example:
-
-```typescript
-const value = "100" as unknown as number;
-```
-
-does not turn the string `"100"` into the number `100`.
-
-Runtime conversion would require:
-
-```typescript
-const value = Number("100");
-```
-
----
-
-# Generics
-
-Generics allow code to work with different types while preserving type information.
-
-Without generics:
-
-```typescript
-function get_first_item(items: any[]) {
-    return items[0];
-}
-```
-
-The return type loses useful information.
-
-With a generic:
-
-```typescript
-function get_first_item<T>(items: T[]): T {
-    return items[0];
-}
-```
-
-Now:
-
-```typescript
-const first_name = get_first_item([
-    "Dinesh",
-    "Gowtham",
-    "Arul"
-]);
-```
-
-TypeScript knows:
-
-```text
-first_name → string
-```
-
-For numbers:
-
-```typescript
-const first_score = get_first_item([
-    90,
-    85,
-    76
-]);
-```
-
-TypeScript knows:
-
-```text
-first_score → number
-```
-
-The `T` represents a type that is determined when the function is used.
-
----
-
-# Generic API Response
-
-Generics are especially useful for API response structures.
-
-```typescript
-interface ApiResponse<T> {
-    success: boolean;
-    data: T;
-    message: string;
-}
-```
-
-Define a user:
-
-```typescript
-interface User {
-    user_id: number;
-    user_name: string;
-}
-```
-
-Then:
-
-```typescript
-const response: ApiResponse<User> = {
-    success: true,
-    data: {
-        user_id: 1,
-        user_name: "Dinesh"
-    },
-    message: "User fetched successfully"
-};
-```
-
-For multiple users:
-
-```typescript
-const response: ApiResponse<User[]> = {
-    success: true,
-    data: [
-        {
-            user_id: 1,
-            user_name: "Dinesh"
-        },
-        {
-            user_id: 2,
-            user_name: "Gowtham"
-        }
-    ],
-    message: "Users fetched successfully"
-};
-```
-
-The same `ApiResponse` type can work with many different data types.
-
----
-
-# Generic Constraints
-
-Sometimes you want a generic type to have certain properties.
-
-```typescript
-function get_user_name<T extends { user_name: string }>(
-    user: T
-): string {
-    return user.user_name;
-}
-```
-
-Any type passed to this function must contain:
-
-```text
-user_name: string
-```
-
-For example:
-
-```typescript
-const user = {
-    user_id: 1,
-    user_name: "Dinesh"
-};
-
-console.log(get_user_name(user));
-```
-
----
-
-# Generic Interfaces
-
-Generics can also be used with interfaces.
-
-```typescript
-interface ApiResponse<T> {
-    success: boolean;
-    data: T;
-}
-```
-
-Example:
-
-```typescript
-interface Product {
-    product_id: number;
-    product_name: string;
-}
-
-const product_response: ApiResponse<Product> = {
-    success: true,
-    data: {
-        product_id: 101,
-        product_name: "Laptop"
-    }
-};
-```
-
----
-
-# Tuples
-
-A tuple represents an array with a specific number and order of elements.
-
-```typescript
-let user_data: [number, string] = [
-    1,
-    "Dinesh"
-];
-```
-
-The first value must be a number.
-
-The second value must be a string.
-
-This is invalid:
-
-```typescript
-let user_data: [number, string] = [
-    "Dinesh",
-    1
-];
-```
-
-Tuples are useful when the position of each value has a defined meaning.
-
----
-
-# Enums
-
-TypeScript supports enums for named sets of values.
-
-```typescript
-enum UserRole {
-    ADMIN,
-    USER,
-    MODERATOR
-}
-```
-
-Use:
-
-```typescript
-const role = UserRole.ADMIN;
-```
-
-String enums can make the values clearer:
-
-```typescript
-enum OrderStatus {
-    PENDING = "pending",
-    CONFIRMED = "confirmed",
-    CANCELLED = "cancelled"
-}
-```
-
-Use:
-
-```typescript
-const order_status = OrderStatus.CONFIRMED;
-```
-
-For many modern TypeScript codebases, string literal unions are also commonly used:
-
-```typescript
-type OrderStatus =
-    | "pending"
-    | "confirmed"
-    | "cancelled";
-```
-
----
-
-# Classes with TypeScript
-
-TypeScript adds type information to JavaScript classes.
-
-```typescript
-class User {
-    user_id: number;
-    user_name: string;
-
-    constructor(
-        user_id: number,
-        user_name: string
-    ) {
-        this.user_id = user_id;
-        this.user_name = user_name;
-    }
-
-    get_user_name(): string {
-        return this.user_name;
-    }
-}
-```
-
-Create an object:
-
-```typescript
-const user = new User(
-    1,
-    "Dinesh"
-);
-
-console.log(user.get_user_name());
-```
-
----
-
-# Access Modifiers
-
-TypeScript provides access modifiers such as:
-
-```text
-public
-private
-protected
-```
-
-Example:
-
-```typescript
-class BankAccount {
-    private balance: number;
-
-    constructor(balance: number) {
-        this.balance = balance;
-    }
-
-    get_balance(): number {
-        return this.balance;
-    }
-}
-```
-
-You can call:
-
-```typescript
-const account = new BankAccount(5000);
-
-console.log(account.get_balance());
-```
-
-But direct access is restricted:
-
-```typescript
-account.balance;
-```
-
-TypeScript reports an error.
-
-These modifiers primarily provide compile-time access checking.
-
----
-
-# Decorators
-
-Decorators are a feature for attaching behavior or metadata to classes and class members.
-
-A decorator can be represented conceptually as:
-
-```typescript
-function log_class(target: Function) {
-    console.log("Class created:", target.name);
-}
-```
-
-Then:
-
-```typescript
-@log_class
-class User {
-}
-```
-
-The decorator is associated with the class.
-
-Decorators are commonly seen in frameworks and libraries that use metadata-driven class patterns.
-
-Examples include frameworks such as NestJS and Angular.
-
-Decorator support and syntax depend on the TypeScript configuration and the decorator model being used, so it is important to follow the configuration required by the framework or project.
-
-Decorators are an advanced TypeScript topic. Understanding the basic idea is more important initially than memorizing decorator implementation details.
-
----
-
-# TypeScript Configuration
-
-A TypeScript project commonly has:
-
-```text
-tsconfig.json
-```
-
-This file controls how TypeScript compiles the project.
-
-Example:
-
-```json
-{
-    "compilerOptions": {
-        "target": "ES2022",
-        "module": "NodeNext",
-        "moduleResolution": "NodeNext",
-        "strict": true,
-        "outDir": "./dist"
-    },
-    "include": [
-        "src/**/*.ts"
-    ]
-}
-```
-
-Important options include:
-
-| Option             | Purpose                        |
-| ------------------ | ------------------------------ |
-| `target`           | JavaScript version to generate |
-| `module`           | Module system used in output   |
-| `strict`           | Enables stronger type checking |
-| `outDir`           | Output directory               |
-| `rootDir`          | Source directory               |
-| `moduleResolution` | How modules are resolved       |
-
----
-
-# Strict Mode
-
-TypeScript can perform stronger checking using:
-
-```json
-{
-    "compilerOptions": {
-        "strict": true
-    }
-}
-```
-
-Strict mode catches more potential errors.
-
-For example, it can identify situations where a value may be `undefined` when your code expects a definite value.
-
-This is one of the most useful settings for serious TypeScript projects.
-
----
-
-# TypeScript with Node.js
-
-A Node.js TypeScript project can look like:
-
-```text
-backend/
-│
-├── src/
-│   ├── server.ts
-│   ├── routes/
-│   ├── controllers/
-│   ├── services/
-│   └── types/
-│
-├── dist/
-├── package.json
-├── tsconfig.json
-└── node_modules/
-```
-
-Development flow:
-
-```text
-TypeScript source
-       ↓
-Type checking
-       ↓
-Compilation
-       ↓
-JavaScript
-       ↓
-Node.js
-```
-
-Modern Node.js tooling can also execute TypeScript directly in development in some setups, but compilation and type checking remain important concepts.
-
----
-
-# JavaScript vs TypeScript
-
-| JavaScript                           | TypeScript                                                       |
-| ------------------------------------ | ---------------------------------------------------------------- |
-| Dynamically typed                    | Statically type-checked                                          |
-| `.js`                                | `.ts`                                                            |
-| Types checked mainly at runtime      | Types checked during development/compilation                     |
-| No interfaces                        | Interfaces available                                             |
-| No generics                          | Generics available                                               |
-| No TypeScript decorators/type system | Decorators and richer type features                              |
-| Runs directly in Node.js/browser     | Usually transformed or executed through TypeScript-aware tooling |
-| Flexible                             | More structured                                                  |
-
-TypeScript does not replace JavaScript at runtime.
-
-The final runtime environment still executes JavaScript.
-
----
-
-# Practical Example — API Data
-
-Imagine an API returns user information.
-
-Define the structure:
-
-```typescript
-interface User {
-    user_id: number;
-    user_name: string;
-    email: string;
-    is_active: boolean;
-}
-```
-
-Define the response:
-
-```typescript
-interface ApiResponse<T> {
-    success: boolean;
-    data: T;
-}
-```
-
-Use it:
-
-```typescript
-async function get_user(): Promise<ApiResponse<User>> {
-    const response = await fetch(
-        "https://example.com/api/user"
-    );
-
-    return response.json();
-}
-```
-
-Now TypeScript knows that:
-
-```text
-get_user()
-    ↓
-Promise
-    ↓
-ApiResponse<User>
-    ↓
-data
-    ↓
-User
-```
-
-So:
-
-```typescript
-const response = await get_user();
-
-console.log(response.data.user_name);
-console.log(response.data.email);
-```
-
-TypeScript can provide autocomplete and detect invalid property access.
-
----
-
-# TypeScript Compilation
-
-Suppose:
-
-```typescript
-const user_name: string = "Dinesh";
-
-console.log(user_name);
-```
-
-Run:
-
-```powershell
-tsc app.ts
-```
-
-The compiler produces JavaScript similar to:
-
-```javascript
-const user_name = "Dinesh";
-
-console.log(user_name);
-```
-
-The type annotation:
-
-```typescript
-: string
-```
-
-does not exist in the generated JavaScript because TypeScript types are primarily development-time information.
-
-
 # JavaScript Design Patterns
 
 ## Introduction
@@ -26458,4 +23697,2764 @@ Employee ↔ Employee
 A graph can represent those relationships.
 
 ---
+
+# TypeScript Basics
+
+## Introduction
+
+TypeScript is a programming language built on top of JavaScript.
+
+It adds a **static type system** to JavaScript.
+
+JavaScript:
+
+```javascript
+let user_name = "Dinesh";
+
+user_name = 25;
+```
+
+JavaScript allows this because variables are dynamically typed.
+
+TypeScript can detect the problem:
+
+```typescript
+let user_name: string = "Dinesh";
+
+user_name = 25;
+```
+
+The TypeScript compiler reports an error because `user_name` was declared as a string.
+
+TypeScript code is normally compiled into JavaScript before it runs in the browser or Node.js.
+
+```text
+TypeScript
+    ↓
+TypeScript Compiler
+    ↓
+JavaScript
+    ↓
+Browser / Node.js
+```
+
+---
+
+# Why TypeScript Is Used
+
+TypeScript helps developers catch many errors before the application runs.
+
+For example:
+
+```javascript
+function calculate_total(price, quantity) {
+    return price * quantity;
+}
+
+calculate_total("500", "2");
+```
+
+JavaScript may allow this and produce an unexpected result.
+
+TypeScript lets you define the expected types:
+
+```typescript
+function calculate_total(
+    price: number,
+    quantity: number
+): number {
+    return price * quantity;
+}
+```
+
+Now:
+
+```typescript
+calculate_total("500", "2");
+```
+
+produces a type error during development.
+
+TypeScript is especially useful in:
+
+* Large JavaScript applications
+* Backend applications
+* Frontend frameworks
+* Team projects
+* APIs
+* Complex data models
+* Libraries and SDKs
+
+---
+
+# Installing TypeScript
+
+TypeScript can be installed globally:
+
+```powershell
+npm install -g typescript
+```
+
+Check the version:
+
+```powershell
+tsc --version
+```
+
+You can also install it as a project development dependency:
+
+```powershell
+npm install --save-dev typescript
+```
+
+For most projects, keeping TypeScript in the project dependencies is preferable because the project controls the compiler version.
+
+---
+
+# TypeScript File
+
+JavaScript files normally use:
+
+```text
+.js
+```
+
+TypeScript files use:
+
+```text
+.ts
+```
+
+Example:
+
+```text
+app.ts
+```
+
+A simple TypeScript program:
+
+```typescript
+const user_name: string = "Dinesh";
+
+console.log(user_name);
+```
+
+Compile it:
+
+```powershell
+tsc app.ts
+```
+
+TypeScript produces:
+
+```text
+app.js
+```
+
+The JavaScript file can then run in Node.js or the browser.
+
+---
+
+# Basic Types
+
+TypeScript provides several commonly used types.
+
+```typescript
+let user_name: string = "Dinesh";
+
+let user_age: number = 22;
+
+let is_logged_in: boolean = true;
+
+let user_id: bigint = 100n;
+```
+
+Common types include:
+
+```text
+string
+number
+boolean
+bigint
+symbol
+object
+null
+undefined
+unknown
+any
+never
+void
+```
+
+---
+
+# String
+
+```typescript
+let user_name: string = "Dinesh";
+```
+
+Only string values should be assigned:
+
+```typescript
+user_name = "Gowtham";
+```
+
+This is invalid:
+
+```typescript
+user_name = 100;
+```
+
+---
+
+# Number
+
+JavaScript has one main numeric type, `number`.
+
+```typescript
+let product_price: number = 1500;
+
+let quantity: number = 3;
+
+let total_price: number = product_price * quantity;
+```
+
+Both integers and floating-point values use `number`.
+
+```typescript
+let count: number = 10;
+
+let rating: number = 4.5;
+```
+
+---
+
+# Boolean
+
+```typescript
+let is_active: boolean = true;
+
+let is_verified: boolean = false;
+```
+
+A boolean can contain only:
+
+```text
+true
+false
+```
+
+---
+
+# Arrays
+
+You can define an array using:
+
+```typescript
+let user_names: string[] = [
+    "Dinesh",
+    "Gowtham",
+    "Arul"
+];
+```
+
+Another syntax is:
+
+```typescript
+let user_names: Array<string> = [
+    "Dinesh",
+    "Gowtham",
+    "Arul"
+];
+```
+
+Both represent an array of strings.
+
+For numbers:
+
+```typescript
+let scores: number[] = [
+    85,
+    90,
+    76
+];
+```
+
+This is invalid:
+
+```typescript
+scores.push("90");
+```
+
+because the array expects numbers.
+
+---
+
+# Objects
+
+You can define the expected structure of an object.
+
+```typescript
+let user: {
+    user_id: number;
+    user_name: string;
+    email: string;
+} = {
+    user_id: 1,
+    user_name: "Dinesh",
+    email: "dinesh@example.com"
+};
+```
+
+The object must follow the declared structure.
+
+---
+
+# Optional Properties
+
+A property can be optional using `?`.
+
+```typescript
+let user: {
+    user_id: number;
+    user_name: string;
+    phone?: string;
+} = {
+    user_id: 1,
+    user_name: "Dinesh"
+};
+```
+
+`phone` is allowed to be missing.
+
+It can also be present:
+
+```typescript
+let user: {
+    user_id: number;
+    user_name: string;
+    phone?: string;
+} = {
+    user_id: 1,
+    user_name: "Dinesh",
+    phone: "9876543210"
+};
+```
+
+---
+
+# Function Types
+
+TypeScript allows you to specify parameter types and return types.
+
+```typescript
+function calculate_total(
+    price: number,
+    quantity: number
+): number {
+    return price * quantity;
+}
+```
+
+The parameters are:
+
+```text
+price → number
+quantity → number
+```
+
+The return value is:
+
+```text
+number
+```
+
+Calling:
+
+```typescript
+const total_price = calculate_total(500, 3);
+```
+
+is valid.
+
+Calling:
+
+```typescript
+calculate_total("500", 3);
+```
+
+produces a type error.
+
+---
+
+# Void
+
+A function that does not return a value can use `void`.
+
+```typescript
+function print_message(message: string): void {
+    console.log(message);
+}
+```
+
+The function performs an operation but does not return a value.
+
+---
+
+# Type Inference
+
+TypeScript does not always require you to explicitly write the type.
+
+For example:
+
+```typescript
+let user_name = "Dinesh";
+```
+
+TypeScript infers:
+
+```text
+user_name → string
+```
+
+Similarly:
+
+```typescript
+let user_age = 22;
+```
+
+TypeScript infers:
+
+```text
+user_age → number
+```
+
+This is called **type inference**.
+
+You can therefore write:
+
+```typescript
+const product_price = 1500;
+```
+
+instead of:
+
+```typescript
+const product_price: number = 1500;
+```
+
+when the type is obvious.
+
+---
+
+# Inference from Function Return Values
+
+TypeScript can also infer function return types.
+
+```typescript
+function calculate_total(
+    price: number,
+    quantity: number
+) {
+    return price * quantity;
+}
+```
+
+TypeScript understands that the function returns a `number`.
+
+You can explicitly write it:
+
+```typescript
+function calculate_total(
+    price: number,
+    quantity: number
+): number {
+    return price * quantity;
+}
+```
+
+Both are valid.
+
+Explicit return types can make larger codebases easier to understand and can catch unintended changes.
+
+---
+
+# Union Types
+
+A variable can allow more than one type using `|`.
+
+```typescript
+let user_id: number | string;
+```
+
+Now both are valid:
+
+```typescript
+user_id = 1001;
+
+user_id = "USR1001";
+```
+
+But this is invalid:
+
+```typescript
+user_id = true;
+```
+
+Union types are useful when an API can return different valid representations.
+
+---
+
+# Literal Types
+
+You can restrict a value to specific strings.
+
+```typescript
+let order_status:
+    "pending" |
+    "confirmed" |
+    "cancelled";
+```
+
+Valid:
+
+```typescript
+order_status = "pending";
+
+order_status = "confirmed";
+```
+
+Invalid:
+
+```typescript
+order_status = "completed";
+```
+
+This is useful for fixed application states.
+
+---
+
+# Type Aliases
+
+A type alias allows you to give a name to a type definition.
+
+```typescript
+type User = {
+    user_id: number;
+    user_name: string;
+    email: string;
+};
+```
+
+Now:
+
+```typescript
+const user: User = {
+    user_id: 1,
+    user_name: "Dinesh",
+    email: "dinesh@example.com"
+};
+```
+
+You can reuse the type:
+
+```typescript
+const admin: User = {
+    user_id: 2,
+    user_name: "Gowtham",
+    email: "gowtham@example.com"
+};
+```
+
+This avoids repeatedly writing the same object structure.
+
+---
+
+# Interfaces
+
+An interface describes the structure that an object should follow.
+
+```typescript
+interface User {
+    user_id: number;
+    user_name: string;
+    email: string;
+}
+```
+
+Use it:
+
+```typescript
+const user: User = {
+    user_id: 1,
+    user_name: "Dinesh",
+    email: "dinesh@example.com"
+};
+```
+
+Interfaces are commonly used for:
+
+* Object structures
+* API responses
+* Class contracts
+* Function parameters
+* Application data models
+
+---
+
+# Interface with Optional Properties
+
+```typescript
+interface User {
+    user_id: number;
+    user_name: string;
+    email: string;
+    phone?: string;
+}
+```
+
+Now:
+
+```typescript
+const user: User = {
+    user_id: 1,
+    user_name: "Dinesh",
+    email: "dinesh@example.com"
+};
+```
+
+is valid.
+
+---
+
+# Interface with Readonly
+
+A property can be marked `readonly`.
+
+```typescript
+interface User {
+    readonly user_id: number;
+    user_name: string;
+}
+```
+
+You can read it:
+
+```typescript
+console.log(user.user_id);
+```
+
+But you cannot normally assign a new value to it:
+
+```typescript
+user.user_id = 10;
+```
+
+TypeScript reports an error.
+
+`readonly` protects the property at the type-checking level. It does not make the underlying JavaScript object deeply immutable at runtime.
+
+---
+
+# Extending Interfaces
+
+An interface can extend another interface.
+
+```typescript
+interface User {
+    user_id: number;
+    user_name: string;
+}
+
+interface Admin extends User {
+    permissions: string[];
+}
+```
+
+Now `Admin` contains:
+
+```text
+user_id
+user_name
+permissions
+```
+
+Example:
+
+```typescript
+const admin: Admin = {
+    user_id: 1,
+    user_name: "Dinesh",
+    permissions: [
+        "read_users",
+        "delete_users"
+    ]
+};
+```
+
+---
+
+# Type Alias vs Interface
+
+Both can describe object structures.
+
+### Type alias
+
+```typescript
+type User = {
+    user_id: number;
+    user_name: string;
+};
+```
+
+### Interface
+
+```typescript
+interface User {
+    user_id: number;
+    user_name: string;
+}
+```
+
+Both can be useful.
+
+Interfaces are particularly common for object-oriented contracts and extensible object structures.
+
+Type aliases are especially flexible for unions, intersections, tuples, and other type expressions.
+
+---
+
+# `any`
+
+The `any` type disables most type checking for that value.
+
+```typescript
+let user_data: any = "Dinesh";
+
+user_data = 100;
+
+user_data = true;
+```
+
+TypeScript allows all of these.
+
+`any` can be useful when migrating an existing JavaScript project, but excessive use removes many of the benefits of TypeScript.
+
+---
+
+# `unknown`
+
+`unknown` is safer than `any`.
+
+```typescript
+let user_data: unknown;
+
+user_data = "Dinesh";
+user_data = 100;
+user_data = true;
+```
+
+Before using an `unknown` value as a specific type, you must check it.
+
+```typescript
+if (typeof user_data === "string") {
+    console.log(user_data.toUpperCase());
+}
+```
+
+This is particularly useful when handling data from external sources such as APIs.
+
+---
+
+# Type Assertions
+
+Sometimes you know more about a value than TypeScript can determine.
+
+You can use a type assertion.
+
+```typescript
+const user_data: unknown = "Dinesh";
+
+const user_name = user_data as string;
+
+console.log(user_name.toUpperCase());
+```
+
+A type assertion tells TypeScript:
+
+> Treat this value as this type.
+
+It does not convert the actual value.
+
+For example:
+
+```typescript
+const value = "100" as unknown as number;
+```
+
+does not turn the string `"100"` into the number `100`.
+
+Runtime conversion would require:
+
+```typescript
+const value = Number("100");
+```
+
+---
+
+# Generics
+
+Generics allow code to work with different types while preserving type information.
+
+Without generics:
+
+```typescript
+function get_first_item(items: any[]) {
+    return items[0];
+}
+```
+
+The return type loses useful information.
+
+With a generic:
+
+```typescript
+function get_first_item<T>(items: T[]): T {
+    return items[0];
+}
+```
+
+Now:
+
+```typescript
+const first_name = get_first_item([
+    "Dinesh",
+    "Gowtham",
+    "Arul"
+]);
+```
+
+TypeScript knows:
+
+```text
+first_name → string
+```
+
+For numbers:
+
+```typescript
+const first_score = get_first_item([
+    90,
+    85,
+    76
+]);
+```
+
+TypeScript knows:
+
+```text
+first_score → number
+```
+
+The `T` represents a type that is determined when the function is used.
+
+---
+
+# Generic API Response
+
+Generics are especially useful for API response structures.
+
+```typescript
+interface ApiResponse<T> {
+    success: boolean;
+    data: T;
+    message: string;
+}
+```
+
+Define a user:
+
+```typescript
+interface User {
+    user_id: number;
+    user_name: string;
+}
+```
+
+Then:
+
+```typescript
+const response: ApiResponse<User> = {
+    success: true,
+    data: {
+        user_id: 1,
+        user_name: "Dinesh"
+    },
+    message: "User fetched successfully"
+};
+```
+
+For multiple users:
+
+```typescript
+const response: ApiResponse<User[]> = {
+    success: true,
+    data: [
+        {
+            user_id: 1,
+            user_name: "Dinesh"
+        },
+        {
+            user_id: 2,
+            user_name: "Gowtham"
+        }
+    ],
+    message: "Users fetched successfully"
+};
+```
+
+The same `ApiResponse` type can work with many different data types.
+
+---
+
+# Generic Constraints
+
+Sometimes you want a generic type to have certain properties.
+
+```typescript
+function get_user_name<T extends { user_name: string }>(
+    user: T
+): string {
+    return user.user_name;
+}
+```
+
+Any type passed to this function must contain:
+
+```text
+user_name: string
+```
+
+For example:
+
+```typescript
+const user = {
+    user_id: 1,
+    user_name: "Dinesh"
+};
+
+console.log(get_user_name(user));
+```
+
+---
+
+# Generic Interfaces
+
+Generics can also be used with interfaces.
+
+```typescript
+interface ApiResponse<T> {
+    success: boolean;
+    data: T;
+}
+```
+
+Example:
+
+```typescript
+interface Product {
+    product_id: number;
+    product_name: string;
+}
+
+const product_response: ApiResponse<Product> = {
+    success: true,
+    data: {
+        product_id: 101,
+        product_name: "Laptop"
+    }
+};
+```
+
+---
+
+# Tuples
+
+A tuple represents an array with a specific number and order of elements.
+
+```typescript
+let user_data: [number, string] = [
+    1,
+    "Dinesh"
+];
+```
+
+The first value must be a number.
+
+The second value must be a string.
+
+This is invalid:
+
+```typescript
+let user_data: [number, string] = [
+    "Dinesh",
+    1
+];
+```
+
+Tuples are useful when the position of each value has a defined meaning.
+
+---
+
+# Enums
+
+TypeScript supports enums for named sets of values.
+
+```typescript
+enum UserRole {
+    ADMIN,
+    USER,
+    MODERATOR
+}
+```
+
+Use:
+
+```typescript
+const role = UserRole.ADMIN;
+```
+
+String enums can make the values clearer:
+
+```typescript
+enum OrderStatus {
+    PENDING = "pending",
+    CONFIRMED = "confirmed",
+    CANCELLED = "cancelled"
+}
+```
+
+Use:
+
+```typescript
+const order_status = OrderStatus.CONFIRMED;
+```
+
+For many modern TypeScript codebases, string literal unions are also commonly used:
+
+```typescript
+type OrderStatus =
+    | "pending"
+    | "confirmed"
+    | "cancelled";
+```
+
+---
+
+# Classes with TypeScript
+
+TypeScript adds type information to JavaScript classes.
+
+```typescript
+class User {
+    user_id: number;
+    user_name: string;
+
+    constructor(
+        user_id: number,
+        user_name: string
+    ) {
+        this.user_id = user_id;
+        this.user_name = user_name;
+    }
+
+    get_user_name(): string {
+        return this.user_name;
+    }
+}
+```
+
+Create an object:
+
+```typescript
+const user = new User(
+    1,
+    "Dinesh"
+);
+
+console.log(user.get_user_name());
+```
+
+---
+
+# Access Modifiers
+
+TypeScript provides access modifiers such as:
+
+```text
+public
+private
+protected
+```
+
+Example:
+
+```typescript
+class BankAccount {
+    private balance: number;
+
+    constructor(balance: number) {
+        this.balance = balance;
+    }
+
+    get_balance(): number {
+        return this.balance;
+    }
+}
+```
+
+You can call:
+
+```typescript
+const account = new BankAccount(5000);
+
+console.log(account.get_balance());
+```
+
+But direct access is restricted:
+
+```typescript
+account.balance;
+```
+
+TypeScript reports an error.
+
+These modifiers primarily provide compile-time access checking.
+
+---
+
+# Decorators
+
+Decorators are a feature for attaching behavior or metadata to classes and class members.
+
+A decorator can be represented conceptually as:
+
+```typescript
+function log_class(target: Function) {
+    console.log("Class created:", target.name);
+}
+```
+
+Then:
+
+```typescript
+@log_class
+class User {
+}
+```
+
+The decorator is associated with the class.
+
+Decorators are commonly seen in frameworks and libraries that use metadata-driven class patterns.
+
+Examples include frameworks such as NestJS and Angular.
+
+Decorator support and syntax depend on the TypeScript configuration and the decorator model being used, so it is important to follow the configuration required by the framework or project.
+
+Decorators are an advanced TypeScript topic. Understanding the basic idea is more important initially than memorizing decorator implementation details.
+
+---
+
+# TypeScript Configuration
+
+A TypeScript project commonly has:
+
+```text
+tsconfig.json
+```
+
+This file controls how TypeScript compiles the project.
+
+Example:
+
+```json
+{
+    "compilerOptions": {
+        "target": "ES2022",
+        "module": "NodeNext",
+        "moduleResolution": "NodeNext",
+        "strict": true,
+        "outDir": "./dist"
+    },
+    "include": [
+        "src/**/*.ts"
+    ]
+}
+```
+
+Important options include:
+
+| Option             | Purpose                        |
+| ------------------ | ------------------------------ |
+| `target`           | JavaScript version to generate |
+| `module`           | Module system used in output   |
+| `strict`           | Enables stronger type checking |
+| `outDir`           | Output directory               |
+| `rootDir`          | Source directory               |
+| `moduleResolution` | How modules are resolved       |
+
+---
+
+# Strict Mode
+
+TypeScript can perform stronger checking using:
+
+```json
+{
+    "compilerOptions": {
+        "strict": true
+    }
+}
+```
+
+Strict mode catches more potential errors.
+
+For example, it can identify situations where a value may be `undefined` when your code expects a definite value.
+
+This is one of the most useful settings for serious TypeScript projects.
+
+---
+
+# TypeScript with Node.js
+
+A Node.js TypeScript project can look like:
+
+```text
+backend/
+│
+├── src/
+│   ├── server.ts
+│   ├── routes/
+│   ├── controllers/
+│   ├── services/
+│   └── types/
+│
+├── dist/
+├── package.json
+├── tsconfig.json
+└── node_modules/
+```
+
+Development flow:
+
+```text
+TypeScript source
+       ↓
+Type checking
+       ↓
+Compilation
+       ↓
+JavaScript
+       ↓
+Node.js
+```
+
+Modern Node.js tooling can also execute TypeScript directly in development in some setups, but compilation and type checking remain important concepts.
+
+---
+
+# JavaScript vs TypeScript
+
+| JavaScript                           | TypeScript                                                       |
+| ------------------------------------ | ---------------------------------------------------------------- |
+| Dynamically typed                    | Statically type-checked                                          |
+| `.js`                                | `.ts`                                                            |
+| Types checked mainly at runtime      | Types checked during development/compilation                     |
+| No interfaces                        | Interfaces available                                             |
+| No generics                          | Generics available                                               |
+| No TypeScript decorators/type system | Decorators and richer type features                              |
+| Runs directly in Node.js/browser     | Usually transformed or executed through TypeScript-aware tooling |
+| Flexible                             | More structured                                                  |
+
+TypeScript does not replace JavaScript at runtime.
+
+The final runtime environment still executes JavaScript.
+
+---
+
+# Practical Example — API Data
+
+Imagine an API returns user information.
+
+Define the structure:
+
+```typescript
+interface User {
+    user_id: number;
+    user_name: string;
+    email: string;
+    is_active: boolean;
+}
+```
+
+Define the response:
+
+```typescript
+interface ApiResponse<T> {
+    success: boolean;
+    data: T;
+}
+```
+
+Use it:
+
+```typescript
+async function get_user(): Promise<ApiResponse<User>> {
+    const response = await fetch(
+        "https://example.com/api/user"
+    );
+
+    return response.json();
+}
+```
+
+Now TypeScript knows that:
+
+```text
+get_user()
+    ↓
+Promise
+    ↓
+ApiResponse<User>
+    ↓
+data
+    ↓
+User
+```
+
+So:
+
+```typescript
+const response = await get_user();
+
+console.log(response.data.user_name);
+console.log(response.data.email);
+```
+
+TypeScript can provide autocomplete and detect invalid property access.
+
+---
+
+# TypeScript Compilation
+
+Suppose:
+
+```typescript
+const user_name: string = "Dinesh";
+
+console.log(user_name);
+```
+
+Run:
+
+```powershell
+tsc app.ts
+```
+
+The compiler produces JavaScript similar to:
+
+```javascript
+const user_name = "Dinesh";
+
+console.log(user_name);
+```
+
+The type annotation:
+
+```typescript
+: string
+```
+
+does not exist in the generated JavaScript because TypeScript types are primarily development-time information.
+
+# TypeScript Basics
+
+## Introduction
+
+TypeScript is a programming language built on top of JavaScript.
+
+It adds a **static type system** to JavaScript.
+
+JavaScript:
+
+```javascript
+let user_name = "Dinesh";
+
+user_name = 25;
+```
+
+JavaScript allows this because variables are dynamically typed.
+
+TypeScript can detect the problem:
+
+```typescript
+let user_name: string = "Dinesh";
+
+user_name = 25;
+```
+
+The TypeScript compiler reports an error because `user_name` was declared as a string.
+
+TypeScript code is normally compiled into JavaScript before it runs in the browser or Node.js.
+
+```text
+TypeScript
+    ↓
+TypeScript Compiler
+    ↓
+JavaScript
+    ↓
+Browser / Node.js
+```
+
+---
+
+# Why TypeScript Is Used
+
+TypeScript helps developers catch many errors before the application runs.
+
+For example:
+
+```javascript
+function calculate_total(price, quantity) {
+    return price * quantity;
+}
+
+calculate_total("500", "2");
+```
+
+JavaScript may allow this and produce an unexpected result.
+
+TypeScript lets you define the expected types:
+
+```typescript
+function calculate_total(
+    price: number,
+    quantity: number
+): number {
+    return price * quantity;
+}
+```
+
+Now:
+
+```typescript
+calculate_total("500", "2");
+```
+
+produces a type error during development.
+
+TypeScript is especially useful in:
+
+* Large JavaScript applications
+* Backend applications
+* Frontend frameworks
+* Team projects
+* APIs
+* Complex data models
+* Libraries and SDKs
+
+---
+
+# Installing TypeScript
+
+TypeScript can be installed globally:
+
+```powershell
+npm install -g typescript
+```
+
+Check the version:
+
+```powershell
+tsc --version
+```
+
+You can also install it as a project development dependency:
+
+```powershell
+npm install --save-dev typescript
+```
+
+For most projects, keeping TypeScript in the project dependencies is preferable because the project controls the compiler version.
+
+---
+
+# TypeScript File
+
+JavaScript files normally use:
+
+```text
+.js
+```
+
+TypeScript files use:
+
+```text
+.ts
+```
+
+Example:
+
+```text
+app.ts
+```
+
+A simple TypeScript program:
+
+```typescript
+const user_name: string = "Dinesh";
+
+console.log(user_name);
+```
+
+Compile it:
+
+```powershell
+tsc app.ts
+```
+
+TypeScript produces:
+
+```text
+app.js
+```
+
+The JavaScript file can then run in Node.js or the browser.
+
+---
+
+# Basic Types
+
+TypeScript provides several commonly used types.
+
+```typescript
+let user_name: string = "Dinesh";
+
+let user_age: number = 22;
+
+let is_logged_in: boolean = true;
+
+let user_id: bigint = 100n;
+```
+
+Common types include:
+
+```text
+string
+number
+boolean
+bigint
+symbol
+object
+null
+undefined
+unknown
+any
+never
+void
+```
+
+---
+
+# String
+
+```typescript
+let user_name: string = "Dinesh";
+```
+
+Only string values should be assigned:
+
+```typescript
+user_name = "Gowtham";
+```
+
+This is invalid:
+
+```typescript
+user_name = 100;
+```
+
+---
+
+# Number
+
+JavaScript has one main numeric type, `number`.
+
+```typescript
+let product_price: number = 1500;
+
+let quantity: number = 3;
+
+let total_price: number = product_price * quantity;
+```
+
+Both integers and floating-point values use `number`.
+
+```typescript
+let count: number = 10;
+
+let rating: number = 4.5;
+```
+
+---
+
+# Boolean
+
+```typescript
+let is_active: boolean = true;
+
+let is_verified: boolean = false;
+```
+
+A boolean can contain only:
+
+```text
+true
+false
+```
+
+---
+
+# Arrays
+
+You can define an array using:
+
+```typescript
+let user_names: string[] = [
+    "Dinesh",
+    "Gowtham",
+    "Arul"
+];
+```
+
+Another syntax is:
+
+```typescript
+let user_names: Array<string> = [
+    "Dinesh",
+    "Gowtham",
+    "Arul"
+];
+```
+
+Both represent an array of strings.
+
+For numbers:
+
+```typescript
+let scores: number[] = [
+    85,
+    90,
+    76
+];
+```
+
+This is invalid:
+
+```typescript
+scores.push("90");
+```
+
+because the array expects numbers.
+
+---
+
+# Objects
+
+You can define the expected structure of an object.
+
+```typescript
+let user: {
+    user_id: number;
+    user_name: string;
+    email: string;
+} = {
+    user_id: 1,
+    user_name: "Dinesh",
+    email: "dinesh@example.com"
+};
+```
+
+The object must follow the declared structure.
+
+---
+
+# Optional Properties
+
+A property can be optional using `?`.
+
+```typescript
+let user: {
+    user_id: number;
+    user_name: string;
+    phone?: string;
+} = {
+    user_id: 1,
+    user_name: "Dinesh"
+};
+```
+
+`phone` is allowed to be missing.
+
+It can also be present:
+
+```typescript
+let user: {
+    user_id: number;
+    user_name: string;
+    phone?: string;
+} = {
+    user_id: 1,
+    user_name: "Dinesh",
+    phone: "9876543210"
+};
+```
+
+---
+
+# Function Types
+
+TypeScript allows you to specify parameter types and return types.
+
+```typescript
+function calculate_total(
+    price: number,
+    quantity: number
+): number {
+    return price * quantity;
+}
+```
+
+The parameters are:
+
+```text
+price → number
+quantity → number
+```
+
+The return value is:
+
+```text
+number
+```
+
+Calling:
+
+```typescript
+const total_price = calculate_total(500, 3);
+```
+
+is valid.
+
+Calling:
+
+```typescript
+calculate_total("500", 3);
+```
+
+produces a type error.
+
+---
+
+# Void
+
+A function that does not return a value can use `void`.
+
+```typescript
+function print_message(message: string): void {
+    console.log(message);
+}
+```
+
+The function performs an operation but does not return a value.
+
+---
+
+# Type Inference
+
+TypeScript does not always require you to explicitly write the type.
+
+For example:
+
+```typescript
+let user_name = "Dinesh";
+```
+
+TypeScript infers:
+
+```text
+user_name → string
+```
+
+Similarly:
+
+```typescript
+let user_age = 22;
+```
+
+TypeScript infers:
+
+```text
+user_age → number
+```
+
+This is called **type inference**.
+
+You can therefore write:
+
+```typescript
+const product_price = 1500;
+```
+
+instead of:
+
+```typescript
+const product_price: number = 1500;
+```
+
+when the type is obvious.
+
+---
+
+# Inference from Function Return Values
+
+TypeScript can also infer function return types.
+
+```typescript
+function calculate_total(
+    price: number,
+    quantity: number
+) {
+    return price * quantity;
+}
+```
+
+TypeScript understands that the function returns a `number`.
+
+You can explicitly write it:
+
+```typescript
+function calculate_total(
+    price: number,
+    quantity: number
+): number {
+    return price * quantity;
+}
+```
+
+Both are valid.
+
+Explicit return types can make larger codebases easier to understand and can catch unintended changes.
+
+---
+
+# Union Types
+
+A variable can allow more than one type using `|`.
+
+```typescript
+let user_id: number | string;
+```
+
+Now both are valid:
+
+```typescript
+user_id = 1001;
+
+user_id = "USR1001";
+```
+
+But this is invalid:
+
+```typescript
+user_id = true;
+```
+
+Union types are useful when an API can return different valid representations.
+
+---
+
+# Literal Types
+
+You can restrict a value to specific strings.
+
+```typescript
+let order_status:
+    "pending" |
+    "confirmed" |
+    "cancelled";
+```
+
+Valid:
+
+```typescript
+order_status = "pending";
+
+order_status = "confirmed";
+```
+
+Invalid:
+
+```typescript
+order_status = "completed";
+```
+
+This is useful for fixed application states.
+
+---
+
+# Type Aliases
+
+A type alias allows you to give a name to a type definition.
+
+```typescript
+type User = {
+    user_id: number;
+    user_name: string;
+    email: string;
+};
+```
+
+Now:
+
+```typescript
+const user: User = {
+    user_id: 1,
+    user_name: "Dinesh",
+    email: "dinesh@example.com"
+};
+```
+
+You can reuse the type:
+
+```typescript
+const admin: User = {
+    user_id: 2,
+    user_name: "Gowtham",
+    email: "gowtham@example.com"
+};
+```
+
+This avoids repeatedly writing the same object structure.
+
+---
+
+# Interfaces
+
+An interface describes the structure that an object should follow.
+
+```typescript
+interface User {
+    user_id: number;
+    user_name: string;
+    email: string;
+}
+```
+
+Use it:
+
+```typescript
+const user: User = {
+    user_id: 1,
+    user_name: "Dinesh",
+    email: "dinesh@example.com"
+};
+```
+
+Interfaces are commonly used for:
+
+* Object structures
+* API responses
+* Class contracts
+* Function parameters
+* Application data models
+
+---
+
+# Interface with Optional Properties
+
+```typescript
+interface User {
+    user_id: number;
+    user_name: string;
+    email: string;
+    phone?: string;
+}
+```
+
+Now:
+
+```typescript
+const user: User = {
+    user_id: 1,
+    user_name: "Dinesh",
+    email: "dinesh@example.com"
+};
+```
+
+is valid.
+
+---
+
+# Interface with Readonly
+
+A property can be marked `readonly`.
+
+```typescript
+interface User {
+    readonly user_id: number;
+    user_name: string;
+}
+```
+
+You can read it:
+
+```typescript
+console.log(user.user_id);
+```
+
+But you cannot normally assign a new value to it:
+
+```typescript
+user.user_id = 10;
+```
+
+TypeScript reports an error.
+
+`readonly` protects the property at the type-checking level. It does not make the underlying JavaScript object deeply immutable at runtime.
+
+---
+
+# Extending Interfaces
+
+An interface can extend another interface.
+
+```typescript
+interface User {
+    user_id: number;
+    user_name: string;
+}
+
+interface Admin extends User {
+    permissions: string[];
+}
+```
+
+Now `Admin` contains:
+
+```text
+user_id
+user_name
+permissions
+```
+
+Example:
+
+```typescript
+const admin: Admin = {
+    user_id: 1,
+    user_name: "Dinesh",
+    permissions: [
+        "read_users",
+        "delete_users"
+    ]
+};
+```
+
+---
+
+# Type Alias vs Interface
+
+Both can describe object structures.
+
+### Type alias
+
+```typescript
+type User = {
+    user_id: number;
+    user_name: string;
+};
+```
+
+### Interface
+
+```typescript
+interface User {
+    user_id: number;
+    user_name: string;
+}
+```
+
+Both can be useful.
+
+Interfaces are particularly common for object-oriented contracts and extensible object structures.
+
+Type aliases are especially flexible for unions, intersections, tuples, and other type expressions.
+
+---
+
+# `any`
+
+The `any` type disables most type checking for that value.
+
+```typescript
+let user_data: any = "Dinesh";
+
+user_data = 100;
+
+user_data = true;
+```
+
+TypeScript allows all of these.
+
+`any` can be useful when migrating an existing JavaScript project, but excessive use removes many of the benefits of TypeScript.
+
+---
+
+# `unknown`
+
+`unknown` is safer than `any`.
+
+```typescript
+let user_data: unknown;
+
+user_data = "Dinesh";
+user_data = 100;
+user_data = true;
+```
+
+Before using an `unknown` value as a specific type, you must check it.
+
+```typescript
+if (typeof user_data === "string") {
+    console.log(user_data.toUpperCase());
+}
+```
+
+This is particularly useful when handling data from external sources such as APIs.
+
+---
+
+# Type Assertions
+
+Sometimes you know more about a value than TypeScript can determine.
+
+You can use a type assertion.
+
+```typescript
+const user_data: unknown = "Dinesh";
+
+const user_name = user_data as string;
+
+console.log(user_name.toUpperCase());
+```
+
+A type assertion tells TypeScript:
+
+> Treat this value as this type.
+
+It does not convert the actual value.
+
+For example:
+
+```typescript
+const value = "100" as unknown as number;
+```
+
+does not turn the string `"100"` into the number `100`.
+
+Runtime conversion would require:
+
+```typescript
+const value = Number("100");
+```
+
+---
+
+# Generics
+
+Generics allow code to work with different types while preserving type information.
+
+Without generics:
+
+```typescript
+function get_first_item(items: any[]) {
+    return items[0];
+}
+```
+
+The return type loses useful information.
+
+With a generic:
+
+```typescript
+function get_first_item<T>(items: T[]): T {
+    return items[0];
+}
+```
+
+Now:
+
+```typescript
+const first_name = get_first_item([
+    "Dinesh",
+    "Gowtham",
+    "Arul"
+]);
+```
+
+TypeScript knows:
+
+```text
+first_name → string
+```
+
+For numbers:
+
+```typescript
+const first_score = get_first_item([
+    90,
+    85,
+    76
+]);
+```
+
+TypeScript knows:
+
+```text
+first_score → number
+```
+
+The `T` represents a type that is determined when the function is used.
+
+---
+
+# Generic API Response
+
+Generics are especially useful for API response structures.
+
+```typescript
+interface ApiResponse<T> {
+    success: boolean;
+    data: T;
+    message: string;
+}
+```
+
+Define a user:
+
+```typescript
+interface User {
+    user_id: number;
+    user_name: string;
+}
+```
+
+Then:
+
+```typescript
+const response: ApiResponse<User> = {
+    success: true,
+    data: {
+        user_id: 1,
+        user_name: "Dinesh"
+    },
+    message: "User fetched successfully"
+};
+```
+
+For multiple users:
+
+```typescript
+const response: ApiResponse<User[]> = {
+    success: true,
+    data: [
+        {
+            user_id: 1,
+            user_name: "Dinesh"
+        },
+        {
+            user_id: 2,
+            user_name: "Gowtham"
+        }
+    ],
+    message: "Users fetched successfully"
+};
+```
+
+The same `ApiResponse` type can work with many different data types.
+
+---
+
+# Generic Constraints
+
+Sometimes you want a generic type to have certain properties.
+
+```typescript
+function get_user_name<T extends { user_name: string }>(
+    user: T
+): string {
+    return user.user_name;
+}
+```
+
+Any type passed to this function must contain:
+
+```text
+user_name: string
+```
+
+For example:
+
+```typescript
+const user = {
+    user_id: 1,
+    user_name: "Dinesh"
+};
+
+console.log(get_user_name(user));
+```
+
+---
+
+# Generic Interfaces
+
+Generics can also be used with interfaces.
+
+```typescript
+interface ApiResponse<T> {
+    success: boolean;
+    data: T;
+}
+```
+
+Example:
+
+```typescript
+interface Product {
+    product_id: number;
+    product_name: string;
+}
+
+const product_response: ApiResponse<Product> = {
+    success: true,
+    data: {
+        product_id: 101,
+        product_name: "Laptop"
+    }
+};
+```
+
+---
+
+# Tuples
+
+A tuple represents an array with a specific number and order of elements.
+
+```typescript
+let user_data: [number, string] = [
+    1,
+    "Dinesh"
+];
+```
+
+The first value must be a number.
+
+The second value must be a string.
+
+This is invalid:
+
+```typescript
+let user_data: [number, string] = [
+    "Dinesh",
+    1
+];
+```
+
+Tuples are useful when the position of each value has a defined meaning.
+
+---
+
+# Enums
+
+TypeScript supports enums for named sets of values.
+
+```typescript
+enum UserRole {
+    ADMIN,
+    USER,
+    MODERATOR
+}
+```
+
+Use:
+
+```typescript
+const role = UserRole.ADMIN;
+```
+
+String enums can make the values clearer:
+
+```typescript
+enum OrderStatus {
+    PENDING = "pending",
+    CONFIRMED = "confirmed",
+    CANCELLED = "cancelled"
+}
+```
+
+Use:
+
+```typescript
+const order_status = OrderStatus.CONFIRMED;
+```
+
+For many modern TypeScript codebases, string literal unions are also commonly used:
+
+```typescript
+type OrderStatus =
+    | "pending"
+    | "confirmed"
+    | "cancelled";
+```
+
+---
+
+# Classes with TypeScript
+
+TypeScript adds type information to JavaScript classes.
+
+```typescript
+class User {
+    user_id: number;
+    user_name: string;
+
+    constructor(
+        user_id: number,
+        user_name: string
+    ) {
+        this.user_id = user_id;
+        this.user_name = user_name;
+    }
+
+    get_user_name(): string {
+        return this.user_name;
+    }
+}
+```
+
+Create an object:
+
+```typescript
+const user = new User(
+    1,
+    "Dinesh"
+);
+
+console.log(user.get_user_name());
+```
+
+---
+
+# Access Modifiers
+
+TypeScript provides access modifiers such as:
+
+```text
+public
+private
+protected
+```
+
+Example:
+
+```typescript
+class BankAccount {
+    private balance: number;
+
+    constructor(balance: number) {
+        this.balance = balance;
+    }
+
+    get_balance(): number {
+        return this.balance;
+    }
+}
+```
+
+You can call:
+
+```typescript
+const account = new BankAccount(5000);
+
+console.log(account.get_balance());
+```
+
+But direct access is restricted:
+
+```typescript
+account.balance;
+```
+
+TypeScript reports an error.
+
+These modifiers primarily provide compile-time access checking.
+
+---
+
+# Decorators
+
+Decorators are a feature for attaching behavior or metadata to classes and class members.
+
+A decorator can be represented conceptually as:
+
+```typescript
+function log_class(target: Function) {
+    console.log("Class created:", target.name);
+}
+```
+
+Then:
+
+```typescript
+@log_class
+class User {
+}
+```
+
+The decorator is associated with the class.
+
+Decorators are commonly seen in frameworks and libraries that use metadata-driven class patterns.
+
+Examples include frameworks such as NestJS and Angular.
+
+Decorator support and syntax depend on the TypeScript configuration and the decorator model being used, so it is important to follow the configuration required by the framework or project.
+
+Decorators are an advanced TypeScript topic. Understanding the basic idea is more important initially than memorizing decorator implementation details.
+
+---
+
+# TypeScript Configuration
+
+A TypeScript project commonly has:
+
+```text
+tsconfig.json
+```
+
+This file controls how TypeScript compiles the project.
+
+Example:
+
+```json
+{
+    "compilerOptions": {
+        "target": "ES2022",
+        "module": "NodeNext",
+        "moduleResolution": "NodeNext",
+        "strict": true,
+        "outDir": "./dist"
+    },
+    "include": [
+        "src/**/*.ts"
+    ]
+}
+```
+
+Important options include:
+
+| Option             | Purpose                        |
+| ------------------ | ------------------------------ |
+| `target`           | JavaScript version to generate |
+| `module`           | Module system used in output   |
+| `strict`           | Enables stronger type checking |
+| `outDir`           | Output directory               |
+| `rootDir`          | Source directory               |
+| `moduleResolution` | How modules are resolved       |
+
+---
+
+# Strict Mode
+
+TypeScript can perform stronger checking using:
+
+```json
+{
+    "compilerOptions": {
+        "strict": true
+    }
+}
+```
+
+Strict mode catches more potential errors.
+
+For example, it can identify situations where a value may be `undefined` when your code expects a definite value.
+
+This is one of the most useful settings for serious TypeScript projects.
+
+---
+
+# TypeScript with Node.js
+
+A Node.js TypeScript project can look like:
+
+```text
+backend/
+│
+├── src/
+│   ├── server.ts
+│   ├── routes/
+│   ├── controllers/
+│   ├── services/
+│   └── types/
+│
+├── dist/
+├── package.json
+├── tsconfig.json
+└── node_modules/
+```
+
+Development flow:
+
+```text
+TypeScript source
+       ↓
+Type checking
+       ↓
+Compilation
+       ↓
+JavaScript
+       ↓
+Node.js
+```
+
+Modern Node.js tooling can also execute TypeScript directly in development in some setups, but compilation and type checking remain important concepts.
+
+---
+
+# JavaScript vs TypeScript
+
+| JavaScript                           | TypeScript                                                       |
+| ------------------------------------ | ---------------------------------------------------------------- |
+| Dynamically typed                    | Statically type-checked                                          |
+| `.js`                                | `.ts`                                                            |
+| Types checked mainly at runtime      | Types checked during development/compilation                     |
+| No interfaces                        | Interfaces available                                             |
+| No generics                          | Generics available                                               |
+| No TypeScript decorators/type system | Decorators and richer type features                              |
+| Runs directly in Node.js/browser     | Usually transformed or executed through TypeScript-aware tooling |
+| Flexible                             | More structured                                                  |
+
+TypeScript does not replace JavaScript at runtime.
+
+The final runtime environment still executes JavaScript.
+
+---
+
+# Practical Example — API Data
+
+Imagine an API returns user information.
+
+Define the structure:
+
+```typescript
+interface User {
+    user_id: number;
+    user_name: string;
+    email: string;
+    is_active: boolean;
+}
+```
+
+Define the response:
+
+```typescript
+interface ApiResponse<T> {
+    success: boolean;
+    data: T;
+}
+```
+
+Use it:
+
+```typescript
+async function get_user(): Promise<ApiResponse<User>> {
+    const response = await fetch(
+        "https://example.com/api/user"
+    );
+
+    return response.json();
+}
+```
+
+Now TypeScript knows that:
+
+```text
+get_user()
+    ↓
+Promise
+    ↓
+ApiResponse<User>
+    ↓
+data
+    ↓
+User
+```
+
+So:
+
+```typescript
+const response = await get_user();
+
+console.log(response.data.user_name);
+console.log(response.data.email);
+```
+
+TypeScript can provide autocomplete and detect invalid property access.
+
+---
+
+# TypeScript Compilation
+
+Suppose:
+
+```typescript
+const user_name: string = "Dinesh";
+
+console.log(user_name);
+```
+
+Run:
+
+```powershell
+tsc app.ts
+```
+
+The compiler produces JavaScript similar to:
+
+```javascript
+const user_name = "Dinesh";
+
+console.log(user_name);
+```
+
+The type annotation:
+
+```typescript
+: string
+```
+
+does not exist in the generated JavaScript because TypeScript types are primarily development-time information.
 
