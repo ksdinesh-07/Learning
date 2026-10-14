@@ -4,51 +4,96 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Real-Time Chat</title>
-    <link rel="stylesheet" href="style.css">
-    <script src="/socket.io/socket.io.js"></script>
-    <script src="client.js" defer></script>
+    <meta name="theme-color" content="#171923">
+    <title>Private Chat</title>
+    <link rel="manifest" href="/manifest.json">
+    <link rel="stylesheet" href="/style.css">
+    <script src="/socket.io/socket.io.js" defer></script>
+    <script src="/client.js" defer></script>
 </head>
 <body>
     <main class="app">
-        <section id="join-screen" class="panel">
-            <h1>Real-Time Chat</h1>
-            <p>Join a room to start chatting.</p>
+        <header class="app-header">
+            <div>
+                <h1>Private Chat</h1>
+                <p id="logged-in-user">Not logged in</p>
 
-            <form id="join-form">
+            </div>
+            <span id="network-status" class="status-pill">Checking...</span>
+        </header>
+
+        <section id="login-screen" class="panel">
+            <h2>Join the chat</h2>
+            <p>Enter a username to start chatting.</p>
+
+            <form id="login-form">
                 <label for="username">Username</label>
-                <input id="username" placeholder="e.g. Alice"
-                    maxlength="30" required>
-
-                <label for="room-id">Session ID</label>
-                <input id="room-id" placeholder="e.g. DEMO123"
-                    maxlength="30" required>
-
-                <button type="submit">Join Chat</button>
+                <input
+                    id="username"
+                    maxlength="30"
+                    autocomplete="username"
+                    placeholder="e.g. dinesh"
+                    required
+                >
+                <button type="submit">Connect</button>
             </form>
         </section>
 
-        <section id="chat-screen" class="panel hidden">
-            <header class="chat-header">
-                <div>
-                    <h2>Chat Room</h2>
-                    <p>Session: <strong id="current-room"></strong></p>
-                    <p id="connection-status">Connecting...</p>
+        <section id="chat-screen" class="chat-layout hidden">
+            <aside class="panel users-panel">
+                <div class="section-heading">
+                    <h2>People</h2>
+                    <span id="user-count">0</span>
                 </div>
-                <button id="leave-button" class="secondary">
-                    Leave
+
+                <p class="muted">Select someone to chat privately.</p>
+
+                <div id="users-list"></div>
+
+                <button id="logout-button" class="secondary" type="button">
+                    Change user
                 </button>
-            </header>
+            </aside>
 
-            <div id="messages" aria-live="polite"></div>
+            <section class="panel conversation">
+                <header class="conversation-header">
+                    <div>
+                        <h2 id="recipient-name">Select a person</h2>
+                        <p id="recipient-status" class="muted">
+                            No conversation selected
+                        </p>
+                    </div>
 
-            <form id="message-form">
-                <input id="message-input"
-                    placeholder="Type your message..."
-                    maxlength="2000" autocomplete="off" required>
-                <button type="submit">Send</button>
-            </form>
+                    <span id="socket-status" class="status-pill">
+                        Connecting
+                    </span>
+                </header>
+
+                <div id="messages" aria-live="polite">
+                    <p class="empty-state">
+                        Choose a person to start a conversation.
+                    </p>
+                </div>
+
+                <form id="message-form">
+                    <input
+                        id="message-input"
+                        maxlength="2000"
+                        placeholder="Write a private message..."
+                        autocomplete="off"
+                        required
+                    >
+                    <button type="submit">Send</button>
+                </form>
+            </section>
         </section>
+
+        <footer>
+            <p>
+                Demo only: usernames are not authenticated identities.
+                Messages are stored on the server.
+            </p>
+        </footer>
     </main>
 </body>
 </html>

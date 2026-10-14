@@ -1,0 +1,9 @@
+{
+  "name": "Offline Private Chat",
+  "short_name": "Private Chat",
+  "description": "A real-time private messaging application with offline support.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#11131b",
+  "theme_color": "#171923"
+}
