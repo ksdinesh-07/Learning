@@ -56,3 +56,20 @@ function applySettings() {
 }
 
 applySettings();
+
+// function createSettings() {
+//     return {
+//         theme: "light",
+//         language: "English"
+//     };
+// }
+
+// const settingsA = createSettings();
+// const settingsB = createSettings();
+
+// settingsA.theme = "dark";
+
+// console.log(settingsA.theme);
+// console.log(settingsB.theme);
+// console.log(settingsA === settingsB);
+
