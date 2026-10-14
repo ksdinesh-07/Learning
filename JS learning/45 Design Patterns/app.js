@@ -116,3 +116,147 @@ function run_poc() {
 }
 
 document.getElementById("run_button").addEventListener("click", run_poc);
+
+
+// # Module Pattern
+
+// ## What is Module Pattern?
+
+// The **Module pattern** organizes related variables and functions into a single unit while controlling what is publicly accessible.
+
+// It helps create:
+
+// * private data
+// * public functions
+// * organized code
+// * encapsulation
+
+// ---
+
+// ## Example
+
+// ```javascript
+// const bank_account = (() => {
+//     let balance = 0;
+
+//     function deposit(amount) {
+//         balance += amount;
+//     }
+
+//     function withdraw(amount) {
+//         if (amount > balance) {
+//             throw new Error("Insufficient balance");
+//         }
+
+//         balance -= amount;
+//     }
+
+//     function get_balance() {
+//         return balance;
+//     }
+
+//     return {
+//         deposit,
+//         withdraw,
+//         get_balance
+//     };
+// })();
+// ```
+
+// Use it:
+
+// ```javascript
+// bank_account.deposit(5000);
+
+// console.log(bank_account.get_balance());
+
+// bank_account.withdraw(1000);
+
+// console.log(bank_account.get_balance());
+// ```
+
+// Output:
+
+// ```text
+// 5000
+// 4000
+// ```
+
+// But this does not work:
+
+// ```javascript
+// console.log(bank_account.balance);
+// ```
+
+// because `balance` is private.
+
+// ---
+
+// ## Module Structure
+
+// ```text
+// Module
+//  ├── Private data
+//  ├── Private functions
+//  │
+//  └── Public API
+//        ├── deposit()
+//        ├── withdraw()
+//        └── get_balance()
+// ```
+
+// The outside code only interacts with the public API.
+
+// ---
+
+// ## Modern JavaScript Modules
+
+// Modern ES modules provide a cleaner approach.
+
+// ### bank_account.js
+
+// ```javascript
+// let balance = 0;
+
+// function deposit(amount) {
+//     balance += amount;
+// }
+
+// function withdraw(amount) {
+//     if (amount > balance) {
+//         throw new Error("Insufficient balance");
+//     }
+
+//     balance -= amount;
+// }
+
+// function get_balance() {
+//     return balance;
+// }
+
+// export {
+//     deposit,
+//     withdraw,
+//     get_balance
+// };
+// ```
+
+// ### app.js
+
+// ```javascript
+// import {
+//     deposit,
+//     withdraw,
+//     get_balance
+// } from "./bank_account.js";
+
+// deposit(5000);
+
+// withdraw(1000);
+
+// console.log(get_balance());
+// ```
+
+// The `balance` variable remains inside the module.
+
+// ---
