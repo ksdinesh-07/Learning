@@ -20175,175 +20175,7 @@ JSON response
 
 MVC becomes particularly useful as applications become larger.
 
----
 
-# Strategy Pattern
-
-## What is Strategy?
-
-The **Strategy pattern** allows you to define multiple algorithms or behaviors and choose one at runtime.
-
-Instead of writing:
-
-```javascript
-if (...)
-else if (...)
-else if (...)
-```
-
-for every possible behavior, you can create separate strategies.
-
----
-
-## Real-world Example
-
-Consider payment processing.
-
-There may be:
-
-```text
-UPI
-Card
-Net Banking
-```
-
-Each payment method has different processing logic.
-
-Create separate strategies:
-
-```javascript
-function pay_with_upi(amount) {
-    return `Paid ₹${amount} using UPI`;
-}
-
-function pay_with_card(amount) {
-    return `Paid ₹${amount} using Card`;
-}
-
-function pay_with_net_banking(amount) {
-    return `Paid ₹${amount} using Net Banking`;
-}
-```
-
-Select a strategy:
-
-```javascript
-function process_payment(strategy, amount) {
-    return strategy(amount);
-}
-```
-
-Now:
-
-```javascript
-console.log(
-    process_payment(pay_with_upi, 1000)
-);
-
-console.log(
-    process_payment(pay_with_card, 2000)
-);
-```
-
-Output:
-
-```text
-Paid ₹1000 using UPI
-Paid ₹2000 using Card
-```
-
-The payment processor doesn't need to know the internal implementation of each payment method.
-
----
-
-## Strategy using Objects
-
-Another approach:
-
-```javascript
-const payment_strategies = {
-    upi: pay_with_upi,
-    card: pay_with_card,
-    net_banking: pay_with_net_banking
-};
-```
-
-Then:
-
-```javascript
-const payment_method = "upi";
-
-const result = payment_strategies[payment_method](1500);
-
-console.log(result);
-```
-
-This is useful when the strategy is selected dynamically.
-
----
-
-# Strategy vs Factory
-
-These patterns can look similar, but their purposes are different.
-
-| Pattern  | Main Purpose                 |
-| -------- | ---------------------------- |
-| Factory  | Creates an object            |
-| Strategy | Selects a behavior/algorithm |
-
-Example:
-
-```text
-Factory
-   ↓
-Which object should I create?
-
-Strategy
-   ↓
-Which behavior should I use?
-```
-
-For example:
-
-```javascript
-const payment_processor = create_payment_processor("upi");
-```
-
-Factory decides what object to create.
-
-Then:
-
-```javascript
-payment_processor.pay(1000);
-```
-
-The selected object determines how the payment works.
-
----
-
-# Singleton vs Module
-
-Both can provide shared state, but they are conceptually different.
-
-| Singleton                                   | Module                                 |
-| ------------------------------------------- | -------------------------------------- |
-| Focuses on one instance                     | Focuses on code organization           |
-| Usually implemented with class/object logic | Built naturally into ES modules        |
-| Controls object creation                    | Controls exports and visibility        |
-| Common for shared services                  | Common for organizing application code |
-
----
-
-# Observer vs Strategy
-
-| Observer                            | Strategy                           |
-| ----------------------------------- | ---------------------------------- |
-| Handles notifications/events        | Handles interchangeable behavior   |
-| One event can notify many observers | Usually one strategy is selected   |
-| Focuses on communication            | Focuses on algorithm selection     |
-| Useful for event-driven systems     | Useful for changing business logic |
-
----
 
 # How These Patterns Work Together
 
@@ -20430,87 +20262,6 @@ Modules keep these pieces separated into files.
 
 MVC can organize the overall application.
 
----
-
-# Choosing a Design Pattern
-
-The important thing is **not to use patterns just because they exist**.
-
-First identify the problem.
-
-If the problem is:
-
-```text
-"I need exactly one shared instance."
-```
-
-Consider:
-
-```text
-Singleton
-```
-
-If the problem is:
-
-```text
-"I need to create different types of objects."
-```
-
-Consider:
-
-```text
-Factory
-```
-
-If the problem is:
-
-```text
-"When something happens, multiple components need to know."
-```
-
-Consider:
-
-```text
-Observer
-```
-
-If the problem is:
-
-```text
-"I need to organize code and hide internal implementation."
-```
-
-Consider:
-
-```text
-Module
-```
-
-If the problem is:
-
-```text
-"My application has separate data, UI, and request/control logic."
-```
-
-Consider:
-
-```text
-MVC
-```
-
-If the problem is:
-
-```text
-"I have multiple algorithms/behaviors and need to choose one."
-```
-
-Consider:
-
-```text
-Strategy
-```
-
-The key idea is that **design patterns are tools for organizing software**, not rules that every application must follow.
 
 # JavaScript Code Organization
 
@@ -20876,22 +20627,6 @@ function render_user() {
 }
 ```
 
----
-
-# MVC vs MVVM
-
-| MVC                                   | MVVM                                           |
-| ------------------------------------- | ---------------------------------------------- |
-| Model + View + Controller             | Model + View + ViewModel                       |
-| Controller handles application flow   | ViewModel manages UI state                     |
-| Common in backend applications        | Common in UI-heavy applications                |
-| Controller receives requests/events   | ViewModel exposes UI-ready data                |
-| Express applications commonly use MVC | Vue-style architectures resemble MVVM concepts |
-
-The distinction is not always strict. Modern frameworks often combine ideas from several architectural patterns.
-
----
-
 # Folder Structure
 
 Folder structure determines how application files are grouped.
@@ -21090,44 +20825,6 @@ async function create_user(user_data) {
 }
 ```
 
-The service answers:
-
-> What should the application do?
-
----
-
-# Repository
-
-A repository handles data access.
-
-```javascript
-async function create(user_data) {
-    return database.query(
-        "INSERT INTO users (...) VALUES (...)",
-        user_data
-    );
-}
-```
-
-The repository answers:
-
-> How do I access the data?
-
-This creates a useful separation:
-
-```text
-Controller
-"What request did I receive?"
-
-Service
-"What should happen?"
-
-Repository
-"How do I access the data?"
-```
-
----
-
 # Configuration
 
 Configuration should be separated from application logic.
@@ -21254,24 +20951,6 @@ async function process_user(user_data) {
 }
 ```
 
----
-
-# Avoid Repetition
-
-This is called **DRY**:
-
-```text
-Don't Repeat Yourself
-```
-
-Bad:
-
-```javascript
-const student_name = user.first_name + " " + user.last_name;
-
-const teacher_name = teacher.first_name + " " + teacher.last_name;
-```
-
 If the same operation is repeated frequently, extract reusable logic:
 
 ```javascript
@@ -21287,9 +20966,7 @@ const student_name = get_full_name(student);
 const teacher_name = get_full_name(teacher);
 ```
 
-DRY does not mean forcing every similar-looking line into an abstraction. An abstraction should make the code clearer, not harder to understand.
 
----
 
 # Avoid Deep Nesting
 
@@ -21462,8 +21139,6 @@ Controller
     ↓
 Service
     ↓
-Repository
-    ↓
 Database
 ```
 
@@ -21559,128 +21234,6 @@ HTTP Response
 
 This is a combination of architectural ideas rather than a requirement to follow one exact pattern.
 
----
-
-# MVC vs MVVM vs Layered Architecture
-
-These concepts operate at somewhat different levels.
-
-| Concept                 | Main Purpose                                            |
-| ----------------------- | ------------------------------------------------------- |
-| MVC                     | Separates Model, View, Controller                       |
-| MVVM                    | Separates Model, View, ViewModel                        |
-| Layered architecture    | Separates application responsibilities into layers      |
-| Feature-based structure | Groups code by business feature                         |
-| Clean code              | Makes individual code easier to understand and maintain |
-
-They can also be combined.
-
-For example:
-
-```text
-Feature
-│
-├── Controller
-├── Service
-├── Repository
-└── Model
-```
-
-while the frontend might use:
-
-```text
-Feature
-│
-├── View
-├── ViewModel
-└── API
-```
-
----
-
-# Code Organization in a Real Application
-
-Imagine an online learning platform.
-
-A user opens:
-
-```text
-/users/123
-```
-
-The backend might work like this:
-
-```text
-Route
-  ↓
-user_controller.js
-  ↓
-user_service.js
-  ↓
-user_repository.js
-  ↓
-Database
-```
-
-The frontend receives the response:
-
-```json
-{
-    "user_id": 123,
-    "user_name": "Arun",
-    "courses": 5
-}
-```
-
-The frontend might organize the data like:
-
-```text
-View
-  ↕
-ViewModel
-  ↕
-API module
-  ↓
-Backend
-```
-
-This keeps the frontend and backend responsibilities separate.
-
----
-
-# Good Folder Structure Principles
-
-A good folder structure should answer three questions quickly:
-
-```text
-Where is the API logic?
-
-Where is the business logic?
-
-Where is the UI logic?
-```
-
-It should also make related code easy to find.
-
-A useful principle is:
-
-```text
-Small project
-    ↓
-Keep structure simple
-
-Growing project
-    ↓
-Introduce separation
-
-Large project
-    ↓
-Organize by features/layers
-```
-
-Don't create architecture just for the sake of architecture.
-
-The structure should solve an actual complexity problem.
 
 # JavaScript Data Structures and Algorithms
 

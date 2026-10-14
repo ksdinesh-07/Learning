@@ -260,3 +260,172 @@ document.getElementById("run_button").addEventListener("click", run_poc);
 // The `balance` variable remains inside the module.
 
 // ---
+
+
+// # Strategy Pattern
+
+// ## What is Strategy?
+
+// The **Strategy pattern** allows you to define multiple algorithms or behaviors and choose one at runtime.
+
+// Instead of writing:
+
+// ```javascript
+// if (...)
+// else if (...)
+// else if (...)
+// ```
+
+// for every possible behavior, you can create separate strategies.
+
+// ---
+
+// ## Real-world Example
+
+// Consider payment processing.
+
+// There may be:
+
+// ```text
+// UPI
+// Card
+// Net Banking
+// ```
+
+// Each payment method has different processing logic.
+
+// Create separate strategies:
+
+// ```javascript
+// function pay_with_upi(amount) {
+//     return `Paid ₹${amount} using UPI`;
+// }
+
+// function pay_with_card(amount) {
+//     return `Paid ₹${amount} using Card`;
+// }
+
+// function pay_with_net_banking(amount) {
+//     return `Paid ₹${amount} using Net Banking`;
+// }
+// ```
+
+// Select a strategy:
+
+// ```javascript
+// function process_payment(strategy, amount) {
+//     return strategy(amount);
+// }
+// ```
+
+// Now:
+
+// ```javascript
+// console.log(
+//     process_payment(pay_with_upi, 1000)
+// );
+
+// console.log(
+//     process_payment(pay_with_card, 2000)
+// );
+// ```
+
+// Output:
+
+// ```text
+// Paid ₹1000 using UPI
+// Paid ₹2000 using Card
+// ```
+
+// The payment processor doesn't need to know the internal implementation of each payment method.
+
+// ---
+
+// ## Strategy using Objects
+
+// Another approach:
+
+// ```javascript
+// const payment_strategies = {
+//     upi: pay_with_upi,
+//     card: pay_with_card,
+//     net_banking: pay_with_net_banking
+// };
+// ```
+
+// Then:
+
+// ```javascript
+// const payment_method = "upi";
+
+// const result = payment_strategies[payment_method](1500);
+
+// console.log(result);
+// ```
+
+// This is useful when the strategy is selected dynamically.
+
+// ---
+
+// # Strategy vs Factory
+
+// These patterns can look similar, but their purposes are different.
+
+// | Pattern  | Main Purpose                 |
+// | -------- | ---------------------------- |
+// | Factory  | Creates an object            |
+// | Strategy | Selects a behavior/algorithm |
+
+// Example:
+
+// ```text
+// Factory
+//    ↓
+// Which object should I create?
+
+// Strategy
+//    ↓
+// Which behavior should I use?
+// ```
+
+// For example:
+
+// ```javascript
+// const payment_processor = create_payment_processor("upi");
+// ```
+
+// Factory decides what object to create.
+
+// Then:
+
+// ```javascript
+// payment_processor.pay(1000);
+// ```
+
+// The selected object determines how the payment works.
+
+// ---
+
+// # Singleton vs Module
+
+// Both can provide shared state, but they are conceptually different.
+
+// | Singleton                                   | Module                                 |
+// | ------------------------------------------- | -------------------------------------- |
+// | Focuses on one instance                     | Focuses on code organization           |
+// | Usually implemented with class/object logic | Built naturally into ES modules        |
+// | Controls object creation                    | Controls exports and visibility        |
+// | Common for shared services                  | Common for organizing application code |
+
+// ---
+
+// # Observer vs Strategy
+
+// | Observer                            | Strategy                           |
+// | ----------------------------------- | ---------------------------------- |
+// | Handles notifications/events        | Handles interchangeable behavior   |
+// | One event can notify many observers | Usually one strategy is selected   |
+// | Focuses on communication            | Focuses on algorithm selection     |
+// | Useful for event-driven systems     | Useful for changing business logic |
+
+// ---

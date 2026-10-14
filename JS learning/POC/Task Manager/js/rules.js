@@ -187,6 +187,7 @@ export function setup_rules() {
 
     let editing_rule_id = null;
     let conditions = [];
+    let is_programmatically_opening = false;
 
     const filter_state = {
         status: status_filter?.value || "all",
@@ -392,6 +393,12 @@ export function setup_rules() {
             render_conditions();
         });
 
+        // Hide the remove button when there is only one condition
+        if (conditions.length <= 1) {
+            remove_btn.style.visibility = "hidden";
+            remove_btn.style.pointerEvents = "none";
+        }
+
         row.append(field_select, op_select, value_wrap, remove_btn);
         return row;
     }
@@ -426,14 +433,28 @@ export function setup_rules() {
     }
 
     section_input?.addEventListener("change", () => {
-        conditions = [];
+        // Skip the reset when the modal is being opened programmatically
+        if (is_programmatically_opening) return;
+
+        // If there are no conditions yet, add one default
+        if (conditions.length === 0) {
+            conditions.push({
+                id: create_id(),
+                field: "",
+                operator: "equals",
+                value: ""
+            });
+        }
+
+        // Re-render — this refreshes the field/operator/value options
+        // based on the new section's catalog
         render_conditions();
         rebuild_action_options();
         rebuild_action_values();
         update_add_condition_state();
         update_select_label(section_input);
     });
-
+    
     action_input?.addEventListener("change", () => {
         rebuild_action_values();
     });
@@ -638,31 +659,36 @@ export function setup_rules() {
     }
 
     function open_add_modal() {
+        // Suppress the section change listener while form.reset() runs
+        is_programmatically_opening = true;
+
         editing_rule_id = null;
         form.reset();
         clear_all_errors();
         conditions = [];
 
-        // Add one default empty condition row
-        conditions.push({
-            id: create_id(),
-            field: "",
-            operator: "equals",
-            value: ""
-        });
+        is_programmatically_opening = false;
 
         if (modal_title) modal_title.textContent = "Add rule";
         if (submit_btn) submit_btn.textContent = "Submit";
 
         rebuild_action_options();
         rebuild_action_values();
-        render_conditions();
         update_add_condition_state();
 
-        // Refresh floating labels so stale has-value classes are removed
+        // Refresh floating labels
         update_select_label(section_input);
         update_select_label(action_input);
         update_select_label(action_value_input);
+
+        // Add one default empty condition row AFTER all the setup
+        conditions.push({
+            id: create_id(),
+            field: "",
+            operator: "equals",
+            value: ""
+        });
+        render_conditions();
 
         modal.style.display = "flex";
         modal.setAttribute("aria-hidden", "false");
@@ -670,12 +696,16 @@ export function setup_rules() {
     }
 
     function open_edit_modal(rule) {
+        is_programmatically_opening = true;
+
         editing_rule_id = rule.rule_id;
         clear_all_errors();
 
         title_input.value = rule.rule_title || "";
         description_input.value = rule.rule_description || "";
         section_input.value = section_value(rule.rule_section);
+
+        is_programmatically_opening = false;
 
         rebuild_action_options();
         action_input.value = rule.rule_action || "";
@@ -685,6 +715,16 @@ export function setup_rules() {
         conditions = Array.isArray(rule.rule_conditions)
             ? rule.rule_conditions.map(c => ({ ...c, id: c.id || create_id() }))
             : [];
+
+        // If a rule has no conditions, add a default one
+        if (conditions.length === 0) {
+            conditions.push({
+                id: create_id(),
+                field: "",
+                operator: "equals",
+                value: ""
+            });
+        }
 
         if (modal_title) modal_title.textContent = "Edit rule";
         if (submit_btn) submit_btn.textContent = "Save";
