@@ -1624,3 +1624,643 @@ However, it is important to understand that:
 
 Use it when the application's data-update pattern genuinely benefits from shallow tracking, not simply because the word "shallow" sounds faster.
 
+# Built-in Components & Templates in Vue.js
+
+## Introduction
+
+Vue.js provides several built-in components that help us manage how components are displayed, how their state is preserved, where their content is rendered in the DOM, and how asynchronous components handle loading.
+
+Unlike normal components that we create ourselves, built-in components are provided by Vue. We can use them directly in our templates for specific purposes.
+
+The four important built-in components are:
+
+- **Dynamic Components (`<component>`)** — Switch between components dynamically.
+- **KeepAlive (`<KeepAlive>`)** — Preserve component instances when switching between components.
+- **Teleport (`<Teleport>`)** — Render template content in a different location in the DOM.
+- **Suspense (`<Suspense>`)** — Coordinate asynchronous component dependencies and display fallback content while they resolve.
+
+These components solve different problems, but they can also work together in the same application.
+
+---
+
+# Dynamic Components
+
+## What is a Dynamic Component?
+
+A dynamic component allows us to display different components in the same location based on a value that changes at runtime.
+
+Normally, we write a component directly in a template:
+
+```vue
+<template>
+  <EmployeeList />
+</template>
+```
+
+Here, Vue always renders the `EmployeeList` component at that location.
+
+However, in a real application, we might want to display an employee list, an employee form, or an employee profile in the same area.
+
+Instead of writing separate locations for every component, we can use Vue's built-in `<component>` element with the `:is` attribute.
+
+```vue
+<component :is="active_component" />
+```
+
+The `active_component` value determines which component Vue renders.
+
+## How Does It Work?
+
+The `:is` attribute accepts a component definition or, in common cases, a registered component name.
+
+When the value changes, Vue updates the rendered component to match the new value.
+
+For example:
+
+- If `active_component` refers to `EmployeeList`, Vue renders the employee list.
+- If it changes to `EmployeeForm`, Vue renders the employee form.
+- If it changes to `EmployeeProfile`, Vue renders the employee profile.
+
+The components occupy the same location in the template, but only the currently selected component is rendered there.
+
+## Example: Switching Between Employee Views
+
+**App.vue**
+
+```vue
+<script setup lang="ts">
+import { ref } from 'vue'
+import EmployeeList from './components/EmployeeList.vue'
+import EmployeeForm from './components/EmployeeForm.vue'
+import EmployeeProfile from './components/EmployeeProfile.vue'
+
+const active_component = ref(EmployeeList)
+
+const components = {
+  list: EmployeeList,
+  form: EmployeeForm,
+  profile: EmployeeProfile
+}
+</script>
+
+<template>
+  <div>
+    <button @click="active_component = components.list">
+      Employee List
+    </button>
+
+    <button @click="active_component = components.form">
+      Add Employee
+    </button>
+
+    <button @click="active_component = components.profile">
+      Employee Profile
+    </button>
+
+    <component :is="active_component" />
+  </div>
+</template>
+```
+
+This example assumes that the three imported component files exist.
+
+### Explanation
+
+- `ref(EmployeeList)` stores the currently selected component reactively.
+- The `components` object provides convenient references to the available components.
+- Each button changes `active_component`.
+- `<component :is="active_component" />` renders the selected component.
+- When the selection changes, Vue replaces the current component with the newly selected one.
+
+Because the components are different, switching between them normally destroys the previous instance and creates a new instance of the selected component. Its local state is not automatically preserved.
+
+## Real-Time Use Cases
+
+**Dashboard:** Switch between analytics, reports, settings, and notifications without navigating to separate routes.
+
+**Employee management:** Switch between the employee table, create form, and profile panel.
+
+**Tabbed interface:** Display a different component when the user selects a tab.
+
+**Payment interface:** Switch between card payment, UPI payment, and net banking forms.
+
+## Important Point
+
+Dynamic components determine *which component is displayed*. They do not automatically preserve the state of the component being replaced.
+
+Use `<KeepAlive>` when you also need to preserve component state.
+
+---
+
+# KeepAlive
+
+## What is KeepAlive?
+
+`<KeepAlive>` is a built-in Vue component that caches inactive component instances instead of destroying them when switching between components.
+
+To understand why this is useful, imagine a user filling out a long registration form. They switch to another tab to check some information and then return to the form.
+
+Without caching, the form component may be recreated, causing its local input values and other component state to reset.
+
+`<KeepAlive>` helps prevent this by retaining the inactive component instance in memory.
+
+## How Does It Work?
+
+Consider two components:
+
+- `EmployeeForm` contains employee details entered by the user.
+- `EmployeeList` displays all employees.
+
+When the user switches from the form to the list:
+
+**Without KeepAlive**
+
+1. Vue removes the form component.
+2. The form component's instance is destroyed.
+3. When the user returns, Vue creates a new instance.
+4. Local form state is initialized again.
+
+**With KeepAlive**
+
+1. Vue moves the form component into an inactive cached state.
+2. Vue displays the employee list.
+3. When the user returns, Vue reactivates the cached form instance.
+4. Its existing local state is retained.
+
+## Syntax
+
+```vue
+<KeepAlive>
+  <component :is="active_component" />
+</KeepAlive>
+```
+
+Here, the dynamic component is wrapped in `KeepAlive`. Vue can cache the component instances as the active component changes.
+
+## Example: Preserving Form Input
+
+**EmployeeForm.vue**
+
+```vue
+<script setup lang="ts">
+import { ref } from 'vue'
+
+const employee_name = ref('')
+const employee_email = ref('')
+</script>
+
+<template>
+  <form>
+    <label>
+      Employee Name
+      <input v-model="employee_name">
+    </label>
+
+    <label>
+      Employee Email
+      <input v-model="employee_email">
+    </label>
+
+    <p>Name: {{ employee_name }}</p>
+    <p>Email: {{ employee_email }}</p>
+  </form>
+</template>
+```
+
+**App.vue**
+
+```vue
+<script setup lang="ts">
+import { ref } from 'vue'
+import EmployeeForm from './components/EmployeeForm.vue'
+import EmployeeList from './components/EmployeeList.vue'
+
+const active_component = ref(EmployeeForm)
+</script>
+
+<template>
+  <button @click="active_component = EmployeeForm">
+    Employee Form
+  </button>
+
+  <button @click="active_component = EmployeeList">
+    Employee List
+  </button>
+
+  <KeepAlive>
+    <component :is="active_component" />
+  </KeepAlive>
+</template>
+```
+
+When the user enters a name and email, switches to the employee list, and then returns to the form, the entered values remain because the same form instance is reactivated.
+
+This example assumes that `EmployeeList.vue` exists.
+
+## KeepAlive Lifecycle Hooks
+
+Cached components have a special lifecycle in addition to their normal mounting and unmounting behavior.
+
+- `onActivated()` runs when a cached component is activated, including its initial activation.
+- `onDeactivated()` runs when a component inside `KeepAlive` becomes inactive.
+
+These hooks are useful when a cached component needs to restart a timer, refresh information, or pause background work.
+
+```vue
+<script setup lang="ts">
+import { onActivated, onDeactivated } from 'vue'
+
+onActivated(() => {
+  console.log('Component is active')
+})
+
+onDeactivated(() => {
+  console.log('Component is inactive')
+})
+</script>
+```
+
+## Additional Features
+
+### Include Specific Components
+
+The `include` attribute allows us to specify which components should be cached by their component names.
+
+```vue
+<KeepAlive include="EmployeeForm,EmployeeProfile">
+  <component :is="active_component" />
+</KeepAlive>
+```
+
+### Exclude Components
+
+The `exclude` attribute prevents specified component names from being cached.
+
+```vue
+<KeepAlive exclude="EmployeeList">
+  <component :is="active_component" />
+</KeepAlive>
+```
+
+### Limit the Cache
+
+The `max` attribute limits the number of cached component instances.
+
+```vue
+<KeepAlive :max="5">
+  <component :is="active_component" />
+</KeepAlive>
+```
+
+When the limit is exceeded, Vue uses a least-recently-used (LRU) strategy to evict cached entries.
+
+## Real-Time Use Cases
+
+- Preserving search filters when switching between dashboard views.
+- Keeping partially completed forms intact.
+- Retaining the state of a multi-step registration process.
+- Preserving the current page of a table when temporarily switching views.
+- Avoiding repeated initialization of expensive components.
+
+## Important Limitations
+
+`KeepAlive` preserves component instances and their in-memory state. It does not automatically save data permanently.
+
+If the browser reloads, the application closes, or the cached instance is evicted, the state may be lost. Use appropriate storage or a backend when persistence across reloads is required.
+
+Also, caching a component does not guarantee that its data is always up to date. Use activation hooks or other data-refresh logic when necessary.
+
+---
+
+# Teleport
+
+## What is Teleport?
+
+`<Teleport>` is a built-in Vue component that allows a component's template content to be rendered in a different location in the DOM tree.
+
+Normally, a component's rendered HTML appears inside the DOM element belonging to its parent.
+
+However, certain UI elements are better rendered elsewhere in the document. Modals, tooltips, and notification containers are common examples.
+
+`<Teleport>` lets us keep the component's template and logic in their natural place in our Vue code while rendering the specified content at a different DOM destination.
+
+## Why is Teleport Needed?
+
+Imagine that a modal is placed inside a container with the following CSS:
+
+```css
+.dashboard {
+  overflow: hidden;
+  transform: translateZ(0);
+}
+```
+
+Depending on the surrounding layout and styles, the modal might be clipped or affected by stacking-context behavior.
+
+Even a very large `z-index` cannot escape every stacking-context or clipping restriction.
+
+Instead of moving the modal's Vue code into another component or manually manipulating the DOM, we can use `<Teleport>` to render it under a suitable destination, commonly an element directly under `<body>`.
+
+## Syntax
+
+```vue
+<Teleport to="body">
+  <div class="modal">
+    <h2>Confirmation</h2>
+    <p>Are you sure you want to continue?</p>
+  </div>
+</Teleport>
+```
+
+The `to="body"` attribute tells Vue to render the enclosed content inside the document's `<body>` element.
+
+The destination must exist when Vue needs to resolve it.
+
+## Example: Confirmation Modal
+
+```vue
+<script setup lang="ts">
+import { ref } from 'vue'
+
+const show_modal = ref(false)
+</script>
+
+<template>
+  <div class="dashboard">
+    <h2>Employee Dashboard</h2>
+
+    <button @click="show_modal = true">
+      Delete Employee
+    </button>
+
+    <Teleport to="body">
+      <div v-if="show_modal" class="modal-overlay">
+        <div class="modal">
+          <h3>Confirm Deletion</h3>
+
+          <p>Do you want to delete this employee?</p>
+
+          <button @click="show_modal = false">
+            Cancel
+          </button>
+
+          <button @click="show_modal = false">
+            Confirm
+          </button>
+        </div>
+      </div>
+    </Teleport>
+  </div>
+</template>
+```
+
+### Explanation
+
+- `show_modal` controls whether the modal is visible.
+- Clicking the Delete Employee button sets `show_modal` to `true`.
+- `v-if` conditionally creates the modal content.
+- `<Teleport to="body">` renders the modal overlay under the document body instead of inside the dashboard's DOM container.
+- Both modal buttons close the modal in this simplified example.
+
+The example demonstrates the rendering behavior; the Confirm button would need additional application logic to actually delete an employee.
+
+### DOM Structure
+
+Without Teleport, the rendered structure would be similar to:
+
+```html
+<body>
+  <div id="app">
+    <div class="dashboard">
+      <div class="modal-overlay">...</div>
+    </div>
+  </div>
+</body>
+```
+
+With Teleport, the modal content is rendered at the destination:
+
+```html
+<body>
+  <div id="app">
+    <div class="dashboard">
+      <!-- Dashboard content -->
+    </div>
+  </div>
+
+  <div class="modal-overlay">
+    ...
+  </div>
+</body>
+```
+
+The precise placement depends on the destination and other content, but the important difference is that the modal is no longer nested inside the dashboard element.
+
+## Important Teleport Features
+
+### Dynamic Destination
+
+The `to` attribute can point to a CSS selector or a DOM element.
+
+```vue
+<Teleport to="#notification-container">
+  <p>Employee saved successfully!</p>
+</Teleport>
+```
+
+The destination element must exist when the teleport is mounted.
+
+### Disable Teleport
+
+The `disabled` attribute allows the content to remain at its normal location in the component tree.
+
+```vue
+<Teleport to="body" :disabled="is_mobile">
+  <div class="modal">Modal content</div>
+</Teleport>
+```
+
+When `is_mobile` is `true`, Teleport is disabled and the content remains in its original DOM location.
+
+### Multiple Teleports
+
+Multiple Teleport instances can target the same destination. Vue renders their content at that destination according to their mounting and ordering behavior.
+
+## Real-Time Use Cases
+
+- **Modals:** Login dialogs, confirmation windows, and forms.
+- **Notifications:** Toast messages displayed above the application content.
+- **Tooltips:** Floating help information.
+- **Global overlays:** Loading screens and command palettes.
+- **Context menus:** Menus that need to appear outside a clipped container.
+
+## Important Point
+
+Teleport changes the physical DOM location of the rendered content, but it does not change the component's logical position in Vue's component tree.
+
+The content can still access its component's reactive state, props, and provided dependencies. Vue event handling also continues to follow the component relationship rather than being determined solely by the DOM location.
+
+Teleport does not automatically manage modal accessibility. Focus management, keyboard handling, and appropriate ARIA attributes may still be necessary.
+
+---
+
+# Suspense
+
+## What is Suspense?
+
+`<Suspense>` is a built-in Vue component that coordinates asynchronous dependencies in a component tree and provides fallback content while those dependencies are unresolved.
+
+Consider a dashboard that needs to load employee information from a server before displaying the complete employee profile.
+
+Without a loading strategy, users may see an empty area or incomplete content while the data is being prepared.
+
+A suspense boundary allows us to specify two possible states:
+
+- **Default content:** The actual component or component tree.
+- **Fallback content:** A temporary loading interface shown while the relevant asynchronous dependencies are pending.
+
+## Why is Suspense Useful?
+
+Suppose an employee profile depends on an asynchronous component that loads data before it can render its main content.
+
+Instead of implementing a separate loading-state mechanism for every part of that component tree, a suspense boundary can display fallback content while supported asynchronous dependencies are unresolved.
+
+This is particularly useful for coordinating loading interfaces across nested components.
+
+## Syntax
+
+```vue
+<Suspense>
+  <template #default>
+    <EmployeeProfile />
+  </template>
+
+  <template #fallback>
+    <p>Loading employee profile...</p>
+  </template>
+</Suspense>
+```
+
+### Explanation
+
+- `#default` identifies the main content to render when the asynchronous dependencies resolve.
+- `#fallback` identifies the temporary content to display while those dependencies are pending.
+- Vue manages the transition between the fallback and resolved content.
+
+For Suspense to provide meaningful loading behavior, the content must contain a supported asynchronous dependency, such as an async component or an `async setup()` component.
+
+A regular synchronous component does not automatically trigger a loading fallback just because it fetches data later in an ordinary lifecycle hook.
+
+## Example: Asynchronous Component
+
+**EmployeeProfile.vue**
+
+```vue
+<script setup lang="ts">
+const response = await fetch(
+  'https://jsonplaceholder.typicode.com/users/1'
+)
+
+if (!response.ok) {
+  throw new Error('Failed to load employee')
+}
+
+const employee = await response.json()
+</script>
+
+<template>
+  <div>
+    <h2>{{ employee.name }}</h2>
+    <p>{{ employee.email }}</p>
+    <p>{{ employee.phone }}</p>
+  </div>
+</template>
+```
+
+This example uses top-level `await` inside `<script setup>`. Vue compiles this into an asynchronous setup process, which can be coordinated by a Suspense boundary.
+
+**App.vue**
+
+```vue
+<script setup lang="ts">
+import EmployeeProfile from './components/EmployeeProfile.vue'
+</script>
+
+<template>
+  <Suspense>
+    <template #default>
+      <EmployeeProfile />
+    </template>
+
+    <template #fallback>
+      <p>Loading employee profile...</p>
+    </template>
+  </Suspense>
+</template>
+```
+
+### Execution Flow
+
+1. Vue encounters the Suspense boundary.
+2. Vue begins rendering `EmployeeProfile`.
+3. The component's asynchronous setup waits for the HTTP response.
+4. While the dependency is pending, Vue displays the fallback content.
+5. Once the asynchronous setup resolves, Vue displays the employee profile.
+
+The endpoint is an illustrative public API. A real application should use its own data service and handle network failures appropriately.
+
+## Error Handling
+
+Suspense is not a complete error-handling system. If an asynchronous dependency fails, the fallback slot should not be treated as an automatic error message.
+
+For example, the component may throw an error when a request fails. You should use Vue's error-handling mechanisms, such as `onErrorCaptured()` or an appropriate application-level error handler, to handle that failure.
+
+You should also design a way to show an error message or retry the request when needed.
+
+## Important Limitation
+
+Vue's Suspense is documented as an experimental feature. Its exact behavior and support should be checked against the Vue version used by your project.
+
+Suspense coordinates supported asynchronous component dependencies. It does not automatically detect every promise, ordinary API request, or asynchronous operation anywhere in the application.
+
+For example, a component that fetches data inside `onMounted()` and updates a `ref` later generally needs its own loading state:
+
+```vue
+<script setup lang="ts">
+import { ref, onMounted } from 'vue'
+
+const employee = ref(null)
+const is_loading = ref(true)
+
+onMounted(async () => {
+  try {
+    const response = await fetch('/api/employees/1')
+
+    if (!response.ok) {
+      throw new Error('Failed to load employee')
+    }
+
+    employee.value = await response.json()
+  } finally {
+    is_loading.value = false
+  }
+})
+</script>
+
+<template>
+  <p v-if="is_loading">Loading employee...</p>
+  <pre v-else>{{ employee }}</pre>
+</template>
+```
+
+This loading indicator is managed by the component itself, not automatically by Suspense.
+
+## Real-Time Use Cases
+
+- Loading a profile page that depends on an asynchronous component.
+- Coordinating loading states for nested asynchronous views.
+- Displaying a temporary skeleton or spinner while supported dependencies resolve.
+- Managing the initial display of asynchronously loaded dashboard sections.
+
+---
+

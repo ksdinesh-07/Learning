@@ -1,18 +1,32 @@
-import type{Ticket} from '../types/ticket'
 import { ref, computed } from 'vue'
+import type { Ticket } from '../types/ticket'
 
-// type Ticket = {
-//   ticket_id: number
-//   title: string
-//   status: 'open' | 'closed' | 'pending'
-// }
+type NewTicket = Pick<Ticket, 'title' | 'status'> & {
+  description: string
+}
 
 export function use_ticket_count() {
   const tickets = ref<Ticket[]>([
-    { ticket_id: 1, title: 'Login issue', status: 'open' },
-    { ticket_id: 2, title: 'Payment issue', status: 'closed' },
-    { ticket_id: 3, title: 'Profile issue', status: 'pending' },
-    { ticket_id: 4, title: 'Password issue', status: 'open' }
+    {
+      ticket_id: 1,
+      title: 'Login issue',
+      status: 'open'
+    },
+    {
+      ticket_id: 2,
+      title: 'Payment issue',
+      status: 'closed'
+    },
+    {
+      ticket_id: 3,
+      title: 'Profile issue',
+      status: 'pending'
+    },
+    {
+      ticket_id: 4,
+      title: 'Password issue',
+      status: 'open'
+    }
   ])
 
   const open_ticket_count = computed(() => {
@@ -27,7 +41,9 @@ export function use_ticket_count() {
     ).length
   })
 
-  const ticket_count = computed(() => tickets.value.length)
+  const ticket_count = computed(() => {
+    return tickets.value.length
+  })
 
   function close_ticket(ticket_id: number) {
     const ticket = tickets.value.find(
@@ -41,12 +57,28 @@ export function use_ticket_count() {
 
   function add_ticket() {
     const new_ticket_id =
-      Math.max(0, ...tickets.value.map((ticket) => ticket.ticket_id)) + 1
+      Math.max(0, ...tickets.value.map(
+        (ticket) => ticket.ticket_id
+      )) + 1
 
     tickets.value.push({
       ticket_id: new_ticket_id,
       title: `New Ticket ${new_ticket_id}`,
       status: 'open'
+    })
+  }
+
+  function add_ticket_with_details(new_ticket: NewTicket) {
+    const new_ticket_id =
+      Math.max(0, ...tickets.value.map(
+        (ticket) => ticket.ticket_id
+      )) + 1
+
+    tickets.value.push({
+      ticket_id: new_ticket_id,
+      title: new_ticket.title,
+      description: new_ticket.description,
+      status: new_ticket.status
     })
   }
 
@@ -56,6 +88,7 @@ export function use_ticket_count() {
     open_ticket_count,
     closed_ticket_count,
     close_ticket,
-    add_ticket
+    add_ticket,
+    add_ticket_with_details
   }
 }

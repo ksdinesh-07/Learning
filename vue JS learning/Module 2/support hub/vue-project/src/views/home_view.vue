@@ -1,119 +1,117 @@
-
 <template>
-  <section>
-    <h2>SupportHub Dashboard</h2>
-
-    <p v-if="is_loading">Loading tickets...</p>
-    <div v-else>
-    <p>Total Tickets: {{ ticket_count }}</p>
-    <p>Open Tickets: {{ open_ticket_count }}</p>
-    <p>Closed Tickets: {{ closed_ticket_count }}</p>
-    </div>
+  <section class="dashboard">
+    <header class="dashboard_header">
+      <h2>SupportHub Dashboard</h2>
+      <p>Manage and track customer support tickets.</p>
+    </header>
 
     <ticket_summary />
 
-    <!-- <LifecycleDemo /> -->
+    <section class="ticket_summary">
+      <h3>Ticket Summary</h3>
 
-    <h3>Ticket Summary</h3>
+      <div class="summary_items">
+        <article class="summary_item">
+          <h4>Total Tickets</h4>
+          <p>{{ ticket_count }}</p>
+        </article>
 
-    <p>Total Tickets: {{ ticket_count }}</p>
-    <p>Open Tickets: {{ open_ticket_count }}</p>
-    <p>Closed Tickets: {{ closed_ticket_count }}</p>
+        <article class="summary_item">
+          <h4>Open Tickets</h4>
+          <p>{{ open_ticket_count }}</p>
+        </article>
 
-    <button @click="add_ticket">
-      Add Ticket
-    </button>
+        <article class="summary_item">
+          <h4>Closed Tickets</h4>
+          <p>{{ closed_ticket_count }}</p>
+        </article>
+      </div>
+    </section>
 
-    <ul>
-      <li v-for="ticket in tickets" :key="ticket.ticket_id">
-        {{ ticket.title }} — {{ ticket.status }}
+    <section class="ticket_list">
+      <div class="section_header">
+        <h3>Support Tickets</h3>
+        <button type="button" @click="add_ticket">
+          Add Sample Ticket
+        </button>
+      </div>
 
-        <button
-          v-if="ticket.status !== 'closed'"
-          @click="close_summary_ticket(ticket.ticket_id)"
+      <p v-if="tickets.length === 0">
+        No tickets available.
+      </p>
+
+      <ul v-else>
+        <li
+          v-for="ticket in tickets"
+          :key="ticket.ticket_id"
+          class="ticket_item"
         >
-          Close Ticket
-        </button>
-      </li>
-    </ul>
+          <div>
+            <h4>{{ ticket.title }}</h4>
 
-    <hr />
+            <p v-if="ticket.description">
+              {{ ticket.description }}
+            </p>
 
-    <h3>Ticket Status Watcher</h3>
+            <span class="ticket_status">
+              {{ ticket.status }}
+            </span>
+          </div>
 
-    <p>Current status: {{ ticket_status }}</p>
-    <p>{{ status_message }}</p>
+          <button
+            v-if="ticket.status !== 'closed'"
+            type="button"
+            @click="close_summary_ticket(ticket.ticket_id)"
+          >
+            Close Ticket
+          </button>
+        </li>
+      </ul>
+    </section>
 
-    <button
-      v-if="ticket_status === 'open'"
-      @click="close_watched_ticket"
-    >
-      Close Watched Ticket
-    </button>
+    <section class="create_ticket">
+      <h3>Create Ticket</h3>
 
-    <button
-      v-else
-      @click="reopen_ticket"
-    >
-      Reopen Watched Ticket
-    </button>
+      <form @submit.prevent="submit_ticket">
+        <div>
+          <label for="ticket_title">Title</label>
+          <input
+            id="ticket_title"
+            v-model="ticket_form.title"
+            placeholder="Enter ticket title"
+            required
+          />
+        </div>
 
-    <hr />
+        <div>
+          <label for="ticket_description">Description</label>
+          <textarea
+            id="ticket_description"
+            v-model="ticket_form.description"
+            placeholder="Describe the issue"
+            required
+          ></textarea>
+        </div>
 
-    <ticket_card>
-      <template #status="{ status }">
-        <p>
-          Current status:
-          <strong>{{ status }}</strong>
-        </p>
-      </template>
-    </ticket_card>
+        <div>
+          <label for="ticket_status">Status</label>
+          <select id="ticket_status" v-model="ticket_form.status">
+            <option value="open">Open</option>
+            <option value="pending">Pending</option>
+            <option value="closed">Closed</option>
+          </select>
+        </div>
+
+        <button type="submit">Create Ticket</button>
+      </form>
+    </section>
   </section>
-
-    <section>
-        <h3>API Fetch Demo</h3>
-
-        <p v-if="is_loading">Loading data...</p>
-
-        <p v-else-if="error_message">
-            {{ error_message }}
-        </p>
-
-        <ul v-else>
-            <li v-for="ticket in demo_tickets" :key="ticket.id">
-            {{ ticket.title }} —
-            {{ ticket.completed ? 'Completed' : 'Pending' }}
-            </li>
-        </ul>
-    </section>
-
-    <section>
-        <h3>Ticket Snapshot</h3>
-
-        <button @click="refresh_ticket_snapshot">
-            Refresh Ticket Snapshot
-        </button>
-
-        <ul>
-            <li
-            v-for="ticket in ticket_snapshot"
-            :key="ticket.ticket_id"
-            >
-            {{ ticket.title }} — {{ ticket.status }}
-            </li>
-        </ul>
-    </section>
-
 </template>
 
 <script setup lang="ts">
-import ticket_card from '../components/ticket_card.vue'
+import { reactive } from 'vue'
 import ticket_summary from '../components/ticket_summary.vue'
-// import LifecycleDemo from '../components/LifecycleDemo.vue'
-import { onMounted,ref,shallowRef } from 'vue'
-
 import { use_ticket_count } from '../composables/use_ticket_count'
-import { use_ticket_watcher } from '../composables/use_ticket_watcher'
 
 const {
   tickets,
@@ -121,92 +119,141 @@ const {
   open_ticket_count,
   closed_ticket_count,
   close_ticket: close_summary_ticket,
-  add_ticket
+  add_ticket,
+  add_ticket_with_details
 } = use_ticket_count()
 
-const {
-  ticket_status,
-  status_message,
-  close_ticket: close_watched_ticket,
-  reopen_ticket
-} = use_ticket_watcher()
-
-// onMounted(()=>{
-//     console.log('Support Hub dashboard loaded');
-//     console.log('Total tickets: ',ticket_count.value)
-// })
-
-// const is_loading=ref(true)
-
-// async function load_tickets(){
-//     try{
-//         console.log('Loading supporthub tickets...')
-//         await new Promise<void>((resolve)=>{
-//             setTimeout(resolve,1000)
-//         })
-//         console.log('Tickets are ready')
-//     }
-//     catch(err){
-//         console.log('Failed to load tickets:',err)
-//     }finally{
-//         is_loading.value=false
-//     }
-// }
-
-type DemoTicket = {
-  userId: number
-  id: number
+interface TicketForm {
   title: string
-  completed: boolean
+  description: string
+  status: 'open' | 'closed' | 'pending'
 }
 
-const demo_tickets = ref<DemoTicket[]>([])
-const is_loading = ref(false)
-const error_message = ref('')
-
-async function load_tickets() {
-  is_loading.value = true
-  error_message.value = ''
-
-  try {
-    const response = await fetch(
-      'https://jsonplaceholder.typicode.com/todos?_limit=5'
-    )
-
-    if (!response.ok) {
-      throw new Error('Unable to load tickets')
-    }
-
-    demo_tickets.value = await response.json()
-  } catch (error) {
-    error_message.value =
-      error instanceof Error
-        ? error.message
-        : 'Something went wrong'
-  } finally {
-    is_loading.value = false
-  }
-}
-
-onMounted(() => {
-  load_tickets()
+const ticket_form = reactive<TicketForm>({
+  title: '',
+  description: '',
+  status: 'open'
 })
 
-import type { Ticket } from '../types/ticket'
+function submit_ticket() {
+  const title = ticket_form.title.trim()
+  const description = ticket_form.description.trim()
 
-const ticket_snapshot = shallowRef<Ticket[]>([
-  { ticket_id: 101, title: 'Login issue', status: 'open' },
-  { ticket_id: 102, title: 'Payment issue', status: 'pending' }
-])
+  if (!title || !description) {
+    return
+  }
 
-function refresh_ticket_snapshot() {
-  ticket_snapshot.value = [
-    ...ticket_snapshot.value,
-    {
-      ticket_id: ticket_snapshot.value.length + 101,
-      title: 'New API Ticket',
-      status: 'open'
-    }
-  ]
+  add_ticket_with_details({
+    title,
+    description,
+    status: ticket_form.status
+  })
+
+  ticket_form.title = ''
+  ticket_form.description = ''
+  ticket_form.status = 'open'
 }
 </script>
+
+<style scoped>
+.dashboard {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.dashboard_header p {
+  color: #666;
+}
+
+.ticket_summary,
+.ticket_list,
+.create_ticket {
+  padding: 20px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+}
+
+.summary_items {
+  display: flex;
+  gap: 16px;
+}
+
+.summary_item {
+  flex: 1;
+  padding: 12px;
+  border-radius: 6px;
+  background: #f4f6f8;
+}
+
+.summary_item p {
+  font-size: 24px;
+  font-weight: bold;
+}
+
+.section_header,
+.ticket_item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.ticket_list ul {
+  padding: 0;
+  list-style: none;
+}
+
+.ticket_item {
+  padding: 16px 0;
+  border-bottom: 1px solid #eee;
+}
+
+.ticket_item h4 {
+  margin-bottom: 6px;
+}
+
+.ticket_status {
+  display: inline-block;
+  margin-top: 6px;
+  padding: 4px 8px;
+  border-radius: 4px;
+  background: #edf0f3;
+  text-transform: capitalize;
+}
+
+.create_ticket form {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.create_ticket form div {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.create_ticket input,
+.create_ticket textarea,
+.create_ticket select {
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  font: inherit;
+}
+
+.create_ticket textarea {
+  min-height: 100px;
+}
+
+button {
+  width: fit-content;
+  padding: 9px 14px;
+  border: none;
+  border-radius: 5px;
+  background: #2563eb;
+  color: white;
+  cursor: pointer;
+}
+</style>
