@@ -5,7 +5,7 @@
     "recipient": "ramesh",
     "content": "hi",
     "timestamp": "2026-10-14T18:23:34.500Z",
-    "status": "delivered"
+    "status": "read"
   },
   {
     "message_id": "b64d2c7b-aaf1-4920-bf16-923318196abd",
@@ -30,5 +30,61 @@
     "content": "hi",
     "timestamp": "2026-10-14T18:24:45.407Z",
     "status": "read"
+  },
+  {
+    "message_id": "e1feed90-fcc8-4a86-951d-a9e2ff4eaf80",
+    "sender": "ganesh",
+    "recipient": "dinesh",
+    "content": "hi",
+    "timestamp": "2026-10-15T01:43:18.004Z",
+    "status": "read"
+  },
+  {
+    "message_id": "d3ad17e4-82b4-49da-ad3b-2368ac02751a",
+    "sender": "ganesh",
+    "recipient": "dinesh",
+    "content": "hello",
+    "timestamp": "2026-10-15T01:49:15.265Z",
+    "status": "read"
+  },
+  {
+    "message_id": "e3453132-126f-47cb-9b0b-762b75935a9a",
+    "sender": "dinesh",
+    "recipient": "ganesh",
+    "content": "good morning",
+    "timestamp": "2026-10-15T01:52:36.217Z",
+    "status": "read"
+  },
+  {
+    "message_id": "7ed2b6a1-c2cc-41c1-bca4-ef61c4216263",
+    "sender": "dinesh",
+    "recipient": "gowtham",
+    "content": "hi",
+    "timestamp": "2026-10-15T01:53:20.842Z",
+    "status": "read"
+  },
+  {
+    "message_id": "d5c29713-3490-4f40-80df-a045e5a2f76b",
+    "sender": "ramesh",
+    "recipient": "dinesh",
+    "content": "hello",
+    "timestamp": "2026-10-15T02:02:11.108Z",
+    "status": "sent"
+  },
+  {
+    "message_id": "87622046-e12e-4065-819e-f1ee38d6dbc3",
+    "sender": "ramesh",
+    "recipient": "gowtham",
+    "content": "hello",
+    "timestamp": "2026-10-15T02:02:24.930Z",
+    "status": "read"
+  },
+  {
+    "message_id": "9a85191b-3357-4976-964b-efa6cbe4b29d",
+    "sender": "gowtham",
+    "recipient": "ramesh",
+    "content": "hi helllo",
+    "timestamp": "2026-10-15T02:09:23.542Z",
+    "status": "delivered"
   }
 ]

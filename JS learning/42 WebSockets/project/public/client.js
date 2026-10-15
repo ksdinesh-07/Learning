@@ -6,6 +6,10 @@ const socket = io({
     reconnectionDelay: 1000
 });
 
+const unread_counts = new Map();
+const counted_unread_message_ids = new Set();
+const read_receipt_sent_ids = new Set();
+
 const loginScreen = document.getElementById("login-screen");
 const chatScreen = document.getElementById("chat-screen");
 const loginForm = document.getElementById("login-form");
@@ -20,7 +24,7 @@ const recipientStatus = document.getElementById("recipient-status");
 const networkStatus = document.getElementById("network-status");
 const socketStatus = document.getElementById("socket-status");
 const logoutButton = document.getElementById("logout-button");
-document.getElementById("logged-in-user").textContent =`Logged in as: ${current_username}`;
+const loggedInUser = document.getElementById("logged-in-user");
 
 const database_name = "private-chat-db";
 const store_name = "outgoing-messages";
@@ -32,6 +36,10 @@ let online_users = [];
 let server_messages = [];
 let local_messages = [];
 let is_syncing = false;
+
+loginScreen.classList.remove("hidden");
+chatScreen.classList.add("hidden");
+loggedInUser.textContent = "Not logged in";
 
 function set_status(element, message, online) {
     element.textContent = message;
@@ -148,13 +156,22 @@ function get_all_messages() {
     const combined = new Map();
 
     for (const message of server_messages) {
-        if (message?.message_id) {
+        if (
+            message?.message_id &&
+            (message.sender === current_username ||
+                message.recipient === current_username)
+        ) {
             combined.set(message.message_id, message);
         }
     }
 
     for (const message of local_messages) {
-        if (message?.message_id && !combined.has(message.message_id)) {
+        if (
+            message?.message_id &&
+            (message.sender === current_username ||
+                message.recipient === current_username) &&
+            !combined.has(message.message_id)
+        ) {
             combined.set(message.message_id, message);
         }
     }
@@ -176,6 +193,24 @@ function get_conversation_messages() {
             (message.sender === selected_recipient &&
                 message.recipient === current_username)
         );
+    });
+}
+
+function mark_message_as_read(message) {
+    if (
+        !socket.connected ||
+        message.sender !== selected_recipient ||
+        message.recipient !== current_username ||
+        message.status === "read" ||
+        read_receipt_sent_ids.has(message.message_id)
+    ) {
+        return;
+    }
+
+    read_receipt_sent_ids.add(message.message_id);
+
+    socket.emit("read-message", {
+        message_id: message.message_id
     });
 }
 
@@ -202,7 +237,6 @@ function render_messages() {
 
     for (const message of conversation) {
         const container = document.createElement("article");
-
         container.className = "message";
         container.classList.add(
             message.sender === current_username
@@ -211,9 +245,8 @@ function render_messages() {
         );
 
         const sender = document.createElement("strong");
-        sender.textContent = message.sender === current_username
-            ? "You"
-            : message.sender;
+        sender.textContent =
+            message.sender === current_username ? "You" : message.sender;
 
         const content = document.createElement("p");
         content.textContent = message.content;
@@ -230,28 +263,44 @@ function render_messages() {
             read: "Read"
         };
 
-        const status = message.sender === current_username
-            ? labels[message.status] || "Pending sync"
-            : "Received";
+        const status =
+            message.sender === current_username
+                ? labels[message.status] || "Pending sync"
+                : "Received";
 
         details.textContent = `${time} · ${status}`;
 
         container.append(sender, content, details);
         messagesElement.appendChild(container);
 
-        if (
-            message.sender === selected_recipient &&
-            message.recipient === current_username &&
-            message.status !== "read" &&
-            socket.connected
-        ) {
-            socket.emit("read-message", {
-                message_id: message.message_id
-            });
-        }
+        mark_message_as_read(message);
     }
 
     messagesElement.scrollTop = messagesElement.scrollHeight;
+}
+
+function rebuild_unread_counts() {
+    unread_counts.clear();
+    counted_unread_message_ids.clear();
+
+    for (const message of get_all_messages()) {
+        if (
+            message.recipient !== current_username ||
+            message.sender === selected_recipient ||
+            message.status === "read"
+        ) {
+            continue;
+        }
+
+        if (counted_unread_message_ids.has(message.message_id)) {
+            continue;
+        }
+
+        counted_unread_message_ids.add(message.message_id);
+
+        const unread_count = unread_counts.get(message.sender) || 0;
+        unread_counts.set(message.sender, unread_count + 1);
+    }
 }
 
 function render_users() {
@@ -264,9 +313,10 @@ function render_users() {
     }
 
     for (const message of get_all_messages()) {
-        const other_username = message.sender === current_username
-            ? message.recipient
-            : message.sender;
+        const other_username =
+            message.sender === current_username
+                ? message.recipient
+                : message.sender;
 
         if (other_username && other_username !== current_username) {
             if (!users.has(other_username)) {
@@ -301,21 +351,49 @@ function render_users() {
             button.classList.add("selected");
         }
 
+        const name_row = document.createElement("span");
+        name_row.className = "user-name-row";
+
+        const online_dot = document.createElement("span");
+        online_dot.className = user.online ? "online-dot" : "offline-dot";
+        online_dot.setAttribute(
+            "aria-label",
+            user.online ? "Online" : "Offline"
+        );
+
         const name = document.createElement("span");
         name.textContent = user.username;
+
+        name_row.append(online_dot, name);
+
+        const unread_count = unread_counts.get(user.username) || 0;
+
+        if (unread_count > 0 && user.username !== selected_recipient) {
+            const unread_badge = document.createElement("span");
+            unread_badge.className = "unread-badge";
+            unread_badge.textContent = String(unread_count);
+            unread_badge.setAttribute(
+                "aria-label",
+                `${unread_count} unread messages`
+            );
+
+            name_row.appendChild(unread_badge);
+        }
 
         const status = document.createElement("small");
         status.textContent = user.online ? "Online" : "Offline";
 
-        button.append(name, status);
+        button.append(name_row, status);
 
         button.addEventListener("click", () => {
             selected_recipient = user.username;
+            unread_counts.set(selected_recipient, 0);
+
             recipientName.textContent = selected_recipient;
 
-            update_connection_status();
             render_users();
             render_messages();
+            update_connection_status();
         });
 
         usersList.appendChild(button);
@@ -324,21 +402,29 @@ function render_users() {
 
 async function refresh_local_messages() {
     local_messages = await get_local_messages();
+
+    rebuild_unread_counts();
     render_users();
     render_messages();
 }
 
-async function load_server_history() {
-    if (!socket.connected || !current_username) {
-        return;
-    }
-
-    socket.emit("request-history", (result) => {
-        if (result?.success && Array.isArray(result.messages)) {
-            server_messages = result.messages;
-            render_users();
-            render_messages();
+function load_server_history() {
+    return new Promise((resolve) => {
+        if (!socket.connected || !current_username) {
+            resolve();
+            return;
         }
+
+        socket.emit("request-history", (result) => {
+            if (result?.success && Array.isArray(result.messages)) {
+                server_messages = result.messages;
+                rebuild_unread_counts();
+                render_users();
+                render_messages();
+            }
+
+            resolve();
+        });
     });
 }
 
@@ -362,7 +448,6 @@ function send_pending_message(message) {
                         "Message remains pending:",
                         result?.message || "Server acknowledgment timed out."
                     );
-
                     resolve(false);
                     return;
                 }
@@ -374,8 +459,15 @@ function send_pending_message(message) {
                     };
 
                     await save_local_message(updated_message);
-                    await refresh_local_messages();
 
+                    server_messages = [
+                        ...server_messages.filter(
+                            (item) => item.message_id !== updated_message.message_id
+                        ),
+                        updated_message
+                    ];
+
+                    await refresh_local_messages();
                     resolve(true);
                 } catch (save_error) {
                     console.error("Unable to update message status:", save_error);
@@ -387,7 +479,12 @@ function send_pending_message(message) {
 }
 
 async function sync_pending_messages() {
-    if (is_syncing || !database || !socket.connected || !current_username) {
+    if (
+        is_syncing ||
+        !database ||
+        !socket.connected ||
+        !current_username
+    ) {
         return;
     }
 
@@ -432,6 +529,7 @@ function register_current_user() {
 
         await load_server_history();
         await refresh_local_messages();
+
         update_connection_status();
         render_users();
 
@@ -465,8 +563,13 @@ loginForm.addEventListener("submit", async (event) => {
             return;
         }
 
-        current_username = result.username;
+        current_username = result.username || username;
         online_users = normalize_users(result.users);
+
+        loggedInUser.textContent = `Logged in as: ${current_username}`;
+
+        selected_recipient = "";
+        recipientName.textContent = "Select a person";
 
         loginScreen.classList.add("hidden");
         chatScreen.classList.remove("hidden");
@@ -475,7 +578,9 @@ loginForm.addEventListener("submit", async (event) => {
         await load_server_history();
 
         render_users();
+        render_messages();
         update_connection_status();
+
         await sync_pending_messages();
     });
 });
@@ -531,7 +636,12 @@ logoutButton.addEventListener("click", () => {
     online_users = [];
     server_messages = [];
 
+    unread_counts.clear();
+    counted_unread_message_ids.clear();
+    read_receipt_sent_ids.clear();
+
     usernameInput.value = "";
+    loggedInUser.textContent = "Not logged in";
     recipientName.textContent = "Select a person";
 
     chatScreen.classList.add("hidden");
@@ -561,6 +671,7 @@ socket.on("connect_error", (error) => {
 
 socket.on("presence-update", (users) => {
     online_users = normalize_users(users);
+
     render_users();
     update_connection_status();
 });
@@ -568,24 +679,45 @@ socket.on("presence-update", (users) => {
 socket.on("message-history", (messages) => {
     if (Array.isArray(messages)) {
         server_messages = messages;
+        rebuild_unread_counts();
         render_users();
         render_messages();
     }
 });
 
 socket.on("private-message", async (message) => {
-    if (!message?.message_id) {
+    if (!message?.message_id || !current_username) {
         return;
     }
 
-    const index = server_messages.findIndex((item) => {
+    const existing_index = server_messages.findIndex((item) => {
         return item.message_id === message.message_id;
     });
 
-    if (index === -1) {
+    if (existing_index === -1) {
         server_messages.push(message);
     } else {
-        server_messages[index] = message;
+        server_messages[existing_index] = message;
+    }
+
+    const is_incoming =
+        message.recipient === current_username &&
+        message.sender !== current_username;
+
+    if (is_incoming) {
+        if (
+            message.sender === selected_recipient &&
+            socket.connected
+        ) {
+            mark_message_as_read(message);
+        } else if (
+            !counted_unread_message_ids.has(message.message_id)
+        ) {
+            counted_unread_message_ids.add(message.message_id);
+
+            const unread_count = unread_counts.get(message.sender) || 0;
+            unread_counts.set(message.sender, unread_count + 1);
+        }
     }
 
     try {
@@ -622,6 +754,7 @@ socket.on("message-status", async (update) => {
         await refresh_local_messages();
     } else {
         render_messages();
+        render_users();
     }
 });
 
@@ -648,6 +781,10 @@ async function initialize_service_worker() {
 }
 
 async function initialize_app() {
+    loginScreen.classList.remove("hidden");
+    chatScreen.classList.add("hidden");
+    loggedInUser.textContent = "Not logged in";
+
     update_connection_status();
 
     try {

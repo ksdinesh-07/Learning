@@ -1,0 +1,11 @@
+
+{
+  "name": "Offline-Ready Private Chat",
+  "short_name": "Private Chat",
+  "description": "A private messaging demo with offline storage and synchronization.",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "background_color": "#171923",
+  "theme_color": "#171923"
+}

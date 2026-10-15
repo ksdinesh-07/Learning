@@ -848,3 +848,779 @@ The descendant can read the employee name and request a change through the provi
 
 This makes the flow of state updates easier to control and understand.
 
+# Advanced Reactivity (Composition API)
+
+## Introduction to Reactivity in Vue
+
+Reactivity is one of the core features of Vue.js. It allows the application to respond automatically when its data changes.
+
+In a traditional JavaScript application, changing a variable does not automatically update the HTML displayed on the page. Developers may need to manually modify the DOM.
+
+Vue simplifies this process by tracking reactive data and updating the relevant parts of the UI when that data changes.
+
+For example, in a customer support application, suppose an administrator closes a ticket. The ticket status, the open-ticket count, and the displayed status badge may all need to change. Vue's reactivity system helps keep these parts of the interface synchronized with the underlying state.
+
+### How Reactivity Works
+
+Vue's reactivity system generally involves three important operations:
+
+- **Track:** Vue records which reactive properties a component or computed value reads.
+- **Trigger:** When a tracked property changes, Vue notifies the effects that depend on it.
+- **Update:** Vue schedules the necessary reactive effects and component updates.
+
+Consider this example:
+
+```ts
+import { ref } from 'vue'
+
+const ticket_status = ref('open')
+
+function close_ticket() {
+  ticket_status.value = 'closed'
+}
+```
+
+When the status changes, Vue can update a template that displays `ticket_status`.
+
+```vue
+<template>
+  <p>Ticket Status: {{ ticket_status }}</p>
+  <button @click="close_ticket">Close Ticket</button>
+</template>
+```
+
+When the user clicks the button, the status changes and the displayed text updates automatically.
+
+## Ref vs. Reactive
+
+Vue provides two main APIs for creating deeply reactive state: `ref()` and `reactive()`.
+
+Although both make data reactive, they differ in how values are stored, accessed, and replaced.
+
+### Understanding ref()
+
+The `ref()` function creates a reactive reference around a value. Internally, a ref exposes the value through its `.value` property in JavaScript and TypeScript.
+
+It supports primitive values such as numbers, strings, and booleans, as well as objects and arrays.
+
+**Syntax:**
+
+```ts
+import { ref } from 'vue'
+
+const variable_name = ref(initial_value)
+```
+
+**Example with primitive values:**
+
+```ts
+import { ref } from 'vue'
+
+const ticket_count = ref<number>(0)
+const search_query = ref<string>('')
+const is_loading = ref<boolean>(false)
+
+ticket_count.value = 5
+search_query.value = 'payment'
+is_loading.value = true
+```
+
+The generic types, such as `number` and `string`, tell TypeScript what kind of value each ref should contain.
+
+In the component's JavaScript or TypeScript code, `.value` is required to read or change a ref's value. Vue templates normally unwrap top-level refs automatically.
+
+### Deep reactivity with ref()
+
+When an object or array is passed to `ref()`, Vue converts it into deeply reactive state.
+
+```ts
+import { ref } from 'vue'
+
+interface Ticket {
+  ticket_id: number
+  title: string
+  status: 'open' | 'closed' | 'pending'
+}
+
+const ticket = ref<Ticket>({
+  ticket_id: 101,
+  title: 'Login issue',
+  status: 'open'
+})
+
+ticket.value.status = 'closed'
+ticket.value.title = 'Updated login issue'
+```
+
+Vue tracks these nested changes, so dependent UI can update automatically.
+
+**When to use ref():**
+
+- When storing primitive values.
+- When an object or array may be replaced entirely.
+- When nested properties need reactive updates.
+- When creating state inside a component or composable.
+- When managing loading states, API responses, form values, and selected items.
+
+### Understanding reactive()
+
+The `reactive()` function creates a reactive proxy for an object. A proxy allows Vue to intercept property reads and writes so it can track dependencies and trigger updates.
+
+**Syntax:**
+
+```ts
+import { reactive } from 'vue'
+
+const variable_name = reactive({
+  property_name: initial_value
+})
+```
+
+**Example:**
+
+```ts
+import { reactive } from 'vue'
+
+interface TicketForm {
+  title: string
+  description: string
+  status: 'open' | 'closed' | 'pending'
+}
+
+const ticket_form = reactive<TicketForm>({
+  title: '',
+  description: '',
+  status: 'open'
+})
+
+ticket_form.title = 'Payment issue'
+ticket_form.description = 'Payment confirmation is missing'
+ticket_form.status = 'pending'
+```
+
+There is no `.value` because the properties are accessed directly through the reactive proxy.
+
+### Nested reactivity with reactive()
+
+Nested objects are reactive by default when accessed through a reactive proxy.
+
+```ts
+import { reactive } from 'vue'
+
+const ticket = reactive({
+  title: 'Payment issue',
+  customer: {
+    name: 'Arun',
+    email: 'arun@example.com'
+  }
+})
+
+ticket.customer.name = 'Arun Kumar'
+```
+
+Vue can track the nested property change and update any UI that depends on it.
+
+### Important limitations of reactive()
+
+`reactive()` has several constraints that developers should understand.
+
+**It is designed for objects.** It does not make a primitive value such as a number directly reactive.
+
+**Reassigning the local variable loses the original proxy reference.**
+
+```ts
+let ticket = reactive({
+  title: 'Login issue'
+})
+
+ticket = reactive({
+  title: 'Payment issue'
+})
+```
+
+In this example, the local variable now points to a different proxy. Components or functions that still reference the original proxy do not automatically switch to the new one.
+
+For state that must be replaced frequently, `ref()` is often more convenient:
+
+```ts
+const ticket = ref({
+  title: 'Login issue'
+})
+
+ticket.value = {
+  title: 'Payment issue'
+}
+```
+
+**Destructuring can disconnect a primitive property from its reactive source.**
+
+```ts
+const ticket = reactive({
+  title: 'Login issue',
+  status: 'open'
+})
+
+const { status } = ticket
+```
+
+Here, `status` is a plain string value, not a reactive reference to `ticket.status`. Changing `ticket.status` does not update the standalone variable.
+
+Use `toRef()` or `toRefs()` when you need to preserve property reactivity while extracting properties from a reactive object.
+
+```ts
+import { reactive, toRefs } from 'vue'
+
+const ticket = reactive({
+  title: 'Login issue',
+  status: 'open'
+})
+
+const { title, status } = toRefs(ticket)
+```
+
+Now `title` and `status` are refs linked to the original reactive properties.
+
+### Ref vs. Reactive: Choosing the Right API
+
+| Requirement | Recommended approach |
+|---|---|
+| Store a number or string | `ref()` |
+| Store a boolean loading flag | `ref()` |
+| Manage a multi-field form | `reactive()` or `ref()` |
+| Replace an entire API response | `ref()` |
+| Track changes inside nested objects | `ref()` or `reactive()` |
+| Extract reactive properties from an object | `toRef()` or `toRefs()` |
+| Store a large immutable snapshot | Consider `shallowRef()` |
+
+Both APIs can be used effectively in real applications. The decision depends on how the state is accessed, updated, and replaced.
+
+## Computed Properties
+
+### What is computed()?
+
+The `computed()` function creates a reactive value derived from other reactive values.
+
+Instead of manually updating a value whenever its dependencies change, Vue calculates it from the current state.
+
+Computed properties are especially useful for values that can be calculated from existing application data.
+
+### Example: Counting SupportHub tickets
+
+```ts
+import { ref, computed } from 'vue'
+
+interface Ticket {
+  ticket_id: number
+  title: string
+  status: 'open' | 'closed' | 'pending'
+}
+
+const tickets = ref<Ticket[]>([
+  { ticket_id: 1, title: 'Login issue', status: 'open' },
+  { ticket_id: 2, title: 'Payment issue', status: 'closed' },
+  { ticket_id: 3, title: 'Profile issue', status: 'open' },
+  { ticket_id: 4, title: 'Password issue', status: 'pending' }
+])
+
+const open_ticket_count = computed(() => {
+  return tickets.value.filter(
+    (ticket) => ticket.status === 'open'
+  ).length
+})
+
+const closed_ticket_count = computed(() => {
+  return tickets.value.filter(
+    (ticket) => ticket.status === 'closed'
+  ).length
+})
+```
+
+The counts are derived from the ticket array. If a ticket changes from `open` to `closed`, both computed values update when their dependent data changes.
+
+### Computed caching
+
+One major benefit of `computed()` is caching.
+
+Vue remembers the computed result until one of its tracked reactive dependencies changes. Accessing the same computed value repeatedly does not require rerunning the calculation every time.
+
+```ts
+const total_ticket_count = computed(() => {
+  console.log('Calculating ticket count')
+
+  return tickets.value.length
+})
+```
+
+The message is logged when Vue evaluates the computed getter. Repeatedly reading `total_ticket_count.value` does not rerun it unless a tracked dependency has changed.
+
+By comparison, a normal function runs whenever it is called.
+
+```ts
+function get_ticket_count() {
+  return tickets.value.length
+}
+```
+
+Computed properties are ideal for derived state, especially when calculations are expensive or used in multiple places.
+
+### Computed properties for filtering
+
+```ts
+const selected_status = ref<'all' | 'open' | 'closed' | 'pending'>('all')
+
+const filtered_tickets = computed(() => {
+  if (selected_status.value === 'all') {
+    return tickets.value
+  }
+
+  return tickets.value.filter(
+    (ticket) => ticket.status === selected_status.value
+  )
+})
+```
+
+The template can render `filtered_tickets` and update automatically when either the tickets or selected status changes.
+
+### Writable computed properties
+
+Computed properties are read-only by default. In special cases, a computed property can have both a getter and a setter.
+
+```ts
+const first_name = ref('Dinesh')
+const last_name = ref('Kumar')
+
+const full_name = computed({
+  get() {
+    return `${first_name.value} ${last_name.value}`
+  },
+  set(new_name: string) {
+    const name_parts = new_name.split(' ')
+
+    first_name.value = name_parts[0] ?? ''
+    last_name.value = name_parts.slice(1).join(' ')
+  }
+})
+
+full_name.value = 'Arun Kumar'
+```
+
+The setter updates the underlying reactive values. Writable computed properties are useful when a derived value needs to support controlled two-way editing.
+
+### Computed best practices
+
+- Keep computed getters focused on deriving values.
+- Avoid modifying other state inside a computed getter.
+- Use computed values for filtering, totals, sorting, and formatted data.
+- Do not use a computed property for an API request or other side effect.
+- Remember that computed results are cached based on reactive dependencies, not arbitrary external changes.
+
+## Watchers
+
+Watchers allow Vue to run side effects in response to reactive changes. They are different from computed properties because their primary purpose is performing an action, rather than returning a derived value.
+
+### Understanding watch()
+
+The `watch()` function observes a specified reactive source and executes a callback when that source changes.
+
+```ts
+import { ref, watch } from 'vue'
+
+const ticket_status = ref<'open' | 'closed'>('open')
+
+watch(ticket_status, (new_status, old_status) => {
+  console.log('Old status:', old_status)
+  console.log('New status:', new_status)
+})
+```
+
+When the status changes, the callback receives the new and previous values.
+
+By default, `watch()` is lazy: it does not run its callback immediately when created. It runs when its watched source changes.
+
+### Watching a getter
+
+A getter can be used to watch a specific property of a reactive object.
+
+```ts
+import { reactive, watch } from 'vue'
+
+const ticket = reactive({
+  title: 'Login issue',
+  status: 'open'
+})
+
+watch(
+  () => ticket.status,
+  (new_status, old_status) => {
+    console.log('Status changed:', old_status, 'to', new_status)
+  }
+)
+```
+
+The watcher responds to changes in `ticket.status`, not unrelated changes such as updating `ticket.title`.
+
+### Watching multiple sources
+
+`watch()` can observe multiple sources.
+
+```ts
+const selected_status = ref('open')
+const selected_priority = ref('high')
+
+watch(
+  [selected_status, selected_priority],
+  ([new_status, new_priority], [old_status, old_priority]) => {
+    console.log(new_status, new_priority)
+    console.log(old_status, old_priority)
+  }
+)
+```
+
+This is useful when an action depends on multiple filters.
+
+### Immediate watchers
+
+An immediate watcher executes its callback during setup and then responds to subsequent changes.
+
+```ts
+watch(
+  ticket_status,
+  (new_status, old_status) => {
+    console.log('Current status:', new_status)
+  },
+  { immediate: true }
+)
+```
+
+The initial `old_status` is `undefined` because there was no previous watched value for that initial callback.
+
+### Deep watchers
+
+A watcher can observe nested changes in an object by using the `deep` option.
+
+```ts
+const ticket = ref({
+  title: 'Login issue',
+  customer: {
+    name: 'Arun'
+  }
+})
+
+watch(
+  ticket,
+  (new_ticket) => {
+    console.log('Ticket data changed:', new_ticket)
+  },
+  { deep: true }
+)
+```
+
+Without deep watching, replacing the ref's value is different from mutating a nested property. A deep watcher can detect nested mutations, but it may be more expensive for large objects.
+
+For a reactive object passed directly as the source, `watch()` is deep by default. For a getter that returns an object, nested changes generally require an explicit deep option.
+
+When a deep watcher reacts to a nested mutation, `new_value` and `old_value` may reference the same object because the object itself was not replaced.
+
+### Understanding watchEffect()
+
+`watchEffect()` automatically detects reactive dependencies accessed while its effect executes.
+
+```ts
+import { ref, watchEffect } from 'vue'
+
+const ticket_id = ref(101)
+const ticket_status = ref('open')
+
+watchEffect(() => {
+  console.log(
+    `Ticket ${ticket_id.value} is ${ticket_status.value}`
+  )
+})
+```
+
+The effect runs immediately. Vue tracks both reactive values and reruns the effect when either dependency changes.
+
+Unlike `watch()`, you do not specify the sources separately.
+
+### watch vs. watchEffect
+
+Use `watch()` when you need precise control over the trigger source, previous values, or when the callback should not run immediately by default.
+
+Use `watchEffect()` when an effect naturally depends on the reactive values it reads and you want Vue to detect those dependencies automatically.
+
+Neither is universally faster or better. Choose based on the behavior you need.
+
+### Watcher cleanup and asynchronous work
+
+Watchers often perform API requests. If the user changes a search query repeatedly, an earlier request might finish after a newer request and overwrite its result.
+
+Cleanup can cancel obsolete work.
+
+```ts
+import { ref, watch } from 'vue'
+
+const search_query = ref('')
+
+watch(search_query, async (query, old_query, on_cleanup) => {
+  const controller = new AbortController()
+
+  on_cleanup(() => {
+    controller.abort()
+  })
+
+  if (!query.trim()) {
+    return
+  }
+
+  try {
+    const response = await fetch(
+      `/api/tickets?search=${encodeURIComponent(query)}`,
+      { signal: controller.signal }
+    )
+
+    if (!response.ok) {
+      throw new Error(`Request failed: ${response.status}`)
+    }
+
+    const result = await response.json()
+    console.log(result)
+  } catch (error) {
+    if (error instanceof Error && error.name === 'AbortError') {
+      return
+    }
+
+    console.error(error)
+  }
+})
+```
+
+This example assumes that the application has a backend endpoint at `/api/tickets`. It is an integration pattern, not a guarantee that such an endpoint already exists.
+
+The cleanup function aborts the previous request when the watcher is invalidated. In Vue 3.5 and later, `onWatcherCleanup()` is another option, but it must be called synchronously during watcher execution.
+
+## Custom Composables
+
+### What is a composable?
+
+A composable is a reusable function that encapsulates stateful logic using Vue's Composition API.
+
+In larger applications, components can become difficult to maintain when data, event handlers, API calls, filtering logic, and loading states are all placed in a single component.
+
+Composables help extract that logic into focused functions.
+
+### Naming conventions
+
+Composable names should begin with `use`, followed by a description of their responsibility.
+
+Examples:
+
+- `use_tickets()` — ticket-related state and actions.
+- `use_fetch()` — reusable data-fetching logic.
+- `use_auth()` — authentication-related behavior.
+- `use_pagination()` — pagination state and operations.
+- `use_ticket_filters()` — filtering and sorting logic.
+
+In TypeScript projects, composable files commonly use the `.ts` extension and are stored in `src/composables/`.
+
+### Benefits of composables
+
+**Code reuse:** Multiple components can use the same logic without copying and pasting it.
+
+**Separation of concerns:** Components handle presentation, while composables manage stateful behavior.
+
+**Maintainability:** Changes to shared logic can be made in one place.
+
+**Type safety:** TypeScript can describe inputs, outputs, state, and function parameters.
+
+**Testability:** Logic can be tested separately from the component template.
+
+### Sharing state between components
+
+A key distinction is whether a composable creates fresh state per call or returns shared state.
+
+```ts
+import { ref } from 'vue'
+
+export function use_ticket_count() {
+  const ticket_count = ref(0)
+
+  function increment_ticket_count() {
+    ticket_count.value++
+  }
+
+  return {
+    ticket_count,
+    increment_ticket_count
+  }
+}
+```
+
+Each call to `use_ticket_count()` creates a separate `ref`. Two components calling it independently will not automatically share the same count.
+
+To deliberately share the same state, the ref can be created at module scope:
+
+```ts
+import { ref } from 'vue'
+
+const ticket_count = ref(0)
+
+export function use_shared_ticket_count() {
+  function increment_ticket_count() {
+    ticket_count.value++
+  }
+
+  return {
+    ticket_count,
+    increment_ticket_count
+  }
+}
+```
+
+Now consumers importing this composable share the same module-level ref within that application module instance.
+
+For complex shared state, consider a dedicated state-management solution such as Pinia. In server-rendered applications, shared module-level state requires additional care to avoid leaking data between requests.
+
+### Composables with API calls
+
+A reusable fetching composable may expose:
+
+- `data` — the fetched data.
+- `is_loading` — whether a request is in progress.
+- `error` — any request failure.
+- `execute()` — a function that starts or repeats the request.
+
+The exact design depends on whether fetching happens automatically, on demand, or when reactive parameters change. Production implementations should also consider cancellation, stale responses, and component lifecycle cleanup.
+
+## Shallow Reactivity
+
+### Why shallow reactivity exists
+
+Vue's normal `ref()` and `reactive()` APIs provide deep reactivity for objects and arrays. Nested properties can be tracked, allowing fine-grained UI updates.
+
+However, deep tracking is not always necessary. Some applications receive large datasets from an API and treat them as immutable snapshots. In that situation, the application may replace the entire dataset instead of changing individual nested properties.
+
+`shallowRef()` and `shallowReactive()` allow reactivity to be limited to the root level.
+
+They are optimization tools for particular state-management patterns, not automatic performance improvements for every component.
+
+### Understanding shallowRef()
+
+A shallow ref tracks the `.value` property itself. It does not automatically make the nested properties of an object or array reactive.
+
+```ts
+import { shallowRef } from 'vue'
+
+interface Ticket {
+  ticket_id: number
+  title: string
+  status: 'open' | 'closed'
+}
+
+const ticket_snapshot = shallowRef<Ticket[]>([
+  { ticket_id: 101, title: 'Login issue', status: 'open' },
+  { ticket_id: 102, title: 'Payment issue', status: 'open' }
+])
+```
+
+A nested mutation changes the JavaScript object but does not, by itself, trigger the shallow ref's reactive update.
+
+```ts
+ticket_snapshot.value[0].status = 'closed'
+```
+
+To trigger an update through the shallow ref, replace its root value:
+
+```ts
+ticket_snapshot.value = ticket_snapshot.value.map((ticket) =>
+  ticket.ticket_id === 101
+    ? { ...ticket, status: 'closed' }
+    : ticket
+)
+```
+
+This creates a new array and a new object for the changed ticket. Assigning the new array to `.value` triggers reactive effects that depend on the shallow ref.
+
+This immutable-update approach makes it clear when the dataset changes.
+
+### Using triggerRef()
+
+Vue also provides `triggerRef()` for cases where a nested mutation has already occurred and you deliberately want to trigger effects that depend on the shallow ref.
+
+```ts
+import { shallowRef, triggerRef } from 'vue'
+
+const ticket_snapshot = shallowRef({
+  title: 'Login issue',
+  status: 'open'
+})
+
+ticket_snapshot.value.status = 'closed'
+
+triggerRef(ticket_snapshot)
+```
+
+This explicitly triggers dependent reactive effects. It does not convert the nested object into deeply reactive state, so subsequent nested mutations will not automatically trigger updates.
+
+Use this approach only when its behavior is intentional and understood. Replacing the root value is often easier to reason about.
+
+### Appropriate use cases for shallowRef()
+
+- Large immutable API response snapshots.
+- Data structures managed by external libraries.
+- State that is replaced as a complete value.
+- Cases where nested mutations are intentionally not tracked.
+
+Avoid using it when a UI needs to respond automatically to individual nested ticket changes.
+
+### Understanding shallowReactive()
+
+`shallowReactive()` creates a reactive proxy for an object, but only the object's top-level properties are reactive.
+
+```ts
+import { shallowReactive } from 'vue'
+
+const ticket_view = shallowReactive({
+  selected_status: 'open',
+  pagination: {
+    page: 1,
+    limit: 10
+  }
+})
+```
+
+Changing a top-level property triggers reactive updates:
+
+```ts
+ticket_view.selected_status = 'closed'
+```
+
+Changing a nested property does not automatically trigger an update through the shallow proxy:
+
+```ts
+ticket_view.pagination.page = 2
+```
+
+Replacing the top-level `pagination` property does trigger an update:
+
+```ts
+ticket_view.pagination = {
+  page: 2,
+  limit: 10
+}
+```
+
+The difference is the location of the changed property. Vue tracks the root-level properties but does not recursively convert nested objects into reactive proxies.
+
+### Shallow reactivity and performance
+
+Shallow reactivity can reduce the work Vue performs when dealing with large, mostly immutable structures. It also creates a simpler boundary between Vue-managed state and externally managed data.
+
+However, it is important to understand that:
+
+- Shallow APIs do not make nested objects immutable.
+- Nested JavaScript values can still be changed.
+- Those nested mutations do not automatically trigger updates through the shallow boundary.
+- Shallow reactivity can cause confusing UI behavior if used without a consistent update strategy.
+
+Use it when the application's data-update pattern genuinely benefits from shallow tracking, not simply because the word "shallow" sounds faster.
+

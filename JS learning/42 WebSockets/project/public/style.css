@@ -368,3 +368,93 @@ footer {
     font-size: 12px;
     font-weight: 700;
 }
+
+.hidden {
+    display: none !important;
+}
+
+.user-name-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    width: 100%;
+}
+
+.online-dot,
+.offline-dot {
+    display: inline-block;
+    flex-shrink: 0;
+    width: 9px;
+    height: 9px;
+    border-radius: 50%;
+}
+
+.online-dot {
+    background-color: #22c55e;
+}
+
+.offline-dot {
+    background-color: #6b7280;
+}
+
+.unread-badge {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 20px;
+    height: 20px;
+    margin-left: auto;
+    padding: 0 6px;
+    border-radius: 10px;
+    background-color: #ef4444;
+    color: #ffffff;
+    font-size: 12px;
+    font-weight: 700;
+}
+
+
+#logged-in-user {
+    margin-top: 8px;
+    color: #34d399;
+    font-size: 14px;
+    font-weight: 600;
+}
+
+.user-name-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    width: 100%;
+}
+
+.online-dot,
+.offline-dot {
+    display: inline-block;
+    flex-shrink: 0;
+    width: 9px;
+    height: 9px;
+    border-radius: 50%;
+}
+
+.online-dot {
+    background-color: #22c55e;
+}
+
+.offline-dot {
+    background-color: #6b7280;
+}
+
+.unread-badge {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 20px;
+    height: 20px;
+    margin-left: auto;
+    padding: 0 6px;
+    border-radius: 10px;
+    background-color: #ef4444;
+    color: #ffffff;
+    font-size: 12px;
+    font-weight: 700;
+}

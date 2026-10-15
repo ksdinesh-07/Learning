@@ -1,0 +1,114 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#171923">
+    <title>Offline-Ready Private Chat</title>
+    <link rel="manifest" href="/manifest.json">
+    <link rel="stylesheet" href="/style.css">
+    <script src="/socket.io/socket.io.js"></script>
+    <script src="/client.js" defer></script>
+</head>
+<body>
+    <main class="app">
+        <header class="app-header">
+            <div>
+                <h1>Private Chat</h1>
+                <p>Real-time messaging with offline support</p>
+            </div>
+            <span id="network-status" class="status-pill">Checking...</span>
+        </header>
+
+        <section id="login-screen" class="panel">
+            <h2>Join the chat</h2>
+            <p>Use a unique username for each browser session.</p>
+
+            <form id="login-form">
+                <label for="username">Username</label>
+                <input id="username" maxlength="30"
+                    placeholder="e.g. dinesh" required>
+                <button type="submit">Connect</button>
+            </form>
+        </section>
+
+        <section id="chat-screen" class="chat-layout hidden">
+            <aside class="panel users-panel">
+                <div class="section-heading">
+                    <h2>People</h2>
+                    <span id="user-count">0</span>
+                </div>
+                <p class="muted">Select someone to chat privately.</p>
+                <div id="users-list"></div>
+                <button id="logout-button" class="secondary">
+                    Change user
+                </button>
+            </aside>
+
+            <section class="panel conversation">
+                <header class="conversation-header">
+                    <div>
+                        <h2 id="recipient-name">Select a person</h2>
+                        <p id="recipient-status" class="muted">
+                            No conversation selected
+                        </p>
+                    </div>
+                    <span id="socket-status" class="status-pill">
+                        Connecting
+                    </span>
+                </header>
+
+                <div id="messages" aria-live="polite">
+                    <p class="empty-state">
+                        Choose a person to start a conversation.
+                    </p>
+                </div>
+
+                <form id="message-form">
+                    <input id="message-input"
+                        maxlength="2000"
+                        placeholder="Write a private message..."
+                        autocomplete="off" required>
+                    <button type="submit">Send</button>
+                </form>
+            </section>
+
+            <aside class="panel demo-panel">
+                <h2>Offline demo</h2>
+
+                <div class="demo-stat">
+                    <span>Network</span>
+                    <strong id="demo-network">Checking</strong>
+                </div>
+
+                <div class="demo-stat">
+                    <span>Socket.IO</span>
+                    <strong id="demo-socket">Connecting</strong>
+                </div>
+
+                <div class="demo-stat">
+                    <span>Pending messages</span>
+                    <strong id="pending-count">0</strong>
+                </div>
+
+                <div class="demo-stat">
+                    <span>Cached files</span>
+                    <strong id="cached-count">Checking</strong>
+                </div>
+
+                <button id="sync-button" class="secondary">
+                    Sync pending messages
+                </button>
+
+                <h3>Activity log</h3>
+                <div id="activity-log" aria-live="polite"></div>
+            </aside>
+        </section>
+
+        <footer>
+            <p>Demo only: usernames are not authenticated identities.</p>
+        </footer>
+    </main>
+</body>
+</html>
