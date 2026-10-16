@@ -2263,4 +2263,772 @@ This loading indicator is managed by the component itself, not automatically by 
 - Managing the initial display of asynchronously loaded dashboard sections.
 
 ---
+# Ecosystem & Routing
 
+## Vue Router
+
+### What is Vue Router?
+
+Vue Router is the official routing library for Vue.js applications. It allows developers to navigate between different pages or views without reloading the entire webpage.
+
+In a Single Page Application (SPA), Vue Router matches the current URL to a Vue component and displays that component inside the application. The browser URL changes while the application continues running.
+
+For example, in an employee management application:
+
+- `/` displays the dashboard.
+- `/employees` displays the employee list.
+- `/employees/101` displays the details of employee 101.
+- `/settings` displays the application settings.
+
+### Why Vue Router is Used
+
+Vue Router helps organize an application into multiple views and provides a structured way to manage navigation.
+
+Its main features include:
+
+- Mapping URLs to Vue components.
+- Navigating between views without full-page reloads.
+- Supporting nested routes and dynamic route parameters.
+- Providing programmatic navigation.
+- Supporting lazy loading of route components.
+- Integrating navigation guards for route access control.
+- Managing browser history and navigation.
+
+### Configuring Vue Router
+
+Install Vue Router in a Vue project using:
+
+```powershell
+npm install vue-router
+```
+
+Create a router configuration file at `src/router/index.ts`.
+
+```ts
+import { createRouter, createWebHistory } from 'vue-router'
+
+import dashboard_view from '../views/dashboard_view.vue'
+import employee_list from '../views/employee_list.vue'
+
+const router = createRouter({
+  history: createWebHistory(),
+
+  routes: [
+    {
+      path: '/',
+      component: dashboard_view
+    },
+    {
+      path: '/employees',
+      component: employee_list
+    }
+  ]
+})
+
+export default router
+```
+
+Register the router in `src/main.ts`.
+
+```ts
+import { createApp } from 'vue'
+import App from './App.vue'
+import router from './router'
+
+createApp(App)
+  .use(router)
+  .mount('#app')
+```
+
+Use `RouterLink` and `RouterView` in `App.vue`.
+
+```vue
+<template>
+  <nav>
+    <RouterLink to="/">Dashboard</RouterLink>
+    <RouterLink to="/employees">Employees</RouterLink>
+  </nav>
+
+  <RouterView />
+</template>
+```
+
+`RouterLink` creates navigation links, while `RouterView` displays the component associated with the current route.
+
+### Nested Routes
+
+Nested routes represent hierarchical pages inside an application. They allow child views to appear within a parent layout.
+
+For example, an employee management section might contain an overview, employee list, and reports.
+
+```ts
+{
+  path: '/employees',
+  component: () => import('../views/employee_layout.vue'),
+
+  children: [
+    {
+      path: '',
+      component: () => import('../views/employee_overview.vue')
+    },
+    {
+      path: 'list',
+      component: () => import('../views/employee_list.vue')
+    },
+    {
+      path: 'reports',
+      component: () => import('../views/employee_reports.vue')
+    }
+  ]
+}
+```
+
+The parent component must contain a nested `<RouterView />` to display its child components.
+
+```vue
+<template>
+  <h2>Employee Management</h2>
+
+  <RouterLink to="/employees">Overview</RouterLink>
+  <RouterLink to="/employees/list">Employee List</RouterLink>
+  <RouterLink to="/employees/reports">Reports</RouterLink>
+
+  <RouterView />
+</template>
+```
+
+The parent layout remains visible while the nested view changes.
+
+**Use cases:** Admin dashboards, banking portals, employee management systems, and learning management systems.
+
+### Dynamic Route Matching
+
+Dynamic routes allow a single route to match multiple URLs containing variable parameters.
+
+For example, `/employees/101` and `/employees/102` can display different employee details using the same component.
+
+```ts
+{
+  path: '/employees/:employee_id',
+  component: () => import('../views/employee_details.vue')
+}
+```
+
+Access the parameter inside the component using `useRoute()`.
+
+```vue
+<script setup lang="ts">
+import { useRoute } from 'vue-router'
+
+const route = useRoute()
+
+const employee_id = route.params.employee_id
+</script>
+
+<template>
+  <h2>Employee ID: {{ employee_id }}</h2>
+</template>
+```
+
+The route parameter is available through `route.params`. Parameters are usually strings, so validate or convert them when a numeric value is required.
+
+**Use cases:** Employee profiles, product details, student records, blog articles, and order tracking pages.
+
+### Programmatic Navigation
+
+Programmatic navigation allows developers to change routes through JavaScript instead of requiring users to click a link.
+
+The `useRouter()` composable provides access to the router instance.
+
+```vue
+<script setup lang="ts">
+import { useRouter } from 'vue-router'
+
+const router = useRouter()
+
+async function create_employee() {
+  // Save employee data to the server.
+
+  await router.push('/employees')
+}
+</script>
+
+<template>
+  <button @click="create_employee">
+    Create Employee
+  </button>
+</template>
+```
+
+Common navigation methods include:
+
+- `router.push()` navigates to a new route.
+- `router.replace()` replaces the current history entry.
+- `router.back()` navigates to the previous history entry.
+- `router.forward()` navigates forward in browser history.
+
+**Use cases:** Redirecting users after login, navigating after form submission, and opening newly created records.
+
+### Lazy Loading Routes
+
+Lazy loading allows Vue Router to load a route component only when the route is visited. This reduces the amount of JavaScript that must be downloaded when the application first loads.
+
+```ts
+{
+  path: '/reports',
+  component: () => import('../views/reports_view.vue')
+}
+```
+
+The dynamic import allows build tools such as Vite to create a separate JavaScript chunk for the component.
+
+**Use cases:** Large dashboards, applications with many pages, and reports that are not frequently accessed.
+
+---
+
+## Navigation Guards
+
+### What are Navigation Guards?
+
+Navigation guards are functions that control whether navigation to a particular route should proceed, be cancelled, or be redirected.
+
+They are commonly used to check authentication, user roles, and other navigation requirements before a page is displayed.
+
+For example, an employee management application may allow every user to view the dashboard but restrict the administration page to authorized administrators.
+
+Navigation guards do not replace backend authorization. The server must independently verify permissions before returning protected data or performing sensitive actions.
+
+### Types of Navigation Guards
+
+Vue Router provides three main categories of navigation guards.
+
+**Global guards** run for navigation throughout the application.
+
+**Per-route guards** apply to specific route definitions.
+
+**In-component guards** are defined inside components and can control navigation when entering or leaving those components.
+
+### Global Navigation Guards
+
+Global guards are registered on the router instance and can check navigation across the application.
+
+The `beforeEach()` guard runs before each navigation.
+
+```ts
+import { createRouter, createWebHistory } from 'vue-router'
+
+const router = createRouter({
+  history: createWebHistory(),
+  routes: [
+    {
+      path: '/login',
+      component: () => import('../views/login_view.vue')
+    },
+    {
+      path: '/dashboard',
+      component: () => import('../views/dashboard_view.vue'),
+      meta: { requires_auth: true }
+    }
+  ]
+})
+
+router.beforeEach((to) => {
+  const is_authenticated = Boolean(localStorage.getItem('access_token'))
+
+  if (to.meta.requires_auth && !is_authenticated) {
+    return '/login'
+  }
+})
+
+export default router
+```
+
+The guard checks whether the destination route requires authentication. If the user is not authenticated, navigation is redirected to the login page.
+
+This is a basic frontend example. A production application should validate authentication with a trusted server-side session or token strategy rather than treating the mere presence of a local storage value as proof of identity.
+
+Other global guards include:
+
+- `beforeResolve()` runs after in-component guards and async route components have resolved, before navigation is confirmed.
+- `afterEach()` runs after navigation is completed or fails. It is useful for analytics and page-title updates, not for blocking navigation.
+
+### Per-Route Navigation Guards
+
+Per-route guards apply to an individual route instead of the entire application.
+
+The `beforeEnter` guard runs when entering the route.
+
+```ts
+{
+  path: '/admin',
+  component: () => import('../views/admin_view.vue'),
+
+  beforeEnter: () => {
+    const user_role = localStorage.getItem('user_role')
+
+    if (user_role !== 'admin') {
+      return '/dashboard'
+    }
+  }
+}
+```
+
+This example checks whether the stored role is `admin`. Users without that role are redirected.
+
+For real applications, role information must be validated against trusted authentication state, and the backend must enforce the same permissions.
+
+**Use cases:** Administrator pages, payment screens, restricted reports, and role-specific dashboards.
+
+### In-Component Navigation Guards
+
+In-component guards are useful when navigation behavior depends on the component itself.
+
+Vue Router provides `onBeforeRouteLeave()` and `onBeforeRouteUpdate()` for Composition API components.
+
+For example, a form may warn users before they leave a page with unsaved changes.
+
+```vue
+<script setup lang="ts">
+import { ref } from 'vue'
+import { onBeforeRouteLeave } from 'vue-router'
+
+const has_unsaved_changes = ref(false)
+
+onBeforeRouteLeave(() => {
+  if (has_unsaved_changes.value) {
+    return window.confirm(
+      'You have unsaved changes. Leave this page?'
+    )
+  }
+})
+</script>
+
+<template>
+  <textarea
+    v-model="has_unsaved_changes"
+    placeholder="Enter your changes"
+  />
+</template>
+```
+
+In a real form, the unsaved-change flag should be updated when the form data changes. The example illustrates the guard concept.
+
+`onBeforeRouteUpdate()` is useful when a reused component receives a different route parameter and needs to react to that change.
+
+### Route Metadata
+
+Route metadata allows developers to attach additional information to route definitions.
+
+```ts
+{
+  path: '/reports',
+  component: () => import('../views/reports_view.vue'),
+  meta: {
+    requires_auth: true,
+    required_role: 'manager'
+  }
+}
+```
+
+A global navigation guard can inspect `to.meta` to determine whether authentication or role checks are needed.
+
+This approach centralizes route requirements and avoids duplicating the same logic across many route definitions.
+
+---
+
+## Pinia State Management
+
+### What is Pinia?
+
+Pinia is the recommended state management library for Vue applications. It provides a centralized way to manage application data that must be shared across multiple components.
+
+Without a centralized store, components may need to pass data through many layers using props and events. Pinia allows components to access shared state directly through a store.
+
+For example, an employee management application may need to share:
+
+- The currently authenticated user.
+- Employee records.
+- Selected department filters.
+- Notification counts.
+- Application preferences.
+
+Pinia organizes this shared state into stores.
+
+### Why Pinia is Used
+
+Pinia provides:
+
+- Centralized and reusable state.
+- Reactive state shared between components.
+- Actions for business operations and asynchronous tasks.
+- Getters for derived or computed values.
+- Modular stores for different application features.
+- TypeScript support and improved developer tooling.
+- Integration with Vue Devtools.
+
+Pinia is particularly useful when state must be accessed or updated by multiple unrelated components.
+
+### Installing Pinia
+
+Install Pinia using:
+
+```powershell
+npm install pinia
+```
+
+Register it in `src/main.ts`.
+
+```ts
+import { createApp } from 'vue'
+import { createPinia } from 'pinia'
+import App from './App.vue'
+import router from './router'
+
+const app = createApp(App)
+
+app.use(createPinia())
+app.use(router)
+
+app.mount('#app')
+```
+
+### Creating a Store
+
+A store is a centralized module that defines and manages a particular area of application state.
+
+Create `src/stores/employee_store.ts`.
+
+```ts
+import { defineStore } from 'pinia'
+import { computed, ref } from 'vue'
+
+interface Employee {
+  id: number
+  name: string
+  department: string
+}
+
+export const use_employee_store = defineStore(
+  'employee',
+  () => {
+    const employees = ref<Employee[]>([
+      {
+        id: 1,
+        name: 'Dinesh',
+        department: 'Development'
+      },
+      {
+        id: 2,
+        name: 'Arun',
+        department: 'Cloud'
+      }
+    ])
+
+    const employee_count = computed(
+      () => employees.value.length
+    )
+
+    function add_employee(employee: Employee) {
+      employees.value.push(employee)
+    }
+
+    return {
+      employees,
+      employee_count,
+      add_employee
+    }
+  }
+)
+```
+
+This example uses Pinia's setup-store syntax.
+
+The store contains three main concepts:
+
+- **State:** `employees` stores the employee records.
+- **Getter:** `employee_count` calculates the number of employees.
+- **Action:** `add_employee()` adds an employee to the store.
+
+### State
+
+State represents the data managed by a store. It can contain arrays, objects, strings, numbers, and other reactive values.
+
+In a setup store, state is commonly declared using `ref()` or `reactive()`.
+
+```ts
+const selected_department = ref('Development')
+const employees = ref<Employee[]>([])
+```
+
+Components can read and update this shared state through the store.
+
+### Getters
+
+Getters provide derived values based on the store's state. They are similar to computed properties in Vue components.
+
+```ts
+const employee_count = computed(
+  () => employees.value.length
+)
+```
+
+Whenever the employee list changes, the computed count updates automatically.
+
+Other examples include calculating total sales, filtering counts, and determining whether a shopping cart is empty.
+
+### Actions
+
+Actions contain operations that modify state or perform business tasks. They can be synchronous or asynchronous.
+
+```ts
+async function fetch_employees() {
+  const response = await fetch('/api/employees')
+
+  if (!response.ok) {
+    throw new Error('Failed to fetch employees')
+  }
+
+  employees.value = await response.json()
+}
+```
+
+The example retrieves employee records from an API. A production application should also validate response data and handle loading and error states.
+
+Actions are useful for keeping shared operations in one place rather than duplicating them in multiple components.
+
+### Using a Store in a Component
+
+Once the store has been created, components can access it using its store function.
+
+```vue
+<script setup lang="ts">
+import { use_employee_store } from '../stores/employee_store'
+
+const employee_store = use_employee_store()
+
+function add_new_employee() {
+  employee_store.add_employee({
+    id: 3,
+    name: 'Kumar',
+    department: 'Testing'
+  })
+}
+</script>
+
+<template>
+  <h2>Employees: {{ employee_store.employee_count }}</h2>
+
+  <ul>
+    <li
+      v-for="employee in employee_store.employees"
+      :key="employee.id"
+    >
+      {{ employee.name }} - {{ employee.department }}
+    </li>
+  </ul>
+
+  <button @click="add_new_employee">
+    Add Employee
+  </button>
+</template>
+```
+
+Any component using the same store instance can access the shared employee state.
+
+### Organizing Multiple Stores
+
+Large applications should organize stores according to application features.
+
+For example:
+
+- `auth_store.ts` manages authentication-related UI state.
+- `employee_store.ts` manages employee records.
+- `notification_store.ts` manages notifications.
+- `settings_store.ts` manages application preferences.
+
+This separation improves maintainability and makes each store easier to understand and test.
+
+### Pinia and TypeScript
+
+Pinia integrates with TypeScript and can infer types from store definitions. Interfaces can be used when explicit data models are required.
+
+```ts
+interface Employee {
+  id: number
+  name: string
+  department: string
+}
+```
+
+TypeScript helps identify invalid assignments, incorrect property names, and incompatible function arguments during development.
+
+### Pinia Best Practices
+
+- Keep stores focused on a specific feature or domain.
+- Use getters for derived state.
+- Use actions for reusable operations and asynchronous tasks.
+- Avoid duplicating the same source of truth across components and stores.
+- Do not store passwords or sensitive secrets in client-side state.
+- Remember that client-side state is not automatically persistent; use a suitable persistence strategy when required.
+- Keep server-side authorization independent of frontend store state.
+
+---
+
+## Server-Side Rendering (SSR)
+
+### What is Server-Side Rendering?
+
+Server-Side Rendering is a technique in which the server generates the initial HTML for a page before sending it to the browser.
+
+In a typical client-rendered Vue application, the browser downloads JavaScript and uses Vue to render the page. In SSR, the server renders the Vue component tree into HTML first. The browser can display that HTML before Vue hydrates it and attaches client-side interactivity.
+
+SSR can improve the time at which meaningful content becomes visible and make public page content easier for search engines and link-preview systems to discover.
+
+### Client-Side Rendering vs Server-Side Rendering
+
+**Client-Side Rendering (CSR)**
+
+- The browser downloads the application JavaScript.
+- Vue initializes and renders the interface in the browser.
+- The page becomes interactive as the application loads.
+- It is often simpler to deploy and operate.
+
+**Server-Side Rendering (SSR)**
+
+- The server executes the Vue rendering process.
+- The server sends HTML for the requested page.
+- The browser can display the rendered content.
+- Vue hydrates the HTML to attach event handlers and client-side behavior.
+
+SSR introduces additional complexity, including server execution, hydration, caching, and differences between server and browser environments.
+
+### What is Hydration?
+
+Hydration is the process in which Vue takes server-rendered HTML in the browser and attaches the necessary reactive behavior and event handlers.
+
+For example, a server may return a button containing the text `Click Me`. Hydration makes the button interactive using the corresponding Vue component logic.
+
+If the server-rendered HTML differs from what Vue expects on the client, hydration mismatches can occur. Developers should ensure that server and client rendering produce compatible output.
+
+### What is Nuxt.js?
+
+Nuxt is a framework built on Vue that provides higher-level application features, including file-based routing, server rendering, data fetching conventions, and deployment options.
+
+It reduces the amount of infrastructure developers must build manually when creating SSR or hybrid-rendered applications.
+
+Common Nuxt capabilities include:
+
+- File-based routing.
+- Server-Side Rendering.
+- Static Site Generation.
+- Client-Side Rendering.
+- Hybrid rendering strategies.
+- Server endpoints and server-side code.
+- Data fetching and SEO metadata utilities.
+
+### Creating a Nuxt Application
+
+A Nuxt application can be created using:
+
+```powershell
+npm create nuxt@latest my-nuxt-app
+```
+
+Move into the project and install dependencies if prompted by the setup process.
+
+```powershell
+cd my-nuxt-app
+npm run dev
+```
+
+Nuxt uses a file-based routing system. For example, creating `pages/about.vue` automatically defines an `/about` route.
+
+```vue
+<template>
+  <main>
+    <h1>About Us</h1>
+    <p>Learn more about our organization.</p>
+  </main>
+</template>
+```
+
+Nuxt provides routing conventions without requiring developers to manually define every route in a Vue Router configuration file.
+
+### SSR in Nuxt
+
+Nuxt supports server rendering by default for a typical new application unless configured otherwise.
+
+A page can fetch data using Nuxt's `useFetch()` composable.
+
+```vue
+<script setup lang="ts">
+interface Employee {
+  id: number
+  name: string
+}
+
+const { data: employees, status, error } =
+  await useFetch<Employee[]>('/api/employees')
+</script>
+
+<template>
+  <main>
+    <h1>Employees</h1>
+
+    <p v-if="status === 'pending'">Loading employees...</p>
+    <p v-else-if="error">Unable to load employees.</p>
+
+    <ul v-else>
+      <li
+        v-for="employee in employees"
+        :key="employee.id"
+      >
+        {{ employee.name }}
+      </li>
+    </ul>
+  </main>
+</template>
+```
+
+Nuxt can fetch data during server rendering and transfer the result to the client so that the initial page does not need to repeat the same request unnecessarily.
+
+The exact behavior depends on the data-fetching method, rendering configuration, and request lifecycle.
+
+### Static Site Generation
+
+Static Site Generation (SSG) generates HTML pages ahead of time during a build or prerendering process.
+
+Unlike request-time SSR, pre-generated pages can be served as static files through a CDN or web server.
+
+SSG is useful when content does not need to be generated separately for every incoming request.
+
+**Use cases:** Documentation websites, blogs, landing pages, and marketing websites.
+
+### Hybrid Rendering
+
+Hybrid rendering allows different routes to use different rendering strategies within the same application.
+
+For example:
+
+- A marketing homepage can be prerendered.
+- A frequently updated public catalogue can use server rendering or suitable caching.
+- A private dashboard can use client-side rendering where appropriate.
+
+Nuxt provides route rules that can configure rendering and caching behavior for different routes.
+
+The correct strategy depends on content freshness, user-specific data, SEO requirements, server costs, and application performance goals.
+
+### When to Use SSR
+
+SSR can be beneficial when:
+
+- Public content needs to be discoverable by search engines.
+- Initial HTML delivery is important.
+- Pages need rich link previews.
+- Content should be rendered on the server for each request.
+
+CSR may be suitable for internal tools, authenticated dashboards, and applications where search visibility is not a major requirement.
+
+SSG is often a good choice for content that changes infrequently.
+
+SSR does not automatically guarantee better SEO or performance. The outcome depends on implementation quality, caching, content, and the rendering strategy.

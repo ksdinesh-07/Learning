@@ -1,0 +1,46 @@
+import type { product } from "../models/product.model"
+
+export const products: product[] = [
+  {
+    id: 1,
+    product_name: "Wireless Headphones",
+    price: 1999,
+    image_url: "https://picsum.photos/seed/headphones/400/400",
+    category: "electronics",
+    stock: 12,
+    rating: 4.5,
+    description: "Noise-cancelling over-ear headphones with 30h battery.",
+    discount: 10,
+  },
+  {
+    id: 2,
+    product_name: "Cotton T-Shirt",
+    price: 599,
+    image_url: "https://picsum.photos/seed/tshirt/400/400",
+    category: "clothing",
+    stock: 40,
+    rating: 4.2,
+    description: "100% cotton, breathable, unisex fit.",
+  },
+  {
+    id: 3,
+    product_name: "Clean Code (Book)",
+    price: 850,
+    image_url: "https://picsum.photos/seed/book/400/400",
+    category: "books",
+    stock: 5,
+    rating: 4.8,
+    description: "A Handbook of Agile Software Craftsmanship.",
+    discount: 15,
+  },
+  {
+    id: 4,
+    product_name: "Desk Lamp",
+    price: 1299,
+    image_url: "https://picsum.photos/seed/lamp/400/400",
+    category: "home",
+    stock: 20,
+    rating: 4.0,
+    description: "Warm LED desk lamp with adjustable brightness.",
+  },
+]

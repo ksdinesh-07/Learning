@@ -1,0 +1,25 @@
+const order_module = (function () {
+    const tax_rate = 0.05;
+
+    function calculate_tax(amount) {
+        return amount * tax_rate;
+    }
+
+    function calculate_total(amount) {
+        return amount + calculate_tax(amount);
+    }
+
+    return {
+        calculate_total
+    };
+})();
+
+
+console.log(order_module.calculate_total(1000));
+// 1050
+
+console.log(order_module.tax_rate);
+// undefined
+
+console.log(order_module.calculate_tax(1000));
+// TypeError: order_module.calculate_tax is not a function

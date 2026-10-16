@@ -4,14 +4,41 @@
         <p v-if="loading">Loading products...</p>
         <p v-else-if="error">{{ error }}</p>
 
-        <div v-else class="grid">
-        <product_card
-            v-for="item in products"
-            :key="item.id"
-            :product="item"
-            @add-to-cart="handle_add_to_cart"
-        />
+        <div v-else>
+
+            <!-- view toggle -->
+            <!-- <div class="view-toggle">
+                <button :class="{active:current_view==='product_card'}" @click="set_view('card')">Grid</button>
+                <button :class="{active:current_view==='product_list'}" @click="set_view('list')">list</button>
+            </div> -->
+
+
+            <!-- render the card view
+            <div v-if="current_view==='card'" class="grid" >
+                <product_card v-for="item in products" :key="item.id" :product="item" @add-to-cart="handle_add_to_cart" />
+            </div>
+
+            render the list view
+                <product_list v-else :products="products" @add-to-cart="handle_add_to_cart" /> -->
+        
+            
+            <div class="view-toggle">
+                <button :class="{active:current_view===product_card}" @click="current_view=product_card">Grid</button>
+                <button :class="{active:current_view===product_list}" @click="current_view=product_list">List</button>
+
+            </div>
+
+            
+
+            <!-- dynamic component rendering -->
+            <component :is="current_view" :products="products" @add-to-cart="handle_add_to_cart" />
+
+
+
+
         </div>
+
+
     </div>
 
 </template>
@@ -19,11 +46,20 @@
 
 <script setup >
 
-    import {ref,onMounted,inject} from 'vue'
+    import {ref,onMounted,inject,shallowRef} from 'vue'
     import product_card from './product_card.vue';
+    // import { use_view } from '@/composables/use_view.js';
+    import product_list from './product_list.vue';
+
+
 
     //inject the shared cart
     const cart=inject('cart')
+
+    //get the view state and setter 
+    // const {current_view,set_view} =use_view()
+
+
 
     const products=ref([])
     const loading=ref(true)
@@ -36,6 +72,12 @@
     //     items:[],
     // })
 
+
+    //current view component that starts as the card view
+    const current_view=shallowRef(product_card)
+
+    console.log("product_card =", product_card)
+    console.log("product_list =", product_list)
 
     onMounted(async()=>{
         try{    
@@ -134,5 +176,26 @@
     .cart-list li {
     margin: 4px 0;
     } */
+
+    .view-toggle {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 16px;
+    }
+
+    .view-toggle button {
+    padding: 6px 14px;
+    border: 1px solid #ddd;
+    background: #fff;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 13px;
+    }
+
+    .view-toggle button.active {
+    background: #42b883;
+    color: #fff;
+    border-color: #42b883;
+    }
 
 </style>

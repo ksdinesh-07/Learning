@@ -2,7 +2,7 @@
 
     import { inject, computed } from "vue"
 
-    // Grab the shared cart
+    // Grab the shared cart from app.vue
     const cart = inject("cart")
 
     // Controls whether the drawer is visible
@@ -55,8 +55,11 @@
 <template>
 
   <Teleport to="body">
+
     <div v-if="is_open" class="overlay" @click.self="close_drawer">
+
       <div class="drawer">
+        
         <div class="drawer-header">
           <h2>Your Cart ({{ total_items }})</h2>
           <button class="close-btn" @click="close_drawer">✕</button>

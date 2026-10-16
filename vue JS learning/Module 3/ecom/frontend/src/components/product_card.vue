@@ -1,99 +1,119 @@
 <template>
 
-  <div class="card">
+  <div class="grid">
 
-        <img :src="product.image_url" :alt="product.product_name" />
-
-        <h3>{{ product.product_name }}</h3>
-
-        <p class="category">{{ product.category }}</p>
-
-        <p class="price">
-        ₹{{ product.price }}
-        <span v-if="product.discount" class="discount">
-            {{ product.discount }}% off
+    <product_card_item
+      v-for="item in products"
+      :key="item.id"
+      :product="item"
+      @add-to-cart="emit('add-to-cart', $event)"
+    >
+      <!-- Named slot: custom badge -->
+      <template #badge>
+        <span v-if="item.stock === 0" class="out-of-stock">Out of stock</span>
+        <span v-else-if="item.rating >= 4.5" class="top-rated">Top rated</span>
+        <span v-else-if="item.discount" class="discount-badge">
+          {{ item.discount }}% OFF
         </span>
-        </p>
+      </template>
 
-        <p class="rating">⭐ {{ product.rating }}</p>
+      <!-- Scoped slot: custom price display -->
+      <template #price="{ price, discount }">
+        <span class="price-tag">₹{{ price.toLocaleString("en-IN") }}</span>
+        <span v-if="discount" class="save-tag">
+          Save ₹{{ Math.round((price * discount) / 100) }}
+        </span>
+      </template>
 
-        <p class="desc">{{ product.description }}</p>
-
-        <button class="add-btn" @click="handle_add_click">Add to Cart</button>
-        
+      <!-- Named slot: custom actions -->
+      <template #actions>
+        <button class="add-btn" @click="emit('add-to-cart', item.id)">
+          🛒 Add — ₹{{ item.price }}
+        </button>
+      </template>
+      
+    </product_card_item>
   </div>
-  
+
 </template>
 
 <script setup>
 
-    const props=defineProps({
-        product:{
-            type:Object,
+    import product_card_item from './product_card_item.vue';
+
+    defineProps({
+        products:{
+            type:Array,
             required:true,
         }
     })
 
     const emit=defineEmits(['add-to-cart'])
 
-    function handle_add_click(){
-        emit('add-to-cart',props.product.id)
-    }
+    // function handle_add_click(){
+    //     emit('add-to-cart',props.product.id)
+    // }
 
 </script>
 
 <style scoped>
 
-    .card {
-    border: 1px solid #ddd;
-    border-radius: 8px;
-    padding: 12px;
-    background: #fff;
-    display: flex;
-    flex-direction: column;
-    gap: 6px;
+    .grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+    gap: 16px;
     }
 
-    .card img {
-    width: 100%;
-    height: 180px;
-    object-fit: cover;
-    border-radius: 6px;
-    }
-
-    h3 {
-    margin: 0;
-    font-size: 16px;
-    }
-
-    .category {
-    text-transform: uppercase;
+    .top-rated {
+    background: #f5a623;
+    color: #fff;
     font-size: 11px;
-    color: #888;
-    margin: 0;
-    }
-
-    .price {
+    padding: 3px 8px;
+    border-radius: 12px;
     font-weight: bold;
-    margin: 0;
     }
 
-    .discount {
-    color: #d33;
+    .out-of-stock {
+    background: #888;
+    color: #fff;
+    font-size: 11px;
+    padding: 3px 8px;
+    border-radius: 12px;
+    font-weight: bold;
+    }
+
+    .discount-badge {
+    background: #d33;
+    color: #fff;
+    font-size: 11px;
+    padding: 3px 8px;
+    border-radius: 12px;
+    font-weight: bold;
+    }
+
+    .price-tag {
+    font-weight: bold;
+    }
+
+    .save-tag {
+    color: #2c8c5a;
     font-size: 12px;
-    margin-left: 6px;
+    margin-left: 8px;
     }
 
-    .rating {
-    font-size: 13px;
-    color: #555;
-    margin: 0;
+    .add-btn {
+    width: 100%;
+    padding: 8px 12px;
+    background: #42b883;
+    color: #fff;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-weight: bold;
     }
 
-    .desc {
-    font-size: 12px;
-    color: #666;
-    margin: 0;
+    .add-btn:hover {
+    background: #369870;
     }
 
 </style>
