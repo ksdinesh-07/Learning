@@ -21649,22 +21649,6 @@ Structure:
 Arun → Priya → Dinesh → null
 ```
 
----
-
-# Linked List vs Array
-
-| Operation             |                 Array |      Linked List |
-| --------------------- | --------------------: | ---------------: |
-| Access by index       |                  O(1) |             O(n) |
-| Search                |                  O(n) |             O(n) |
-| Insert at beginning   |                  O(n) |             O(1) |
-| Remove from beginning |                  O(n) |             O(1) |
-| Memory                | Usually less overhead | Extra references |
-
-JavaScript applications commonly use arrays rather than manually implemented linked lists, but understanding linked lists is important for algorithms and interviews.
-
----
-
 # Set
 
 A JavaScript `Set` stores **unique values**.

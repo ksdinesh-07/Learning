@@ -1,51 +1,45 @@
 <template>
-
-    <div class="card">
-
-        <!-- named-slot name appears at the top-right of the card -->
-        <div class="badge-area">
-            <slot name="badge" >
-
-                <!-- fallback shows only if the parent provides no badge -->
-                <span v-if="product.discount" class="discount-badge" >
-                    {{ product.discount }}% off
-                </span>
-
-            </slot>
-        </div>
-
-        <img :src="product.image_url" :alt="product.product_name" />
-
-        <h3>{{ product.product_name }}</h3>
-
-        <p class="category">{{ product.category }}</p>
-
-        <!-- scoped slot for the price -> the child passes the raw price up  -->
-        <p class="price">
-            <slot name="price" :price="product.price" :discount="product.discount">
-                <!-- fallback: default price display -->
-                ₹{{ product.price }}
-            </slot>
-        <span v-if="product.discount" class="discount">
-            {{ product.discount }}% off
+    
+  <div class="card">
+    <!-- Badge slot (top-right) -->
+    <div class="badge-area">
+      <slot name="badge">
+        <span v-if="product.discount" class="discount-badge">
+          {{ product.discount }}% off
         </span>
-        </p>
-
-        <p class="rating">⭐ {{ product.rating }}</p>
-        <p class="desc">{{ product.description }}</p>
-
-        <!-- default slot for the actio button area -->
-         <div class="actions">
-            <slot name="actions">
-                <!-- fallback default -> add to cart button -->
-                 <button class="add-btn" @click="handle_add_click">Add to Cart</button>
-            </slot>
-         </div>
-
+      </slot>
     </div>
 
-</template>
+    <!-- Clickable image + title → go to detail page -->
+    <RouterLink :to="`/product/${product.id}`" class="card-link">
+      <img :src="product.image_url" :alt="product.product_name" />
+      <h3>{{ product.product_name }}</h3>
+    </RouterLink>
 
+    <p class="category">{{ product.category }}</p>
+
+    <!-- Price slot -->
+    <p class="price">
+      <slot name="price" :price="product.price" :discount="product.discount">
+        ₹{{ product.price }}
+        <span v-if="product.discount" class="discount">
+          {{ product.discount }}% off
+        </span>
+      </slot>
+    </p>
+
+    <p class="rating">⭐ {{ product.rating }}</p>
+    <p class="desc">{{ product.description }}</p>
+
+    <!-- Actions slot -->
+    <div class="actions">
+      <slot name="actions">
+        <button class="add-btn" @click="handle_add_click">Add to Cart</button>
+      </slot>
+    </div>
+  </div>
+
+</template>
 
 <script setup>
 
@@ -94,19 +88,64 @@
     font-weight: bold;
     }
 
-    .card img {
+    /* Clickable link wrapping image + title */
+    .card-link {
+    text-decoration: none;
+    color: inherit;
+    display: block;
+    }
+
+    .card-link img {
     width: 100%;
     height: 180px;
     object-fit: cover;
     border-radius: 6px;
+    transition: transform 0.2s;
     }
 
-    h3 { margin: 0; font-size: 16px; }
-    .category { text-transform: uppercase; font-size: 11px; color: #888; margin: 0; }
-    .price { font-weight: bold; margin: 0; }
-    .discount { color: #d33; font-size: 12px; margin-left: 6px; }
-    .rating { font-size: 13px; color: #555; margin: 0; }
-    .desc { font-size: 12px; color: #666; margin: 0; }
+    .card-link:hover img {
+    transform: scale(1.03);
+    }
+
+    .card-link h3 {
+    margin: 6px 0 0 0;
+    font-size: 16px;
+    color: #333;
+    }
+
+    .card-link:hover h3 {
+    color: #42b883;
+    }
+
+    .category {
+    text-transform: uppercase;
+    font-size: 11px;
+    color: #888;
+    margin: 0;
+    }
+
+    .price {
+    font-weight: bold;
+    margin: 0;
+    }
+
+    .discount {
+    color: #d33;
+    font-size: 12px;
+    margin-left: 6px;
+    }
+
+    .rating {
+    font-size: 13px;
+    color: #555;
+    margin: 0;
+    }
+
+    .desc {
+    font-size: 12px;
+    color: #666;
+    margin: 0;
+    }
 
     .actions {
     margin-top: auto;
@@ -123,6 +162,8 @@
     font-weight: bold;
     }
 
-    .add-btn:hover { background: #369870; }
+    .add-btn:hover {
+    background: #369870;
+    }
 
 </style>

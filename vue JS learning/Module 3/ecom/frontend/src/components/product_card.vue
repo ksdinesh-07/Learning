@@ -37,9 +37,16 @@
 
 </template>
 
+
 <script setup>
 
     import product_card_item from './product_card_item.vue';
+    import { onMounted, onActivated, onDeactivated } from "vue"
+
+    onMounted(() => console.log("🟢 product_card MOUNTED"))
+    onActivated(() => console.log("🟢 product_card ACTIVATED"))
+    onDeactivated(() => console.log("🔴 product_card DEACTIVATED"))
+
 
     defineProps({
         products:{

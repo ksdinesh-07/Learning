@@ -3032,3 +3032,501 @@ CSR may be suitable for internal tools, authenticated dashboards, and applicatio
 SSG is often a good choice for content that changes infrequently.
 
 SSR does not automatically guarantee better SEO or performance. The outcome depends on implementation quality, caching, content, and the rendering strategy.
+
+
+# Tooling, Testing & Production in Vue
+
+## Vite Toolchain
+
+Vite is a frontend build tool that provides a fast development server and an optimized production build. In a Vue application, Vite processes Vue single-file components, TypeScript, CSS, and other assets.
+
+### Local Build Pipeline
+
+The build pipeline is the process of transforming application source code into files that browsers can run efficiently.
+
+During development, Vite provides a development server with features such as Hot Module Replacement (HMR), which updates changed modules without requiring a full page reload in many cases.
+
+During production, Vite bundles and optimizes application resources for deployment.
+
+Common commands:
+
+```bash
+npm run dev
+npm run build
+npm run preview
+```
+
+- `npm run dev` starts the development server.
+- `npm run build` generates the production build, usually in the `dist` directory.
+- `npm run preview` serves the production build locally for inspection.
+
+Example `package.json` scripts:
+
+```json
+{
+  "scripts": {
+    "dev": "vite",
+    "build": "vue-tsc -b && vite build",
+    "preview": "vite preview"
+  }
+}
+```
+
+The `vue-tsc -b` command performs Vue and TypeScript project checks when the project is configured for it.
+
+### Environment Variables
+
+Environment variables allow an application to use different configuration values for development, testing, and production without hardcoding them into source files.
+
+Vite exposes client-side environment variables prefixed with `VITE_`.
+
+Example `.env.development`:
+
+```env
+VITE_API_BASE_URL=http://localhost:5000/api
+```
+
+Example `.env.production`:
+
+```env
+VITE_API_BASE_URL=https://api.example.com/api
+```
+
+Access the variable in a Vue component:
+
+```vue
+<script setup lang="ts">
+const api_base_url = import.meta.env.VITE_API_BASE_URL;
+</script>
+
+<template>
+  <p>API URL: {{ api_base_url }}</p>
+</template>
+```
+
+Important considerations:
+
+- Variables prefixed with `VITE_` are exposed to client-side code.
+- Never store passwords, private API keys, database credentials, or other secrets in client-exposed environment variables.
+- Restart the development server when changes require environment variables to be reloaded.
+- Use environment-specific files and deployment configuration appropriately.
+
+### Path Aliases
+
+Path aliases provide shorter, more readable import paths. Instead of using long relative paths, developers can use aliases such as `@` to represent the `src` directory.
+
+Example `vite.config.ts`:
+
+```typescript
+import { fileURLToPath, URL } from 'node:url';
+import { defineConfig } from 'vite';
+import vue from '@vitejs/plugin-vue';
+
+export default defineConfig({
+  plugins: [vue()],
+  resolve: {
+    alias: {
+      '@': fileURLToPath(new URL('./src', import.meta.url))
+    }
+  }
+});
+```
+
+The TypeScript configuration must also recognize the alias. For a project using a compatible `tsconfig.app.json`, configure:
+
+```json
+{
+  "compilerOptions": {
+    "baseUrl": ".",
+    "paths": {
+      "@/*": ["./src/*"]
+    }
+  }
+}
+```
+
+Example usage:
+
+```typescript
+import type { Ticket } from '@/types/ticket';
+import TicketCard from '@/components/TicketCard.vue';
+```
+
+This makes imports easier to maintain when the project has multiple folders and nested components.
+
+### Asset Optimization
+
+Asset optimization reduces the size and loading cost of application resources.
+
+Vite supports production optimizations such as JavaScript bundling, CSS processing, asset hashing, and appropriate handling of static assets.
+
+Common practices include:
+
+- Compressing and resizing images before deployment.
+- Using modern image formats where appropriate.
+- Removing unused dependencies.
+- Avoiding unnecessarily large JavaScript bundles.
+- Importing assets through the build pipeline when they need processing.
+- Using the `public` directory for assets that must retain their exact filenames and paths.
+
+Optimized assets can reduce download time and improve the user experience.
+
+## Testing
+
+Testing verifies that an application behaves as expected. It helps identify bugs before changes reach users and reduces the risk of breaking existing functionality.
+
+Vue applications commonly use unit tests, component tests, integration tests, and end-to-end tests.
+
+### Unit Testing with Vitest
+
+Vitest is a testing framework designed to work well with Vite. It supports test files, assertions, mocking, and code coverage.
+
+Unit tests focus on small, isolated units of functionality, such as utility functions, composables, and business logic.
+
+Example function:
+
+```typescript
+export function calculate_total(
+  price: number,
+  quantity: number
+): number {
+  return price * quantity;
+}
+```
+
+Example `calculate_total.test.ts`:
+
+```typescript
+import { describe, expect, it } from 'vitest';
+import { calculate_total } from './calculate_total';
+
+describe('calculate_total', () => {
+  it('calculates the total price', () => {
+    expect(calculate_total(200, 3)).toBe(600);
+  });
+});
+```
+
+The test checks whether the function returns the expected result for a price of 200 and a quantity of 3.
+
+### Component Testing with Vue Test Utils
+
+Vue Test Utils is the official utility library for testing Vue components. It allows developers to mount components, inspect rendered output, trigger events, and verify component behavior.
+
+Example component:
+
+```vue
+<script setup lang="ts">
+import { ref } from 'vue';
+
+const count = ref(0);
+</script>
+
+<template>
+  <button @click="count++">
+    Count: {{ count }}
+  </button>
+</template>
+```
+
+Example component test:
+
+```typescript
+import { mount } from '@vue/test-utils';
+import { expect, it } from 'vitest';
+import Counter from './Counter.vue';
+
+it('increments the count when clicked', async () => {
+  const wrapper = mount(Counter);
+
+  await wrapper.get('button').trigger('click');
+
+  expect(wrapper.text()).toContain('Count: 1');
+});
+```
+
+The test mounts the component, simulates a button click, and checks the displayed result.
+
+Vue Test Utils is particularly useful for checking props, emitted events, conditional rendering, and user interactions.
+
+### End-to-End Testing with Playwright or Cypress
+
+End-to-end (E2E) testing checks an application from the user's perspective by interacting with the browser.
+
+It can verify that pages load correctly, navigation works, forms submit successfully, and important workflows behave as expected.
+
+Playwright and Cypress are popular browser automation tools.
+
+Example Playwright test:
+
+```typescript
+import { test, expect } from '@playwright/test';
+
+test('user can open the support page', async ({ page }) => {
+  await page.goto('http://localhost:5173');
+
+  await expect(
+    page.getByRole('heading', { name: 'Support Hub' })
+  ).toBeVisible();
+});
+```
+
+This test opens the application and checks whether the expected heading is visible.
+
+E2E tests are useful for verifying workflows that involve several components or pages. They generally take longer to execute than isolated unit tests.
+
+### Unit Testing vs End-to-End Testing
+
+| Feature | Unit testing | End-to-end testing |
+|---|---|---|
+| Main purpose | Verify isolated logic | Verify complete user workflows |
+| Execution | Usually fast | Usually slower |
+| Scope | Functions, composables, components | Browser and application workflows |
+| Common tools | Vitest, Vue Test Utils | Playwright, Cypress |
+| Example | Validate ticket filtering | Open a ticket and submit a reply |
+
+A balanced testing strategy uses fast unit and component tests for frequent checks and E2E tests for important user journeys.
+
+## TypeScript Integration
+
+TypeScript adds static type checking to JavaScript. In Vue applications, it helps detect invalid data types and incorrect component usage during development.
+
+TypeScript is especially useful for defining component props, event payloads, API response objects, and shared application state.
+
+### Type-Safe Component Properties
+
+Props allow a parent component to pass data to a child component.
+
+In Vue 3 with TypeScript, `defineProps` can infer prop types from a type declaration.
+
+Example:
+
+```vue
+<script setup lang="ts">
+interface Ticket {
+  ticket_id: number;
+  title: string;
+  status: 'open' | 'closed' | 'pending';
+}
+
+defineProps<{
+  ticket: Ticket;
+}>();
+</script>
+
+<template>
+  <article>
+    <h2>{{ ticket.title }}</h2>
+    <p>Status: {{ ticket.status }}</p>
+  </article>
+</template>
+```
+
+The `Ticket` interface describes the structure of a ticket. TypeScript can detect invalid property names and incompatible values during type checking.
+
+The status field uses a union type, restricting the value to `open`, `closed`, or `pending`.
+
+### Type-Safe Event Payloads
+
+Components can communicate with their parents by emitting events.
+
+Typed event declarations help ensure that events carry the expected payload.
+
+Example:
+
+```vue
+<script setup lang="ts">
+const emit = defineEmits<{
+  closeTicket: [ticket_id: number];
+}>();
+
+function close_ticket(ticket_id: number) {
+  emit('closeTicket', ticket_id);
+}
+</script>
+
+<template>
+  <button @click="close_ticket(101)">
+    Close ticket
+  </button>
+</template>
+```
+
+The event expects a numeric ticket ID. Passing a string instead of a number produces a TypeScript error during type checking.
+
+Typed events improve communication between components and make component contracts easier to understand.
+
+### Type-Safe Global State
+
+Global state allows multiple components to access shared application data. In Vue projects, this can be managed through provide/inject, composables, or Pinia.
+
+Example using Pinia:
+
+```typescript
+import { defineStore } from 'pinia';
+import { ref } from 'vue';
+
+export const use_ticket_store = defineStore(
+  'tickets',
+  () => {
+    const open_ticket_count = ref<number>(0);
+
+    function set_open_ticket_count(count: number) {
+      open_ticket_count.value = count;
+    }
+
+    return {
+      open_ticket_count,
+      set_open_ticket_count
+    };
+  }
+);
+```
+
+The count is explicitly typed as a number, and the action accepts a numeric argument.
+
+Type-safe state management reduces accidental type mismatches when multiple components share application data.
+
+### Strict Type Checking
+
+Strict TypeScript settings enable additional checks that identify potentially unsafe code.
+
+For example:
+
+```typescript
+const username: string = 'Dinesh';
+const user_age: number = 21;
+```
+
+Assigning an incompatible value to either variable produces a type error.
+
+Useful compiler options include `strict`, `noImplicitAny`, and `strictNullChecks`. Some are enabled automatically when `strict` is enabled.
+
+Type checking does not validate every runtime value from an API or external source. Runtime validation may still be necessary when handling untrusted data.
+
+## Performance Optimization
+
+Performance optimization improves how quickly an application loads, responds to user interactions, and uses browser resources.
+
+Vue applications can use route lazy loading, asynchronous components, code splitting, and bundle analysis to reduce unnecessary work.
+
+### Lazy Loading Routes
+
+Lazy loading delays downloading a route's component code until the route is needed.
+
+This reduces the amount of JavaScript that must be loaded when the application first opens.
+
+Example Vue Router configuration:
+
+```typescript
+import { createRouter, createWebHistory } from 'vue-router';
+
+const router = createRouter({
+  history: createWebHistory(),
+  routes: [
+    {
+      path: '/',
+      component: () => import('@/views/HomeView.vue')
+    },
+    {
+      path: '/tickets',
+      component: () => import('@/views/TicketsView.vue')
+    },
+    {
+      path: '/settings',
+      component: () => import('@/views/SettingsView.vue')
+    }
+  ]
+});
+
+export default router;
+```
+
+The dynamic imports allow Vite to split route components into separate JavaScript chunks when building for production.
+
+The application can load the ticket or settings component when the user navigates to that route.
+
+Lazy loading is most useful for larger pages that are not needed immediately. Excessive splitting can also create additional network requests, so it should be applied thoughtfully.
+
+### Asynchronous Components
+
+Vue supports loading components asynchronously using `defineAsyncComponent`.
+
+This is useful when a component is expensive to load or is only required in certain situations.
+
+Example:
+
+```vue
+<script setup lang="ts">
+import { defineAsyncComponent } from 'vue';
+
+const TicketAnalytics = defineAsyncComponent(
+  () => import('@/components/TicketAnalytics.vue')
+);
+</script>
+
+<template>
+  <Suspense>
+    <TicketAnalytics />
+  </Suspense>
+</template>
+```
+
+For asynchronous components, Vue can also be configured with loading and error components using the options form of `defineAsyncComponent`.
+
+The component's JavaScript can be placed in a separate chunk and loaded when needed.
+
+Note that `<Suspense>` is not required for every async component. Vue's async component loading and the Suspense mechanism are separate features, and their use depends on the application's loading strategy.
+
+### Build Footprint Analysis
+
+Build footprint analysis examines the size and composition of the generated production assets.
+
+It helps identify large dependencies, duplicated modules, and code that may be suitable for lazy loading.
+
+A Vite bundle visualizer can generate a report showing how much space each module occupies in the output bundle.
+
+Typical optimization steps include:
+
+- Identify large dependencies in the generated bundle.
+- Replace unnecessarily heavy packages with smaller alternatives where appropriate.
+- Lazy-load routes and rarely used components.
+- Remove unused code and dependencies.
+- Avoid importing an entire library when only a small part is needed, where the library supports smaller imports.
+- Measure the result after each significant optimization.
+
+The objective is not simply to minimize bundle size. Optimization should improve real user experience without making the application unnecessarily complex.
+
+### Measuring Performance
+
+Use browser developer tools and build reports to investigate performance.
+
+Important measurements include:
+
+- Initial JavaScript download size.
+- Route loading time.
+- Time required to render important content.
+- Responsiveness during user interactions.
+- Network requests and asset sizes.
+- Core Web Vitals, such as Largest Contentful Paint (LCP), Interaction to Next Paint (INP), and Cumulative Layout Shift (CLS).
+
+Measurements should guide optimization rather than relying on assumptions.
+
+## Production Readiness
+
+Before deploying a Vue application, verify that the project is configured and tested appropriately.
+
+Common production checks include:
+
+- Run the production build.
+- Run TypeScript checks.
+- Execute unit and component tests.
+- Run E2E tests for important workflows.
+- Check environment variables and API URLs.
+- Inspect the generated assets for unnecessary size.
+- Verify routing and fallback behavior on the deployment server.
+- Confirm that sensitive values are not exposed in client bundles.
+- Test the built application in an environment similar to production.
+
+A successful build alone does not guarantee that an application is free of bugs or ready for deployment. Testing, configuration checks, and runtime verification are also important.
+

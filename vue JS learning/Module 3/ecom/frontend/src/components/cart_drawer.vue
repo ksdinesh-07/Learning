@@ -1,54 +1,60 @@
 <script setup>
 
     import { inject, computed } from "vue"
+    import { use_cart } from "@/composables/use_cart.js"
+
 
     // Grab the shared cart from app.vue
-    const cart = inject("cart")
+    // const cart = inject("cart")
 
     // Controls whether the drawer is visible
     // We inject this from AppHeader so both share the same open/closed state
     const is_open = inject("cart_open")
 
+
+    //cart state and operations
+    const {cart,total_items,total_price,increase,decrease}=use_cart();
+
     // Grand total — recomputes whenever the cart changes
-    const total_price = computed(() => {
-    let sum = 0
-    for (let i = 0; i < cart.items.length; i++) {
-        sum = sum + cart.items[i].price * cart.items[i].quantity
-    }
-    return sum
-    })
+    // const total_price = computed(() => {
+    // let sum = 0
+    // for (let i = 0; i < cart.items.length; i++) {
+    //     sum = sum + cart.items[i].price * cart.items[i].quantity
+    // }
+    // return sum
+    // })
 
     // Total item count
-    const total_items = computed(() => {
-    let sum = 0
-    for (let i = 0; i < cart.items.length; i++) {
-        sum = sum + cart.items[i].quantity
-    }
-    return sum
-    })
+    // const total_items = computed(() => {
+    // let sum = 0
+    // for (let i = 0; i < cart.items.length; i++) {
+    //     sum = sum + cart.items[i].quantity
+    // }
+    // return sum
+    // })
 
     // Close the drawer
     function close_drawer() {
     is_open.value = false
     }
 
-    // Increase quantity
-    function increase(item) {
-    item.quantity = item.quantity + 1
-    }
+    // // Increase quantity
+    // function increase(item) {
+    // item.quantity = item.quantity + 1
+    // }
 
-    // Decrease quantity — removes item if it hits 0
-    function decrease(item) {
-    if (item.quantity > 1) {
-        item.quantity = item.quantity - 1
-    } else {
-        // Remove the item from cart.items
-        const index = cart.items.indexOf(item)
-        if (index !== -1) {
-        cart.items.splice(index, 1)
-        }
-    }
-    }
+    // // Decrease quantity — removes item if it hits 0
+    // function decrease(item) {
+    // if (item.quantity > 1) {
+    //     item.quantity = item.quantity - 1
+    // } else {
+    //     // Remove the item from cart.items
+    //     const index = cart.items.indexOf(item)
+    //     if (index !== -1) {
+    //     cart.items.splice(index, 1)
+    //     }
+    // }
+    // }
 
 </script>
 
@@ -77,9 +83,9 @@
             </div>
 
             <div class="item-controls">
-              <button @click="decrease(item)">−</button>
+              <button @click="decrease(item.product_id)">−</button>
               <span class="qty">{{ item.quantity }}</span>
-              <button @click="increase(item)">+</button>
+              <button @click="increase(item.product_id)">+</button>
             </div>
 
             <div class="item-total">₹{{ item.price * item.quantity }}</div>

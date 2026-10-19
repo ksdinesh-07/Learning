@@ -26,6 +26,11 @@
 
 <script setup>
 
+    import { onMounted, onActivated, onDeactivated } from "vue"
+    onMounted(() => console.log("🟡 product_list MOUNTED"))
+    onActivated(() => console.log("🟡 product_list ACTIVATED"))
+    onDeactivated(() => console.log("🔴 product_list DEACTIVATED"))
+
     defineProps({
         products:{
             type:Array,
@@ -36,7 +41,7 @@
     const emit=defineEmits(['add-to-cart'])
 
     function handle_add_click(product_id){
-        emit('add-to-cart,product_id')
+        emit('add-to-cart',product_id)
     }
 
 </script>

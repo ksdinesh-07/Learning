@@ -25,20 +25,17 @@
             <div class="view-toggle">
                 <button :class="{active:current_view===product_card}" @click="current_view=product_card">Grid</button>
                 <button :class="{active:current_view===product_list}" @click="current_view=product_list">List</button>
-
             </div>
 
+            <!-- demonstration of caching -->
+            <p class="mount-info">Mount count: {{ mount_count }}</p>
             
-
             <!-- dynamic component rendering -->
-            <component :is="current_view" :products="products" @add-to-cart="handle_add_to_cart" />
-
-
-
+            <KeepAlive>
+                <component :is="current_view" :products="products" @add-to-cart="handle_add_to_cart" />
+            </KeepAlive>
 
         </div>
-
-
     </div>
 
 </template>
@@ -46,24 +43,63 @@
 
 <script setup >
 
-    import {ref,onMounted,inject,shallowRef} from 'vue'
+    import {ref,onMounted,inject,shallowRef,onActivated,onDeactivated, watch} from 'vue'
     import product_card from './product_card.vue';
     // import { use_view } from '@/composables/use_view.js';
     import product_list from './product_list.vue';
+    //composobles
+    import { use_fetch } from '../composables/use_fetch.js';
+    import { use_cart } from "../composables/use_cart.js"    
 
+    //fetch products from the backend
+    const {data,loading,error} =use_fetch('http://localhost:3000/api/products');
 
+    //extract the products
+    const products=shallowRef([])   
+    watch(data,(new_data)=>{
+        if(new_data && new_data.data){
+            products.value=new_data.data
+        }
+    })
 
+    //current view
+    const current_view=shallowRef(product_card)
+
+    //cart
+    const {add_product} =use_cart();
+
+    //handler
+    function handle_add_to_cart(product_id){
+        let found=null;
+        for (let i=0;i<products.value.length;i++){
+            if(products.value[i].id===product_id){
+                found=products.value[i]
+                break
+            }
+        }
+        if (found){
+            add_product(found)
+        }
+    }
+
+    
     //inject the shared cart
-    const cart=inject('cart')
+    // const cart=inject('cart')
 
     //get the view state and setter 
     // const {current_view,set_view} =use_view()
 
 
 
-    const products=ref([])
-    const loading=ref(true)
-    const error=ref("")
+    // const products=ref([])
+    // const loading=ref(true)
+    // const error=ref("")
+
+    // Counter to demonstrate KeepAlive caching
+    const mount_count=ref(0)
+    onMounted(() => {
+        mount_count.value = mount_count.value + 1
+    })
 
     // const cart_count=ref(0)
 
@@ -74,21 +110,31 @@
 
 
     //current view component that starts as the card view
-    const current_view=shallowRef(product_card)
+    // const current_view=shallowRef(product_card)
 
     console.log("product_card =", product_card)
     console.log("product_list =", product_list)
 
-    onMounted(async()=>{
-        try{    
-            const response =await fetch('http://localhost:3000/api/products')
-            const json=await response.json()
-            products.value=json.data
-        }catch(err){
-            error.value='Failed to load products'
-        }finally{
-            loading.value=false
-        }
+    // onMounted(async()=>{
+    //     mount_count.value=mount_count.value+1
+    //     console.log('Product card Mounted',mount_count.value)
+    //     try{    
+    //         const response =await fetch('http://localhost:3000/api/products')
+    //         const json=await response.json()
+    //         products.value=json.data
+    //     }catch(err){
+    //         error.value='Failed to load products'
+    //     }finally{
+    //         loading.value=false
+    //     }
+    // })
+
+    onActivated(()=>{
+        console.log('Product card Activated')
+    })
+
+    onDeactivated(()=>{
+        console.log("product card deactivated")
     })
 
     // //total number of items 
@@ -110,38 +156,42 @@
     // })
 
     //runs when child emits
-    function handle_add_to_cart(product_id){
-        let find_product=null;
-        for(let i=0;i<products.value.length;i++){
-            if(products.value[i].id=== product_id){
-                find_product=products.value[i]
-                break
-            }
-        }
+    // function handle_add_to_cart(product_id){
+    //     if (!cart || !cart.items){
+    //         console.error('Cart is unavailable')
+    //         return
+    //     }
+    //     let find_product=null;
+    //     for(let i=0;i<products.value.length;i++){
+    //         if(products.value[i].id=== product_id){
+    //             find_product=products.value[i]
+    //             break
+    //         }
+    //     }
 
-        if (find_product===null) return
+    //     if (find_product===null) return
 
-        //check if the product is alrady in cart
-        let existing_item=null
-        for (let i=0;i< cart.items.length;i++){
-            if (cart.items[i].product_id===product_id){
-                existing_item=cart.items[i]
-                break
-            }
-        }
+    //     //check if the product is alrady in cart
+    //     let existing_item=null
+    //     for (let i=0;i< cart.items.length;i++){
+    //         if (cart.items[i].product_id===product_id){
+    //             existing_item=cart.items[i]
+    //             break
+    //         }
+    //     }
 
-        if (existing_item!=null){
-            existing_item.quantity=existing_item.quantity + 1
-        }else{
-            cart.items.push({
-                product_id:find_product.id,
-                product_name:find_product.product_name,
-                price:find_product.price,
-                quantity:1,
-            })
-        }
+    //     if (existing_item!=null){
+    //         existing_item.quantity=existing_item.quantity + 1
+    //     }else{
+    //         cart.items.push({
+    //             product_id:find_product.id,
+    //             product_name:find_product.product_name,
+    //             price:find_product.price,
+    //             quantity:1,
+    //         })
+    //     }
 
-    }
+    // }
 
 
 </script>
@@ -196,6 +246,12 @@
     background: #42b883;
     color: #fff;
     border-color: #42b883;
+    }
+
+    .mount-info {
+    font-size: 12px;
+    color: #888;
+    margin-bottom: 12px;
     }
 
 </style>
