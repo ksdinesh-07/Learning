@@ -21778,27 +21778,6 @@ clear()
 
 ---
 
-# Map vs Object
-
-Both can store key-value data.
-
-Object:
-
-```javascript
-const user = {
-    user_id: 101,
-    user_name: "Arun"
-};
-```
-
-Map:
-
-```javascript
-const user = new Map();
-
-user.set("user_id", 101);
-user.set("user_name", "Arun");
-```
 
 Map is particularly useful when:
 
@@ -21873,7 +21852,7 @@ Searching can be efficient when the tree is balanced.
 
 ---
 
-# Tree in JavaScript
+# Tree 
 
 ```javascript
 class Tree_node {
@@ -22301,6 +22280,401 @@ O(n²)
 Bubble Sort is useful for learning algorithms, but it is generally not the first choice for production sorting.
 
 ---
+
+## Selection Sort
+
+### Definition
+
+Selection Sort is a sorting algorithm that repeatedly finds the smallest element from the unsorted portion of an array and places it at the beginning of that portion.
+
+It divides the array into two parts:
+
+- **Sorted portion:** Elements already placed in their correct positions.
+- **Unsorted portion:** Elements that still need to be sorted.
+
+### Working Principle
+
+- Start from the first element.
+- Find the smallest element in the unsorted portion.
+- Swap it with the first element of that portion.
+- Move to the next position.
+- Repeat until the entire array is sorted.
+
+### Example
+
+Consider the following array:
+
+`[7, 3, 8, 2, 6]`
+
+**Pass 1:** Find the smallest element, `2`, and swap it with `7`.
+
+`[2, 3, 8, 7, 6]`
+
+**Pass 2:** Find the smallest element in the remaining portion. The smallest is `3`, which is already in the correct position.
+
+`[2, 3, 8, 7, 6]`
+
+**Pass 3:** Find the smallest element in `[8, 7, 6]` and swap `6` with `8`.
+
+`[2, 3, 6, 7, 8]`
+
+The array is now sorted.
+
+### JavaScript Implementation
+
+```javascript
+const numbers = [7, 3, 8, 2, 6];
+
+for (let i = 0; i < numbers.length - 1; i++) {
+  let min_index = i;
+
+  for (let j = i + 1; j < numbers.length; j++) {
+    if (numbers[j] < numbers[min_index]) {
+      min_index = j;
+    }
+  }
+
+  [numbers[i], numbers[min_index]] =
+    [numbers[min_index], numbers[i]];
+}
+
+console.log(numbers);
+// [2, 3, 6, 7, 8]
+```
+
+### Time and Space Complexity
+
+- Best-case time complexity: `O(n²)`
+- Average-case time complexity: `O(n²)`
+- Worst-case time complexity: `O(n²)`
+- Auxiliary space complexity: `O(1)`
+
+Selection Sort performs approximately the same number of comparisons regardless of the initial order of the array.
+
+### Real-Time Use Cases
+
+- Sorting small collections of data.
+- Situations where minimizing the number of swaps is important.
+- Educational applications for understanding comparisons and swapping.
+
+### Advantages
+
+- Simple to understand and implement.
+- Requires very little additional memory.
+- Performs at most `n - 1` swaps for an array of `n` elements.
+
+### Disadvantages
+
+- Inefficient for large datasets.
+- Performs many comparisons even when the array is already sorted.
+- Standard Selection Sort is not stable.
+
+## Insertion Sort
+
+### Definition
+
+Insertion Sort is a sorting algorithm that builds a sorted portion of an array one element at a time by inserting each new element into its correct position.
+
+It works similarly to arranging playing cards in your hand.
+
+### Working Principle
+
+- Consider the first element as the initially sorted portion.
+- Select the next element as the current value.
+- Compare it with the elements in the sorted portion.
+- Shift larger elements one position to the right.
+- Insert the current value into the available position.
+- Repeat until all elements are sorted.
+
+### Example
+
+Consider the following array:
+
+`[7, 3, 8, 2, 6]`
+
+**Pass 1:** Insert `3` before `7`.
+
+`[3, 7, 8, 2, 6]`
+
+**Pass 2:** Insert `8`. Since it is larger than `7`, no shifting is required.
+
+`[3, 7, 8, 2, 6]`
+
+**Pass 3:** Insert `2` at the beginning by shifting the larger elements to the right.
+
+`[2, 3, 7, 8, 6]`
+
+**Pass 4:** Insert `6` between `3` and `7`.
+
+`[2, 3, 6, 7, 8]`
+
+The array is now sorted.
+
+### JavaScript Implementation
+
+```javascript
+const numbers = [7, 3, 8, 2, 6];
+
+for (let i = 1; i < numbers.length; i++) {
+  const current_value = numbers[i];
+  let j = i - 1;
+
+  while (j >= 0 && numbers[j] > current_value) {
+    numbers[j + 1] = numbers[j];
+    j--;
+  }
+
+  numbers[j + 1] = current_value;
+}
+
+console.log(numbers);
+// [2, 3, 6, 7, 8]
+```
+
+### Time and Space Complexity
+
+- Best-case time complexity: `O(n)`
+- Average-case time complexity: `O(n²)`
+- Worst-case time complexity: `O(n²)`
+- Auxiliary space complexity: `O(1)`
+
+Insertion Sort performs efficiently when the array is already sorted or nearly sorted.
+
+### Real-Time Use Cases
+
+- Sorting small datasets.
+- Maintaining a small list of items in sorted order.
+- Sorting data that is frequently updated with a few new elements.
+- Sorting nearly ordered records.
+
+### Advantages
+
+- Simple to implement.
+- Uses constant additional memory.
+- Efficient for small or nearly sorted arrays.
+- Stable when implemented using the standard comparison condition.
+
+### Disadvantages
+
+- Inefficient for large, randomly ordered datasets.
+- May require many shifts when elements are in reverse order.
+
+## Merge Sort
+
+### Definition
+
+Merge Sort is a divide-and-conquer sorting algorithm that divides an array into smaller subarrays, sorts them recursively, and merges the sorted subarrays into a single sorted array.
+
+### Working Principle
+
+- Divide the array into two halves.
+- Continue dividing each half until every subarray contains one element.
+- Compare elements from the smaller sorted subarrays.
+- Merge the elements in the correct order.
+- Continue merging until one completely sorted array remains.
+
+### Example
+
+Consider the following array:
+
+`[7, 3, 8, 2, 6]`
+
+**Divide the array:**
+
+`[7, 3]` and `[8, 2, 6]`
+
+Divide further until each part contains one element:
+
+`[7]`, `[3]`, `[8]`, `[2]`, `[6]`
+
+**Merge the smaller parts:**
+
+`[7]` and `[3]` become `[3, 7]`.
+
+`[2]` and `[6]` become `[2, 6]`.
+
+Merge `[8]` with `[2, 6]` to produce `[2, 6, 8]`.
+
+**Final merge:**
+
+Merge `[3, 7]` and `[2, 6, 8]`.
+
+The final sorted array is:
+
+`[2, 3, 6, 7, 8]`
+
+### JavaScript Implementation
+
+```javascript
+function merge_sort(numbers) {
+  if (numbers.length <= 1) {
+    return numbers;
+  }
+
+  const middle = Math.floor(numbers.length / 2);
+
+  const left = merge_sort(numbers.slice(0, middle));
+  const right = merge_sort(numbers.slice(middle));
+
+  return merge(left, right);
+}
+
+function merge(left, right) {
+  const result = [];
+  let i = 0;
+  let j = 0;
+
+  while (i < left.length && j < right.length) {
+    if (left[i] <= right[j]) {
+      result.push(left[i]);
+      i++;
+    } else {
+      result.push(right[j]);
+      j++;
+    }
+  }
+
+  return result.concat(left.slice(i), right.slice(j));
+}
+
+console.log(merge_sort([7, 3, 8, 2, 6]));
+// [2, 3, 6, 7, 8]
+```
+
+### Time and Space Complexity
+
+- Best-case time complexity: `O(n log n)`
+- Average-case time complexity: `O(n log n)`
+- Worst-case time complexity: `O(n log n)`
+- Auxiliary space complexity: `O(n)` for this array-based implementation.
+
+### Real-Time Use Cases
+
+- Sorting large datasets.
+- Sorting linked lists efficiently.
+- External sorting when large datasets cannot fit into memory.
+- Applications that require predictable sorting performance.
+
+### Advantages
+
+- Consistent `O(n log n)` time complexity.
+- Stable when equal elements are merged in the correct order.
+- Suitable for large datasets.
+- Works well with linked lists and external sorting.
+
+### Disadvantages
+
+- Typically requires additional memory for arrays.
+- Recursive calls introduce overhead.
+- May use more memory than in-place sorting algorithms.
+
+## Quick Sort
+
+### Definition
+
+Quick Sort is a divide-and-conquer sorting algorithm that selects a pivot element, partitions the other elements according to their values relative to the pivot, and recursively sorts the resulting partitions.
+
+### Working Principle
+
+- Choose a pivot element.
+- Partition the remaining elements into smaller and larger groups.
+- Place the pivot in its correct position through partitioning.
+- Recursively sort the smaller and larger partitions.
+- Continue until the partitions contain zero or one element.
+
+### Example
+
+Consider the following array:
+
+`[7, 3, 8, 2, 6]`
+
+Choose `6` as the pivot.
+
+**Partition the elements:**
+
+- Smaller than the pivot: `[3, 2]`
+- Pivot: `6`
+- Larger than the pivot: `[7, 8]`
+
+Sort the smaller group:
+
+`[3, 2]` becomes `[2, 3]`.
+
+Sort the larger group:
+
+`[7, 8]` is already sorted.
+
+Combine the results:
+
+`[2, 3] + [6] + [7, 8]`
+
+Final sorted array:
+
+`[2, 3, 6, 7, 8]`
+
+### JavaScript Implementation
+
+```javascript
+function quick_sort(numbers) {
+  if (numbers.length <= 1) {
+    return numbers;
+  }
+
+  const pivot = numbers[numbers.length - 1];
+  const left = [];
+  const right = [];
+
+  for (let i = 0; i < numbers.length - 1; i++) {
+    if (numbers[i] < pivot) {
+      left.push(numbers[i]);
+    } else {
+      right.push(numbers[i]);
+    }
+  }
+
+  return [
+    ...quick_sort(left),
+    pivot,
+    ...quick_sort(right)
+  ];
+}
+
+console.log(quick_sort([7, 3, 8, 2, 6]));
+// [2, 3, 6, 7, 8]
+```
+
+This is a simplified implementation that creates new arrays. Other implementations perform partitioning in place.
+
+### Time and Space Complexity
+
+- Best-case time complexity: `O(n log n)`
+- Average-case time complexity: `O(n log n)`
+- Worst-case time complexity: `O(n²)`
+- Auxiliary space complexity: `O(n)` for the array-based implementation shown, including the additional arrays and recursive calls.
+
+The worst case can occur when the pivot repeatedly creates highly unbalanced partitions, such as when sorting already sorted data with a consistently poor pivot strategy.
+
+### Real-Time Use Cases
+
+- General-purpose in-memory sorting.
+- Sorting numerical data and records.
+- Applications where average-case performance is important.
+- Situations where a well-designed partitioning implementation can reduce extra memory usage.
+
+### Advantages
+
+- Usually performs well on arrays in memory.
+- Has good average-case time complexity.
+- In-place variants can use relatively little additional memory.
+- Supports different pivot-selection strategies.
+
+### Disadvantages
+
+- Worst-case time complexity is `O(n²)`.
+- Performance depends on pivot selection and partitioning.
+- Recursive implementations can use additional stack space.
+- The implementation shown creates additional arrays and is not in-place.
+
 
 # JavaScript Array Sort
 
