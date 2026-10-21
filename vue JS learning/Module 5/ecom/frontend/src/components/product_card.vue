@@ -72,7 +72,7 @@
     }
 
     .top-rated {
-    background: #f5a623;
+    background: #8a4d00;
     color: #fff;
     font-size: 11px;
     padding: 3px 8px;
@@ -90,7 +90,7 @@
     }
 
     .discount-badge {
-    background: #d33;
+    background: #b71c1c;
     color: #fff;
     font-size: 11px;
     padding: 3px 8px;
@@ -103,7 +103,7 @@
     }
 
     .save-tag {
-    color: #2c8c5a;
+    color: #1f6e47;
     font-size: 12px;
     margin-left: 8px;
     }
@@ -111,8 +111,8 @@
     .add-btn {
     width: 100%;
     padding: 8px 12px;
-    background: #42b883;
-    color: #fff;
+    background: #1f6e47;
+    color: #ffffff;
     border: none;
     border-radius: 6px;
     cursor: pointer;
@@ -120,7 +120,7 @@
     }
 
     .add-btn:hover {
-    background: #369870;
+    background: #175437;
     }
 
 </style>

@@ -4,7 +4,9 @@
 
     <app_header />
     <!-- <product_grid_page /> -->
-    <router-view />
+     <main>
+        <router-view />
+     </main>
     <cart_drawer />
 
   </div>

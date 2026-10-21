@@ -79,10 +79,10 @@
     font-size: 13px;
     }
 
-    .view-toggle button.active {
-    background: #42b883;
-    color: #fff;
-    border-color: #42b883;
-    }
-
+.view-toggle button.active {
+  color: #ffffff;
+  background: #0d3d24;
+  border-color: #0d3d24;
+  font-weight: 700;
+}
 </style>

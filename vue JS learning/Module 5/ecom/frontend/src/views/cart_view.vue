@@ -154,7 +154,7 @@
 
     .item-price {
     font-size: 12px;
-    color: #888;
+    color: #555;
     margin-top: 2px;
     }
 
@@ -226,7 +226,7 @@
     .checkout-btn {
     width: 100%;
     padding: 12px;
-    background: #42b883;
+    background: #226e47;
     color: #fff;
     border: none;
     border-radius: 6px;
@@ -237,14 +237,14 @@
     }
 
     .checkout-btn:hover {
-    background: #369870;
+    background: #226e47;
     }
 
     .continue-btn {
     width: 100%;
     padding: 10px;
     background: #fff;
-    color: #42b883;
+    color: #2c8c5a;
     border: 1px solid #42b883;
     border-radius: 6px;
     cursor: pointer;

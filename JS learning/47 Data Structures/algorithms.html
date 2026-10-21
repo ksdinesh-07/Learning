@@ -1,0 +1,472 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Real Data Sorting with Speed Comparison</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f0f4f8;
+      padding: 20px;
+      color: #222;
+    }
+    h1 {
+      text-align: center;
+      color: #1a73e8;
+    }
+    .box {
+      background: white;
+      padding: 15px;
+      border-radius: 8px;
+      margin-bottom: 20px;
+      border: 1px solid #ccc;
+    }
+    label {
+      margin-right: 5px;
+      font-weight: bold;
+    }
+    select, button, input {
+      padding: 8px 14px;
+      margin: 5px;
+      font-size: 14px;
+      border-radius: 5px;
+      border: 1px solid #ccc;
+    }
+    button {
+      background: #1a73e8;
+      color: white;
+      border: none;
+      cursor: pointer;
+    }
+    button:hover {
+      background: #1558b0;
+    }
+    button:disabled {
+      background: #999;
+      cursor: not-allowed;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 10px;
+      font-size: 13px;
+    }
+    th, td {
+      border: 1px solid #ddd;
+      padding: 8px;
+      text-align: left;
+    }
+    th {
+      background: #e8f0fe;
+    }
+    .green {
+      color: green;
+      font-weight: bold;
+    }
+    .speed-table td {
+      font-family: monospace;
+    }
+    #message {
+      text-align: center;
+      color: #555;
+      margin: 10px;
+      font-style: italic;
+      min-height: 20px;
+    }
+    .scroll-box {
+      max-height: 400px;
+      overflow-y: auto;
+      border: 1px solid #ddd;
+      border-radius: 5px;
+    }
+  </style>
+</head>
+<body>
+
+
+  <!-- Controls -->
+  <div class="box">
+    <label>How many records:</label>
+    <select id="recordCount">
+      <option value="100">100</option>
+      <option value="500">500</option>
+      <option value="1000" selected>1,000</option>
+      <option value="2000">2,000</option>
+      <option value="5000">5,000</option>
+    </select>
+
+    <label>Sort by:</label>
+    <select id="sortField">
+      <option value="name">Name</option>
+      <option value="email">Email</option>
+      <option value="city">City</option>
+      <option value="company">Company</option>
+    </select>
+
+    <label>Algorithm:</label>
+    <select id="algorithm">
+      <option value="bubble">Bubble Sort</option>
+      <option value="selection">Selection Sort</option>
+      <option value="insertion">Insertion Sort</option>
+      <option value="merge">Merge Sort</option>
+      <option value="quick">Quick Sort</option>
+      <option value="native">Native Array.sort</option>
+    </select>
+  </div>
+
+  <div class="box" style="text-align:center;">
+    <button id="loadBtn" onclick="loadData()">1. Load Real Data</button>
+    <button id="sortBtn" onclick="runSort()" disabled>2. Sort & Show Speed</button>
+    <button id="compareBtn" onclick="runAllSorts()" disabled>3. Compare All Algorithms</button>
+  </div>
+
+
+  <!-- Speed result -->
+  <div class="box">
+    <h2>Execution Speed</h2>
+    <table class="speed-table" id="speedTable">
+      <tr>
+        <th>Algorithm</th>
+        <th>Time (ms)</th>
+        <th>Records</th>
+      </tr>
+    </table>
+  </div>
+
+  <!-- Real data display -->
+  <div class="box">
+    <h2>Sorted Real Data (showing first 100)</h2>
+    <div class="scroll-box">
+      <table id="dataTable">
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>Name</th>
+            <th>Email</th>
+            <th>City</th>
+            <th>Company</th>
+          </tr>
+        </thead>
+        <tbody id="dataBody">
+          <tr><td colspan="5" style="text-align:center;color:#999;">No data loaded yet.</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+<script>
+  // Global variable to hold the raw data
+  var users = [];
+
+  // 1. LOAD REAL DATA
+  function loadData() {
+    var message = document.getElementById("message");
+    var loadBtn = document.getElementById("loadBtn");
+    var sortBtn = document.getElementById("sortBtn");
+    var compareBtn = document.getElementById("compareBtn");
+
+    var howMany = parseInt(document.getElementById("recordCount").value);
+
+    message.innerHTML = "Loading " + howMany + " real users from Random User Generator...";
+    loadBtn.disabled = true;
+    sortBtn.disabled = true;
+    compareBtn.disabled = true;
+
+    fetch("https://randomuser.me/api/?results=" + howMany)
+      .then(function(response) {
+        return response.json();
+      })
+      .then(function(data) {
+        var rawUsers = data.results;
+        users = [];
+
+        for (var i = 0; i < rawUsers.length; i++) {
+          var user = rawUsers[i];
+          users.push({
+            id: i + 1,
+            name: user.name.first + " " + user.name.last,
+            email: user.email,
+            city: user.location.city,
+            company: user.login.username
+          });
+        }
+
+        message.innerHTML = "Loaded " + users.length + " real users. Choose a field and click Sort.";
+        loadBtn.disabled = false;
+        sortBtn.disabled = false;
+        compareBtn.disabled = false;
+
+        // Show unsorted preview
+        showData(users);
+      })
+      .catch(function(error) {
+        message.innerHTML = "Error loading data: " + error;
+        loadBtn.disabled = false;
+      });
+  }
+
+  // --------------------------------------
+  // 2. SORTING ALGORITHMS
+  // --------------------------------------
+  function bubbleSort(arr, compareFn) {
+    var copy = arr.slice();
+    var n = copy.length;
+    for (var i = 0; i < n - 1; i++) {
+      for (var j = 0; j < n - 1 - i; j++) {
+        if (compareFn(copy[j], copy[j + 1]) > 0) {
+          var temp = copy[j];
+          copy[j] = copy[j + 1];
+          copy[j + 1] = temp;
+        }
+      }
+    }
+    return copy;
+  }
+
+  function selectionSort(arr, compareFn) {
+    var copy = arr.slice();
+    var n = copy.length;
+    for (var i = 0; i < n - 1; i++) {
+      var minIndex = i;
+      for (var j = i + 1; j < n; j++) {
+        if (compareFn(copy[j], copy[minIndex]) < 0) {
+          minIndex = j;
+        }
+      }
+      if (minIndex !== i) {
+        var temp = copy[i];
+        copy[i] = copy[minIndex];
+        copy[minIndex] = temp;
+      }
+    }
+    return copy;
+  }
+
+  function insertionSort(arr, compareFn) {
+    var copy = arr.slice();
+    var n = copy.length;
+    for (var i = 1; i < n; i++) {
+      var current = copy[i];
+      var j = i - 1;
+      while (j >= 0 && compareFn(copy[j], current) > 0) {
+        copy[j + 1] = copy[j];
+        j = j - 1;
+      }
+      copy[j + 1] = current;
+    }
+    return copy;
+  }
+
+  function mergeSort(arr, compareFn) {
+    if (arr.length <= 1) {
+      return arr;
+    }
+    var middle = Math.floor(arr.length / 2);
+    var left = arr.slice(0, middle);
+    var right = arr.slice(middle);
+    var sortedLeft = mergeSort(left, compareFn);
+    var sortedRight = mergeSort(right, compareFn);
+    return merge(sortedLeft, sortedRight, compareFn);
+  }
+
+  function merge(left, right, compareFn) {
+    var result = [];
+    var i = 0;
+    var j = 0;
+    while (i < left.length && j < right.length) {
+      if (compareFn(left[i], right[j]) <= 0) {
+        result.push(left[i]);
+        i++;
+      } else {
+        result.push(right[j]);
+        j++;
+      }
+    }
+    while (i < left.length) {
+      result.push(left[i]);
+      i++;
+    }
+    while (j < right.length) {
+      result.push(right[j]);
+      j++;
+    }
+    return result;
+  }
+
+  function quickSort(arr, compareFn) {
+    if (arr.length <= 1) {
+      return arr;
+    }
+    var pivot = arr[0];
+    var smaller = [];
+    var equal = [];
+    var bigger = [];
+    for (var i = 0; i < arr.length; i++) {
+      var cmp = compareFn(arr[i], pivot);
+      if (cmp < 0) {
+        smaller.push(arr[i]);
+      } else if (cmp > 0) {
+        bigger.push(arr[i]);
+      } else {
+        equal.push(arr[i]);
+      }
+    }
+    return quickSort(smaller, compareFn).concat(equal).concat(quickSort(bigger, compareFn));
+  }
+
+  function nativeSort(arr, compareFn) {
+    var copy = arr.slice();
+    copy.sort(compareFn);
+    return copy;
+  }
+  // 3. Build a compare function based on field
+  function buildCompareFn(field) {
+    return function(a, b) {
+      var valA = a[field];
+      var valB = b[field];
+      if (typeof valA === "string" && typeof valB === "string") {
+        return valA.localeCompare(valB);
+      }
+      return valA - valB;
+    };
+  }
+
+  // 4. Pick a sorting function by name
+  
+  function pickSortFn(algo) {
+    if (algo === "bubble") { return { fn: bubbleSort, name: "Bubble Sort" }; }
+    if (algo === "selection") { return { fn: selectionSort, name: "Selection Sort" }; }
+    if (algo === "insertion") { return { fn: insertionSort, name: "Insertion Sort" }; }
+    if (algo === "merge") { return { fn: mergeSort, name: "Merge Sort" }; }
+    if (algo === "quick") { return { fn: quickSort, name: "Quick Sort" }; }
+    return { fn: nativeSort, name: "Native Array.sort" };
+  }
+
+  // 5. RUN ONE SORT
+  function runSort() {
+    if (users.length === 0) {
+      alert("Please load data first.");
+      return;
+    }
+
+    var field = document.getElementById("sortField").value;
+    var algo = document.getElementById("algorithm").value;
+    var message = document.getElementById("message");
+
+    var compareFn = buildCompareFn(field);
+    var picked = pickSortFn(algo);
+
+    message.innerHTML = "Sorting " + users.length + " real records with " + picked.name + "...";
+
+    setTimeout(function() {
+      var start = performance.now();
+      var sorted = picked.fn(users, compareFn);
+      var end = performance.now();
+      var timeMs = end - start;
+
+      showData(sorted);
+
+      var speedTable = document.getElementById("speedTable");
+      speedTable.innerHTML =
+        "<tr><th>Algorithm</th><th>Time (ms)</th><th>Records</th></tr>" +
+        "<tr><td>" + picked.name + "</td><td class='green'>" + timeMs.toFixed(3) +
+        "</td><td>" + users.length + "</td></tr>";
+
+      message.innerHTML = "Done! " + picked.name + " sorted " + users.length +
+        " records by " + field + " in " + timeMs.toFixed(3) + " ms.";
+    }, 50);
+  }
+
+  // 6. COMPARE ALL ALGORITHMS
+  
+  function runAllSorts() {
+    if (users.length === 0) {
+      alert("Please load data first.");
+      return;
+    }
+
+    var field = document.getElementById("sortField").value;
+    var message = document.getElementById("message");
+    var compareFn = buildCompareFn(field);
+
+    var algos = [
+      { id: "bubble", name: "Bubble Sort" },
+      { id: "selection", name: "Selection Sort" },
+      { id: "insertion", name: "Insertion Sort" },
+      { id: "merge", name: "Merge Sort" },
+      { id: "quick", name: "Quick Sort" },
+      { id: "native", name: "Native Array.sort" }
+    ];
+
+    message.innerHTML = "Running all algorithms on " + users.length + " records... please wait.";
+
+    setTimeout(function() {
+      var results = [];
+      var lastSorted = users;
+
+      for (var i = 0; i < algos.length; i++) {
+        var picked = pickSortFn(algos[i].id);
+        var start = performance.now();
+        var sorted = picked.fn(users, compareFn);
+        var end = performance.now();
+        results.push({
+          name: picked.name,
+          time: end - start,
+          data: sorted
+        });
+        lastSorted = sorted;
+      }
+
+      // Find fastest
+      var fastest = 999999999;
+      for (var k = 0; k < results.length; k++) {
+        if (results[k].time < fastest) {
+          fastest = results[k].time;
+        }
+      }
+
+      // Show all results in speed table
+      var speedTable = document.getElementById("speedTable");
+      var html = "<tr><th>Algorithm</th><th>Time (ms)</th><th>Records</th></tr>";
+      for (var r = 0; r < results.length; r++) {
+        var rowClass = (results[r].time === fastest) ? "green" : "";
+        var label = (results[r].time === fastest) ? " (fastest)" : "";
+        html += "<tr><td>" + results[r].name + "</td>" +
+                "<td class='" + rowClass + "'>" + results[r].time.toFixed(3) + label + "</td>" +
+                "<td>" + users.length + "</td></tr>";
+      }
+      speedTable.innerHTML = html;
+
+      // Show sorted data from the last run
+      showData(lastSorted);
+
+      message.innerHTML = "All sorts complete on " + users.length +
+        " records sorted by " + field + ". Fastest: " +
+        (function() {
+          for (var f = 0; f < results.length; f++) {
+            if (results[f].time === fastest) return results[f].name;
+          }
+        })();
+    }, 50);
+  }
+
+  // 7. SHOW REAL DATA (first 100 rows)
+  
+  function showData(dataArray) {
+    var tbody = document.getElementById("dataBody");
+    tbody.innerHTML = "";
+
+    var limit = Math.min(dataArray.length, 100);
+    for (var i = 0; i < limit; i++) {
+      var user = dataArray[i];
+      var row = tbody.insertRow(-1);
+      row.insertCell(0).innerHTML = user.id;
+      row.insertCell(1).innerHTML = user.name;
+      row.insertCell(2).innerHTML = user.email;
+      row.insertCell(3).innerHTML = user.city;
+      row.insertCell(4).innerHTML = user.company;
+    }
+  }
+</script>
+
+</body>
+</html>

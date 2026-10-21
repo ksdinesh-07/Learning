@@ -98,7 +98,7 @@
 
     .add-btn {
     padding: 6px 14px;
-    background: #42b883;
+    background: #1f6e47;
     color: #fff;
     border: none;
     border-radius: 6px;

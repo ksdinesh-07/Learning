@@ -25,6 +25,7 @@
     "@vitest/ui": "^5.0.5",
     "@vue/test-utils": "^2.5.1",
     "happy-dom": "^21.0.3",
+    "rollup-plugin-visualizer": "^7.1.1",
     "typescript": "^7.0.2",
     "vite": "^8.2.2",
     "vite-plugin-vue-devtools": "^8.2.1",

@@ -229,27 +229,30 @@
     margin: 4px 0;
     } */
 
-    .view-toggle {
-    display: flex;
-    gap: 8px;
-    margin-bottom: 16px;
-    }
+.view-toggle {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 16px;
+}
 
-    .view-toggle button {
-    padding: 6px 14px;
-    border: 1px solid #ddd;
-    background: #fff;
-    border-radius: 6px;
-    cursor: pointer;
-    font-size: 13px;
-    }
+.view-toggle button {
+  padding: 6px 14px;
+  border: 1px solid #666;
+  background: #ffffff;
+  color: #1a1a1a;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 13px;
+  font-weight: 600;
+}
 
-    .view-toggle button.active {
-    background: #42b883;
-    color: #fff;
-    border-color: #42b883;
-    }
-
+.view-toggle button.active {
+  background: #0d3d24;         /* very dark green */
+  color: #ffffff;
+  border-color: #0d3d24;
+  font-weight: 700;
+}
+    
     .mount-info {
     font-size: 12px;
     color: #888;

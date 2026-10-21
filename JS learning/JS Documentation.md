@@ -21291,8 +21291,6 @@ Other structures such as linked lists, trees, and graphs are usually implemented
 
 # Big O Notation
 
-Before studying data structures, understand **Big O notation**.
-
 Big O describes how the amount of work grows as the input size increases.
 
 Common complexities:
@@ -21305,6 +21303,14 @@ Common complexities:
 | O(n log n) | Common efficient sorting |
 | O(n²)      | Quadratic                |
 | O(2ⁿ)      | Exponential              |
+
+| Complexity | Input: 10 | Input: 20 | What Happens When Input Doubles? |
+| `O(1)` | 1 | 1 | Stays the same |
+| `O(log n)` | ~3.3 | ~4.3 | Increases slightly |
+| `O(n)` | 10 | 20 | Work doubles |
+| `O(n log n)` | ~33 | ~86 | Grows slightly more than double |
+| `O(n²)` | 100 | 400 | Work becomes 4 times |
+| `O(2ⁿ)` | 1,024 | 1,048,576 | Work multiplies enormously |
 
 For example:
 
@@ -21638,15 +21644,15 @@ Use it:
 ```javascript
 const user_list = new Linked_list();
 
-user_list.append("Arun");
-user_list.append("Priya");
+user_list.append("vinoth");
+user_list.append("gowtham");
 user_list.append("Dinesh");
 ```
 
 Structure:
 
 ```text
-Arun → Priya → Dinesh → null
+vinoth → gowtham → Dinesh → null
 ```
 
 # Set
@@ -22347,7 +22353,6 @@ console.log(numbers);
 - Best-case time complexity: `O(n²)`
 - Average-case time complexity: `O(n²)`
 - Worst-case time complexity: `O(n²)`
-- Auxiliary space complexity: `O(1)`
 
 Selection Sort performs approximately the same number of comparisons regardless of the initial order of the array.
 
@@ -22650,7 +22655,6 @@ This is a simplified implementation that creates new arrays. Other implementatio
 - Best-case time complexity: `O(n log n)`
 - Average-case time complexity: `O(n log n)`
 - Worst-case time complexity: `O(n²)`
-- Auxiliary space complexity: `O(n)` for the array-based implementation shown, including the additional arrays and recursive calls.
 
 The worst case can occur when the pivot repeatedly creates highly unbalanced partitions, such as when sorting already sorted data with a consistently poor pivot strategy.
 
@@ -22926,172 +22930,6 @@ Value:  0  1  1  2  3  5
 ```
 
 
-
-# Data Structure and Algorithm Relationship
-
-Data structures and algorithms work together.
-
-For example:
-
-```text
-Problem:
-Find nearby users
-       ↓
-Graph
-       ↓
-BFS
-       ↓
-Queue
-```
-
-Another example:
-
-```text
-Problem:
-Undo last action
-       ↓
-Stack
-       ↓
-pop()
-```
-
-Another:
-
-```text
-Problem:
-Quickly find user by ID
-       ↓
-Map
-       ↓
-get(user_id)
-```
-
-Another:
-
-```text
-Problem:
-Search sorted numbers
-       ↓
-Array
-       ↓
-Binary Search
-```
-
----
-
-# Choosing a Data Structure
-
-| Requirement             | Useful Structure |
-| ----------------------- | ---------------- |
-| Last-in-first-out       | Stack            |
-| First-in-first-out      | Queue            |
-| Sequential linked nodes | Linked List      |
-| Unique values           | Set              |
-| Key-value lookup        | Map              |
-| Hierarchical data       | Tree             |
-| Relationships/networks  | Graph            |
-
----
-
-# Choosing an Algorithm
-
-| Problem                    | Common Approach        |
-| -------------------------- | ---------------------- |
-| Find item in unsorted data | Linear Search          |
-| Find item in sorted data   | Binary Search          |
-| Arrange data               | Sorting                |
-| Hierarchical traversal     | DFS / BFS              |
-| Explore graph              | BFS / DFS              |
-| Repeated subproblems       | Dynamic Programming    |
-| Tree processing            | Recursion              |
-| Undo operations            | Stack-based processing |
-
----
-
-
-Actual performance can depend on the implementation and data shape. For example, an unbalanced binary search tree can degrade toward O(n).
-
----
-
-# Practical JavaScript Example
-
-Imagine an application that manages employees.
-
-You might choose:
-
-```text
-Employee lookup
-      ↓
-Map
-```
-
-```javascript
-const employee_map = new Map();
-
-employee_map.set(101, {
-    employee_name: "Arun",
-    department: "Engineering"
-});
-
-employee_map.set(102, {
-    employee_name: "Priya",
-    department: "Finance"
-});
-```
-
-For unique skills:
-
-```text
-Employee skills
-      ↓
-Set
-```
-
-```javascript
-const skills = new Set([
-    "JavaScript",
-    "Node.js",
-    "SQL"
-]);
-```
-
-For processing tasks:
-
-```text
-Background jobs
-      ↓
-Queue
-```
-
-For undo operations:
-
-```text
-User actions
-      ↓
-Stack
-```
-
-For organization hierarchy:
-
-```text
-CEO
- ↓
-Manager
- ↓
-Team
-```
-
-Use a tree.
-
-For relationships between employees:
-
-```text
-Employee ↔ Employee
-```
-
-A graph can represent those relationships.
-
----
 
 # TypeScript Basics
 

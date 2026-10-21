@@ -1,0 +1,73 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>File System Explorer</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <header>
+        <h1>File System Explorer</h1>
+    </header>
+
+    <main>
+        <section class="panel">
+            <h2>Recent Files — Linked List</h2>
+
+            <div class="form-row">
+                <input id="recent_file_input" placeholder="Enter file name">
+                <button id="open_file_btn">Open File</button>
+                <button id="remove_recent_btn" class="secondary">Remove Latest</button>
+            </div>
+
+            <div id="recent_files" class="output"></div>
+        </section>
+
+        <section class="panel">
+            <h2>Folder Explorer — Tree</h2>
+
+            <div class="form-row">
+                <input id="folder_name_input" placeholder="Folder or file name">
+                <input id="parent_folder_input" placeholder="Parent folder (e.g. Documents)">
+
+                <select id="item_type">
+                    <option value="folder">Folder</option>
+                    <option value="file">File</option>
+                </select>
+
+                <button id="add_item_btn">Add Item</button>
+            </div>
+
+            <div id="folder_tree" class="output"></div>
+        </section>
+
+        <section class="panel">
+            <h2>File Dependencies — Graph</h2>
+
+            <div class="form-row">
+                <input id="dependency_file" placeholder="File name">
+                <button id="add_file_btn">Add File</button>
+            </div>
+
+            <div class="form-row">
+                <input id="dependency_from" placeholder="Source file">
+                <input id="dependency_to" placeholder="Depends on file">
+                <button id="connect_files_btn">Connect Files</button>
+            </div>
+
+            <div class="form-row">
+                <input id="path_from" placeholder="Start file">
+                <input id="path_to" placeholder="Destination file">
+                <button id="find_path_btn">Find Path</button>
+            </div>
+
+            <div id="dependency_graph" class="output"></div>
+            <p id="path_result" aria-live="polite"></p>
+        </section>
+    </main>
+
+    <script src="script.js"></script>
+</body>
+</html>

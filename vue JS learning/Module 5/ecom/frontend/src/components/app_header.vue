@@ -89,12 +89,12 @@
     }
 
     .nav-link.router-link-exact-active {
-    color: #42b883;
-    border-bottom-color: #42b883;
+    color: #1f6e47;
+    border-bottom-color: #2c8c5a;
     font-weight: bold;
     }
     .cart-badge {
-    background: #42b883;
+    background: #1f6e47;
     color: #fff;
     padding: 6px 12px;
     border: none;
@@ -105,7 +105,7 @@
     }
 
     .cart-badge:hover {
-    background: #369870;
+    background: #226e47;
     }
 
 </style>

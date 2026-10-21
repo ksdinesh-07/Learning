@@ -1,0 +1,36 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Printer Queue Management</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Printer Queue Management</h1>
+
+        <div class="form">
+            <input type="text" id="user_name" placeholder="Enter user name">
+            <input type="text" id="document_name" placeholder="Enter document name">
+            <button id="add_button">Add Print Job</button>
+        </div>
+
+        <div class="actions">
+            <button id="print_button">Print Next</button>
+            <button id="undo_button">Undo Last Addition</button>
+        </div>
+
+        <p id="message"></p>
+
+        <h2>Pending Print Jobs</h2>
+        <ul id="pending_jobs"></ul>
+
+        <h2>Completed Print Jobs</h2>
+        <ul id="completed_jobs"></ul>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>

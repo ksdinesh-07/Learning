@@ -1,0 +1,126 @@
+
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background: #f1f5f9;
+    color: #1e293b;
+}
+
+header {
+    padding: 25px;
+    text-align: center;
+    color: white;
+    background: #1e293b;
+}
+
+header h1 {
+    margin-top: 0;
+}
+
+header p {
+    margin-bottom: 0;
+    color: #cbd5e1;
+}
+
+main {
+    max-width: 1000px;
+    margin: 25px auto;
+    padding: 0 16px;
+}
+
+.panel {
+    margin-bottom: 22px;
+    padding: 22px;
+    background: white;
+    border-radius: 10px;
+    box-shadow: 0 3px 12px #0000000d;
+}
+
+.panel h2 {
+    margin-top: 0;
+    color: #2563eb;
+}
+
+.form-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin: 15px 0;
+}
+
+input,
+select {
+    min-width: 130px;
+    flex: 1;
+    padding: 11px;
+    border: 1px solid #cbd5e1;
+    border-radius: 6px;
+    background: white;
+    font-size: 14px;
+}
+
+button {
+    padding: 11px 15px;
+    border: none;
+    border-radius: 6px;
+    color: white;
+    background: #2563eb;
+    cursor: pointer;
+}
+
+button:hover {
+    background: #1d4ed8;
+}
+
+button.secondary {
+    background: #64748b;
+}
+
+.output {
+    margin-top: 15px;
+    padding: 15px;
+    overflow-wrap: anywhere;
+    background: #f8fafc;
+    border: 1px solid #e2e8f0;
+    border-radius: 8px;
+}
+
+.file-node {
+    display: inline-block;
+    margin: 5px;
+    padding: 10px;
+    background: #dbeafe;
+    border: 1px solid #93c5fd;
+    border-radius: 6px;
+}
+
+.tree-item {
+    margin: 8px 0;
+    padding: 9px;
+    border-left: 3px solid #60a5fa;
+    background: #eff6ff;
+    border-radius: 4px;
+}
+
+.tree-children {
+    margin: 10px 0 0 18px;
+    padding-left: 12px;
+    border-left: 1px solid #cbd5e1;
+}
+
+.graph-item {
+    margin: 8px 0;
+    padding: 10px;
+    background: #dcfce7;
+    border-radius: 6px;
+}
+
+#path_result {
+    overflow-wrap: anywhere;
+    font-weight: bold;
+    color: #166534;
+}
