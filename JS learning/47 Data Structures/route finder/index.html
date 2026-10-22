@@ -1,0 +1,86 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>City Route Finder</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <header>
+        <h1>City Route Finder</h1>
+    </header>
+
+    <main>
+        <section class="panel">
+            <h2>Find a Route</h2>
+
+            <label for="start-city">Starting City</label>
+            <select id="start-city"></select>
+
+            <label for="end-city">Destination</label>
+            <select id="end-city"></select>
+
+            <label for="algorithm">Algorithm</label>
+            <select id="algorithm">
+                <option value="dijkstra">Dijkstra — Shortest Distance</option>
+                <option value="bfs">BFS — Fewest Roads</option>
+            </select>
+
+            <button id="find-route">Find Route</button>
+            <div id="result" aria-live="polite">Select cities to find a route.</div>
+        </section>
+
+        <section class="panel">
+            <h2>Add a City</h2>
+
+            <form id="city-form">
+                <label for="new-city">City Name</label>
+                <input id="new-city" type="text" placeholder="Enter city name" required>
+                <button type="submit">Add City</button>
+            </form>
+
+            <h2>Add a Road</h2>
+
+            <form id="road-form">
+                <label for="road-from">From</label>
+                <select id="road-from"></select>
+
+                <label for="road-to">To</label>
+                <select id="road-to"></select>
+
+                <label for="distance">Distance (km)</label>
+                <input id="distance" type="number" min="1" required>
+
+                <button type="submit">Add Road</button>
+            </form>
+
+            <button id="reset-graph" class="secondary">Reset Graph</button>
+            <p id="message" aria-live="polite"></p>
+        </section>
+
+        <section class="panel graph-panel">
+            <h2>City Network</h2>
+            <p>Circles represent cities. Lines represent roads.</p>
+            <svg id="graph" viewBox="0 0 700 400" role="img" aria-label="City road network"></svg>
+
+            <div class="stats">
+                <div>
+                    <strong id="city-count">0</strong>
+                    <span>Cities</span>
+                </div>
+                <div>
+                    <strong id="road-count">0</strong>
+                    <span>Roads</span>
+                </div>
+            </div>
+
+            <h2>Adjacency List</h2>
+            <ul id="adjacency-list"></ul>
+        </section>
+    </main>
+
+    <script src="script.js"></script>
+</body>
+</html>

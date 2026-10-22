@@ -46,7 +46,7 @@ export async function process_csv(input_file, output_file) {
         objectMode: true,
 
         transform(row, _, callback) {
-            if (row.payment_status === 'PARTIALLY_REFUNDED') {
+            if (row.payment_status === 'pending') {
                 const output_data = [
                     row.order_id,
                     row.customer_id,

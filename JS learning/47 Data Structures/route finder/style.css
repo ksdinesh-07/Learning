@@ -1,0 +1,183 @@
+
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background: #f1f5f9;
+    color: #1e293b;
+}
+
+header {
+    padding: 28px;
+    text-align: center;
+    color: white;
+    background: #172554;
+}
+
+header h1 {
+    margin: 0 0 10px;
+}
+
+header p {
+    margin: 0;
+    color: #cbd5e1;
+}
+
+main {
+    display: grid;
+    grid-template-columns: 280px 280px minmax(400px, 1fr);
+    gap: 20px;
+    padding: 24px;
+}
+
+.panel {
+    padding: 20px;
+    border: 1px solid #e2e8f0;
+    border-radius: 12px;
+    background: white;
+    box-shadow: 0 4px 12px #0f172a0a;
+}
+
+h2 {
+    margin-top: 0;
+    font-size: 20px;
+}
+
+label {
+    display: block;
+    margin: 14px 0 6px;
+    font-size: 14px;
+    font-weight: bold;
+}
+
+input,
+select {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #cbd5e1;
+    border-radius: 6px;
+    background: white;
+    font-size: 14px;
+}
+
+button {
+    width: 100%;
+    margin-top: 14px;
+    padding: 11px;
+    border: none;
+    border-radius: 6px;
+    background: #2563eb;
+    color: white;
+    font-size: 14px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+button:hover {
+    background: #1d4ed8;
+}
+
+button.secondary {
+    background: #475569;
+}
+
+#result {
+    margin-top: 16px;
+    padding: 14px;
+    border-radius: 8px;
+    background: #eff6ff;
+    color: #1e40af;
+    line-height: 1.6;
+    overflow-wrap: anywhere;
+}
+
+#message {
+    color: #15803d;
+    font-size: 14px;
+}
+
+.graph-panel {
+    min-width: 0;
+}
+
+#graph {
+    display: block;
+    width: 100%;
+    border: 1px solid #e2e8f0;
+    border-radius: 8px;
+    background: #f8fafc;
+}
+
+.edge {
+    stroke: #94a3b8;
+    stroke-width: 2;
+}
+
+.edge.active {
+    stroke: #f97316;
+    stroke-width: 5;
+}
+
+.edge-label {
+    fill: #475569;
+    font-size: 12px;
+    text-anchor: middle;
+    paint-order: stroke;
+    stroke: #f8fafc;
+    stroke-width: 4px;
+}
+
+.node {
+    fill: #2563eb;
+    stroke: white;
+    stroke-width: 3;
+}
+
+.node.active {
+    fill: #f97316;
+}
+
+.node-label {
+    fill: #1e293b;
+    font-size: 13px;
+    font-weight: bold;
+    text-anchor: middle;
+}
+
+.stats {
+    display: flex;
+    gap: 12px;
+    margin: 16px 0;
+}
+
+.stats div {
+    flex: 1;
+    padding: 12px;
+    border-radius: 8px;
+    background: #eff6ff;
+}
+
+.stats strong,
+.stats span {
+    display: block;
+}
+
+.stats strong {
+    color: #1d4ed8;
+    font-size: 24px;
+}
+
+.stats span {
+    margin-top: 4px;
+    color: #64748b;
+    font-size: 13px;
+}
+
+#adjacency-list {
+    padding-left: 20px;
+    line-height: 1.8;
+    overflow-wrap: anywhere;
+}

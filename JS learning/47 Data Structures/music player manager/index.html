@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Music Playlist Manager</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <header>
+        <h1>Music Playlist Manager</h1>
+    </header>
+
+    <main>
+        <section class="player">
+            <div class="album_art">♫</div>
+
+            <p class="label">NOW PLAYING</p>
+            <h2 id="current_title">No song selected</h2>
+            <p id="current_artist">Add songs to your playlist</p>
+
+            <div class="progress_container">
+                <div id="progress_bar"></div>
+            </div>
+
+            <div class="time_labels">
+                <span id="current_time">0:00</span>
+                <span id="duration">0:00</span>
+            </div>
+
+            <div class="player_controls">
+                <button id="previous_button" aria-label="Previous song">⏮</button>
+                <button id="play_button" class="play_button" aria-label="Play or pause">▶</button>
+                <button id="next_button" aria-label="Next song">⏭</button>
+            </div>
+
+            <p id="player_message">Your playlist is ready.</p>
+        </section>
+
+        <section class="playlist_section">
+            <div class="section_heading">
+                <div>
+                    <h2>Your Playlist</h2>
+                    <p id="song_count">0 songs</p>
+                </div>
+            </div>
+
+            <form id="add_song_form">
+                <input
+                    type="text"
+                    id="song_title"
+                    placeholder="Song title"
+                    required
+                >
+                <input
+                    type="text"
+                    id="song_artist"
+                    placeholder="Artist name"
+                    required
+                >
+                <button type="submit">+ Add Song</button>
+            </form>
+
+            <div id="playlist" class="playlist"></div>
+        </section>
+
+        <section class="structure_section">
+            <h2>Doubly Linked List</h2>
+            <p>Each node points to both the previous and next song.</p>
+
+            <div id="linked_list_view" class="linked_list_view"></div>
+
+            <div class="structure_details">
+                <p>Head: <strong id="head_value">NULL</strong></p>
+                <p>Current: <strong id="current_value">NULL</strong></p>
+                <p>Tail: <strong id="tail_value">NULL</strong></p>
+                <p>Nodes: <strong id="node_count">0</strong></p>
+            </div>
+
+            <p class="legend">
+                <span>← Previous pointer</span>
+                <span>Next pointer →</span>
+            </p>
+        </section>
+    </main>
+
+    <script src="script.js"></script>
+</body>
+</html>
