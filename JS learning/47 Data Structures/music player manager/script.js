@@ -148,11 +148,9 @@ function render_playlist() {
         `${playlist.size} song${playlist.size === 1 ? "" : "s"}`;
 
     if (songs.length === 0) {
-        playlist_container.innerHTML =
-            '<p class="empty_message">Your playlist is empty. Add a song to begin.</p>';
+        playlist_container.innerHTML ='<p class="empty_message">Your playlist is empty. Add a song to begin.</p>';
 
-        linked_list_view.innerHTML =
-            '<p class="empty_message">HEAD → NULL</p>';
+        linked_list_view.innerHTML ='<p class="empty_message">HEAD → NULL</p>';
     }
 
     songs.forEach((song, index) => {
@@ -248,23 +246,12 @@ function render_playlist() {
         }
     });
 
-    document.getElementById("head_value").textContent =
-        playlist.head?.title ?? "NULL";
-
-    document.getElementById("tail_value").textContent =
-        playlist.tail?.title ?? "NULL";
-
-    document.getElementById("current_value").textContent =
-        playlist.current_song?.title ?? "NULL";
-
+    document.getElementById("head_value").textContent =playlist.head?.title ?? "NULL";
+    document.getElementById("tail_value").textContent =playlist.tail?.title ?? "NULL";
+    document.getElementById("current_value").textContent =playlist.current_song?.title ?? "NULL";
     document.getElementById("node_count").textContent = playlist.size;
-
-    current_title.textContent =
-        playlist.current_song?.title ?? "No song selected";
-
-    current_artist.textContent =
-        playlist.current_song?.artist ?? "Add songs to your playlist";
-
+    current_title.textContent =playlist.current_song?.title ?? "No song selected";
+    current_artist.textContent =playlist.current_song?.artist ?? "Add songs to your playlist";
     play_button.textContent = is_playing ? "⏸" : "▶";
 }
 
@@ -275,10 +262,8 @@ function update_player(text) {
 
 document.getElementById("add_song_form").addEventListener("submit", (event) => {
     event.preventDefault();
-
     const title_input = document.getElementById("song_title");
     const artist_input = document.getElementById("song_artist");
-
     const title = title_input.value.trim();
     const artist = artist_input.value.trim();
 
@@ -287,7 +272,6 @@ document.getElementById("add_song_form").addEventListener("submit", (event) => {
     }
 
     playlist.add_song(title, artist);
-
     title_input.value = "";
     artist_input.value = "";
 
@@ -321,9 +305,7 @@ play_button.addEventListener("click", () => {
     is_playing = !is_playing;
 
     update_player(
-        is_playing
-            ? `Playback simulation started for "${playlist.current_song.title}".`
-            : `Playback paused for "${playlist.current_song.title}".`
+        is_playing ? `Playback simulation started for "${playlist.current_song.title}".`: `Playback paused for "${playlist.current_song.title}".`
     );
 });
 

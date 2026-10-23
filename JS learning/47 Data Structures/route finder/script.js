@@ -244,6 +244,23 @@ function update_selects() {
 function render_graph() {
     graph_svg.replaceChildren();
 
+    const defs = document.createElementNS(svg_namespace, "defs");
+const marker = document.createElementNS(svg_namespace, "marker");
+
+marker.setAttribute("id", "arrow");
+marker.setAttribute("markerWidth", "10");
+marker.setAttribute("markerHeight", "10");
+marker.setAttribute("refX", "8");
+marker.setAttribute("refY", "3");
+marker.setAttribute("orient", "auto");
+
+const arrow_head = document.createElementNS(svg_namespace, "path");
+arrow_head.setAttribute("d", "M0,0 L0,6 L9,3 Z");
+arrow_head.setAttribute("fill", "#64748b");
+
+marker.appendChild(arrow_head);
+defs.appendChild(marker);
+
     const svg_namespace = "http://www.w3.org/2000/svg";
     const active_nodes = new Set(active_route);
     const active_edges = new Set();

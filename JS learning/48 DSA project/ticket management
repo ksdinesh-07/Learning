@@ -1,0 +1,87 @@
+class ticket_node {
+    constructor(ticket_id, customer_name, issue) {
+        this.ticket_id = ticket_id;
+        this.customer_name = customer_name;
+        this.issue = issue;
+        this.next = null;
+    }
+}
+class TicketQueue {
+    constructor() {
+        this.front = null;
+        this.rear = null;
+        this.size = 0;
+    }
+
+    add_ticket(ticket_id, customer_name, issue) {
+        const new_ticket = new ticket_node(ticket_id,customer_name,issue);
+        if (this.rear === null) {
+            this.front = new_ticket;
+            this.rear = new_ticket;
+        } 
+        else {
+            this.rear.next = new_ticket;
+            this.rear = new_ticket;
+        }
+        this.size++;
+        console.log(`Ticket ${ticket_id} added successfully.`);
+    }
+
+    process_ticket() {
+        if (this.front === null) {
+            console.log("No tickets waiting for an agent.");
+            return;
+        }
+
+        const processed_ticket = this.front;
+        this.front = this.front.next;
+        if (this.front === null) {
+            this.rear = null;
+        }
+        this.size--;
+
+        console.log("\nTicket processed successfully.");
+        console.log(`Ticket ID: ${processed_ticket.ticket_id}`);
+        console.log(`Customer: ${processed_ticket.customer_name}`);
+        console.log(`Issue: ${processed_ticket.issue}`);
+    }
+
+    display_tickets() {
+        if (this.front === null) {
+            console.log("The ticket queue is empty.");
+            return;
+        }
+
+        let current_ticket = this.front;
+        console.log("\nWaiting Support Tickets:");
+        while (current_ticket !== null) {
+            console.log(`Ticket ${current_ticket.ticket_id} | ` +`Customer: ${current_ticket.customer_name} | ` +`Issue: ${current_ticket.issue}`);
+            current_ticket = current_ticket.next;
+        }
+        console.log(`\nTotal waiting tickets: ${this.size}`);
+    }
+
+    view_next_ticket() {
+        if (this.front === null) {
+            console.log("No tickets waiting.");
+            return;
+        }
+        console.log("\nNext ticket to process:");
+        console.log(`Ticket ID: ${this.front.ticket_id}`);
+        console.log(`Customer: ${this.front.customer_name}`);
+        console.log(`Issue: ${this.front.issue}`);
+    }
+}
+
+const support_queue = new TicketQueue();
+
+support_queue.add_ticket(101, "gowtham", "Unable to log in");
+support_queue.add_ticket(102, "giri", "Payment failed");
+support_queue.add_ticket(103, "venkat", "Unable to update profile");
+
+support_queue.display_tickets();
+support_queue.view_next_ticket()
+support_queue.process_ticket();
+support_queue.display_tickets();
+support_queue.process_ticket()
+support_queue.display_tickets();

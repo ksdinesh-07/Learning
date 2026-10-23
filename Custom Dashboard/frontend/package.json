@@ -10,8 +10,9 @@
   },
   "dependencies": {
     "axios": "^1.20.0",
-    "halleyx-ui-framework": "^11.16.20",
+    "halleyx-ui-framework": "^11.16.21",
     "vue": "^3.5.44",
+    "vue-grid-layout": "^3.0.0-beta1",
     "vue-router": "^4.6.4"
   },
   "devDependencies": {
@@ -19,6 +20,6 @@
     "vite": "^8.3.4"
   },
   "allowScripts": {
-    "halleyx-ui-framework@11.16.20": true
+    "halleyx-ui-framework@11.16.21": true
   }
 }

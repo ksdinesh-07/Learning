@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Inventory reservation</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="script.js" defer></script>
+</head>
+<body>
+
+    <h1>Inventory Reservation Checker</h1>
+
+    <div class="container">
+        <h2>Product Inventory</h2>
+
+        <label for="product_id">Product ID</label>
+        <select id="product_id">
+            <option value="P101">P101</option>
+            <option value="P102">P102</option>
+            <option value="P103">P103</option>
+        </select>
+
+        <!-- <label for="warehouse_id">Warehouse</label>
+        <input type="text" id="warehouse_id" value="WH-01" readonly> -->
+
+        <label for="available_stock">Available Stock</label>
+        <input type="number" id="available_stock" value="20" min="0">
+
+        <button id="check_button">Check Reservations</button>
+
+        <!-- <h2>Reservation Orders</h2>
+
+        <div id="orders"></div> -->
+
+        <h2>Conflict Report</h2>
+        <p id="result">Click the button to check inventory.</p>
+    </div>
+
+    
+</body>
+</html>

@@ -1,6 +1,5 @@
-
 const error_handler=(err,req,res,next)=>{
-    console.log(`Error : {err.message}`);
+    console.log(`Error : ${err.message}`);
 
     const status_code=res.statusCode===200 ? 500:res.statusCode;
 

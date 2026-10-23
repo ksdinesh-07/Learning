@@ -1,12 +1,12 @@
-import mongoose  from "mongoose";
+import mongoose from "mongoose";
 
 const order_schema = new mongoose.Schema({
 
-    firstName: { 
+    first_name: { 
         type: String, 
         required: true 
     },
-    lastName: { 
+    last_name: { 
         type: String, 
         required: true 
     },
@@ -30,7 +30,7 @@ const order_schema = new mongoose.Schema({
         type: String, 
         required: true 
     },
-    postalCode: { 
+    postal_code: { 
         type: String, 
         required: true 
     },
@@ -47,11 +47,11 @@ const order_schema = new mongoose.Schema({
         required: true, 
         min: 1 
     },
-    unitPrice: { 
+    unit_price: { 
         type: Number, 
         required: true 
     },
-    totalAmount: { 
+    total_amount: { 
         type: Number, 
         required: true 
     },
@@ -59,12 +59,12 @@ const order_schema = new mongoose.Schema({
         type: String, 
         required: true 
     },
-    createdBy: { 
+    created_by: { 
         type: String, 
         required: true 
     }
 
 }, { timestamps: true });
 
-const order=mongoose.model('order',order_schema);
+const order = mongoose.model('order', order_schema);
 export default order;

@@ -1,0 +1,56 @@
+body {
+    background-color: #f2f2f2;
+    padding: 20px;
+}
+
+h1 {
+    text-align: center;
+}
+
+.container {
+    max-width: 500px;
+    margin: auto;
+    padding: 20px;
+    background-color: white;
+}
+
+label {
+    display: block;
+    margin-top: 10px;
+}
+
+input {
+    width: 100%;
+    box-sizing: border-box;
+    padding: 8px;
+}
+
+button {
+    width: 100%;
+    margin-top: 15px;
+    padding: 10px;
+    background-color: rgb(136, 136, 145);
+    color: white;
+    border: none;
+    cursor: pointer;
+}
+
+.order {
+    margin-top: 10px;
+    padding: 10px;
+    background-color: #eee;
+}
+
+#result {
+    padding: 10px;
+}
+
+#result.conflict {
+    background-color: #ffcccc;
+    color: red;
+}
+
+#result.safe {
+    background-color: #ccffcc;
+    color: green;
+}

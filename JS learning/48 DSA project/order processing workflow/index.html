@@ -1,0 +1,49 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Order Processing Workflow</title>
+    <script src="script.js" defer></script>
+</head>
+<body>
+    <h1>Order Processing Workflow</h1>
+
+    <main class="container">
+        <section>
+            <h2>Orders Table</h2>
+
+            <table>
+                <thead>
+                    <tr>
+                        <th>Order ID</th>
+                        <th>Amount</th>
+                        <th>Payment</th>
+                        <th>Status</th>
+                    </tr>
+                </thead>
+                <tbody id="orders_table"></tbody>
+            </table>
+        </section>
+
+        <section>
+            <h2> Payment</h2>
+
+            <label for="order_id">Select Order</label>
+            <select id="order_id"></select>
+
+            <label for="payment_status">Payment Result</label>
+            <select id="payment_status">
+                <option value="success">Success</option>
+                <option value="failed">Failed</option>
+            </select>
+
+            <button id="process_button">Process Order</button>
+        </section>
+
+
+        <p id="result">Select an order and process its payment.</p>
+    </main>
+</body>
+</html>
