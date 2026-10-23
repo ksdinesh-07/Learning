@@ -1,6 +1,5 @@
-const Event_emitter = require("events");
-
-const order_emitter = new Event_emitter();
+import { EventEmitter } from "node:events";
+const order_emitter = new EventEmitter();
 
 order_emitter.on("order_placed", (order_id, customer_name) => {
     console.log(`Order ${order_id} placed successfully.`);
