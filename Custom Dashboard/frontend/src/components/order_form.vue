@@ -1,339 +1,514 @@
 <template>
   <div class="modal-overlay">
     <div class="modal-content">
-
-      <!-- header -->
       <div class="modal-header">
-        <h3>Create order</h3>
-        <button class="close-btn" @click="$emit('close')">
+        <h3>{{ props.edit_data ? 'Edit order' : 'Create order' }}</h3>        
+        <button class="close-btn" @click="emit('close')">
           <img src="../assets/close.svg" alt="close" class="close-icon">
         </button>
       </div>
 
-      <!-- form -->
-      <div>
+      <div class="form-body">
         <h4>Customer Information</h4>
-        
-        <div class="row">
-          <div class="col" @input="first_name = $event.target.value">
-            <hlx-input label-value="First name *" type="text" :label-animation="true" />
-          </div>
-          <div class="col" @input="email = $event.target.value">
-            <hlx-input label-value="Email id *" type="text" :label-animation="true" />
-          </div>
-        </div>
-
-        <div class="row">
-          <div class="col" @input="last_name = $event.target.value">
-            <hlx-input label-value="Last name *" type="text" :label-animation="true" />
-          </div>
-          <div class="col" @input="phone = $event.target.value">
-            <hlx-input label-value="Phone number *" type="text" :label-animation="true" />
-          </div>
-        </div>
-
-        <div class="row">
-          <div class="col full-width" @input="address = $event.target.value">
-            <hlx-input label-value="Street Address *" type="text" :label-animation="true" />
-          </div>
-        </div>
-
-        <div class="row">
-          <div class="col" @input="city = $event.target.value">
-            <hlx-input label-value="City *" type="text" :label-animation="true" />
-          </div>
-          <div class="col" @input="state = $event.target.value">
-            <hlx-input label-value="State / Province *" type="text" :label-animation="true" />
-          </div>
-        </div>
-
-        <div class="row">
-          <div class="col" @input="postal_code = $event.target.value">
-            <hlx-input label-value="Postal code *" type="text" :label-animation="true" />
-          </div>
-          <div class="col">
-            <!-- Dropdowns use v-model -->
-            <hlx-select 
-              v-model:name="country_name"
-              v-model:value="country"
-              :options="countries" 
-              :label="'name'" 
-              :prop-value="'value'"
-              :placeholder-value="'Country *'" 
-              :label-animation="true"
-            />
-          </div>
-        </div>
-
-        <h4 style="margin-top: 20px;">Order Information</h4>
-
-        <div class="row">
-          <div class="col full-width">
-            <hlx-select 
-              v-model:name="product_name"
-              v-model:value="product"
-              :options="products" 
-              :label="'name'" 
-              :prop-value="'value'"
-              :placeholder-value="'Choose product *'" 
-              :label-animation="true"
-            />
-          </div>
-        </div>
-
-        <div class="row">
-          <div class="col" @input="quantity = $event.target.value">
-            <hlx-input label-value="Quantity *" type="number" :label-animation="true" />
-          </div>
-          <div class="col" @input="unit_price = $event.target.value">
-            <hlx-input label-value="Unit price *" type="number" :label-animation="true" />
-          </div>
-        </div>
 
         <div class="row">
           <div class="col">
-            <div class="readonly-wrapper">
-              <label class="static-label">Total amount *</label>
-              <!-- Auto calculation here -->
-              <input type="text" :value="'$ ' + (Number(quantity) * Number(unit_price)).toFixed(2)" disabled class="readonly-input" />
+            <div class="input-group">
+              <label>First name *</label>
+              <input 
+                v-model="first_name" 
+                type="text" 
+                class="custom-input" 
+                :class="{ 'has-error': errors.first_name }"
+              />
+              <span class="error-text" :class="{ 'has-error': errors.first_name }">Please fill the field</span>
             </div>
           </div>
           <div class="col">
-            <hlx-select 
-              v-model:name="status_name"
-              v-model:value="status"
-              :options="statuses" 
-              :label="'name'" 
-              :prop-value="'value'"
-              :placeholder-value="'Status *'" 
-              :label-animation="true"
-            />
+            <div class="input-group">
+              <label>Email id *</label>
+              <input 
+                v-model="email" 
+                type="text" 
+                class="custom-input" 
+                :class="{ 'has-error': errors.email }"
+              />
+              <span class="error-text" :class="{ 'has-error': errors.email }">Please fill the field</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="col">
+            <div class="input-group">
+              <label>Last name *</label>
+              <input 
+                v-model="last_name" 
+                type="text" 
+                class="custom-input" 
+                :class="{ 'has-error': errors.last_name }"
+              />
+              <span class="error-text" :class="{ 'has-error': errors.last_name }">Please fill the field</span>
+            </div>
+          </div>
+          <div class="col">
+            <div class="input-group">
+              <label>Phone number *</label>
+              <input 
+                v-model="phone" 
+                type="text" 
+                class="custom-input" 
+                :class="{ 'has-error': errors.phone }"
+              />
+              <span class="error-text" :class="{ 'has-error': errors.phone }">Please fill the field</span>
+            </div>
           </div>
         </div>
 
         <div class="row">
           <div class="col full-width">
-            <hlx-select 
-              v-model:name="created_by_name"
-              v-model:value="created_by"
-              :options="users" 
-              :label="'name'" 
-              :prop-value="'value'"
-              :placeholder-value="'Created by * '"
-              :label-animation="true"
-            />
+            <div class="input-group">
+              <label>Street Address *</label>
+              <input 
+                v-model="address" 
+                type="text" 
+                class="custom-input" 
+                :class="{ 'has-error': errors.address }"
+              />
+              <span class="error-text" :class="{ 'has-error': errors.address }">Please fill the field</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="col">
+            <div class="input-group">
+              <label>City *</label>
+              <input 
+                v-model="city" 
+                type="text" 
+                class="custom-input" 
+                :class="{ 'has-error': errors.city }"
+              />
+              <span class="error-text" :class="{ 'has-error': errors.city }">Please fill the field</span>
+            </div>
+          </div>
+          <div class="col">
+            <div class="input-group">
+              <label>State / Province *</label>
+              <input 
+                v-model="state" 
+                type="text" 
+                class="custom-input" 
+                :class="{ 'has-error': errors.state }"
+              />
+              <span class="error-text" :class="{ 'has-error': errors.state }">Please fill the field</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="col">
+            <div class="input-group">
+              <label>Postal code *</label>
+              <input 
+                v-model="postal_code" 
+                type="text" 
+                class="custom-input" 
+                :class="{ 'has-error': errors.postal_code }"
+              />
+              <span class="error-text" :class="{ 'has-error': errors.postal_code }">Please fill the field</span>
+            </div>
+          </div>
+          <div class="col">
+            <div class="input-group">
+              <label>Country *</label>
+              <select v-model="country" class="custom-input" :class="{ 'has-error': errors.country }">
+                <option value="" disabled>Select Country</option>
+                <option v-for="c in countries" :key="c.value" :value="c.value">{{ c.name }}</option>
+              </select>
+              <span class="error-text" :class="{ 'has-error': errors.country }">Please fill the field</span>
+            </div>
+          </div>
+        </div>
+
+        <h4 class="order-heading">Order Information</h4>
+
+        <div class="row">
+          <div class="col full-width">
+            <div class="input-group">
+              <label>Choose product *</label>
+              <select v-model="product" class="custom-input" :class="{ 'has-error': errors.product }">
+                <option value="" disabled>Select Product</option>
+                <option v-for="p in products" :key="p.value" :value="p.value">{{ p.name }}</option>
+              </select>
+              <span class="error-text" :class="{ 'has-error': errors.product }">Please fill the field</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="col">
+            <div class="input-group">
+              <label>Quantity *</label>
+              <input 
+                v-model="quantity" 
+                type="number" 
+                class="custom-input" 
+                :class="{ 'has-error': errors.quantity }"
+              />
+              <span class="error-text" :class="{ 'has-error': errors.quantity }">Quantity must be at least 1</span>
+            </div>
+          </div>
+          <div class="col">
+            <div class="input-group">
+              <label>Unit price *</label>
+              <input 
+                v-model="unit_price" 
+                type="number" 
+                class="custom-input" 
+                :class="{ 'has-error': errors.unit_price }"
+              />
+              <span class="error-text" :class="{ 'has-error': errors.unit_price }">Please enter a valid unit price</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="col">
+            <div class="input-group">
+              <label>Total amount *</label>
+              <input 
+                type="text" 
+                :value="'$ ' + total_amount.toFixed(2)" 
+                disabled 
+                class="custom-input readonly-input"
+              />
+              <span class="error-text"></span>
+            </div>
+          </div>
+          <div class="col">
+            <div class="input-group">
+              <label>Status *</label>
+              <select v-model="status" class="custom-input" :class="{ 'has-error': errors.status }">
+                <option value="" disabled>Select Status</option>
+                <option v-for="s in statuses" :key="s.value" :value="s.value">{{ s.name }}</option>
+              </select>
+              <span class="error-text" :class="{ 'has-error': errors.status }">Please fill the field</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="col full-width">
+            <div class="input-group">
+              <label>Created by *</label>
+              <select v-model="created_by" class="custom-input" :class="{ 'has-error': errors.created_by }">
+                <option value="" disabled>Select User</option>
+                <option v-for="u in users" :key="u.value" :value="u.value">{{ u.name }}</option>
+              </select>
+              <span class="error-text" :class="{ 'has-error': errors.created_by }">Please fill the field</span>
+            </div>
           </div>
         </div>
 
         <div class="form-actions">
-          <hlx-button @click.native="$emit('close')">Cancel</hlx-button>
-          <hlx-button class="primary" @click.native="submit_form">Submit</hlx-button>
+          <hlx-button @click.native="emit('close')">Cancel</hlx-button>
+          <hlx-button class="primary" @click.native="submit_form">
+            {{ props.edit_data ? 'Save' : 'Submit' }}
+          </hlx-button>
         </div>
-
       </div>
     </div>
   </div>
 </template>
 
 <script setup>
-import { ref } from 'vue'
+import { ref, computed } from 'vue'
 import axios from 'axios'
+
+const props = defineProps({
+  edit_data: { type: Object, default: null }
+})
 
 const emit = defineEmits(['close', 'saved'])
 
-const first_name = ref('')
-const last_name = ref('')
-const email = ref('')
-const phone = ref('')
-const address = ref('')
-const city = ref('')
-const state = ref('')
-const postal_code = ref('')
-const quantity = ref(1)
-const unit_price = ref(90)
+const first_name = ref(props.edit_data?.first_name || '')
+const last_name = ref(props.edit_data?.last_name || '')
+const email = ref(props.edit_data?.email || '')
+const phone = ref(props.edit_data?.phone || '')
+const address = ref(props.edit_data?.address || '')
+const city = ref(props.edit_data?.city || '')
+const state = ref(props.edit_data?.state || '')
+const postal_code = ref(props.edit_data?.postal_code || '')
+const quantity = ref(props.edit_data?.quantity || 1)
+const unit_price = ref(props.edit_data?.unit_price || 0)
+const country = ref(props.edit_data?.country || '')
+const product = ref(props.edit_data?.product || '')
+const status = ref(props.edit_data?.status || '')
+const created_by = ref(props.edit_data?.created_by || '')
+const has_submitted = ref(false)
 
-const country = ref('')
-const country_name = ref('')
-const product = ref('')
-const product_name = ref('')
-const status = ref('')
-const status_name = ref('')
-const created_by = ref('')
-const created_by_name = ref('')
+const errors = ref({
+    first_name: false, last_name: false, email: false, phone: false,
+    address: false, city: false, state: false, postal_code: false,
+    country: false, product: false, quantity: false, unit_price: false,
+    status: false, created_by: false
+})
 
 const countries = [
-  { name: "United States", checked: false, disabled: false, value: "United States" },
-  { name: "Canada", checked: false, disabled: false, value: "Canada" },
-  { name: "Australia", checked: false, disabled: false, value: "Australia" },
-  { name: "Singapore", checked: false, disabled: false, value: "Singapore" },
-  { name: "Hong Kong", checked: false, disabled: false, value: "Hong Kong" }
+    { name: 'United States', value: 'United States' },
+    { name: 'Canada', value: 'Canada' },
+    { name: 'Australia', value: 'Australia' },
+    { name: 'Singapore', value: 'Singapore' },
+    { name: 'Hong Kong', value: 'Hong Kong' }
 ]
 
 const products = [
-  { name: "VoIP Corporate Package", checked: false, disabled: false, value: "VoIP Corporate Package" },
-  { name: "Business Internet 500 Mbps", checked: false, disabled: false, value: "Business Internet 500 Mbps" },
-  { name: "Fiber Internet 1 Gbps", checked: false, disabled: false, value: "Fiber Internet 1 Gbps" },
-  { name: "5G Unlimited Mobile Plan", checked: false, disabled: false, value: "5G Unlimited Mobile Plan" },
-  { name: "Fiber Internet 300 Mbps", checked: false, disabled: false, value: "Fiber Internet 300 Mbps" }
+    { name: 'VoIP Corporate Package', value: 'VoIP Corporate Package' },
+    { name: 'Business Internet 500 Mbps', value: 'Business Internet 500 Mbps' },
+    { name: 'Fiber Internet 1 Gbps', value: 'Fiber Internet 1 Gbps' },
+    { name: '5G Unlimited Mobile Plan', value: '5G Unlimited Mobile Plan' },
+    { name: 'Fiber Internet 300 Mbps', value: 'Fiber Internet 300 Mbps' }
 ]
 
 const statuses = [
-  { name: "Pending", checked: false, disabled: false, value: "Pending" },
-  { name: "In Progress", checked: false, disabled: false, value: "In Progress" },
-  { name: "Completed", checked: false, disabled: false, value: "Completed" }
+    { name: 'Pending', value: 'Pending' },
+    { name: 'In Progress', value: 'In Progress' },
+    { name: 'Completed', value: 'Completed' }
 ]
 
 const users = [
-  { name: "Mr. Michael Harris", checked: false, disabled: false, value: "Mr. Michael Harris" },
-  { name: "Mr. Ryan Cooper", checked: false, disabled: false, value: "Mr. Ryan Cooper" },
-  { name: "Ms. Olivia Carter", checked: false, disabled: false, value: "Ms. Olivia Carter" },
-  { name: "Mr. Lucas Martin", checked: false, disabled: false, value: "Mr. Lucas Martin" },
-  { name: "Jordan Ray", checked: false, disabled: false, value: "Jordan Ray" }
+    { name: 'Mr. Michael Harris', value: 'Mr. Michael Harris' },
+    { name: 'Mr. Ryan Cooper', value: 'Mr. Ryan Cooper' },
+    { name: 'Ms. Olivia Carter', value: 'Ms. Olivia Carter' },
+    { name: 'Mr. Lucas Martin', value: 'Mr. Lucas Martin' },
+    { name: 'Jordan Ray', value: 'Jordan Ray' }
 ]
 
-const submit_form = async () => {
-  const payload = {
-    first_name: first_name.value,
-    last_name: last_name.value,
-    email: email.value,
-    phone: phone.value,
-    address: address.value,
-    city: city.value,
-    state: state.value,
-    postal_code: postal_code.value,
-    quantity: Number(quantity.value) || 1,
-    unit_price: Number(unit_price.value) || 0,
-    country: country.value,
-    product: product.value,
-    status: status.value,
-    created_by: created_by.value,
-    total_amount: (Number(quantity.value) * Number(unit_price.value)) || 0
-  }
+const total_amount = computed(() => {
+    return (Number(quantity.value) || 0) * (Number(unit_price.value) || 0)
+})
 
-  console.log("Sending payload:", payload)
+const validate_form = () => {
+    let has_error = false
+    Object.keys(errors.value).forEach(key => errors.value[key] = false)
 
-  // Validation
-  if (!payload.first_name || !payload.last_name || !payload.email || !payload.country || !payload.product || !payload.status || !payload.created_by) {
-    alert("Please fill in all required fields and select all dropdowns!");
-    return;
-  }
+    if (!first_name.value) { errors.value.first_name = true; has_error = true }
+    if (!last_name.value) { errors.value.last_name = true; has_error = true }
+    if (!email.value) { errors.value.email = true; has_error = true }
+    if (!phone.value) { errors.value.phone = true; has_error = true }
+    if (!address.value) { errors.value.address = true; has_error = true }
+    if (!city.value) { errors.value.city = true; has_error = true }
+    if (!state.value) { errors.value.state = true; has_error = true }
+    if (!postal_code.value) { errors.value.postal_code = true; has_error = true }
+    if (!country.value) { errors.value.country = true; has_error = true }
+    if (!product.value) { errors.value.product = true; has_error = true }
+    if (!quantity.value || quantity.value < 1) { errors.value.quantity = true; has_error = true }
+    if (!unit_price.value || unit_price.value <= 0) { errors.value.unit_price = true; has_error = true }
+    if (!status.value) { errors.value.status = true; has_error = true }
+    if (!created_by.value) { errors.value.created_by = true; has_error = true }
 
-  try {
-    await axios.post('http://localhost:3000/api/orders', payload)
-    emit('saved')
-  } catch (error) {
-    console.error(error)
-    alert('Failed to create order.')
-  }
+    return has_error
+}
+
+const submit_form = async()=>{
+    has_submitted.value = true
+    if (validate_form()) return
+
+    const payload = {
+        first_name: first_name.value,
+        last_name: last_name.value,
+        email: email.value,
+        phone: phone.value,
+        address: address.value,
+        city: city.value,
+        state: state.value,
+        postal_code: postal_code.value,
+        country: country.value,
+        product: product.value,
+        quantity: Number(quantity.value),
+        unit_price: Number(unit_price.value),
+        status: status.value,
+        created_by: created_by.value,
+        total_amount: total_amount.value
+    }
+
+    try {
+      if (props.edit_data){
+        await axios.put(`http://localhost:3000/api/orders/${props.edit_data._id}`, payload)
+      } else {
+        await axios.post('http://localhost:3000/api/orders', payload)
+      }
+      emit('saved')
+    } catch (error) {
+        console.error('Error', error)
+        alert('Failed to save order.')
+    }
 }
 </script>
 
 <style scoped>
 
 .modal-overlay {
-  position: fixed; top: 0; left: 0; right: 0; bottom: 0;
-  background: rgba(0,0,0,0.5); 
-  display: flex; 
-  justify-content: center; 
-  align-items: center; 
-  z-index: 1000;
-}
-.modal-content {
-  background: white; 
-  width: 100%; 
-  max-width: 750px; 
-  border-radius: 8px; 
-  padding: 24px;
-  max-height: 90vh;
-  overflow-y: auto;
-}
-.modal-header { 
-  display: flex; 
-  justify-content: space-between; 
+  position: fixed;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: rgba(0, 0, 0, 0.4);
+  display: flex;
+  justify-content: center;
   align-items: center;
-  margin-bottom: 24px; 
-  padding-bottom: 16px;
+  z-index: 1000;
+  overflow: hidden; 
+}
+
+.modal-content {
+  background: white;
+  width: 680px;           
+  min-width: 680px;       
+  max-width: 95vw;        
+  height: auto;           
+  border-radius: 8px;
+  padding: 20px 24px;   
+  display: flex;
+  flex-direction: column;
+  box-sizing: border-box;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+}
+
+.modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12px;
+  padding-bottom: 12px;
   border-bottom: 1px solid #eee;
 }
+
 .modal-header h3 {
+  font-weight: 600;
   margin: 0;
-  font-family: 'Quicksand', sans-serif !important;
-  font-size: 18px;
+  font-family: 'Quicksand', sans-serif;
+  font-size: 16px;
   color: #333;
 }
-h4 {
-  font-family: 'Quicksand', sans-serif !important;
-  font-size: 14px;
-  color: #333;
-  margin-bottom: 16px;
-  margin-top: 0;
-}
-.close-btn { 
-  background: none; 
-  border: none; 
-  cursor: pointer; 
+
+.close-btn {
+  background: none;
+  border: none;
+  cursor: pointer;
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 4px;
 }
+
 .close-icon {
-  width: 16px;  
-  height: 16px;
-  object-fit: contain;
+  width: 14px;
+  height: 14px;
 }
-.row { 
-  display: flex; 
-  gap: 16px; 
-  margin-bottom: 16px;
-}
-.col { 
-  flex: 1; 
+
+.form-body {
   display: flex;
   flex-direction: column;
+  gap: 4px; 
 }
+
+.form-body h4 {
+  font-weight: 600;
+  font-family: 'Quicksand', sans-serif;
+  font-size: 13px;
+  color: #333;
+  margin: 0;
+  margin-top: 6px; 
+  margin-bottom: 4px;
+}
+
+.row {
+  display: flex;
+  gap: 16px; 
+  width: 100%;
+  align-items: flex-start;
+}
+
+.col {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
 .full-width {
   flex: 100%;
 }
-.readonly-wrapper {
+
+.input-group {
   display: flex;
   flex-direction: column;
   position: relative;
+  margin-bottom: 20px; 
 }
-.static-label {
+
+.input-group label {
   position: absolute;
-  top: -8px;
-  left: 12px;
-  background: white;
+  top: -8px; 
+  left: 10px;
+  background-color: white;
   padding: 0 4px;
   font-size: 11px;
-  color: #999;
-  z-index: 1;
+  color: #6b7280;
+  font-family: 'Open Sans', sans-serif;
+  z-index: 10;
 }
-.readonly-input {
-  padding: 12px;
-  border: 1px solid #e0e0e0;
-  border-radius: 6px;
-  background: #f9fafb;
+
+.custom-input {
+  height: 36px; 
+  padding: 0 12px;
+  border: 1px solid #d1d5db;
+  border-radius: 5px;
+  font-size: 13px;
+  font-family: 'Open Sans', sans-serif;
   color: #333;
-  font-family: 'Open Sans', sans-serif !important;
-  font-size: 14px;
   outline: none;
+  width: 100%;
+  box-sizing: border-box;
+  transition: border-color 0.2s;
+  background-color: white;
+  padding-top: 2px; 
 }
-:deep(.hlx-select) {
-  color: #333333 !important;
+
+.custom-input:focus {
+  border-color: #54BD95;
 }
-:deep(.hlx-select .hlx-select-label),
-:deep(.hlx-select label) {
-  color: #6b7280 !important; 
-  background: white !important;
-  padding: 0 4px !important;
+
+.custom-input.has-error {
+  border-color: #ff4d4f;
 }
-.form-actions { 
-  display: flex; 
-  justify-content: flex-end; 
-  gap: 12px; 
-  margin-top: 32px; 
+
+.readonly-input {
+  background: #f9fafb;
+  color: #666;
+}
+
+/* error */
+.error-text {
+  color: #ff4d4f;
+  font-size: 11px;
+  font-family: 'Open Sans', sans-serif;
+  position: absolute;
+  bottom: -16px; 
+  left: 0;
+  visibility: hidden; 
+}
+
+.error-text.has-error {
+  visibility: visible; 
+}
+
+/* footer */
+.form-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+  margin-top: 8px; 
   padding-top: 16px;
   border-top: 1px solid #eee;
 }

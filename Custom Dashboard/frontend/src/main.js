@@ -2,7 +2,7 @@ import { createApp } from 'vue'
 import App from './App.vue'
 import * as halleyxComponents from 'halleyx-ui-framework'
 // halleyxComponents.for
-console.log(halleyxComponents)
+// console.log(halleyxComponents)
 import 'halleyx-ui-framework/dist/es/index.css'
 import './style.css'
 
