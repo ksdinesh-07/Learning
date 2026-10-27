@@ -2,7 +2,6 @@ import order from '../models/order.js';
 
 export const get_dashboard_metrics = async (req, res) => {
   try {
-    // 1. Extract all parameters
     const metric = req.query.metric || 'total_amount';
     const aggregation = req.query.aggregation || 'sum';
     const timeFilter = req.query.time || 'All time';
@@ -11,7 +10,7 @@ export const get_dashboard_metrics = async (req, res) => {
     const yAxis = req.query.y_axis || 'total_amount';
     const pieField = req.query.chart_data || 'status'; 
 
-    // 2. Date Filter Logic
+    // date Filter Logic
     let dateMatch = {};
     const now = new Date();
     
@@ -26,36 +25,40 @@ export const get_dashboard_metrics = async (req, res) => {
       const last30 = new Date();
       last30.setDate(last30.getDate() - 30);
       dateMatch = { $expr: { $gte: [{ $toDate: "$createdAt" }, last30] } };
+    } else if (timeFilter === 'Last 3 Months') { 
+      const last3Months = new Date();
+      last3Months.setMonth(last3Months.getMonth() - 3);
+      dateMatch = { $expr: { $gte: [{ $toDate: "$createdAt" }, last3Months] } };
     } else if (timeFilter === 'Last 90 Days') {
       const last90 = new Date();
       last90.setDate(last90.getDate() - 90);
       dateMatch = { $expr: { $gte: [{ $toDate: "$createdAt" }, last90] } };
     }
 
-    // 3. Aggregation Logic for KPI
+    //  Aggregation Logic for KPI
     let accumulator = { $sum: `$${metric}` };
     if (aggregation === 'average') accumulator = { $avg: `$${metric}` };
     if (aggregation === 'count') accumulator = { $sum: 1 };
 
-    // 4. Run the Database Queries in parallel
+    //  Run the Database Queries in parallel
     const [tableData, kpiResult, pieResult, barResult] = await Promise.all([
       
-      // A. Table Data
-      order.find().sort({ createdAt: -1 }).limit(10),
+      //  Table Data Now filtered by dateMatch)
+      order.find(dateMatch).sort({ createdAt: -1 }).limit(10),
 
-      // B. KPI Data 
+      //  KPI Data 
       order.aggregate([
         { $match: dateMatch },
         { 
           $group: { 
             _id: null, 
-            totalSales: accumulator, // <-- Dynamic metric & aggregation
+            totalSales: accumulator,
             totalOrders: { $sum: 1 } 
           } 
         }
       ]),
 
-      // C. Pie Chart Data (Dynamic based on 'chart_data' field)
+      //  Pie Chart Data
       order.aggregate([
         { $match: dateMatch },
         { 
@@ -67,7 +70,7 @@ export const get_dashboard_metrics = async (req, res) => {
         { $sort: { value: -1 } }
       ]),
 
-      // D. Bar/Line/Area Chart Data (Dynamic X and Y)
+      //  Bar/Line/Area Chart Data (Dynamic X and Y)
       order.aggregate([
         { $match: dateMatch },
         {
@@ -86,13 +89,13 @@ export const get_dashboard_metrics = async (req, res) => {
       ])
     ]); 
 
-    // 5. Format Month Names
+    //  Format Month Names
     const getMonthName = (monthNumber) => {
       const months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
       return months[monthNumber - 1] || 'Unknown';
     };
 
-    // 6. Send Response
+    // Send Response
     res.json({
       kpi: {
         totalSales: kpiResult[0]?.totalSales || 0,

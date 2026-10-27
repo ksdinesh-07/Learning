@@ -4,46 +4,80 @@
 
       <!-- Top Header -->
       <div class="top-header">
-        <div>
+        <!-- Left Side: Title -->
+        <div class="header-left">
           <h1 class="page-title">Customer Orders</h1>
           <p class="page-subtitle">View and manage customer orders and details</p>
         </div>
         
-        <!-- Right Side Actions -->
-        <div class="header-actions">
+        <!-- Right Side: Actions (Column Layout) -->
+        <div class="header-right">
           
-          <!-- Dashboard Selector & Icons -->
-          <div v-if="saved_dashboards.length > 0" class="dashboard-controls">
-            
-            <!-- Dropdown (Using Halleyx Select) -->
-            <hlx-select 
-              v-model:value="active_dashboard_id"
-              :options="saved_dashboards"
-              :label="'name'"
-              :prop-value="'_id'"
-              placeholder-value="Select Dashboard"
-              :label-animation="true"
-              @update:value="load_selected_dashboard"
-              class="dashboard-select"
-            />
+          <!-- Top Row: Dashboard Controls & Configure Button -->
+          <div class="top-actions">
+            <!-- Dashboard Selector & Icons -->
+            <div v-if="saved_dashboards.length > 0" class="dashboard-controls">
+              
+              <hlx-select 
+                v-model:value="active_dashboard_id"
+                :options="saved_dashboards"
+                :label="'name'"
+                :prop-value="'_id'"
+                placeholder-value="Select Dashboard"
+                :label-animation="true"
+                @update:value="load_selected_dashboard"
+                class="dashboard-select"
+              />
 
-            <!-- Edit Icon -->
-            <button class="action-icon-btn" @click="go_to_edit" title="Edit Dashboard">
-              <img src="../assets/setting..svg" alt="Edit" class="action-icon" />
-            </button>
+              <button class="action-icon-btn" @click="go_to_edit" title="Edit Dashboard">
+                <img src="../assets/setting..svg" alt="Edit" class="action-icon" />
+              </button>
 
-            <!-- Delete Icon -->
-            <button class="action-icon-btn delete" @click="open_delete_modal" title="Delete Dashboard">
-              <img src="../assets/delete-iocn.svg.svg" alt="Delete" class="action-icon" />
+              <button class="action-icon-btn delete" @click="open_delete_modal" title="Delete Dashboard">
+                <img src="../assets/delete-iocn.svg.svg" alt="Delete" class="action-icon" />
+              </button>
+              
+            </div>
+
+            <!-- Configure Button -->
+            <button class="configure-btn" @click="router.push('/dashboard/configure')">
+              <img src="../assets/setting..svg" alt="Settings" class="btn-icon" />
+              Configure dashboard
             </button>
-            
           </div>
 
-          <!-- Configure Button (Standard HTML for Router) -->
-          <button class="configure-btn" @click="router.push('/dashboard/configure')">
-            <img src="../assets/setting..svg" alt="Settings" class="btn-icon" />
-            Configure dashboard
-          </button>
+          <!-- Bottom Row: Custom Calendar Filter Dropdown -->
+          <div class="bottom-actions">
+            <div class="filter-container" ref="filterContainer">
+              
+              <!-- Clickable Calendar Icon -->
+              <img 
+                src="../assets/calender-icon.svg" 
+                alt="calendar" 
+                class="calendar-icon clickable" 
+                @click="toggle_filter_dropdown"
+              />
+
+              <!-- Selected Text Pill -->
+              <div class="filter-pill clickable" @click="toggle_filter_dropdown">
+                <span>{{ selected_time_filter }}</span>
+              </div>
+
+              <!-- Dropdown Menu -->
+              <div v-if="is_filter_open" class="filter-dropdown-menu">
+                <div 
+                  v-for="option in time_options" 
+                  :key="option" 
+                  class="filter-option"
+                  :class="{ active: selected_time_filter === option }"
+                  @click="select_time_filter(option)"
+                >
+                  {{ option }}
+                </div>
+              </div>
+
+            </div>
+          </div>
 
         </div>
       </div>
@@ -86,7 +120,7 @@
         </div>
       </div>
 
-      <!-- Dashboard View (14x14 Grid) -->
+      <!-- grid layout -->
       <div v-else class="dashboard-view-area">
         
         <div class="grid-container">
@@ -110,7 +144,7 @@
               <widget_renderer 
                 :key="widget.key || widget.id" 
                 :widget="widget" 
-                timeFilter="All time" 
+                :timeFilter="selected_time_filter" 
               />
             </div>
           </div>
@@ -141,7 +175,7 @@
 </template>
 
 <script setup>
-import { ref, computed, onMounted } from 'vue'
+import { ref, computed, onMounted, onUnmounted } from 'vue'
 import { useRouter } from 'vue-router'
 import axios from 'axios'
 import widget_renderer from '../components/widget_renderer.vue'
@@ -152,6 +186,33 @@ const is_loading = ref(true)
 const saved_dashboards = ref([])
 const active_dashboard_id = ref(null)
 const is_delete_modal_open = ref(false)
+
+const is_filter_open = ref(false)
+const filterContainer = ref(null)
+const selected_time_filter = ref('Last 3 Months')
+
+const time_options = [
+  'Last 7 Days',
+  'Last 30 Days',
+  'Last 3 Months',
+  'Last 90 Days',
+  'All time'
+]
+
+const toggle_filter_dropdown = () => {
+  is_filter_open.value = !is_filter_open.value
+}
+
+const select_time_filter = (option) => {
+  selected_time_filter.value = option
+  is_filter_open.value = false
+}
+
+const handle_click_outside = (event) => {
+  if (filterContainer.value && !filterContainer.value.contains(event.target)) {
+    is_filter_open.value = false
+  }
+}
 
 // Computed properties
 const current_dashboard = computed(() => {
@@ -167,16 +228,20 @@ const current_widgets = computed(() => {
 })
 
 onMounted(async () => {
+  document.addEventListener('click', handle_click_outside)
+  
   try {
     const res = await axios.get('http://localhost:3000/api/dashboard')
     
     let fetched_data = res.data;
     if (Array.isArray(fetched_data)) {
       saved_dashboards.value = fetched_data;
-    } else if (fetched_data && fetched_data._id) {
+    } 
+    else if (fetched_data && fetched_data._id) {
       saved_dashboards.value = [fetched_data];
-    } else {
-      saved_dashboards.value = [];
+    } 
+    else {
+      saved_dashboards.value =[];
     }
 
     if (saved_dashboards.value.length > 0) {
@@ -187,6 +252,10 @@ onMounted(async () => {
   } finally {
     is_loading.value = false
   }
+})
+
+onUnmounted(() => {
+  document.removeEventListener('click', handle_click_outside)
 })
 
 const load_selected_dashboard = (new_id) => {
@@ -205,13 +274,13 @@ const confirm_delete = async () => {
   try {
     await axios.delete(`http://localhost:3000/api/dashboard/${active_dashboard_id.value}`)
     saved_dashboards.value = saved_dashboards.value.filter(d => d._id !== active_dashboard_id.value)
-    
     if (saved_dashboards.value.length > 0) {
       active_dashboard_id.value = saved_dashboards.value[0]._id
-    } else {
-      active_dashboard_id.value = null
+    } 
+    else {
+      active_dashboard_id.value =null
     }
-    is_delete_modal_open.value = false
+    is_delete_modal_open.value=false
   } catch (error) {
     console.error("Failed to delete dashboard:", error)
     alert("Failed to delete dashboard.")
@@ -220,7 +289,6 @@ const confirm_delete = async () => {
 </script>
 
 <style scoped>
-/* Main Layout (FIXED, NO SCROLL) */
 .page-container {
   background-color: #f3f4f6;
   height: 100vh;
@@ -241,13 +309,17 @@ const confirm_delete = async () => {
   overflow: hidden;
 }
 
-/* Top Header */
 .top-header {
   display: flex;
   justify-content: space-between;
   align-items: flex-start;
   margin-bottom: 20px;
   flex-shrink: 0;
+}
+
+.header-left {
+  display: flex;
+  flex-direction: column;
 }
 
 .page-title {
@@ -265,11 +337,22 @@ const confirm_delete = async () => {
   margin: 0;
 }
 
-/* Header Actions */
-.header-actions {
+.header-right {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 12px;
+}
+
+.top-actions {
   display: flex;
   align-items: center;
   gap: 16px;
+}
+
+.bottom-actions {
+  display: flex;
+  justify-content: flex-end;
 }
 
 .dashboard-controls {
@@ -332,6 +415,86 @@ const confirm_delete = async () => {
   width: 16px;
   height: 16px;
   object-fit: contain;
+}
+
+.filter-container {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.clickable {
+  cursor: pointer;
+  user-select: none;
+}
+
+.calendar-icon {
+  width: 20px;
+  height: 20px;
+  object-fit: contain;
+  opacity: 0.6;
+  transition: opacity 0.2s;
+}
+
+.calendar-icon:hover {
+  opacity: 1;
+}
+
+.filter-pill {
+  background-color: #f3f4f6;
+  border-radius: 8px;
+  padding: 0 16px;
+  height: 36px;
+  display: flex;
+  align-items: center;
+  transition: background 0.2s;
+}
+
+.filter-pill:hover {
+  background-color: #e5e7eb;
+}
+
+.filter-pill span {
+  font-family: 'Open Sans', sans-serif;
+  font-size: 14px;
+  color: #4b5563;
+  font-weight: 500;
+}
+
+/* ✅ Dropdown Menu */
+.filter-dropdown-menu {
+  position: absolute;
+  top: 45px;
+  left: 30px; /* Offset from the calendar icon */
+  background: white;
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  min-width: 150px;
+  z-index: 100;
+  overflow: hidden;
+  padding: 4px 0;
+}
+
+.filter-option {
+  padding: 10px 16px;
+  font-family: 'Open Sans', sans-serif;
+  font-size: 13px;
+  color: #4b5563;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.filter-option:hover {
+  background-color: #f9fafb;
+  color: #111827;
+}
+
+.filter-option.active {
+  background-color: #ecfdf5;
+  color: #10b981;
+  font-weight: 600;
 }
 
 /* Navigation Bar */
@@ -438,9 +601,10 @@ const confirm_delete = async () => {
   gap: 8px;
   transition: all 0.2s;
 }
-.secondary-success-btn:hover { background-color: #ecfdf5; }
+.secondary-success-btn:hover { 
+  background-color: #ecfdf5; 
+}
 
-/* Dashboard View (14x14 Grid) */
 .dashboard-view-area {
   flex: 1;
   display: flex;
@@ -494,7 +658,6 @@ const confirm_delete = async () => {
   overflow: hidden;
 }
 
-/* Loading */
 .loading-state {
   flex: 1;
   display: flex;
@@ -504,7 +667,6 @@ const confirm_delete = async () => {
   font-family: 'Open Sans', sans-serif;
 }
 
-/* Modal */
 .modal-overlay {
   position: fixed;
   top: 0;
@@ -585,7 +747,9 @@ const confirm_delete = async () => {
   cursor: pointer;
   transition: all 0.2s;
 }
-.cancel-btn:hover { background-color: #f3f4f6; }
+.cancel-btn:hover { 
+  background-color: #f3f4f6; 
+}
 
 .delete-confirm-btn {
   background-color: #ef4444;
@@ -599,5 +763,7 @@ const confirm_delete = async () => {
   cursor: pointer;
   transition: all 0.2s;
 }
-.delete-confirm-btn:hover { background-color: #dc2626; }
+.delete-confirm-btn:hover { 
+  background-color: #dc2626; 
+}
 </style>

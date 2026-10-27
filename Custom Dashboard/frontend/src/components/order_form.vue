@@ -9,125 +9,139 @@
       </div>
 
       <div class="form-body">
-        <h4>Customer Information</h4>
+        <h4 class="order-heading">Customer Information</h4>
 
         <div class="row">
           <div class="col">
-            <div class="input-group">
-              <label>First name *</label>
-              <input 
-                v-model="first_name" 
-                type="text" 
-                class="custom-input" 
-                :class="{ 'has-error': errors.first_name }"
+            <div class="field-wrapper">
+              <hlx-input 
+                v-model:value="first_name" 
+                label-value="First name"
+                :required="true"
+                :label-animation="true"
+                :custom-error="errors.first_name"
+                :display-error="errors.first_name"
+                :custom-error-message="errors.first_name ? 'Please fill the field' : ''"
               />
-              <span class="error-text" :class="{ 'has-error': errors.first_name }">Please fill the field</span>
             </div>
           </div>
           <div class="col">
-            <div class="input-group">
-              <label>Email id *</label>
-              <input 
-                v-model="email" 
-                type="text" 
-                class="custom-input" 
-                :class="{ 'has-error': errors.email }"
+            <div class="field-wrapper">
+              <hlx-input 
+                v-model:value="email" 
+                label-value="Email id"
+                :required="true"
+                :label-animation="true"
+                :custom-error="errors.email"
+                :display-error="errors.email"
+                :custom-error-message="errors.email ? 'Please fill the field' : ''"
               />
-              <span class="error-text" :class="{ 'has-error': errors.email }">Please fill the field</span>
             </div>
           </div>
         </div>
 
         <div class="row">
           <div class="col">
-            <div class="input-group">
-              <label>Last name *</label>
-              <input 
-                v-model="last_name" 
-                type="text" 
-                class="custom-input" 
-                :class="{ 'has-error': errors.last_name }"
+            <div class="field-wrapper">
+              <hlx-input 
+                v-model:value="last_name" 
+                label-value="Last name"
+                :required="true"
+                :label-animation="true"
+                :custom-error="errors.last_name"
+                :display-error="errors.last_name"
+                :custom-error-message="errors.last_name ? 'Please fill the field' : ''"
               />
-              <span class="error-text" :class="{ 'has-error': errors.last_name }">Please fill the field</span>
             </div>
           </div>
           <div class="col">
-            <div class="input-group">
-              <label>Phone number *</label>
-              <input 
-                v-model="phone" 
-                type="text" 
-                class="custom-input" 
-                :class="{ 'has-error': errors.phone }"
+            <div class="field-wrapper">
+              <hlx-input 
+                v-model:value="phone" 
+                label-value="Phone number"
+                :required="true"
+                :label-animation="true"
+                :custom-error="errors.phone"
+                :display-error="errors.phone"
+                :custom-error-message="errors.phone ? 'Please fill the field' : ''"
               />
-              <span class="error-text" :class="{ 'has-error': errors.phone }">Please fill the field</span>
             </div>
           </div>
         </div>
 
         <div class="row">
           <div class="col full-width">
-            <div class="input-group">
-              <label>Street Address *</label>
-              <input 
-                v-model="address" 
-                type="text" 
-                class="custom-input" 
-                :class="{ 'has-error': errors.address }"
+            <div class="field-wrapper">
+              <hlx-input 
+                v-model:value="address" 
+                label-value="Street Address"
+                :required="true"
+                :label-animation="true"
+                :custom-error="errors.address"
+                :display-error="errors.address"
+                :custom-error-message="errors.address ? 'Please fill the field' : ''"
               />
-              <span class="error-text" :class="{ 'has-error': errors.address }">Please fill the field</span>
             </div>
           </div>
         </div>
 
         <div class="row">
           <div class="col">
-            <div class="input-group">
-              <label>City *</label>
-              <input 
-                v-model="city" 
-                type="text" 
-                class="custom-input" 
-                :class="{ 'has-error': errors.city }"
+            <div class="field-wrapper">
+              <hlx-input 
+                v-model:value="city" 
+                label-value="City"
+                :required="true"
+                :label-animation="true"
+                :custom-error="errors.city"
+                :display-error="errors.city"
+                :custom-error-message="errors.city ? 'Please fill the field' : ''"
               />
-              <span class="error-text" :class="{ 'has-error': errors.city }">Please fill the field</span>
             </div>
           </div>
           <div class="col">
-            <div class="input-group">
-              <label>State / Province *</label>
-              <input 
-                v-model="state" 
-                type="text" 
-                class="custom-input" 
-                :class="{ 'has-error': errors.state }"
+            <div class="field-wrapper">
+              <hlx-input 
+                v-model:value="state" 
+                label-value="State / Province"
+                :required="true"
+                :label-animation="true"
+                :custom-error="errors.state"
+                :display-error="errors.state"
+                :custom-error-message="errors.state ? 'Please fill the field' : ''"
               />
-              <span class="error-text" :class="{ 'has-error': errors.state }">Please fill the field</span>
             </div>
           </div>
         </div>
 
         <div class="row">
           <div class="col">
-            <div class="input-group">
-              <label>Postal code *</label>
-              <input 
-                v-model="postal_code" 
-                type="text" 
-                class="custom-input" 
-                :class="{ 'has-error': errors.postal_code }"
+            <div class="field-wrapper">
+              <hlx-input 
+                v-model:value="postal_code" 
+                label-value="Postal code"
+                :required="true"
+                :label-animation="true"
+                :custom-error="errors.postal_code"
+                :display-error="errors.postal_code"
+                :custom-error-message="errors.postal_code ? 'Please fill the field' : ''"
               />
-              <span class="error-text" :class="{ 'has-error': errors.postal_code }">Please fill the field</span>
             </div>
           </div>
           <div class="col">
-            <div class="input-group">
-              <label>Country *</label>
-              <select v-model="country" class="custom-input" :class="{ 'has-error': errors.country }">
-                <option value="" disabled>Select Country</option>
-                <option v-for="c in countries" :key="c.value" :value="c.value">{{ c.name }}</option>
-              </select>
-              <span class="error-text" :class="{ 'has-error': errors.country }">Please fill the field</span>
+            <div class="field-wrapper">
+              <!-- Select with manual error message -->
+              <hlx-select 
+                v-model:value="country"
+                :options="countries"
+                :label="'name'"
+                :prop-value="'value'"
+                placeholder-value="Country"
+                :required="true"
+                :label-animation="true"
+                :error="errors.country"
+              />
+              <span class="manual-error" v-if="errors.country">Please fill the field</span>
             </div>
           </div>
         </div>
@@ -136,78 +150,96 @@
 
         <div class="row">
           <div class="col full-width">
-            <div class="input-group">
-              <label>Choose product *</label>
-              <select v-model="product" class="custom-input" :class="{ 'has-error': errors.product }">
-                <option value="" disabled>Select Product</option>
-                <option v-for="p in products" :key="p.value" :value="p.value">{{ p.name }}</option>
-              </select>
-              <span class="error-text" :class="{ 'has-error': errors.product }">Please fill the field</span>
+            <div class="field-wrapper">
+              <hlx-select 
+                v-model:value="product"
+                :options="products"
+                :label="'name'"
+                :prop-value="'value'"
+                placeholder-value="Choose product"
+                :required="true"
+                :label-animation="true"
+                :error="errors.product"
+              />
+              <span class="manual-error" v-if="errors.product">Please fill the field</span>
             </div>
           </div>
         </div>
 
         <div class="row">
           <div class="col">
-            <div class="input-group">
-              <label>Quantity *</label>
-              <input 
-                v-model="quantity" 
-                type="number" 
-                class="custom-input" 
-                :class="{ 'has-error': errors.quantity }"
+            <div class="field-wrapper">
+              <hlx-input 
+                v-model:value="quantity" 
+                type="number"
+                label-value="Quantity"
+                :required="true"
+                :label-animation="true"
+                :custom-error="errors.quantity"
+                :display-error="errors.quantity"
+                :custom-error-message="errors.quantity ? 'Quantity must be at least 1' : ''"
               />
-              <span class="error-text" :class="{ 'has-error': errors.quantity }">Quantity must be at least 1</span>
             </div>
           </div>
           <div class="col">
-            <div class="input-group">
-              <label>Unit price *</label>
-              <input 
-                v-model="unit_price" 
-                type="number" 
-                class="custom-input" 
-                :class="{ 'has-error': errors.unit_price }"
+            <div class="field-wrapper">
+              <hlx-input 
+                v-model:value="unit_price" 
+                type="number"
+                label-value="Unit price"
+                :required="true"
+                :label-animation="true"
+                :custom-error="errors.unit_price"
+                :display-error="errors.unit_price"
+                :custom-error-message="errors.unit_price ? 'Please enter a valid unit price' : ''"
               />
-              <span class="error-text" :class="{ 'has-error': errors.unit_price }">Please enter a valid unit price</span>
             </div>
           </div>
         </div>
 
         <div class="row">
           <div class="col">
-            <div class="input-group">
-              <label>Total amount *</label>
-              <input 
-                type="text" 
-                :value="'$ ' + total_amount.toFixed(2)" 
-                disabled 
-                class="custom-input readonly-input"
+            <div class="field-wrapper">
+              <hlx-input 
+                :pre-val="'$ ' + total_amount.toFixed(2)" 
+                label-value="Total amount"
+                :required="true"
+                :disabled="true"
+                :label-animation="true"
               />
-              <span class="error-text"></span>
             </div>
           </div>
           <div class="col">
-            <div class="input-group">
-              <label>Status *</label>
-              <select v-model="status" class="custom-input" :class="{ 'has-error': errors.status }">
-                <option value="" disabled>Select Status</option>
-                <option v-for="s in statuses" :key="s.value" :value="s.value">{{ s.name }}</option>
-              </select>
-              <span class="error-text" :class="{ 'has-error': errors.status }">Please fill the field</span>
+            <div class="field-wrapper">
+              <hlx-select 
+                v-model:value="status"
+                :options="statuses"
+                :label="'name'"
+                :prop-value="'value'"
+                placeholder-value="Status"
+                :required="true"
+                :label-animation="true"
+                :error="errors.status"
+              />
+              <span class="manual-error" v-if="errors.status">Please fill the field</span>
             </div>
           </div>
         </div>
 
         <div class="row">
           <div class="col full-width">
-            <div class="input-group">
-              <label>Created by *</label>
-              <select v-model="created_by" class="custom-input" :class="{ 'has-error': errors.created_by }">
-                <option value="" disabled>Select User</option>
-                <option v-for="u in users" :key="u.value" :value="u.value">{{ u.name }}</option>
-              </select>
-              <span class="error-text" :class="{ 'has-error': errors.created_by }">Please fill the field</span>
+            <div class="field-wrapper">
+              <hlx-select 
+                v-model:value="created_by"
+                :options="users"
+                :label="'name'"
+                :prop-value="'value'"
+                placeholder-value="Created by"
+                :required="true"
+                :label-animation="true"
+                :error="errors.created_by"
+              />
+              <span class="manual-error" v-if="errors.created_by">Please fill the field</span>
             </div>
           </div>
         </div>
@@ -312,7 +344,7 @@ const validate_form = () => {
     return has_error
 }
 
-const submit_form = async()=>{
+const submit_form = async () => {
     has_submitted.value = true
     if (validate_form()) return
 
@@ -335,12 +367,12 @@ const submit_form = async()=>{
     }
 
     try {
-      if (props.edit_data){
-        await axios.put(`http://localhost:3000/api/orders/${props.edit_data._id}`, payload)
-      } else {
-        await axios.post('http://localhost:3000/api/orders', payload)
-      }
-      emit('saved')
+        if (props.edit_data) {
+            await axios.put(`http://localhost:3000/api/orders/${props.edit_data._id}`, payload)
+        } else {
+            await axios.post('http://localhost:3000/api/orders', payload)
+        }
+        emit('saved')
     } catch (error) {
         console.error('Error', error)
         alert('Failed to save order.')
@@ -348,39 +380,44 @@ const submit_form = async()=>{
 }
 </script>
 
-<style scoped>
 
+
+<style scoped>
 .modal-overlay {
   position: fixed;
-  top: 0; left: 0; right: 0; bottom: 0;
+  inset: 0;
   background: rgba(0, 0, 0, 0.4);
   display: flex;
   justify-content: center;
   align-items: center;
+  padding: 12px;
+  box-sizing: border-box;
   z-index: 1000;
-  overflow: hidden; 
+  overflow: auto;
 }
 
 .modal-content {
-  background: white;
-  width: 680px;           
-  min-width: 680px;       
-  max-width: 95vw;        
-  height: auto;           
-  border-radius: 8px;
-  padding: 20px 24px;   
+  background: #fff;
+  width: 720px;
+  min-width: 0;
+  max-width: 100%;
+  max-height: 100%;
+  height: auto;
+  border-radius: 5px;
+  padding: 0;
   display: flex;
   flex-direction: column;
   box-sizing: border-box;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.12);
+  overflow: hidden;
 }
 
 .modal-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 12px;
-  padding-bottom: 12px;
+  flex-shrink: 0;
+  padding: 10px 14px;
   border-bottom: 1px solid #eee;
 }
 
@@ -395,6 +432,7 @@ const submit_form = async()=>{
 .close-btn {
   background: none;
   border: none;
+  padding: 3px;
   cursor: pointer;
   display: flex;
   align-items: center;
@@ -409,107 +447,92 @@ const submit_form = async()=>{
 .form-body {
   display: flex;
   flex-direction: column;
-  gap: 4px; 
+  gap: 0;
+  padding: 6px 14px 0;
+  overflow-y: auto;
+  min-height: 0;
 }
 
 .form-body h4 {
   font-weight: 600;
   font-family: 'Quicksand', sans-serif;
-  font-size: 13px;
+  font-size: 14px;
   color: #333;
-  margin: 0;
-  margin-top: 6px; 
-  margin-bottom: 4px;
+  margin: 2px 0 5px;
 }
 
 .row {
   display: flex;
-  gap: 16px; 
+  gap: 12px;
   width: 100%;
   align-items: flex-start;
+  margin-bottom: 2px;
 }
 
 .col {
-  flex: 1;
+  flex: 1 1 0;
   display: flex;
   flex-direction: column;
   min-width: 0;
 }
 
 .full-width {
-  flex: 100%;
+  flex: 1 1 100%;
+  width: 100%;
 }
 
-.input-group {
-  display: flex;
-  flex-direction: column;
+.field-wrapper {
+  min-height: 54px;
   position: relative;
-  margin-bottom: 20px; 
-}
-
-.input-group label {
-  position: absolute;
-  top: -8px; 
-  left: 10px;
-  background-color: white;
-  padding: 0 4px;
-  font-size: 11px;
-  color: #6b7280;
-  font-family: 'Open Sans', sans-serif;
-  z-index: 10;
-}
-
-.custom-input {
-  height: 36px; 
-  padding: 0 12px;
-  border: 1px solid #d1d5db;
-  border-radius: 5px;
-  font-size: 13px;
-  font-family: 'Open Sans', sans-serif;
-  color: #333;
-  outline: none;
   width: 100%;
   box-sizing: border-box;
-  transition: border-color 0.2s;
-  background-color: white;
-  padding-top: 2px; 
 }
 
-.custom-input:focus {
-  border-color: #54BD95;
-}
-
-.custom-input.has-error {
-  border-color: #ff4d4f;
-}
-
-.readonly-input {
-  background: #f9fafb;
-  color: #666;
-}
-
-/* error */
-.error-text {
+.manual-error {
   color: #ff4d4f;
-  font-size: 11px;
+  font-size: 10px;
   font-family: 'Open Sans', sans-serif;
   position: absolute;
-  bottom: -16px; 
+  bottom: 2px;
   left: 0;
-  visibility: hidden; 
+  z-index: 2;
 }
 
-.error-text.has-error {
-  visibility: visible; 
+.order-heading {
+  margin-top: 2px !important;
+  padding-bottom: 4px;
 }
 
-/* footer */
 .form-actions {
   display: flex;
   justify-content: flex-end;
+  align-items: center;
   gap: 8px;
-  margin-top: 8px; 
-  padding-top: 16px;
+  flex-shrink: 0;
+  margin-top: 0;
+  padding: 8px 0;
   border-top: 1px solid #eee;
 }
+
+/* Add a little space above entered values */
+:deep(hlx-input input) {
+  padding-top: 3px !important;
+  line-height: normal;
+}
+
+:deep(input::placeholder) {
+  transform: translateY(2px);
+}
+
+:deep(hlx-input input) {
+  padding-top: 6px !important;
+  box-sizing: border-box;
+}
+
+
+:deep(.input-field.small input) {
+  padding-top: 12px !important;
+}
+
+
 </style>

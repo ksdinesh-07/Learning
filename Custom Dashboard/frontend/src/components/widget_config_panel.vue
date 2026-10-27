@@ -20,7 +20,8 @@
       </button>
     </div>
 
-    <div class="config-body">
+    <!--  Only render the form after options are ready -->
+    <div class="config-body" v-if="is_ready">
       
       <!-- DATA TAB -->
       <div v-show="active_tab === 'data'">
@@ -157,8 +158,6 @@
 
         <!-- KPI SETTINGS -->
         <template v-else-if="local_widget.type === 'kpi'">
-          
-          <!-- Select Metric -->
           <div class="input-group">
             <hlx-select 
               v-model:value="local_widget.metric"
@@ -171,7 +170,6 @@
             />
           </div>
 
-          <!-- Aggregation -->
           <div class="input-group">
             <hlx-select 
               v-model:value="local_widget.aggregation"
@@ -184,7 +182,6 @@
             />
           </div>
 
-          <!-- Data Format -->
           <div class="input-group">
             <hlx-select 
               v-model:value="local_widget.data_format"
@@ -197,12 +194,10 @@
             />
           </div>
 
-          <!-- Decimal Precision -->
           <div class="input-group">
             <label>Decimal Precision *</label>
             <input v-model.number="local_widget.precision" type="number" class="custom-input" />
           </div>
-
         </template>
 
       </div>
@@ -214,11 +209,12 @@
           <input v-model.number="local_widget.font_size" type="number" class="custom-input" />
         </div>
 
+
         <div class="input-group">
-          <label>Header background</label>
+          <label>Chart Color</label>
           <div class="color-picker-group">
-            <input type="color" v-model="local_widget.header_bg" class="color-swatch" />
-            <input type="text" v-model="local_widget.header_bg" class="custom-input" />
+            <input type="color" v-model="local_widget.chart_color" class="color-swatch" />
+            <input type="text" v-model="local_widget.chart_color" class="custom-input" />
           </div>
         </div>
       </div>
@@ -233,7 +229,7 @@
 </template>
 
 <script setup>
-import { ref } from 'vue'
+import { ref, watch, onMounted } from 'vue'
 
 const props = defineProps({
   widget: { type: Object, required: true }
@@ -242,6 +238,7 @@ const props = defineProps({
 const emit = defineEmits(['close', 'save'])
 
 const active_tab = ref('data')
+const is_ready = ref(false)
 
 const local_widget = ref({ 
   id: props.widget.id,
@@ -250,31 +247,62 @@ const local_widget = ref({
   description: props.widget.description || '',
   w: props.widget.w || 4,
   h: props.widget.h || 4,
-  
   metric: props.widget.metric || '',
   aggregation: props.widget.aggregation || '',
-  data_format: props.widget.data_format || 'number', // Default to 'number'
+  data_format: props.widget.data_format || 'number',
   precision: props.widget.precision !== undefined ? props.widget.precision : 0,
-  
   table_columns: props.widget.table_columns || ['customer_name', 'product', 'total_amount'],
   table_sort: props.widget.table_sort || 'asc',
   table_pagination: props.widget.table_pagination || 5,
   table_apply_filter: props.widget.table_apply_filter || false,
-
   x_axis: props.widget.x_axis || '',
   y_axis: props.widget.y_axis || '',
   show_data_labels: props.widget.show_data_labels || false,
-
   chart_data: props.widget.chart_data || '',
   show_legend: props.widget.show_legend !== undefined ? props.widget.show_legend : true,
-
   font_size: props.widget.font_size || 14,
-  header_bg: props.widget.header_bg || '#D8D8D8'
+  header_bg: props.widget.header_bg || '#D8D8D8',
+  chart_color: props.widget.chart_color || '#54BD95'
 })
 
-const errors = ref({
-  title: false, w: false, h: false
+// Watch for prop changes
+watch(() => props.widget, (newWidget) => {
+  if (newWidget) {
+    local_widget.value = {
+      id: newWidget.id,
+      title: newWidget.title || 'Untitled',
+      type: newWidget.type || 'kpi', 
+      description: newWidget.description || '',
+      w: newWidget.w || 4,
+      h: newWidget.h || 4,
+      metric: newWidget.metric || '',
+      aggregation: newWidget.aggregation || '',
+      data_format: newWidget.data_format || 'number',
+      precision: newWidget.precision !== undefined ? newWidget.precision : 0,
+      table_columns: newWidget.table_columns || ['customer_name', 'product', 'total_amount'],
+      table_sort: newWidget.table_sort || 'asc',
+      table_pagination: newWidget.table_pagination || 5,
+      table_apply_filter: newWidget.table_apply_filter || false,
+      x_axis: newWidget.x_axis || '',
+      y_axis: newWidget.y_axis || '',
+      show_data_labels: newWidget.show_data_labels || false,
+      chart_data: newWidget.chart_data || '',
+      show_legend: newWidget.show_legend !== undefined ? newWidget.show_legend : true,
+      font_size: newWidget.font_size || 14,
+      header_bg: newWidget.header_bg || '#D8D8D8',
+      chart_color: newWidget.chart_color || '#54BD95'
+    }
+  }
+}, { deep: true, immediate: true })
+
+//  Wait before rendering to let options register
+onMounted(() => {
+  setTimeout(() => {
+    is_ready.value = true
+  }, 150)
 })
+
+const errors = ref({ title: false, w: false, h: false })
 
 const widget_type_options = [
   { name: 'KPI', value: 'kpi' },
@@ -286,7 +314,6 @@ const widget_type_options = [
   { name: 'Table', value: 'table' }
 ]
 
-// ✅ UPDATED: All fields in Select Metric
 const metric_options = [
   { name: 'Customer ID', value: 'customer_id' },
   { name: 'Customer name', value: 'customer_name' },
@@ -301,14 +328,12 @@ const metric_options = [
   { name: 'Quantity', value: 'quantity' }
 ]
 
-// ✅ UPDATED: Sum, Average, Count
 const aggregation_options = [
   { name: 'Sum', value: 'sum' },
   { name: 'Average', value: 'average' },
   { name: 'Count', value: 'count' }
 ]
 
-// ✅ UPDATED: Number, Currency
 const format_options = [
   { name: 'Number', value: 'number' },
   { name: 'Currency', value: 'currency' }
@@ -360,16 +385,16 @@ const chart_data_options = [
 const save = () => {
   Object.keys(errors.value).forEach(key => errors.value[key] = false)
   let has_error = false
-
   if (!local_widget.value.title) { errors.value.title = true; has_error = true }
   if (!local_widget.value.w) { errors.value.w = true; has_error = true }
   if (!local_widget.value.h) { errors.value.h = true; has_error = true }
-
   if (has_error) return
-
   emit('save', local_widget.value)
 }
 </script>
+
+
+
 
 <style scoped>
 /* Config Panel Layout */

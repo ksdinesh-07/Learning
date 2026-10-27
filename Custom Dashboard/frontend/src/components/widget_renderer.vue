@@ -6,7 +6,6 @@
         {{ formatValue(chart_data.kpi.totalSales, widget.data_format || 'currency', widget.precision) }}
       </span>
     </div>
-
     
     <!-- TABLE -->
     <div v-else-if="widget.type === 'table'" class="table-content">
@@ -20,17 +19,37 @@
         <tbody>
           <tr v-for="row in paginated_table_data" :key="row._id">
             <td v-for="col in active_columns" :key="col.value">
-              <template v-if="col.value === 'order_id'">ORD-{{ row._id.slice(-4).toUpperCase() }}</template>
-              <template v-else-if="col.value === 'customer_name'">{{ row.first_name }} {{ row.last_name }}</template>
-              <template v-else-if="col.value === 'total_amount' || col.value === 'unit_price'">{{ formatValue(row[col.value], 'currency', 2) }}</template>
-              <template v-else>{{ row[col.value] || '-' }}</template>
+              <template v-if="col.value === 'order_id'">
+                ORD-{{ row._id.slice(-4).toUpperCase() }}
+              </template>
+              <template v-else-if="col.value === 'customer_name'">
+                {{ row.first_name }} {{ row.last_name }}
+              </template>
+              <template v-else-if="col.value === 'email_id'">
+                {{ row.email || '-' }}
+              </template>
+              <template v-else-if="col.value === 'order_date'">
+                {{ row.createdAt ? new Date(row.createdAt).toLocaleDateString() : '-' }}
+              </template>
+              <template v-else-if="col.value === 'customer_id'">
+                {{ row._id ? row._id.slice(-6) : '-' }}
+              </template>
+              <template v-else-if="col.value === 'address'">
+                {{ row.address || '-' }}
+              </template>
+              <template v-else-if="col.value === 'total_amount' || col.value === 'unit_price'">
+                {{ formatValue(row[col.value], 'currency', 2) }}
+              </template>
+              <template v-else>
+                {{ row[col.value] || '-' }}
+              </template>
             </td>
           </tr>
         </tbody>
       </table>
     </div>
 
-    <!-- CHARTS (Bar, Line, Area, Scatter, Pie) -->
+    <!-- CHARTS -->
     <div v-else class="chart-content">
       <apexchart 
         width="100%" 
@@ -62,15 +81,19 @@ const chart_data = ref({
   kpi: { totalSales: 0, totalOrders: 0 } 
 })
 
-// --- TABLE LOGIC ---
 const all_column_definitions = [
   { name: 'Order ID', value: 'order_id' },
+  { name: 'Customer ID', value: 'customer_id' },
   { name: 'Customer name', value: 'customer_name' },
+  { name: 'Email id', value: 'email_id' },
+  { name: 'Address', value: 'address' },
+  { name: 'Order date', value: 'order_date' },
   { name: 'Product', value: 'product' },
-  { name: 'Quantity', value: 'quantity' },
-  { name: 'Total amount', value: 'total_amount' },
+  { name: 'Created by', value: 'created_by' },
   { name: 'Status', value: 'status' },
-  { name: 'Unit Price', value: 'unit_price' }
+  { name: 'Total amount', value: 'total_amount' },
+  { name: 'Unit price', value: 'unit_price' },
+  { name: 'Quantity', value: 'quantity' }
 ]
 
 const active_columns = computed(() => {
@@ -87,7 +110,6 @@ const paginated_table_data = computed(() => {
   return data.slice(0, props.widget.table_pagination || 5);
 })
 
-// --- FETCH DATA ---
 const fetch_data = async () => {
   try {
     const params = {
@@ -115,7 +137,16 @@ const fetch_data = async () => {
 }
 
 onMounted(() => fetch_data())
-watch(() => [props.widget.metric, props.widget.aggregation, props.timeFilter, props.widget.x_axis, props.widget.y_axis, props.widget.chart_data], () => { fetch_data() }, { deep: true })
+
+watch(() => [
+  props.widget.metric, 
+  props.widget.aggregation, 
+  props.timeFilter, 
+  props.widget.x_axis, 
+  props.widget.y_axis, 
+  props.widget.chart_data,
+  props.widget.chart_color
+], () => { fetch_data() }, { deep: true })
 
 const formatValue = (value, format, precision) => {
   if (value === undefined || value === null) return '$ 0.00'
@@ -125,60 +156,79 @@ const formatValue = (value, format, precision) => {
   return Number(value).toFixed(p)
 }
 
-// --- APEXCHARTS CONFIGURATION ---
 const get_chart_options = () => {
+  const mainColor = props.widget.chart_color || '#54BD95'; 
+
   const options = {
     chart: { 
       toolbar: { show: false }, 
       fontFamily: 'Open Sans, sans-serif',
       animations: { enabled: false }
     },
-    colors: ['#3B82F6'], // Blue color (same as line chart)
-    stroke: { 
-      show: true, 
-      curve: 'smooth', // Smooth curve for the line
-      width: 3 
-    },
+    colors: [mainColor], 
+    stroke: { show: true, curve: 'smooth', width: 2 },
     dataLabels: { enabled: false },
     tooltip: { enabled: true, theme: 'light' },
     grid: { 
       borderColor: '#f3f4f6', 
       strokeDashArray: 4, 
       padding: { top: 0, right: 0, bottom: 0, left: 0 } 
-    },
-    // ✅ AREA CHART FILL (Gradient)
-    fill: {
-      type: 'gradient',
-      gradient: {
-        shadeIntensity: 1,
-        opacityFrom: 0.4, // Solid at the top
-        opacityTo: 0.05,  // Fades out at the bottom
-        stops: [0, 100]
-      }
-    },
-    // ✅ SHOW DOTS (MARKERS) ON THE LINE
-    markers: {
-      size: 5,
-      colors: ['#3B82F6'],
-      strokeColors: '#fff',
-      strokeWidth: 2,
-      hover: { size: 7 }
     }
   }
 
   if (props.widget.type === 'pie') {
-    options.colors = ['#10B981', '#F59E0B', '#EF4444'];
+    options.colors = [mainColor, '#F59E0B', '#EF4444', '#3B82F6'];
     options.labels = chart_data.value.pie_labels.length > 0 ? chart_data.value.pie_labels : ['No Data'];
     options.legend = { show: true, position: 'right', markers: { radius: 0, size: 8 } };
     options.stroke = { show: true, width: 3, colors: ['#ffffff'], lineCap: 'butt' };
-    options.fill = { type: 'solid' }; // Pie charts don't need gradient fill
-  } else if (props.widget.type === 'scatter') {
-    options.xaxis = { title: { text: 'Index' }, type: 'numeric' }
     options.fill = { type: 'solid' };
-  } else {
-    // Bar, Line, Area
+  } 
+  else if (props.widget.type === 'scatter') {
+    options.stroke = { width: 0 }; 
+    options.markers = {
+      size: 6,
+      colors: [mainColor],
+      strokeColors: '#fff',
+      strokeWidth: 1,
+      hover: { size: 8 }
+    };
+    
+    options.xaxis = { 
+      type: 'numeric',
+      position: 'bottom',
+      title: { text: 'X - Axis' },
+      labels: { 
+        style: { fontSize: '11px', fontFamily: 'Open Sans, sans-serif' },
+        rotate: 0,
+        rotateAlways: false,
+        hideOverlappingLabels: true,
+        showDuplicates: false,
+        trim: true,
+        formatter: (value) => Math.round(value)
+      },
+      tickAmount: 10,
+      axisBorder: { show: true, color: '#e5e7eb' },
+      axisTicks: { show: true, color: '#e5e7eb' }
+    };
+    
+    options.yaxis = {
+      title: { text: 'Y - Axis' },
+      axisBorder: { show: true, color: '#e5e7eb' },
+      axisTicks: { show: true, color: '#e5e7eb' },
+      labels: { style: { fontSize: '11px', fontFamily: 'Open Sans, sans-serif' } }
+    };
+  } 
+  else {
     options.plotOptions = { bar: { borderRadius: 0, columnWidth: '60%' } }
     
+    options.markers = {
+      size: 5,
+      colors: [mainColor],
+      strokeColors: '#fff',
+      strokeWidth: 2,
+      hover: { size: 7 }
+    };
+
     options.xaxis = { 
       categories: chart_data.value.labels.length > 0 ? chart_data.value.labels : ['No Data'],
       labels: { 
@@ -224,28 +274,110 @@ const get_chart_options = () => {
     };
     
     options.grid.padding.bottom = 0; 
+
+    if (props.widget.type === 'area') {
+      options.fill = { 
+        type: 'gradient', 
+        gradient: { shadeIntensity: 1, opacityFrom: 0.4, opacityTo: 0.05, stops: [0, 100] } 
+      };
+    }
   }
 
   return options
 }
 
 const get_chart_series = () => {
-  if (props.widget.type === 'pie') return chart_data.value.pie_values.length > 0 ? chart_data.value.pie_values : [0];
-  if (props.widget.type === 'scatter') return [{ name: 'Data', data: chart_data.value.values.map((val, index) => [index + 1, val || 0]) }];
+  if (props.widget.type === 'pie') {
+    return chart_data.value.pie_values.length > 0 ? chart_data.value.pie_values : [0];
+  }
+  
+  if (props.widget.type === 'scatter') {
+    return [{ 
+      name: 'Data', 
+      data: chart_data.value.values.map((val, index) => [index + 1, val || 0]) 
+    }];
+  }
+
   return [{ name: 'Total', data: chart_data.value.values.length > 0 ? chart_data.value.values : [0] }];
 }
 </script>
 
 <style scoped>
-.widget-renderer { width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; overflow: hidden; }
-.chart-content { width: 100%; height: 100%; padding: 0; }
-.kpi-content { display: flex; align-items: center; justify-content: center; width: 100%; height: 100%; }
-.widget-value { font-family: 'Open Sans', sans-serif; font-size: 28px; font-weight: 600; color: #111827; }
+.widget-renderer { 
+  width: 100%; 
+  height: 100%; 
+  display: flex; 
+  align-items: center; 
+  justify-content: center; 
+  overflow: hidden; 
+}
 
-/* Table Styles */
-.table-content { width: 100%; height: 100%; overflow: auto; padding: 8px; }
-.mini-table { width: 100%; border-collapse: collapse; font-family: 'Open Sans', sans-serif; }
-.mini-table th { padding: 10px 8px; text-align: left; border-bottom: 1px solid #e5e7eb; color: #374151; font-weight: 600; background-color: #f9fafb; }
-.mini-table td { padding: 10px 8px; border-bottom: 1px solid #f3f4f6; color: #4b5563; }
-.empty-table-state { display: flex; align-items: center; justify-content: center; width: 100%; height: 100%; color: #9ca3af; font-family: 'Open Sans', sans-serif; font-size: 14px; }
+.chart-content { 
+  width: 100%; 
+  height: 100%; 
+  padding: 0; 
+}
+
+.kpi-content { 
+  display: flex; 
+  align-items: center; 
+  justify-content: center; 
+  width: 100%; 
+  height: 100%; 
+}
+
+.widget-value { 
+  font-family: 'Open Sans', sans-serif; 
+  font-size: 28px; 
+  font-weight: 600; 
+  color: #111827; 
+}
+
+.table-content { 
+  width: 100%; 
+  height: 100%; 
+  overflow: auto; 
+  padding: 0; 
+  position: relative;
+}
+
+.mini-table { 
+  width: 100%; 
+  border-collapse: separate; 
+  border-spacing: 0; 
+  font-family: 'Open Sans', sans-serif; 
+}
+
+.mini-table thead { 
+  position: sticky; 
+  top: 0; 
+  z-index: 10; 
+}
+
+.mini-table th { 
+  background-color: #f9fafb;
+  padding: 10px 8px; 
+  text-align: left; 
+  border-bottom: 1px solid #e5e7eb; 
+  color: #374151; 
+  font-weight: 600; 
+}
+
+.mini-table td { 
+  padding: 10px 8px; 
+  border-bottom: 1px solid #f3f4f6; 
+  color: #4b5563; 
+  background-color: #ffffff; 
+}
+
+.empty-table-state { 
+  display: flex; 
+  align-items: center; 
+  justify-content: center; 
+  width: 100%; 
+  height: 100%; 
+  color: #9ca3af; 
+  font-family: 'Open Sans', sans-serif; 
+  font-size: 14px; 
+}
 </style>

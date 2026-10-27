@@ -6,7 +6,7 @@ import order_routes from './routes/order_routes.js'
 import error_handler from './middleware/error_middleware.js';
 import dashboard_routes from './routes/dashboard_routes.js'
 import chart_routes from './routes/chart_routes.js';
-
+import preference_routes from './routes/preference_routes.js'
 
 //connect db
 connect_db();
@@ -21,6 +21,7 @@ app.use(express.json());
 app.use('/api/orders',order_routes);
 app.use('/api/dashboard', dashboard_routes);
 app.use('/api/charts', chart_routes);
+app.use('/api/preferences',preference_routes)
 
 //error error handler
 app.use(error_handler);
