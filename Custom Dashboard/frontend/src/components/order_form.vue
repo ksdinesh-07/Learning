@@ -8,14 +8,15 @@
         </button>
       </div>
 
-      <div class="form-body">
+      <div class="form-body" v-if="is_ready" :key="render_key">
         <h4 class="order-heading">Customer Information</h4>
 
         <div class="row">
           <div class="col">
             <div class="field-wrapper">
               <hlx-input 
-                v-model:value="first_name" 
+                v-model:value="form_data.first_name" 
+                :pre-val="form_data.first_name"
                 label-value="First name"
                 :required="true"
                 :label-animation="true"
@@ -28,7 +29,8 @@
           <div class="col">
             <div class="field-wrapper">
               <hlx-input 
-                v-model:value="email" 
+                v-model:value="form_data.email" 
+                :pre-val="form_data.email"
                 label-value="Email id"
                 :required="true"
                 :label-animation="true"
@@ -44,7 +46,8 @@
           <div class="col">
             <div class="field-wrapper">
               <hlx-input 
-                v-model:value="last_name" 
+                v-model:value="form_data.last_name" 
+                :pre-val="form_data.last_name"
                 label-value="Last name"
                 :required="true"
                 :label-animation="true"
@@ -57,7 +60,8 @@
           <div class="col">
             <div class="field-wrapper">
               <hlx-input 
-                v-model:value="phone" 
+                v-model:value="form_data.phone" 
+                :pre-val="form_data.phone"
                 label-value="Phone number"
                 :required="true"
                 :label-animation="true"
@@ -73,7 +77,8 @@
           <div class="col full-width">
             <div class="field-wrapper">
               <hlx-input 
-                v-model:value="address" 
+                v-model:value="form_data.address" 
+                :pre-val="form_data.address"
                 label-value="Street Address"
                 :required="true"
                 :label-animation="true"
@@ -89,7 +94,8 @@
           <div class="col">
             <div class="field-wrapper">
               <hlx-input 
-                v-model:value="city" 
+                v-model:value="form_data.city" 
+                :pre-val="form_data.city"
                 label-value="City"
                 :required="true"
                 :label-animation="true"
@@ -102,7 +108,8 @@
           <div class="col">
             <div class="field-wrapper">
               <hlx-input 
-                v-model:value="state" 
+                v-model:value="form_data.state" 
+                :pre-val="form_data.state"
                 label-value="State / Province"
                 :required="true"
                 :label-animation="true"
@@ -118,7 +125,8 @@
           <div class="col">
             <div class="field-wrapper">
               <hlx-input 
-                v-model:value="postal_code" 
+                v-model:value="form_data.postal_code" 
+                :pre-val="form_data.postal_code"
                 label-value="Postal code"
                 :required="true"
                 :label-animation="true"
@@ -130,9 +138,9 @@
           </div>
           <div class="col">
             <div class="field-wrapper">
-              <!-- Select with manual error message -->
               <hlx-select 
-                v-model:value="country"
+                v-model:value="form_data.country"
+                :pre-value="form_data.country"
                 :options="countries"
                 :label="'name'"
                 :prop-value="'value'"
@@ -140,6 +148,7 @@
                 :required="true"
                 :label-animation="true"
                 :error="errors.country"
+                :fixbutton="false"
               />
               <span class="manual-error" v-if="errors.country">Please fill the field</span>
             </div>
@@ -152,7 +161,8 @@
           <div class="col full-width">
             <div class="field-wrapper">
               <hlx-select 
-                v-model:value="product"
+                v-model:value="form_data.product"
+                :pre-value="form_data.product"
                 :options="products"
                 :label="'name'"
                 :prop-value="'value'"
@@ -160,17 +170,19 @@
                 :required="true"
                 :label-animation="true"
                 :error="errors.product"
+                :fixbutton="false"
               />
               <span class="manual-error" v-if="errors.product">Please fill the field</span>
             </div>
           </div>
         </div>
 
-        <div class="row">
+        <div class="row alter" >
           <div class="col">
             <div class="field-wrapper">
               <hlx-input 
-                v-model:value="quantity" 
+                v-model:value="form_data.quantity" 
+                :pre-val="form_data.quantity"
                 type="number"
                 label-value="Quantity"
                 :required="true"
@@ -184,7 +196,8 @@
           <div class="col">
             <div class="field-wrapper">
               <hlx-input 
-                v-model:value="unit_price" 
+                v-model:value="form_data.unit_price" 
+                :pre-val="form_data.unit_price"
                 type="number"
                 label-value="Unit price"
                 :required="true"
@@ -212,7 +225,8 @@
           <div class="col">
             <div class="field-wrapper">
               <hlx-select 
-                v-model:value="status"
+                v-model:value="form_data.status"
+                :pre-value="form_data.status"
                 :options="statuses"
                 :label="'name'"
                 :prop-value="'value'"
@@ -220,6 +234,7 @@
                 :required="true"
                 :label-animation="true"
                 :error="errors.status"
+                :fixbutton="false"
               />
               <span class="manual-error" v-if="errors.status">Please fill the field</span>
             </div>
@@ -230,7 +245,8 @@
           <div class="col full-width">
             <div class="field-wrapper">
               <hlx-select 
-                v-model:value="created_by"
+                v-model:value="form_data.created_by"
+                :pre-value="form_data.created_by"
                 :options="users"
                 :label="'name'"
                 :prop-value="'value'"
@@ -238,6 +254,7 @@
                 :required="true"
                 :label-animation="true"
                 :error="errors.created_by"
+                :fixbutton="false"
               />
               <span class="manual-error" v-if="errors.created_by">Please fill the field</span>
             </div>
@@ -256,7 +273,7 @@
 </template>
 
 <script setup>
-import { ref, computed } from 'vue'
+import { ref, computed, onMounted } from 'vue'
 import axios from 'axios'
 
 const props = defineProps({
@@ -265,27 +282,57 @@ const props = defineProps({
 
 const emit = defineEmits(['close', 'saved'])
 
-const first_name = ref(props.edit_data?.first_name || '')
-const last_name = ref(props.edit_data?.last_name || '')
-const email = ref(props.edit_data?.email || '')
-const phone = ref(props.edit_data?.phone || '')
-const address = ref(props.edit_data?.address || '')
-const city = ref(props.edit_data?.city || '')
-const state = ref(props.edit_data?.state || '')
-const postal_code = ref(props.edit_data?.postal_code || '')
-const quantity = ref(props.edit_data?.quantity || 1)
-const unit_price = ref(props.edit_data?.unit_price || 0)
-const country = ref(props.edit_data?.country || '')
-const product = ref(props.edit_data?.product || '')
-const status = ref(props.edit_data?.status || '')
-const created_by = ref(props.edit_data?.created_by || '')
-const has_submitted = ref(false)
+const render_key = ref(0)
+const is_ready = ref(false)
+
+const form_data = ref({
+  first_name: '',
+  last_name: '',
+  email: '',
+  phone: '',
+  address: '',
+  city: '',
+  state: '',
+  postal_code: '',
+  quantity: 1,
+  unit_price: 0,
+  country: '',
+  product: '',
+  status: '',
+  created_by: ''
+})
 
 const errors = ref({
     first_name: false, last_name: false, email: false, phone: false,
     address: false, city: false, state: false, postal_code: false,
     country: false, product: false, quantity: false, unit_price: false,
     status: false, created_by: false
+})
+
+onMounted(() => {
+  if (props.edit_data) {
+    form_data.value = {
+      first_name: props.edit_data.first_name || '',
+      last_name: props.edit_data.last_name || '',
+      email: props.edit_data.email || '',
+      phone: props.edit_data.phone || '',
+      address: props.edit_data.address || '',
+      city: props.edit_data.city || '',
+      state: props.edit_data.state || '',
+      postal_code: props.edit_data.postal_code || '',
+      quantity: props.edit_data.quantity || 1,
+      unit_price: props.edit_data.unit_price || 0,
+      country: props.edit_data.country || '',
+      product: props.edit_data.product || '',
+      status: props.edit_data.status || '',
+      created_by: props.edit_data.created_by || ''
+    }
+  }
+
+  setTimeout(() => {
+    is_ready.value = true
+    render_key.value++
+  }, 100)
 })
 
 const countries = [
@@ -319,50 +366,49 @@ const users = [
 ]
 
 const total_amount = computed(() => {
-    return (Number(quantity.value) || 0) * (Number(unit_price.value) || 0)
+    return (Number(form_data.value.quantity) || 0) * (Number(form_data.value.unit_price) || 0)
 })
 
 const validate_form = () => {
     let has_error = false
     Object.keys(errors.value).forEach(key => errors.value[key] = false)
 
-    if (!first_name.value) { errors.value.first_name = true; has_error = true }
-    if (!last_name.value) { errors.value.last_name = true; has_error = true }
-    if (!email.value) { errors.value.email = true; has_error = true }
-    if (!phone.value) { errors.value.phone = true; has_error = true }
-    if (!address.value) { errors.value.address = true; has_error = true }
-    if (!city.value) { errors.value.city = true; has_error = true }
-    if (!state.value) { errors.value.state = true; has_error = true }
-    if (!postal_code.value) { errors.value.postal_code = true; has_error = true }
-    if (!country.value) { errors.value.country = true; has_error = true }
-    if (!product.value) { errors.value.product = true; has_error = true }
-    if (!quantity.value || quantity.value < 1) { errors.value.quantity = true; has_error = true }
-    if (!unit_price.value || unit_price.value <= 0) { errors.value.unit_price = true; has_error = true }
-    if (!status.value) { errors.value.status = true; has_error = true }
-    if (!created_by.value) { errors.value.created_by = true; has_error = true }
+    if (!form_data.value.first_name) { errors.value.first_name = true; has_error = true }
+    if (!form_data.value.last_name) { errors.value.last_name = true; has_error = true }
+    if (!form_data.value.email) { errors.value.email = true; has_error = true }
+    if (!form_data.value.phone) { errors.value.phone = true; has_error = true }
+    if (!form_data.value.address) { errors.value.address = true; has_error = true }
+    if (!form_data.value.city) { errors.value.city = true; has_error = true }
+    if (!form_data.value.state) { errors.value.state = true; has_error = true }
+    if (!form_data.value.postal_code) { errors.value.postal_code = true; has_error = true }
+    if (!form_data.value.country) { errors.value.country = true; has_error = true }
+    if (!form_data.value.product) { errors.value.product = true; has_error = true }
+    if (!form_data.value.quantity || form_data.value.quantity < 1) { errors.value.quantity = true; has_error = true }
+    if (!form_data.value.unit_price || form_data.value.unit_price <= 0) { errors.value.unit_price = true; has_error = true }
+    if (!form_data.value.status) { errors.value.status = true; has_error = true }
+    if (!form_data.value.created_by) { errors.value.created_by = true; has_error = true }
 
     return has_error
 }
 
 const submit_form = async () => {
-    has_submitted.value = true
     if (validate_form()) return
 
     const payload = {
-        first_name: first_name.value,
-        last_name: last_name.value,
-        email: email.value,
-        phone: phone.value,
-        address: address.value,
-        city: city.value,
-        state: state.value,
-        postal_code: postal_code.value,
-        country: country.value,
-        product: product.value,
-        quantity: Number(quantity.value),
-        unit_price: Number(unit_price.value),
-        status: status.value,
-        created_by: created_by.value,
+        first_name: form_data.value.first_name,
+        last_name: form_data.value.last_name,
+        email: form_data.value.email,
+        phone: form_data.value.phone,
+        address: form_data.value.address,
+        city: form_data.value.city,
+        state: form_data.value.state,
+        postal_code: form_data.value.postal_code,
+        country: form_data.value.country,
+        product: form_data.value.product,
+        quantity: Number(form_data.value.quantity),
+        unit_price: Number(form_data.value.unit_price),
+        status: form_data.value.status,
+        created_by: form_data.value.created_by,
         total_amount: total_amount.value
     }
 
@@ -378,6 +424,8 @@ const submit_form = async () => {
         alert('Failed to save order.')
     }
 }
+
+
 </script>
 
 
@@ -514,25 +562,31 @@ const submit_form = async () => {
   border-top: 1px solid #eee;
 }
 
-/* Add a little space above entered values */
 :deep(hlx-input input) {
-  padding-top: 3px !important;
-  line-height: normal;
+  padding-top: 6px !important;
+  box-sizing: border-box;
 }
 
 :deep(input::placeholder) {
   transform: translateY(2px);
 }
 
-:deep(hlx-input input) {
-  padding-top: 6px !important;
-  box-sizing: border-box;
-}
-
-
 :deep(.input-field.small input) {
   padding-top: 12px !important;
 }
 
+.alter{
+  margin-top: 4px;
+}
+
+:deep(.hlx-input-error-message),
+:deep(.error-message),
+:deep(.input-error-text) {
+  font-size: 10px !important; 
+  font-family: 'Open Sans', sans-serif !important;
+  color: #ff4d4f !important;
+  line-height: 1 !important;
+  margin-top: 2px;
+}
 
 </style>
