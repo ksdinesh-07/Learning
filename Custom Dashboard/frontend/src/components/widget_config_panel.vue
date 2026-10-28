@@ -20,54 +20,82 @@
       </button>
     </div>
 
-    <!--  Only render the form after options are ready -->
     <div class="config-body" v-if="is_ready">
       
-      <!-- DATA TAB -->
+      <!-- tab -->
       <div v-show="active_tab === 'data'">
         
         <div class="input-group">
           <label>Widget title *</label>
-          <input v-model="local_widget.title" type="text" class="custom-input" :class="{ 'has-error': errors.title }" />
-          <span class="error-text" :class="{ 'has-error': errors.title }">Please fill the field</span>
+          <hlx-input 
+            v-model:value="local_widget.title" 
+            :pre-val="local_widget.title"
+            :key="'title-' + render_key"
+            :custom-error="errors.title"
+            :display-error="errors.title"
+            :custom-error-message="errors.title ? 'Please fill the field' : ''"
+          />
         </div>
 
-        <div class="input-group">
+        <!-- <div class="input-group">
           <hlx-select 
             v-model:value="local_widget.type"
-            :key="'type-' + local_widget.id"
+            :pre-value="local_widget.type"
+            :key="'type-' + render_key"
             :options="widget_type_options"
             :label="'name'"
             :prop-value="'value'"
             placeholder-value="Widget type *"
             :label-animation="true"
+            :fixbutton="false"
           />
-        </div>
+        </div> -->
 
         <div class="input-group">
           <label>Description</label>
-          <textarea v-model="local_widget.description" class="custom-input textarea"></textarea>
+          <hlx-input 
+            v-model:value="local_widget.description" 
+            :pre-val="local_widget.description"
+            :key="'desc-' + render_key"
+          />
         </div>
 
         <h4 class="config-section-title">Widget size</h4>
         <div class="row-group">
           <div class="input-group half">
             <label>Width (Cols) *</label>
-            <input v-model.number="local_widget.w" type="number" class="custom-input" :class="{ 'has-error': errors.w }" />
+            <hlx-input 
+              v-model:value="local_widget.w" 
+              :pre-val="local_widget.w"
+              :key="'w-' + render_key"
+              type="number"
+              :custom-error="errors.w"
+              :display-error="errors.w"
+              :custom-error-message="errors.w ? 'Please fill the field' : ''"
+            />
           </div>
           <div class="input-group half">
             <label>Height (Rows) *</label>
-            <input v-model.number="local_widget.h" type="number" class="custom-input" :class="{ 'has-error': errors.h }" />
+            <hlx-input 
+              v-model:value="local_widget.h" 
+              :pre-val="local_widget.h"
+              :key="'h-' + render_key"
+              type="number"
+              :custom-error="errors.h"
+              :display-error="errors.h"
+              :custom-error-message="errors.h ? 'Please fill the field' : ''"
+            />
           </div>
         </div>
 
         <h4 class="config-section-title">Data setting</h4>
 
-        <!-- TABLE SETTINGS -->
+        <!-- tbl setting -->
         <template v-if="local_widget.type === 'table'">
           <div class="input-group">
             <hlx-multi-select
               :pre-value="local_widget.table_columns"
+              :key="'cols-' + render_key"
               :required="true"
               :options="column_options"
               :placeholder="'Choose columns *'"
@@ -81,24 +109,28 @@
           <div class="input-group">
             <hlx-select 
               v-model:value="local_widget.table_sort"
-              :key="'sort-' + local_widget.id"
+              :pre-value="local_widget.table_sort"
+              :key="'sort-' + render_key"
               :options="sort_options"
               :label="'name'"
               :prop-value="'value'"
               placeholder-value="Sort by"
               :label-animation="true"
+              :fixbutton="false"
             />
           </div>
 
           <div class="input-group">
             <hlx-select 
               v-model:value="local_widget.table_pagination"
-              :key="'page-' + local_widget.id"
+              :pre-value="local_widget.table_pagination"
+              :key="'page-' + render_key"
               :options="pagination_options"
               :label="'name'"
               :prop-value="'value'"
               placeholder-value="Pagination"
               :label-animation="true"
+              :fixbutton="false"
             />
           </div>
 
@@ -107,29 +139,33 @@
           </div>
         </template>
 
-        <!-- CHART SETTINGS -->
+        <!-- chart setting -->
         <template v-else-if="['bar', 'line', 'area', 'scatter'].includes(local_widget.type)">
           <div class="input-group">
             <hlx-select 
               v-model:value="local_widget.x_axis"
-              :key="'xaxis-' + local_widget.id"
+              :pre-value="local_widget.x_axis"
+              :key="'xaxis-' + render_key"
               :options="axis_options"
               :label="'name'"
               :prop-value="'value'"
               placeholder-value="Choose X - axis data"
               :label-animation="true"
+              :fixbutton="false"
             />
           </div>
 
           <div class="input-group">
             <hlx-select 
               v-model:value="local_widget.y_axis"
-              :key="'yaxis-' + local_widget.id"
+              :pre-value="local_widget.y_axis"
+              :key="'yaxis-' + render_key"
               :options="axis_options"
               :label="'name'"
               :prop-value="'value'"
               placeholder-value="Choose Y - axis data"
               :label-animation="true"
+              :fixbutton="false"
             />
           </div>
 
@@ -138,17 +174,19 @@
           </div>
         </template>
 
-        <!-- PIE CHART SETTINGS -->
+        <!-- pie chart -->
         <template v-else-if="local_widget.type === 'pie'">
           <div class="input-group">
             <hlx-select 
               v-model:value="local_widget.chart_data"
-              :key="'chartdata-' + local_widget.id"
+              :pre-value="local_widget.chart_data"
+              :key="'chartdata-' + render_key"
               :options="chart_data_options"
               :label="'name'"
               :prop-value="'value'"
               placeholder-value="Choose chart data *"
               :label-animation="true"
+              :fixbutton="false"
             />
           </div>
           <div class="input-group checkbox-group">
@@ -156,65 +194,84 @@
           </div>
         </template>
 
-        <!-- KPI SETTINGS -->
+        <!-- KPI -->
         <template v-else-if="local_widget.type === 'kpi'">
           <div class="input-group">
             <hlx-select 
               v-model:value="local_widget.metric"
-              :key="'metric-' + local_widget.id"
+              :pre-value="local_widget.metric"
+              :key="'metric-' + render_key"
               :options="metric_options"
               :label="'name'"
               :prop-value="'value'"
               placeholder-value="Select metric *"
               :label-animation="true"
+              :fixbutton="false"
             />
           </div>
 
           <div class="input-group">
             <hlx-select 
               v-model:value="local_widget.aggregation"
-              :key="'agg-' + local_widget.id"
+              :pre-value="local_widget.aggregation"
+              :key="'agg-' + render_key"
               :options="aggregation_options"
               :label="'name'"
               :prop-value="'value'"
               placeholder-value="Aggregation *"
               :label-animation="true"
+              :fixbutton="false"
             />
           </div>
 
           <div class="input-group">
             <hlx-select 
               v-model:value="local_widget.data_format"
-              :key="'format-' + local_widget.id"
+              :pre-value="local_widget.data_format"
+              :key="'format-' + render_key"
               :options="format_options"
               :label="'name'"
               :prop-value="'value'"
               placeholder-value="Data format *"
               :label-animation="true"
+              :fixbutton="false"
             />
           </div>
 
           <div class="input-group">
             <label>Decimal Precision *</label>
-            <input v-model.number="local_widget.precision" type="number" class="custom-input" />
+            <hlx-input 
+              v-model:value="local_widget.precision" 
+              :pre-val="local_widget.precision"
+              :key="'prec-' + render_key"
+              type="number"
+            />
           </div>
         </template>
 
       </div>
 
-      <!-- STYLING TAB -->
+      <!-- style tab -->
       <div v-show="active_tab === 'styling'">
         <div class="input-group">
           <label>Font size (px)</label>
-          <input v-model.number="local_widget.font_size" type="number" class="custom-input" />
+          <hlx-input 
+            v-model:value="local_widget.font_size" 
+            :pre-val="local_widget.font_size"
+            :key="'fs-' + render_key"
+            type="number"
+          />
         </div>
-
 
         <div class="input-group">
           <label>Chart Color</label>
           <div class="color-picker-group">
             <input type="color" v-model="local_widget.chart_color" class="color-swatch" />
-            <input type="text" v-model="local_widget.chart_color" class="custom-input" />
+            <hlx-input 
+              v-model:value="local_widget.chart_color" 
+              :pre-val="local_widget.chart_color"
+              :key="'color-' + render_key"
+            />
           </div>
         </div>
       </div>
@@ -222,13 +279,14 @@
     </div>
 
     <div class="config-footer">
-      <hlx-button @click.native="$emit('close')">Cancel</hlx-button>
+      <hlx-button class="cnl-btn" @click.native="$emit('close')">Cancel</hlx-button>
       <hlx-button class="primary" @click.native="save">Save</hlx-button>
     </div>
   </div>
 </template>
 
 <script setup>
+
 import { ref, watch, onMounted } from 'vue'
 
 const props = defineProps({
@@ -239,37 +297,17 @@ const emit = defineEmits(['close', 'save'])
 
 const active_tab = ref('data')
 const is_ready = ref(false)
+const render_key = ref(0)
 
-const local_widget = ref({ 
-  id: props.widget.id,
-  title: props.widget.title || 'Untitled',
-  type: props.widget.type || 'kpi', 
-  description: props.widget.description || '',
-  w: props.widget.w || 4,
-  h: props.widget.h || 4,
-  metric: props.widget.metric || '',
-  aggregation: props.widget.aggregation || '',
-  data_format: props.widget.data_format || 'number',
-  precision: props.widget.precision !== undefined ? props.widget.precision : 0,
-  table_columns: props.widget.table_columns || ['customer_name', 'product', 'total_amount'],
-  table_sort: props.widget.table_sort || 'asc',
-  table_pagination: props.widget.table_pagination || 5,
-  table_apply_filter: props.widget.table_apply_filter || false,
-  x_axis: props.widget.x_axis || '',
-  y_axis: props.widget.y_axis || '',
-  show_data_labels: props.widget.show_data_labels || false,
-  chart_data: props.widget.chart_data || '',
-  show_legend: props.widget.show_legend !== undefined ? props.widget.show_legend : true,
-  font_size: props.widget.font_size || 14,
-  header_bg: props.widget.header_bg || '#D8D8D8',
-  chart_color: props.widget.chart_color || '#54BD95'
-})
 
-// Watch for prop changes
+const local_widget = ref({ ...props.widget })
+
+// watch the widget change
 watch(() => props.widget, (newWidget) => {
   if (newWidget) {
-    local_widget.value = {
-      id: newWidget.id,
+    local_widget.value = { 
+      ...newWidget,
+      // Ensure default fallbacks if values are missing
       title: newWidget.title || 'Untitled',
       type: newWidget.type || 'kpi', 
       description: newWidget.description || '',
@@ -289,16 +327,16 @@ watch(() => props.widget, (newWidget) => {
       chart_data: newWidget.chart_data || '',
       show_legend: newWidget.show_legend !== undefined ? newWidget.show_legend : true,
       font_size: newWidget.font_size || 14,
-      header_bg: newWidget.header_bg || '#D8D8D8',
       chart_color: newWidget.chart_color || '#54BD95'
     }
   }
 }, { deep: true, immediate: true })
 
-//  Wait before rendering to let options register
+// Wait before rendering to let the custom hlx components register properly
 onMounted(() => {
   setTimeout(() => {
     is_ready.value = true
+    render_key.value++ // Force the custom inputs to read the data
   }, 150)
 })
 
@@ -393,11 +431,8 @@ const save = () => {
 }
 </script>
 
-
-
-
 <style scoped>
-/* Config Panel Layout */
+
 .config-panel {
   position: absolute;
   top: 0;
@@ -434,7 +469,7 @@ const save = () => {
   color: #9ca3af;
 }
 
-/* Tabs */
+
 .config-tabs {
   display: flex;
   padding: 10px 24px 0;
@@ -503,7 +538,6 @@ const save = () => {
   background: #fafafa;
 }
 
-/* Input Labels */
 .input-group label {
   position: absolute;
   top: -8px;
@@ -516,36 +550,6 @@ const save = () => {
   z-index: 10;
 }
 
-/* Standard Inputs */
-.custom-input {
-  height: 40px;
-  padding: 0 12px;
-  border: 1px solid #d1d5db;
-  border-radius: 6px;
-  font-size: 14px;
-  font-family: 'Open Sans', sans-serif;
-  color: #333;
-  outline: none;
-  width: 100%;
-  box-sizing: border-box;
-  background-color: white;
-}
-
-.custom-input:focus {
-  border-color: #10b981;
-}
-
-textarea.custom-input {
-  height: 80px;
-  padding: 10px 12px;
-  resize: none;
-}
-
-.custom-input.has-error {
-  border-color: #ff4d4f;
-}
-
-/* Checkbox Group */
 .checkbox-group {
   flex-direction: row;
   align-items: center;
@@ -561,10 +565,11 @@ textarea.custom-input {
   color: #374151;
 }
 
-/* Color Picker Group */
+/* color Picker  */
 .color-picker-group {
   display: flex;
   gap: 8px;
+  align-items: center;
 }
 
 .color-swatch {
@@ -574,20 +579,11 @@ textarea.custom-input {
   border-radius: 6px;
   cursor: pointer;
   padding: 0;
+  flex-shrink: 0;
 }
 
-/* Error Text */
-.error-text {
-  color: #ff4d4f;
-  font-size: 11px;
-  font-family: 'Open Sans', sans-serif;
-  position: absolute;
-  bottom: -18px;
-  left: 0;
-  visibility: hidden;
+.cnl-btn{
+  border: 1px solid black;
 }
 
-.error-text.has-error {
-  visibility: visible;
-}
 </style>

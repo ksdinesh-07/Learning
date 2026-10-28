@@ -33,7 +33,7 @@ defineEmits(['close', 'confirm'])
 </script>
 
 <style scoped>
-/* 1. Overlay Background */
+
 .modal-overlay {
   position: fixed;
   top: 0; left: 0; right: 0; bottom: 0;
@@ -44,7 +44,7 @@ defineEmits(['close', 'confirm'])
   z-index: 1000;
 }
 
-/* 2. Modal Box */
+
 .delete-modal {
   background: white;
   width: 400px;
@@ -55,7 +55,7 @@ defineEmits(['close', 'confirm'])
   overflow: hidden;
 }
 
-/* 3. Header */
+
 .modal-header {
   display: flex;
   justify-content: space-between;
@@ -86,7 +86,6 @@ defineEmits(['close', 'confirm'])
   height: 14px;
 }
 
-/* 4. Body */
 .modal-body {
   padding: 24px;
   font-family: 'Open Sans', sans-serif;
@@ -94,7 +93,6 @@ defineEmits(['close', 'confirm'])
   color: #374151;
 }
 
-/* 5. Footer */
 .modal-footer {
   display: flex;
   justify-content: flex-end;

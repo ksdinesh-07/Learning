@@ -304,17 +304,17 @@ const save_config = (updated_widget) => {
 }
 
 //dragable state
-let dragged_type = null
-let dragged_widget = null
-const widgets = ref([])
-const drag_preview = ref(null) 
+let dragged_type=null
+let dragged_widget=null
+const widgets=ref([])
+const drag_preview=ref(null) 
 
 //delete state
-const is_delete_open = ref(false)
-const widget_to_delete = ref(null)
+const is_delete_open=ref(false)
+const widget_to_delete=ref(null)
 
-const get_name_for_type = (type) => {
-  const names = {
+const get_name_for_type=(type)=>{
+  const names={
     'bar': 'Bar Chart', 'line': 'Line Chart', 'pie': 'Pie Chart',
     'area': 'Area Chart', 'scatter': 'Scatter Plot', 'table': 'Table', 'kpi': 'KPI Value'
   }
@@ -322,68 +322,69 @@ const get_name_for_type = (type) => {
 }
 
 //  drag logic 
-const on_drag_start = (event, type) => {
-  dragged_type = type
-  dragged_widget = null
-  event.dataTransfer.effectAllowed = 'copy'
+const on_drag_start=(event, type)=>{
+  dragged_type=type
+  dragged_widget=null
+  event.dataTransfer.effectAllowed='copy'
   event.dataTransfer.setData('text/plain', type)
 }
 
-const on_widget_drag_start = (event, widget) => {
-  dragged_widget = widget
-  dragged_type = widget.type
-  event.dataTransfer.effectAllowed = 'move'
+const on_widget_drag_start=(event, widget) => {
+  dragged_widget=widget
+  dragged_type=widget.type
+  event.dataTransfer.effectAllowed='move'
   event.dataTransfer.setData('text/plain', widget.id)
 }
 
-const on_drag_over = (event) => {
+const on_drag_over=(event) => {
   if (!dragged_type || !gridContainer.value) return
 
-  const grid_rect = gridContainer.value.getBoundingClientRect()
-  const col_width = (grid_rect.width - (13 * 6)) / 14
-  const row_height = (grid_rect.height - (13 * 6)) / 14
+  const grid_rect=gridContainer.value.getBoundingClientRect()
+  const col_width=(grid_rect.width - (13 * 6)) / 14
+  const row_height=(grid_rect.height - (13 * 6)) / 14
 
-  const mouse_x = event.clientX - grid_rect.left
-  const mouse_y = event.clientY - grid_rect.top
+  const mouse_x=event.clientX - grid_rect.left
+  const mouse_y=event.clientY - grid_rect.top
 
-  let col = Math.floor(mouse_x / (col_width + 6))
-  let row = Math.floor(mouse_y / (row_height + 6))
+  let col=Math.floor(mouse_x / (col_width + 6))
+  let row=Math.floor(mouse_y / (row_height + 6))
 
-  if (col < 0) col = 0
-  if (row < 0) row = 0
+  if (col < 0) col=0
+  if (row < 0) row=0
 
-  let w = 4, h = 4
-  if (dragged_type === 'table') { w = 5; h = 5 }
-  if (dragged_type === 'kpi') { w = 2; h = 2 }
+  let w=4, h=4
+  if (dragged_type === 'table') { w=5; h=5 }
+  if (dragged_type === 'kpi') { w=2; h=2 }
 
-  if (col + w > 14) col = 14 - w
-  if (row + h > 14) row = 14 - h
+  if (col + w > 14) col=14 - w
+  if (row + h > 14) row=14 - h
 
-  drag_preview.value = { x: col, y: row, w: w, h: h }
+  drag_preview.value={ x: col, y: row, w: w, h: h }
 }
 
-const on_drag_leave = () => {
-  drag_preview.value = null
+const on_drag_leave=()=>{
+  drag_preview.value=null
 }
 
-const on_drop = () => {
+const on_drop=()=>{
   if (!dragged_type || !drag_preview.value) {
-    dragged_type = null
-    dragged_widget = null
-    drag_preview.value = null
+    dragged_type=null
+    dragged_widget=null
+    drag_preview.value=null
     return
   }
 
-  const pos = drag_preview.value
+  const pos=drag_preview.value
 
-  if (dragged_widget) {
-    const index = widgets.value.findIndex(w => w.id === dragged_widget.id)
+  if(dragged_widget) {
+    const index=widgets.value.findIndex(w => w.id === dragged_widget.id)
     if (index !== -1) {
       widgets.value[index].x = pos.x
       widgets.value[index].y = pos.y
       widgets.value[index].key = Date.now()
     }
-  } else {
+  } 
+  else {
     widgets.value.push({
       id: Date.now().toString(),
       type: dragged_type,
@@ -411,63 +412,64 @@ const on_drop = () => {
     })
   }
   
-  dragged_type = null
-  dragged_widget = null
-  drag_preview.value = null
+  dragged_type=null
+  dragged_widget=null
+  drag_preview.value=null
 }
 
 //  delete logic 
-const open_delete = (widget) => {
-  widget_to_delete.value = widget
-  is_delete_open.value = true
+const open_delete=(widget) => {
+  widget_to_delete.value=widget
+  is_delete_open.value=true
 }
 
-const confirm_delete = () => {
-  widgets.value = widgets.value.filter(w => w.id !== widget_to_delete.value.id)
-  is_delete_open.value = false
-  widget_to_delete.value = null
+const confirm_delete=()=>{
+  widgets.value=widgets.value.filter(w => w.id !== widget_to_delete.value.id)
+  is_delete_open.value =false
+  widget_to_delete.value= null
 
-  notification.value = {
+  notification.value={
     type: 'success',
     message: 'Done! Your widget has been removed'
   }
 }
 
 //  unsaved changes logic 
-watch(widgets, () => {
+watch(widgets, ()=>{
   has_unsaved_changes.value = true
 }, { deep: true })
 
-const handle_back = () => {
+const handle_back=()=>{
   if (has_unsaved_changes.value) {
     is_unsaved_open.value = true
-  } else {
+  } 
+  else {
     router.push('/dashboard')
   }
 }
 
-const discard_changes = () => {
-  is_unsaved_open.value = false
+const discard_changes=()=>{
+  is_unsaved_open.value=false
   router.push('/dashboard')
 }
 
-const save_and_leave = () => {
-  is_unsaved_open.value = false
-  has_unsaved_changes.value = false
+const save_and_leave =()=> {
+  is_unsaved_open.value=false
+  has_unsaved_changes.value=false
   
-  notification.value = {
+  notification.value={
     type: 'success',
     message: 'All set! Your changes have been saved successfully!'
   }
   
-  setTimeout(() => {
+  setTimeout(()=>{
     router.push('/dashboard')
   }, 1500)
 }
 
 //  other state 
-const selected_time = ref('All time')
-const time_options = [
+const selected_time=ref('All time')
+const time_options=[
   { name: 'All time', value: 'All time' },
   { name: 'Today', value: 'Today' },
   { name: 'Last 7 Days', value: 'Last 7 Days' },

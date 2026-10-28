@@ -237,27 +237,27 @@ import delete_modal from '../components/delete_modal.vue'
 
 const router = useRouter()
 
-const is_form_open = ref(false)
-const is_edit_open = ref(false)
-const is_delete_open = ref(false)
-const selected_order = ref(null)
-const orders = ref([])
-const search_key = ref('')
-const notification = ref({})
+const is_form_open=ref(false)
+const is_edit_open=ref(false)
+const is_delete_open=ref(false)
+const selected_order=ref(null)
+const orders=ref([])
+const search_key=ref('')
+const notification=ref({})
 
 // pagination
-const current_page = ref(1)
-const rows_per_page = ref(5)
+const current_page=ref(1)
+const rows_per_page=ref(5)
 
-const show_page = (page) => {
-  current_page.value = page
+const show_page=(page)=>{
+  current_page.value=page
 }
 
 // rearrange state
-const re_arrange = ref(false)
+const re_arrange=ref(false)
 
 // default columns (never modified)
-const default_theads = [
+const default_theads=[
   { prop: 'customer_id', label: 'Customer ID', width: 120, checked: true, disabled: false, resizable: true },
   { prop: 'customer_name', label: 'Customer name', width: 150, checked: true, disabled: false, resizable: true },
   { prop: 'email', label: 'Email id', width: 200, checked: true, disabled: false, resizable: true },
@@ -274,17 +274,17 @@ const default_theads = [
 ]
 
 // active columns (starts as default, replaced by saved prefs)
-const theads = ref([...default_theads])
+const theads=ref([...default_theads])
 
 // only checked columns
-const active_columns = computed(() => {
+const active_columns=computed(() => {
   return theads.value.filter(col => col.checked === true)
 })
 
 // save preferences (must be defined before apply_columns)
-const save_preferences_db = async (updated_heads) => {
+const save_preferences_db=async (updated_heads) => {
   try {
-    const columns_to_save = updated_heads.map(col => ({
+    const columns_to_save=updated_heads.map(col => ({
       prop: col.prop,
       label: col.label,
       checked: col.checked,
@@ -307,19 +307,19 @@ const save_preferences_db = async (updated_heads) => {
 }
 
 // load preferences (robust - handles partial saves)
-const load_preferences_from_db = async () => {
+const load_preferences_from_db=async()=>{
   try {
-    const res = await axios.get('http://localhost:3000/api/preferences', {
+    const res=await axios.get('http://localhost:3000/api/preferences', {
       params: { user_id: 'default_user', page: 'orders_table' }
     })
 
-    const saved_columns = res.data.columns || []
+    const saved_columns=res.data.columns || []
 
     if (saved_columns.length > 0) {
       // 1. Merge saved columns with their default configs
-      const from_saved = saved_columns
+      const from_saved=saved_columns
         .map(saved => {
-          const def_col = default_theads.find(d => d.prop === saved.prop)
+          const def_col=default_theads.find(d => d.prop === saved.prop)
           return def_col ? { ...def_col, ...saved } : null
         })
         .filter(Boolean)
@@ -329,7 +329,7 @@ const load_preferences_from_db = async () => {
       const missing_defaults = default_theads.filter(d => !saved_props.includes(d.prop))
 
       // 3. Combine: saved first (in saved order), then missing defaults
-      theads.value = [...from_saved, ...missing_defaults]
+      theads.value=[...from_saved, ...missing_defaults]
     }
     // If saved_columns is empty, theads stays as [...default_theads]
   } catch (err) {
@@ -338,56 +338,56 @@ const load_preferences_from_db = async () => {
 }
 
 // open rearrange modal
-const open_rearrange = () => {
-  re_arrange.value = true
+const open_rearrange=()=>{
+  re_arrange.value=true
 }
 
 // close modal
-const arrange = (val) => {
+const arrange=(val)=>{
   re_arrange.value = val
 }
 
 // apply columns
-const apply_columns = (updated_heads) => {
-  theads.value = updated_heads
-  re_arrange.value = false
+const apply_columns=(updated_heads) => {
+  theads.value=updated_heads
+  re_arrange.value=false
   save_preferences_db(updated_heads)
 }
 
 // menu options
-const menu_options = [
+const menu_options=[
   { label: 'Edit', icon: 'icon-edit-regular' },
   { label: 'Delete', icon: 'icon-trash-regular' }
 ]
 
-const active_menu_index = ref(-1)
+const active_menu_index=ref(-1)
 
-const toggle_menu = (index) => {
+const toggle_menu=(index)=> {
   active_menu_index.value = active_menu_index.value === index ? -1 : index
 }
 
-const handle_menu_choice = (action) => {
-  const clicked_index = active_menu_index.value
-  const order = pagination_orders.value[clicked_index]
+const handle_menu_choice=(action)=> {
+  const clicked_index=active_menu_index.value
+  const order=pagination_orders.value[clicked_index]
   
-  active_menu_index.value = -1 
-  selected_order.value = order
+  active_menu_index.value= -1 
+  selected_order.value=order
 
   if (action === 'Edit') {
     is_edit_open.value = false 
-    setTimeout(() => { is_edit_open.value = true }, 50)
+    setTimeout(()=>{ is_edit_open.value = true }, 50)
   } else if (action === 'Delete') {
     is_delete_open.value = false
-    setTimeout(() => { is_delete_open.value = true }, 50)
+    setTimeout(()=>{ is_delete_open.value = true }, 50)
   }
 }
 
-const confirm_delete = async () => {
+const confirm_delete=async () => {
   if (!selected_order.value) return
 
   try {
     await axios.delete(`http://localhost:3000/api/orders/${selected_order.value._id}`)
-    is_delete_open.value = false
+    is_delete_open.value=false
     fetch_orders()
     push_notification('Order deleted successfully')
   } catch (err) {
@@ -397,7 +397,7 @@ const confirm_delete = async () => {
 }
 
 // get data
-const fetch_orders = async () => {
+const fetch_orders=async ()=>{
   try {
     const response = await axios.get('http://localhost:3000/api/orders')
     orders.value = response.data
@@ -406,22 +406,22 @@ const fetch_orders = async () => {
   }
 }
 
-const search = (key) => {
+const search=(key)=>{
   search_key.value = key
   current_page.value = 1
 }
 
-const push_notification = (message) => {
-  notification.value = { type: 'success', message: message }
+const push_notification=(message)=>{
+  notification.value={ type: 'success', message: message }
 }
 
-const filtered_orders = computed(() => {
+const filtered_orders=computed(() => {
   if (!search_key.value) return orders.value
 
-  const key = search_key.value.toLowerCase().trim()
+  const key=search_key.value.toLowerCase().trim()
   if (!key) return orders.value
 
-  return orders.value.filter((order) => {
+  return orders.value.filter((order)=>{
     // Loop through every field in the order object
     return Object.keys(order).some((field) => {
       const value = order[field]
@@ -438,7 +438,7 @@ const filtered_orders = computed(() => {
 
       // Handle dates (createdAt, updatedAt)
       if (field === 'createdAt' || field === 'updatedAt') {
-        const formatted = new Date(value).toLocaleDateString('en-US', {
+        const formatted=new Date(value).toLocaleDateString('en-US', {
           month: 'short', day: '2-digit', year: 'numeric'
         }).toLowerCase()
         return formatted.includes(key)
@@ -450,25 +450,25 @@ const filtered_orders = computed(() => {
   })
 })
 
-const pagination_orders = computed(() => {
-  const start = (current_page.value - 1) * rows_per_page.value
-  const end = start + rows_per_page.value
+const pagination_orders=computed(()=>{
+  const start=(current_page.value - 1) * rows_per_page.value
+  const end=start + rows_per_page.value
   return filtered_orders.value.slice(start, end)
 })
 
-const handle_order_saved = () => {
+const handle_order_saved=()=>{
   is_form_open.value = false
   fetch_orders()
   push_notification('Order created successfully')
 }
 
-const handle_edit_saved = () => {
+const handle_edit_saved=()=>{
   is_edit_open.value = false
   fetch_orders()
   push_notification('Order updated successfully')
 }
 
-onMounted(() => {
+onMounted(()=>{
   fetch_orders()
   load_preferences_from_db()
 })

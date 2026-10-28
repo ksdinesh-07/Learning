@@ -1,13 +1,13 @@
 <template>
   <div class="widget-renderer">
-    <!-- KPI CARD -->
+    <!-- KPI -->
     <div v-if="widget.type === 'kpi'" class="kpi-content">
       <span class="widget-value">
         {{ formatValue(chart_data.kpi.totalSales, widget.data_format || 'currency', widget.precision) }}
       </span>
     </div>
     
-    <!-- TABLE -->
+    <!-- table -->
     <div v-else-if="widget.type === 'table'" class="table-content">
       <div v-if="paginated_table_data.length === 0" class="empty-table-state">No data</div>
       <table v-else class="mini-table" :style="{ fontSize: (widget.font_size || 14) + 'px' }">
@@ -49,8 +49,8 @@
       </table>
     </div>
 
-    <!-- CHARTS -->
-    <div v-else class="chart-content">
+    <!--charts -->
+    <div v-else class="chart-content" style="position: relative;">
       <apexchart 
         width="100%" 
         height="100%" 
@@ -67,7 +67,7 @@ import { ref, onMounted, watch, computed } from 'vue'
 import axios from 'axios'
 import apexchart from 'vue3-apexcharts' 
 
-const props = defineProps({
+const props=defineProps({
   widget: { type: Object, required: true },
   timeFilter: { type: String, default: 'All time' }
 })
@@ -96,23 +96,23 @@ const all_column_definitions = [
   { name: 'Quantity', value: 'quantity' }
 ]
 
-const active_columns = computed(() => {
-  const saved_cols = props.widget.table_columns || ['order_id', 'customer_name', 'product', 'total_amount', 'status'];
+const active_columns=computed(()=>{
+  const saved_cols=props.widget.table_columns || ['order_id', 'customer_name', 'product', 'total_amount', 'status'];
   return all_column_definitions.filter(c => saved_cols.includes(c.value));
 })
 
-const paginated_table_data = computed(() => {
+const paginated_table_data = computed(()=>{
   let data = [...chart_data.value.table];
-  if (props.widget.table_apply_filter) {
+  if(props.widget.table_apply_filter){
     data = data.filter(row => row.status === 'Pending');
   }
   data.sort((a, b) => props.widget.table_sort === 'asc' ? new Date(a.createdAt) - new Date(b.createdAt) : new Date(b.createdAt) - new Date(a.createdAt));
   return data.slice(0, props.widget.table_pagination || 5);
 })
 
-const fetch_data = async () => {
-  try {
-    const params = {
+const fetch_data=async()=>{
+  try{
+    const params ={
       time: props.timeFilter,
       metric: props.widget.metric || 'total_amount',
       aggregation: props.widget.aggregation || 'sum',
@@ -123,7 +123,7 @@ const fetch_data = async () => {
 
     const res = await axios.get('http://localhost:3000/api/charts', { params })
     
-    chart_data.value = {
+    chart_data.value={
       labels: res.data.barChart?.labels || [],
       values: res.data.barChart?.values || [],
       pie_labels: res.data.pieChart?.labels || [],
@@ -136,9 +136,9 @@ const fetch_data = async () => {
   }
 }
 
-onMounted(() => fetch_data())
+onMounted(()=>fetch_data())
 
-watch(() => [
+watch(()=>[
   props.widget.metric, 
   props.widget.aggregation, 
   props.timeFilter, 
@@ -156,6 +156,26 @@ const formatValue = (value, format, precision) => {
   return Number(value).toFixed(p)
 }
 
+const format_axis_name = (axis_string) => {
+  if (!axis_string) return ''; // Return empty string if no axis is selected
+  
+  const name_map = {
+    'createdAt': 'Created Date',
+    'total_amount': 'Total Amount',
+    'unit_price': 'Unit Price',
+    'customer_name': 'Customer Name',
+    'customer_id': 'Customer ID',
+    'email_id': 'Email ID',
+    'order_date': 'Order Date',
+    'created_by': 'Created By',
+    'quantity': 'Quantity',
+    'product': 'Product',
+    'status': 'Status'
+  }
+  if (name_map[axis_string]) return name_map[axis_string]
+  return axis_string.replace(/_/g, ' ').replace(/([A-Z])/g, ' $1').trim().toUpperCase()
+}
+
 const get_chart_options = () => {
   const mainColor = props.widget.chart_color || '#54BD95'; 
 
@@ -163,7 +183,8 @@ const get_chart_options = () => {
     chart: { 
       toolbar: { show: false }, 
       fontFamily: 'Open Sans, sans-serif',
-      animations: { enabled: false }
+      animations: { enabled: false },
+      parentHeightOffset: 0 
     },
     colors: [mainColor], 
     stroke: { show: true, curve: 'smooth', width: 2 },
@@ -172,31 +193,49 @@ const get_chart_options = () => {
     grid: { 
       borderColor: '#f3f4f6', 
       strokeDashArray: 4, 
-      padding: { top: 0, right: 0, bottom: 0, left: 0 } 
+      padding: { top: 10, right: 10, bottom: 0, left: 15 } 
     }
   }
 
   if (props.widget.type === 'pie') {
+    const total = chart_data.value.pie_values.reduce((a, b) => a + b, 0) || 1;
+    
     options.colors = [mainColor, '#F59E0B', '#EF4444', '#3B82F6'];
     options.labels = chart_data.value.pie_labels.length > 0 ? chart_data.value.pie_labels : ['No Data'];
-    options.legend = { show: true, position: 'right', markers: { radius: 0, size: 8 } };
-    options.stroke = { show: true, width: 3, colors: ['#ffffff'], lineCap: 'butt' };
+    
+    options.legend = { 
+      show: props.widget.show_legend !== undefined ? props.widget.show_legend : true, 
+      position: 'right',           
+      horizontalAlign: 'center',   
+      fontSize: '13px',
+      fontFamily: 'Open Sans, sans-serif',
+      markers: { radius: 0, size: 8 },
+      formatter: (seriesName, opts) => {
+        const val = opts.w.globals.series[opts.seriesIndex];
+        const percent = ((val / total) * 100).toFixed(0);
+        return `${seriesName} (${percent}%)`;
+      },
+      itemMargin: { vertical: 5 }
+    };
+
+    options.dataLabels = {
+      enabled: true,
+      formatter: (val) => val.toFixed(0) + '%',
+      style: { fontSize: '12px', fontFamily: 'Open Sans, sans-serif', fontWeight: 'bold', colors: ['#fff'] }
+    };
+    
+    options.stroke = { show: true, width: 3, colors: ['#ffffff'], lineCap: 'butt', curve: 'straight' };
     options.fill = { type: 'solid' };
   } 
   else if (props.widget.type === 'scatter') {
     options.stroke = { width: 0 }; 
-    options.markers = {
-      size: 6,
-      colors: [mainColor],
-      strokeColors: '#fff',
-      strokeWidth: 1,
-      hover: { size: 8 }
-    };
+    options.markers = { size: 6, colors: [mainColor], strokeColors: '#fff', strokeWidth: 1, hover: { size: 8 } };
     
     options.xaxis = { 
       type: 'numeric',
       position: 'bottom',
-      title: { text: 'X - Axis' },
+      offsetX: 10, 
+      title: { text: format_axis_name(props.widget.x_axis) || 'X-Axis' },
       labels: { 
         style: { fontSize: '11px', fontFamily: 'Open Sans, sans-serif' },
         rotate: 0,
@@ -212,25 +251,20 @@ const get_chart_options = () => {
     };
     
     options.yaxis = {
-      title: { text: 'Y - Axis' },
+      title: { text: format_axis_name(props.widget.y_axis) || 'Y-Axis' },
+      offsetX: -10, 
       axisBorder: { show: true, color: '#e5e7eb' },
       axisTicks: { show: true, color: '#e5e7eb' },
       labels: { style: { fontSize: '11px', fontFamily: 'Open Sans, sans-serif' } }
     };
   } 
   else {
-    options.plotOptions = { bar: { borderRadius: 0, columnWidth: '60%' } }
-    
-    options.markers = {
-      size: 5,
-      colors: [mainColor],
-      strokeColors: '#fff',
-      strokeWidth: 2,
-      hover: { size: 7 }
-    };
+    options.plotOptions = { bar: { borderRadius: 0, columnWidth: '60%' } };
+    options.markers = { size: 5, colors: [mainColor], strokeColors: '#fff', strokeWidth: 2, hover: { size: 7 } };
 
     options.xaxis = { 
       categories: chart_data.value.labels.length > 0 ? chart_data.value.labels : ['No Data'],
+      title: { text: format_axis_name(props.widget.x_axis) || 'X-Axis' },
       labels: { 
         rotate: 0,
         rotateAlways: false,
@@ -260,6 +294,7 @@ const get_chart_options = () => {
     };
 
     options.yaxis = {
+      title: { text: format_axis_name(props.widget.y_axis) || 'Y-Axis' },
       axisBorder: { show: true, color: '#e5e7eb' },
       axisTicks: { show: true, color: '#e5e7eb' },
       labels: {
@@ -272,30 +307,20 @@ const get_chart_options = () => {
         }
       }
     };
-    
     options.grid.padding.bottom = 0; 
-
     if (props.widget.type === 'area') {
-      options.fill = { 
-        type: 'gradient', 
-        gradient: { shadeIntensity: 1, opacityFrom: 0.4, opacityTo: 0.05, stops: [0, 100] } 
-      };
+      options.fill = { type: 'gradient', gradient: { shadeIntensity: 1, opacityFrom: 0.4, opacityTo: 0.05, stops: [0, 100] } };
     }
   }
-
   return options
 }
 
-const get_chart_series = () => {
-  if (props.widget.type === 'pie') {
+const get_chart_series=()=>{
+  if (props.widget.type === 'pie'){
     return chart_data.value.pie_values.length > 0 ? chart_data.value.pie_values : [0];
   }
-  
-  if (props.widget.type === 'scatter') {
-    return [{ 
-      name: 'Data', 
-      data: chart_data.value.values.map((val, index) => [index + 1, val || 0]) 
-    }];
+  if(props.widget.type === 'scatter'){
+    return [{ name: 'Data', data: chart_data.value.values.map((val, index) => [index + 1, val || 0]) }];
   }
 
   return [{ name: 'Total', data: chart_data.value.values.length > 0 ? chart_data.value.values : [0] }];
@@ -303,81 +328,14 @@ const get_chart_series = () => {
 </script>
 
 <style scoped>
-.widget-renderer { 
-  width: 100%; 
-  height: 100%; 
-  display: flex; 
-  align-items: center; 
-  justify-content: center; 
-  overflow: hidden; 
-}
-
-.chart-content { 
-  width: 100%; 
-  height: 100%; 
-  padding: 0; 
-}
-
-.kpi-content { 
-  display: flex; 
-  align-items: center; 
-  justify-content: center; 
-  width: 100%; 
-  height: 100%; 
-}
-
-.widget-value { 
-  font-family: 'Open Sans', sans-serif; 
-  font-size: 28px; 
-  font-weight: 600; 
-  color: #111827; 
-}
-
-.table-content { 
-  width: 100%; 
-  height: 100%; 
-  overflow: auto; 
-  padding: 0; 
-  position: relative;
-}
-
-.mini-table { 
-  width: 100%; 
-  border-collapse: separate; 
-  border-spacing: 0; 
-  font-family: 'Open Sans', sans-serif; 
-}
-
-.mini-table thead { 
-  position: sticky; 
-  top: 0; 
-  z-index: 10; 
-}
-
-.mini-table th { 
-  background-color: #f9fafb;
-  padding: 10px 8px; 
-  text-align: left; 
-  border-bottom: 1px solid #e5e7eb; 
-  color: #374151; 
-  font-weight: 600; 
-}
-
-.mini-table td { 
-  padding: 10px 8px; 
-  border-bottom: 1px solid #f3f4f6; 
-  color: #4b5563; 
-  background-color: #ffffff; 
-}
-
-.empty-table-state { 
-  display: flex; 
-  align-items: center; 
-  justify-content: center; 
-  width: 100%; 
-  height: 100%; 
-  color: #9ca3af; 
-  font-family: 'Open Sans', sans-serif; 
-  font-size: 14px; 
-}
+.widget-renderer { width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; overflow: hidden; }
+.chart-content { width: 100%; height: 100%; padding: 0; }
+.kpi-content { display: flex; align-items: center; justify-content: center; width: 100%; height: 100%; }
+.widget-value { font-family: 'Open Sans', sans-serif; font-size: 28px; font-weight: 600; color: #111827; }
+.table-content { width: 100%; height: 100%; overflow: auto; padding: 0; position: relative; }
+.mini-table { width: 100%; border-collapse: separate; border-spacing: 0; font-family: 'Open Sans', sans-serif; }
+.mini-table thead { position: sticky; top: 0; z-index: 10; }
+.mini-table th { background-color: #f9fafb; padding: 10px 8px; text-align: left; border-bottom: 1px solid #e5e7eb; color: #374151; font-weight: 600; }
+.mini-table td { padding: 10px 8px; border-bottom: 1px solid #f3f4f6; color: #4b5563; background-color: #ffffff; }
+.empty-table-state { display: flex; align-items: center; justify-content: center; width: 100%; height: 100%; color: #9ca3af; font-family: 'Open Sans', sans-serif; font-size: 14px; }
 </style>
