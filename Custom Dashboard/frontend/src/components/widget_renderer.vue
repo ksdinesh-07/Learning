@@ -157,7 +157,7 @@ const formatValue = (value, format, precision) => {
 }
 
 const format_axis_name = (axis_string) => {
-  if (!axis_string) return ''; // Return empty string if no axis is selected
+  if (!axis_string) return '';
   
   const name_map = {
     'createdAt': 'Created Date',
@@ -243,7 +243,12 @@ const get_chart_options = () => {
         hideOverlappingLabels: true,
         showDuplicates: false,
         trim: true,
-        formatter: (value) => Math.round(value)
+        formatter: (value) => {
+          if (props.widget.x_axis === 'total_amount' || props.widget.x_axis === 'unit_price') {
+            return '$ ' + Math.round(value);
+          }
+          return Math.round(value);
+        }
       },
       tickAmount: 10,
       axisBorder: { show: true, color: '#e5e7eb' },
@@ -255,7 +260,16 @@ const get_chart_options = () => {
       offsetX: -10, 
       axisBorder: { show: true, color: '#e5e7eb' },
       axisTicks: { show: true, color: '#e5e7eb' },
-      labels: { style: { fontSize: '11px', fontFamily: 'Open Sans, sans-serif' } }
+      labels: { 
+        style: { fontSize: '11px', fontFamily: 'Open Sans, sans-serif' },
+        // FIXED: Added currency check for the Scatter Plot Y-axis
+        formatter: (val) => {
+          if (props.widget.y_axis === 'total_amount' || props.widget.y_axis === 'unit_price') {
+            return '$ ' + Math.round(val);
+          }
+          return Math.round(val);
+        }
+      }
     };
   } 
   else {
@@ -273,8 +287,15 @@ const get_chart_options = () => {
         style: { fontSize: '11px', fontFamily: 'Open Sans, sans-serif' },
         formatter: (val) => {
           if (val === undefined || val === null) return '';
-          const string_val = String(val); 
-          const words = string_val.split(' ');
+          
+          let formatted_val = String(val);
+          if (props.widget.x_axis === 'total_amount' || props.widget.x_axis === 'unit_price') {
+             if (!isNaN(Number(formatted_val))) {
+                 formatted_val = '$ ' + formatted_val;
+             }
+          }
+
+          const words = formatted_val.split(' ');
           let lines = [];
           let currentLine = '';
           words.forEach(word => {

@@ -81,7 +81,6 @@
 
           <template #tbody>
             <tr v-for="(order, index) in pagination_orders" :key="order._id">
-              
               <!-- serial number -->
               <hlx-table-cell align="center" fixed="left">
                 {{ (current_page - 1) * rows_per_page + index + 1 }}
@@ -415,38 +414,58 @@ const push_notification=(message)=>{
   notification.value={ type: 'success', message: message }
 }
 
-const filtered_orders=computed(() => {
+const filtered_orders = computed(() => {
   if (!search_key.value) return orders.value
 
-  const key=search_key.value.toLowerCase().trim()
+  const key = search_key.value.toLowerCase().trim()
   if (!key) return orders.value
 
-  return orders.value.filter((order)=>{
-    // Loop through every field in the order object
-    return Object.keys(order).some((field) => {
+  return orders.value.filter((order) => {
+    
+    const searchable_data = []
+
+    if (order._id) {
+      const raw_id = order._id.toString();
+      searchable_data.push(raw_id);
+      searchable_data.push(raw_id.slice(-6));
+      searchable_data.push(`ORD-${raw_id.slice(-4).toUpperCase()}`);
+      searchable_data.push(`CUS-${raw_id.slice(-6).toUpperCase()}`); 
+    }
+
+    // customer name
+    if (order.first_name || order.last_name) {
+      searchable_data.push(`${order.first_name || ''} ${order.last_name || ''}`.trim());
+    }
+
+    // date
+    if (order.createdAt) {
+      const date = new Date(order.createdAt);
+      searchable_data.push(date.toLocaleDateString('en-US', { month: 'short', day: '2-digit', year: 'numeric' }));
+      searchable_data.push(date.toLocaleDateString()); 
+    }
+
+    // search throw all fiels
+    Object.keys(order).forEach((field) => {
       const value = order[field]
+      if (value === null || value === undefined) return
 
-      // Skip null/undefined
-      if (value === null || value === undefined) return false
-
-      // Handle objects (like phone: { country_code, number })
+      // for nested handling of the phone 
       if (typeof value === 'object') {
-        return Object.values(value).some(
-          (inner) => String(inner).toLowerCase().includes(key)
-        )
+        Object.values(value).forEach((inner) => {
+          if (inner !== null && inner !== undefined) {
+            searchable_data.push(String(inner))
+          }
+        })
+        return
       }
 
-      // Handle dates (createdAt, updatedAt)
-      if (field === 'createdAt' || field === 'updatedAt') {
-        const formatted=new Date(value).toLocaleDateString('en-US', {
-          month: 'short', day: '2-digit', year: 'numeric'
-        }).toLowerCase()
-        return formatted.includes(key)
-      }
-
-      // Handle primitives (string, number, boolean)
-      return String(value).toLowerCase().includes(key)
+      // for string and number
+      searchable_data.push(String(value))
     })
+
+    // check for the search key
+    const combined_string = searchable_data.join(' ').toLowerCase()
+    return combined_string.includes(key)
   })
 })
 
@@ -461,6 +480,7 @@ const handle_order_saved=()=>{
   fetch_orders()
   push_notification('Order created successfully')
 }
+
 
 const handle_edit_saved=()=>{
   is_edit_open.value = false
